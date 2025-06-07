@@ -5,11 +5,17 @@ function App() {
   const [panelState, setPanelState] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor");
 
+  const toggleSettings = () => {}
+
 
   return (
     <div>
       <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
         <img className={"openMenuButtonIcon"} src="/assets/Circuits%20Menu/menu.svg" alt="open/close menu"/>
+      </button>
+
+      <button className="openSettingsButton" onClick={() => toggleSettings()}>
+        <img className={"openSettingsButtonIcon"} src="/assets/Settings/gear.svg" alt="open/close menu"/>
       </button>
 
       <div className={`panel ${panelState ? 'open' : ''}`}>
@@ -32,42 +38,42 @@ function App() {
 
       <div className={"toolbar"}>
         <button
-          className={`toolbarButton ${activeButton === "cursor"  ? 'activeButton' : ''}`}
+          className={`toolbarButton ${activeButton === "cursor"  ? 'active' : ''}`}
           onClick={() => setActiveButton("cursor")}
         >
           <img src="/assets/toolBar/cursor.svg" alt="cursor" className={"toolbarButtonIcon"}/>
         </button>
 
         <button
-          className={`toolbarButton ${activeButton === "hand"  ? 'activeButton' : ''}`}
+          className={`toolbarButton ${activeButton === "hand"  ? 'active' : ''}`}
           onClick={() => setActiveButton("hand")}
         >
           <img src="/assets/toolBar/hand.svg" alt="hand" className={"toolbarButtonIcon"}/>
         </button>
 
         <button
-          className={`toolbarButton ${activeButton === "sqwire"  ? 'activeButton' : ''}`}
+          className={`toolbarButton ${activeButton === "sqwire"  ? 'active' : ''}`}
           onClick={() => setActiveButton("sqwire")}
         >
           <img src="/assets/toolBar/line.svg" alt="square wire" className={"toolbarButtonIcon"}/>
         </button>
 
         <button
-          className={`toolbarButton ${activeButton === "dwire"  ? 'activeButton' : ''}`}
+          className={`toolbarButton ${activeButton === "dwire"  ? 'active' : ''}`}
           onClick={() => setActiveButton("dwire")}
         >
           <img src="/assets/toolBar/line2.svg" alt="diagonal wire" className={"toolbarButtonIcon"}/>
         </button>
 
         <button
-          className={`toolbarButton ${activeButton === "eraser"  ? 'activeButton' : ''}`}
+          className={`toolbarButton ${activeButton === "eraser"  ? 'active' : ''}`}
           onClick={() => setActiveButton("eraser")}
         >
           <img src="/assets/toolBar/eraser.svg" alt="eraser" className={"toolbarButtonIcon"}/>
         </button>
 
         <button
-          className={`toolbarButton ${activeButton === "text" ? 'activeButton' : ''}`}
+          className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
           onClick={() => setActiveButton("text")}
         >
           <img src="/assets/toolBar/text.svg" alt="text tool" className={"toolbarButtonIcon"}/>
