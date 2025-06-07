@@ -27,11 +27,11 @@ function App() {
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="../public/assets/OR.png" alt={"or"}/>
+          <img className={'buttonPicture'} src="../public/assets/OR.svg" alt={"or"}/>
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="../public/assets/NOT.png" alt={"not"}/>
+          <img className={'buttonPicture'} src="../public/assets/NOT.svg" alt={"not"}/>
         </button>
 
       </div>
