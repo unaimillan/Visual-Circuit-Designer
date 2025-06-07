@@ -19,20 +19,19 @@ function App() {
       <div className={`panel ${panelState ? 'open' : ''}`}>
 
         <p className={"menuText menuContent"}>
-          Меню!
+          Меню
         </p>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-
-          Я перви кнопишка! 👻
+          <img src="/assets/AND.png"/>
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          А я вторая кнопишка! ☺️
+          <img src="../public/assets/OR.png"/>
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          Окак! Я трети кнопишка! 💕🎶
+          <img src="../public/assets/NOT.png"/>
         </button>
 
       </div>
