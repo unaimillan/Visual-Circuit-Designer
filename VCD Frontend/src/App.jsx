@@ -23,15 +23,15 @@ function App() {
         </p>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="/assets/AND.png"/>
+          <img className={'buttonPicture'} src="/assets/AND.png" alt={"and"}/>
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="../public/assets/OR.png"/>
+          <img className={'buttonPicture'} src="../public/assets/OR.png" alt={"or"}/>
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="../public/assets/NOT.png"/>
+          <img className={'buttonPicture'} src="../public/assets/NOT.png" alt={"not"}/>
         </button>
 
       </div>
