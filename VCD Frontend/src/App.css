@@ -17,7 +17,7 @@
 
 .openMenuButton:hover {
     transition: 0.15s ease-out;
-    background-color: #f3f3f3;
+    background-color: #f6f6f6;
 }
 
 .openMenuButton:active {
@@ -120,6 +120,11 @@
     height: 1.2rem;
 }
 
+.toolbarButton.activeButton{
+    transition: 0.05s ease-out;
+    background-color: #dbedff;
+    box-shadow: none;
+}
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
 /*cursor: pointer;*/
