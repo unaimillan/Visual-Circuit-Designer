@@ -18,7 +18,7 @@ function App() {
       <div className={`panel ${panelState ? 'open' : ''}`}>
 
         <p className={"menuText menuContent"}>
-          Приветик!💋 Я крутая менюшка!
+          Меню!
         </p>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
