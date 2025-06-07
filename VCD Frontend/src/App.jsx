@@ -23,7 +23,7 @@ function App() {
         </p>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="/assets/AND.png" alt={"and"}/>
+          <img className={'buttonPicture'} src="/assets/AND.svg" alt={"and"}/>
         </button>
 
         <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
