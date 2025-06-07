@@ -2,38 +2,70 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
+  let activeButton, isButtonActive;
   const [panelState, setPanelState] = useState(false)
+  isButtonActive = false;
+  activeButton = "mouse";
+  //Обычная мышка - mouse
+  //рука для drag - hand
+  //провод по сетке - squareWire
+  //провод по диаг - diagWire
+  // Ластик - eraser
 
 
 
   return (
     <div>
-      <div className></div>
       <button
-          className="panelButton"
+          className="openMenuButton"
           onClick={() => setPanelState(!panelState)}
       >
-          {panelState ? "Закрыть" : "Открыть"} меню.
+        <img className={"openMenuButtonIcon"} src="/assets/Circuits%20Menu/menu.svg" alt="open/close menu"/>
       </button>
 
       <div className={`panel ${panelState ? 'open' : ''}`}>
 
-        <p className={"menuText menuContent"}>
+        <p className={"panelText"}>
           Меню
         </p>
 
-        <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="/assets/AND.svg" alt={"and"}/>
+        <button className={`panelInnerButton`}>
+          <img className={'buttonPicture'} src="/assets/Circuits%20Menu/AND.svg" alt={"and"}/>
         </button>
 
-        <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="../public/assets/OR.svg" alt={"or"}/>
+        <button className={`panelInnerButton`}>
+          <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>
         </button>
 
-        <button className={`panelInnerButton menuContent ${panelState ? 'showed' : ''}`}>
-          <img className={'buttonPicture'} src="../public/assets/NOT.svg" alt={"not"}/>
+        <button className={`panelInnerButton`}>
+          <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>
+        </button>
+      </div>
+
+      <div className={"toolbar"}>
+        <button className={`toolbarButton ${isButtonActive ? 'activeButton' : ''}`}>
+          <img src="/assets/toolBar/cursor.svg" alt="cursor" className={"toolbarButtonIcon"}/>
         </button>
 
+        <button className={`toolbarButton ${isButtonActive ? 'activeButton' : ''}`}>
+          <img src="/assets/toolBar/hand.svg" alt="hand" className={"toolbarButtonIcon"}/>
+        </button>
+
+        <button className={`toolbarButton ${isButtonActive ? 'activeButton' : ''}`}>
+          <img src="/assets/toolBar/line.svg" alt="square wire" className={"toolbarButtonIcon"}/>
+        </button>
+
+        <button className={`toolbarButton ${isButtonActive ? 'activeButton' : ''}`}>
+          <img src="/assets/toolBar/line2.svg" alt="diagonal wire" className={"toolbarButtonIcon"}/>
+        </button>
+
+        <button className={`toolbarButton ${isButtonActive ? 'activeButton' : ''}`}>
+          <img src="/assets/toolBar/eraser.svg" alt="eraser" className={"toolbarButtonIcon"}/>
+        </button>
+
+        <button className={`toolbarButton ${isButtonActive ? 'activeButton' : ''}`}>
+          <img src="/assets/toolBar/text.svg" alt="text tool" className={"toolbarButtonIcon"}/>
+        </button>
       </div>
 
 
