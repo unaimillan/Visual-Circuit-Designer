@@ -4,9 +4,9 @@
     box-shadow: #e4e4e4 2px 2px 10px;
     transition: 0.15s ease-out;
     border-radius: 10px;
-    width: 300px;
-    height: 300px;
-    margin: 10px;
+    width: 100px;
+    height: 100px;
+    margin: 5px;
 }
 
 .panelInnerButton:hover {
@@ -21,12 +21,13 @@
 }
 
 .panel{
-    width: 320px;
+    width: 330px;
     border-radius: 10px;
     box-shadow: #c6c6c6 2px 2px 10px;
     transition: 0.3s ease-in-out;
     position: fixed;
     left: -500px;
+    margin: 10px 0 0 10px;
 }
 
 .panel.open{
@@ -45,4 +46,9 @@
 
 .menuContent.showed{
     transition: 0.3s ease-in-out;
+}
+
+.buttonPicture{
+    width: 80px;
+    align-items: center;
 }
