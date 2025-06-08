@@ -5,12 +5,6 @@ function App() {
     const [panelState, setPanelState] = useState(false)
     const [openSettings, setOpenSettings] = useState(false)
     const [activeButton, setActiveButton] = useState("cursor");
-    // const [isBasicVisible, setIsBasicVisible] = useState(true);
-    //Обычная мышка - mouse
-    //рука для drag - hand
-    //провод по сетке - squareWire
-    //провод по диаг - diagWire
-    // Ластик - eraser
 
     const [openIndexes, setOpenIndexes] = useState([]);
     const menuItems = [
@@ -18,16 +12,38 @@ function App() {
             question: "1. Basic Logic Elements",
             answer: [
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/AND.svg" alt={"and"}/>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/AND.svg"
+                        alt={"and"}
+                    />
                 </button>,
+
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>
+                    <img className={'buttonPicture'}
+                         draggable="false"
+                         src="../public/assets/Circuits%20Menu/OR.svg"
+                         alt={"or"}
+                    />
                 </button>,
+
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/NOT.svg"
+                        alt={"not"}
+                    />
                 </button>,
+
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NAND.svg" alt={"nand"}/>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/NAND.svg"
+                        alt={"nand"}
+                    />
                 </button>
             ]
         },
@@ -35,7 +51,12 @@ function App() {
             question: "2. Advanced Logic Elements",
             answer: [
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/OR.svg"
+                        alt={"or"}
+                    />
                 </button>
             ]
         },
@@ -43,7 +64,12 @@ function App() {
             question: "3. Pins",
             answer: [
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>
+                    <img
+                      className={'buttonPicture'}
+                      draggable="false"
+                      src="../public/assets/Circuits%20Menu/NOT.svg"
+                      alt={"not"}
+                    />
                 </button>
             ]
         },
@@ -51,7 +77,12 @@ function App() {
             question: "4. Custom Logic Elements",
             answer: [
                 <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NAND.svg" alt={"nand"}/>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/NAND.svg"
+                        alt={"nand"}
+                    />
                 </button>
             ]
         }
@@ -120,42 +151,72 @@ function App() {
                     className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
                     onClick={() => setActiveButton("cursor")}
                 >
-                    <img src="/assets/toolBar/cursor.svg" alt="cursor" className={"toolbarButtonIcon"}/>
+                    <img
+                        src="/assets/toolBar/cursor.svg"
+                        alt="cursor"
+                        className={"toolbarButtonIcon"}
+                        draggable="false"
+                    />
                 </button>
 
                 <button
                     className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
                     onClick={() => setActiveButton("hand")}
                 >
-                    <img src="/assets/toolBar/hand.svg" alt="hand" className={"toolbarButtonIcon"}/>
+                    <img
+                        src="/assets/toolBar/hand.svg"
+                        alt="hand"
+                        className={"toolbarButtonIcon"}
+                        draggable="false"
+                    />
                 </button>
 
                 <button
                     className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
                     onClick={() => setActiveButton("sqwire")}
                 >
-                    <img src="/assets/toolBar/line.svg" alt="square wire" className={"toolbarButtonIcon"}/>
+                    <img
+                        src="/assets/toolBar/line.svg"
+                        alt="square wire"
+                        className={"toolbarButtonIcon"}
+                        draggable="false"
+                    />
                 </button>
 
                 <button
                     className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
                     onClick={() => setActiveButton("dwire")}
                 >
-                    <img src="/assets/toolBar/line2.svg" alt="diagonal wire" className={"toolbarButtonIcon"}/>
+                    <img
+                        src="/assets/toolBar/line2.svg"
+                        alt="diagonal wire"
+                        draggable="false"
+                        className={"toolbarButtonIcon"}
+                    />
                 </button>
 
                 <button
                     className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
                     onClick={() => setActiveButton("eraser")}
                 >
-                    <img src="/assets/toolBar/eraser.svg" alt="eraser" className={"toolbarButtonIcon"}/>
+                    <img
+                        src="/assets/toolBar/eraser.svg"
+                        alt="eraser"
+                        draggable="false"
+                        className={"toolbarButtonIcon"}
+                    />
                 </button>
 
                 <button
                     className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
                     onClick={() => setActiveButton("text")}
                 >
-                    <img src="/assets/toolBar/text.svg" alt="text tool" className={"toolbarButtonIcon"}/>
+                    <img
+                        src="/assets/toolBar/text.svg"
+                        alt="text tool"
+                        className={"toolbarButtonIcon"}
+                        draggable="false"
+                    />
                 </button>
             </div>
 

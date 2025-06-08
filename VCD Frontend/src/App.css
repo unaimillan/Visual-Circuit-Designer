@@ -11,11 +11,13 @@
     box-shadow: #e4e4e4 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
+    user-select: none;
 }
 
 .openMenuButtonIcon{
     width: 1rem;
     height: 1rem;
+    user-select: none;
 }
 
 .openMenuButton:hover {
@@ -43,6 +45,7 @@
     box-shadow: #e4e4e4 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
+    user-select: none;
 }
 
 .openSettingsButton:hover {
@@ -58,6 +61,7 @@
 
 .openSettingsButtonIcon{
     width: 1rem; height: 1rem;
+    user-select: none;
 }
 
 /*_______Panel_______*/
@@ -70,6 +74,7 @@
     border-radius: 0.66rem;
     box-shadow: #cdcdcd 1px 1px 5px;
     transition: 0.3s ease-in-out;
+    user-select: none;
 }
 
 .panel.open{
@@ -115,6 +120,7 @@
 
 /*_______ToolBar_______*/
 .toolbar {
+    user-select: none;
     display: flex;
     width: 16.66rem;
     border-radius: 0.66rem;
@@ -161,6 +167,8 @@
     box-shadow: none;
 }
 
+
+/*______Menu list______*/
 .question {
     display: flex;
     justify-content: space-between;
@@ -188,6 +196,8 @@
     font-size: 12px;
     color: #888;
     transition: transform 0.3s;
+    cursor: pointer;
+    user-select: none;
 }
 
 .menu-item.active .arrow {
