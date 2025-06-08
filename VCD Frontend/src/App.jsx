@@ -44,6 +44,23 @@ function App() {
                         src="../public/assets/Circuits%20Menu/NAND.svg"
                         alt={"nand"}
                     />
+                </button>,
+
+                <button className={`panelInnerButton`}>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/NOR.svg"
+                        alt={"nor"}
+                    />
+                </button>,
+                <button className={`panelInnerButton`}>
+                    <img
+                        className={'buttonPicture'}
+                        draggable="false"
+                        src="../public/assets/Circuits%20Menu/XOR.svg"
+                        alt={"xor"}
+                    />
                 </button>
             ]
         },
