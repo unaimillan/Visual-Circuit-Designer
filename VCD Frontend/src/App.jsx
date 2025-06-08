@@ -96,10 +96,6 @@ function App() {
         );
     };
 
-    const toggleSettings = () => {
-      console.log(openSettings)
-    }
-
     return (
         <div>
             <div className={`backdrop ${openSettings? 'cover' : ``}`} onClick={() => setOpenSettings(false)}></div>
