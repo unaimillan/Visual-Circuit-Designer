@@ -1,4 +1,4 @@
-import {useState, useRef} from 'react'
+import React, {useState, useRef} from 'react'
 import {
     ReactInfiniteCanvas,
     COMPONENT_POSITIONS,
@@ -66,6 +66,7 @@ function App() {
                     />
                     <span className="buttonText">NOR</span>
                 </button>,
+
                 <button className={`panelInnerButton`}>
                     <img
                         className={'buttonPicture'}
@@ -84,10 +85,20 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../assets/circuitsMenu/OR.svg"
-                        alt={"or"}
+                        src="../assets/circuitsMenu/AND.svg"
+                        alt={"and"}
                     />
-                </button>
+                    <span className="buttonText">AND</span>
+                </button>,
+
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'}
+                         draggable="false"
+                         src="../assets/circuitsMenu/OR.svg"
+                         alt={"or"}
+                    />
+                    <span className="buttonText">OR</span>
+                </button>,
             ]
         },
         {
@@ -97,10 +108,20 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../assets/circuitsMenu/NOT.svg"
-                        alt={"not"}
+                        src="../assets/circuitsMenu/AND.svg"
+                        alt={"and"}
                     />
-                </button>
+                    <span className="buttonText">AND</span>
+                </button>,
+
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'}
+                         draggable="false"
+                         src="../assets/circuitsMenu/OR.svg"
+                         alt={"or"}
+                    />
+                    <span className="buttonText">OR</span>
+                </button>,
             ]
         },
         {
@@ -110,10 +131,20 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../assets/circuitsMenu/NAND.svg"
-                        alt={"nand"}
+                        src="../assets/circuitsMenu/AND.svg"
+                        alt={"and"}
                     />
-                </button>
+                    <span className="buttonText">AND</span>
+                </button>,
+
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'}
+                         draggable="false"
+                         src="../assets/circuitsMenu/OR.svg"
+                         alt={"or"}
+                    />
+                    <span className="buttonText">OR</span>
+                </button>,
             ]
         }
     ];
@@ -198,7 +229,9 @@ function App() {
 
                                     {openIndexes.includes(index) && (
                                         <div className="answer-grid">
-                                            {item.answer}
+                                            {item.answer.map((btn, btnIndex) =>
+                                                React.cloneElement(btn, { key: `item-${index}-btn-${btnIndex}` })
+                                            )}
                                         </div>
                                     )}
                                 </li>
