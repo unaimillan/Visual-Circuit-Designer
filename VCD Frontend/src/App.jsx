@@ -105,18 +105,28 @@ function App() {
             {/*<div className={`backdrop ${openSettings? toggleSettings() : ``}`}></div>*/}
 
             <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
-                <img className={"openMenuButtonIcon"} src="/assets/Circuits%20Menu/menu.svg" alt="open/close menu"/>
+                <img
+                    src="/assets/Circuits%20Menu/menu.svg"
+                    alt="open/close menu"
+                    className={"openMenuButtonIcon"}
+                    draggable="false"
+                />
             </button>
 
             <button className="openSettingsButton" onClick={() => toggleSettings()}>
-                <img className={"openSettingsButtonIcon"} src="/assets/Settings/gear.svg" alt="open/close menu"/>
+                <img
+                    src="/assets/Settings/gear.svg"
+                    alt="open/close settings"
+                    className={"openSettingsButtonIcon"}
+                    draggable="false"
+                />
             </button>
 
             <div className={`panel ${panelState ? 'open' : ''}`}>
 
                 <div className="menu-container">
                     <div className="menu-header">
-                        <p className={"panelText"}>
+                        <p className={"panelTitle"}>
                             Menu
                         </p>
                         <div className="divider"></div>

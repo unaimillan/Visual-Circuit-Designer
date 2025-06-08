@@ -105,11 +105,9 @@
     box-shadow: none;
 }
 
-.panelText{
+.panelTitle{
     margin-top: 0.66rem;
     text-align: center;
-    font-family: Helvetica, serif;
-    font-weight: 400;
     font-size: 1.32rem;
 }
 
