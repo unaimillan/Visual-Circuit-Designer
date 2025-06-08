@@ -29,8 +29,8 @@ function App() {
     const [openIndexes, setOpenIndexes] = useState([]);
     const menuItems = [
         {
-            question: "1. Basic Logic Elements",
-            answer: [
+            header: "Basic Logic Elements",
+            gates: [
                 <button className={`panelInnerButton`}>
                     <img
                         className={'buttonPicture'}
@@ -92,8 +92,8 @@ function App() {
             ]
         },
         {
-            question: "2. Advanced Logic Elements",
-            answer: [
+            header: "Advanced Logic Elements",
+            gates: [
                 <button className={`panelInnerButton`}>
                     <img
                         className={'buttonPicture'}
@@ -115,8 +115,8 @@ function App() {
             ]
         },
         {
-            question: "3. Pins",
-            answer: [
+            header: "Pins",
+            gates: [
                 <button className={`panelInnerButton`}>
                     <img
                         className={'buttonPicture'}
@@ -138,8 +138,8 @@ function App() {
             ]
         },
         {
-            question: "4. Custom Logic Elements",
-            answer: [
+            header: "Custom Logic Elements",
+            gates: [
                 <button className={`panelInnerButton`}>
                     <img
                         className={'buttonPicture'}
@@ -170,10 +170,6 @@ function App() {
         );
     };
 
-    // const toggleSettings = () => {
-    //   console.log(openSettings)
-    // }
-
     return (
         <div className="canvasContainer">
             <ReactInfiniteCanvas
@@ -197,11 +193,9 @@ function App() {
             >
             </ReactInfiniteCanvas>
             <div>
-                {/*<div className={`backdrop ${openSettings? toggleSettings() : ``}`}></div>*/}
-
                 <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
                     <img
-                        src="/assets/circuitsMenu/menu.svg"
+                        src="../assets/circuitsMenu/menu.svg"
                         alt="open/close menu"
                         className={"openMenuButtonIcon"}
                         draggable="false"
@@ -210,7 +204,7 @@ function App() {
 
                 <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
                     <img
-                        src="/assets/settings/gear.svg"
+                        src="../assets/settings/gear.svg"
                         alt="open/close settings"
                         className={"openSettingsButtonIcon"}
                         draggable="false"
@@ -235,29 +229,29 @@ function App() {
                             <div className="divider"></div>
                         </div>
 
-                        <ul className="menu-items">
+                        <ol className="menu-items">
                             {menuItems.map((item, index) => (
                                 <li
                                     key={index}
                                     className={`menu-item ${openIndexes.includes(index) ? 'active' : ''}`}
                                 >
-                                    <div className="question" onClick={() => toggleItem(index)}>
-                                        {item.question}
+                                    <div className="header" onClick={() => toggleItem(index)}>
+                                        {item.header}
                                         <span className="arrow">
                                         ▼
                                     </span>
                                     </div>
 
                                     {openIndexes.includes(index) && (
-                                        <div className="answer-grid">
-                                            {item.answer.map((btn, btnIndex) =>
+                                        <div className="gates-grid">
+                                            {item.gates.map((btn, btnIndex) =>
                                                 React.cloneElement(btn, {key: `item-${index}-btn-${btnIndex}`})
                                             )}
                                         </div>
                                     )}
                                 </li>
                             ))}
-                        </ul>
+                        </ol>
                     </div>
                 </div>
 
@@ -267,7 +261,7 @@ function App() {
                         onClick={() => setActiveButton("cursor")}
                     >
                         <img
-                            src="/assets/toolBar/cursor.svg"
+                            src="../assets/toolBar/cursor.svg"
                             alt="cursor"
                             className={"toolbarButtonIcon"}
                             draggable="false"
@@ -279,7 +273,7 @@ function App() {
                         onClick={() => setActiveButton("hand")}
                     >
                         <img
-                            src="/assets/toolBar/hand.svg"
+                            src="../assets/toolBar/hand.svg"
                             alt="hand"
                             className={"toolbarButtonIcon"}
                             draggable="false"
@@ -291,7 +285,7 @@ function App() {
                         onClick={() => setActiveButton("sqwire")}
                     >
                         <img
-                            src="/assets/toolBar/line.svg"
+                            src="../assets/toolBar/line.svg"
                             alt="square wire"
                             className={"toolbarButtonIcon"}
                             draggable="false"
@@ -303,7 +297,7 @@ function App() {
                         onClick={() => setActiveButton("dwire")}
                     >
                         <img
-                            src="/assets/toolBar/line2.svg"
+                            src="../assets/toolBar/line2.svg"
                             alt="diagonal wire"
                             draggable="false"
                             className={"toolbarButtonIcon"}
@@ -315,7 +309,7 @@ function App() {
                         onClick={() => setActiveButton("eraser")}
                     >
                         <img
-                            src="/assets/toolBar/eraser.svg"
+                            src="../assets/toolBar/eraser.svg"
                             alt="eraser"
                             draggable="false"
                             className={"toolbarButtonIcon"}
@@ -327,7 +321,7 @@ function App() {
                         onClick={() => setActiveButton("text")}
                     >
                         <img
-                            src="/assets/toolBar/text.svg"
+                            src="../assets/toolBar/text.svg"
                             alt="text tool"
                             className={"toolbarButtonIcon"}
                             draggable="false"
