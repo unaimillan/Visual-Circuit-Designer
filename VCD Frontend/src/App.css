@@ -176,6 +176,12 @@
     height: 1.2rem;
 }
 
+.toolbarButton.active {
+    transition: 0.05s ease-out;
+    background-color: #dbedff;
+    box-shadow: none;
+}
+
 /*______Menu list______*/
 .header {
     display: flex;

@@ -213,7 +213,7 @@ function App() {
 
                 <div className={`backdrop ${openSettings ? 'cover' : ''}`} onClick={() => setOpenSettings(false)}></div>
                 <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
-                    <p className={'settingsMenuTitle'}>Setting</p>
+                    <p className={'settingsMenuTitle'}>Settings</p>
 
 
                 </div>
