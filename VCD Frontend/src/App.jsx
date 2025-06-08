@@ -50,7 +50,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/NOR.svg"
+                        src="../public/assets/circuitsMenu/NOR.svg"
                         alt={"nor"}
                     />
                 </button>,
@@ -58,7 +58,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/XOR.svg"
+                        src="../public/assets/circuitsMenu/XOR.svg"
                         alt={"xor"}
                     />
                 </button>
