@@ -1,3 +1,9 @@
+/*_______Canvas_______*/
+.canvasContainer {
+    height: 99vh;
+    width: 98.7vw;
+}
+
 /*_______Open Menu_______*/
 .openMenuButton{
     position: fixed;
@@ -67,11 +73,13 @@
 /*_______Panel_______*/
 .panel{
     /*width: 15.33rem;*/
+    z-index: 200;
     position: fixed;
     top: 2.5rem;
     left: -17.33rem;
     margin: 0.33rem 0 0 0.33rem;
     border-radius: 0.66rem;
+    background-color: #ffffff;
     box-shadow: #cdcdcd 1px 1px 5px;
     transition: 0.3s ease-in-out;
     user-select: none;
