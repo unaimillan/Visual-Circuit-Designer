@@ -1,10 +1,24 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
+
 import './App.css'
 
 function App() {
   const [panelState, setPanelState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor");
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && openSettings) {
+        setOpenSettings(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [openSettings]);
 
   const [openIndexes, setOpenIndexes] = useState([]);
   const menuItems = [
@@ -133,7 +147,11 @@ function App() {
       </button>
 
       <div className={`backdrop ${openSettings? 'cover' : ''}`} onClick={() => setOpenSettings(false)}></div>
-      <div className={`settingsMenu ${openSettings? 'showed' : ''}`}></div>
+      <div className={`settingsMenu ${openSettings? 'showed' : ''}`}>
+        <p className={'settingsMenuTitle'}>Setting</p>
+
+
+      </div>
 
 
       <div className={`panel ${panelState ? 'open' : ''}`}>

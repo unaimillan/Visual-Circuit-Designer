@@ -253,7 +253,7 @@
     background-color: #ffffff;
     box-shadow: #e4e4e4 1px 1px 5px;
     border-radius: 0.66rem;
-    transition: width 0s 0.15s, height 0s 0.15s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
+    transition: width 1s 0.15s, height 1s 0.15s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
 
 }
 
@@ -264,7 +264,15 @@
     height: 80%;
     top: 10%;
     left: 20%;
-    transition: width 0s, height 0s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
+    transition: width 0s, height 0s, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.settingsMenuTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0 0;
+    user-select: none;
 }
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
