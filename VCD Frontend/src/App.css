@@ -5,7 +5,7 @@
 }
 
 /*_______Open Menu_______*/
-.openMenuButton{
+.openMenuButton {
     position: fixed;
     top: 0.5rem;
     left: 0.5rem;
@@ -20,7 +20,7 @@
     user-select: none;
 }
 
-.openMenuButtonIcon{
+.openMenuButtonIcon {
     width: 1rem;
     height: 1rem;
     user-select: none;
@@ -38,7 +38,7 @@
 }
 
 /*_______Open Settings_______*/
-.openSettingsButton{
+.openSettingsButton {
     z-index: 501;
     position: fixed;
     top: 0.5rem;
@@ -65,13 +65,14 @@
     box-shadow: none;
 }
 
-.openSettingsButtonIcon{
-    width: 1rem; height: 1rem;
+.openSettingsButtonIcon {
+    width: 1rem;
+    height: 1rem;
     user-select: none;
 }
 
 /*_______Panel_______*/
-.panel{
+.panel {
     /*width: 15.33rem;*/
     z-index: 200;
     position: fixed;
@@ -85,8 +86,8 @@
     user-select: none;
 }
 
-.panel.open{
-    transition: 0.2s ease;
+.panel.open {
+    transition: 0.3s ease-out;
     position: fixed;
     left: 0;
 }
@@ -113,13 +114,13 @@
     box-shadow: none;
 }
 
-.panelTitle{
+.panelTitle {
     margin-top: 0.66rem;
     text-align: center;
     font-size: 1.32rem;
 }
 
-.buttonPicture{
+.buttonPicture {
     width: 2.66rem;
     align-items: center;
     vertical-align: middle;
@@ -170,7 +171,7 @@
     box-shadow: none;
 }
 
-.toolbarButtonIcon{
+.toolbarButtonIcon {
     width: 1.2rem;
     height: 1.2rem;
 }
@@ -226,11 +227,13 @@
 /*______Backdrop______*/
 .backdrop {
     position: fixed;
+    z-index: 2000;
     top: 0;
     left: 0;
     width: 0;
     height: 0;
     background-color: rgba(0, 0, 0, 0);
+    transition: width 0s, height 0s, background-color 0.15s ease, backdrop-filter 0.15s ease;
 }
 
 .backdrop.cover {
@@ -240,9 +243,44 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный черный */
-    /*z-index: 998; !* Ниже меню, но выше остального контента *!*/
-    backdrop-filter: blur(2px); /* Размытие фона (опционально) */
-    transition: background-color 0.15s ease-out;
+    backdrop-filter: blur(4px); /* Размытие фона (опционально) */
+    transition: width 0s, height 0s, background-color 0.15s ease, backdrop-filter 0.15s ease;
+}
+
+
+/*______Settings______*/
+.settingsMenu {
+    position: fixed;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: -100%;
+    z-index: 2001;
+    opacity: 0;
+    /*left: 20%;*/
+    background-color: #ffffff;
+    box-shadow: #e4e4e4 1px 1px 5px;
+    border-radius: 0.66rem;
+    transition: width 1s 0.15s, height 1s 0.15s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
+
+}
+
+.settingsMenu.showed {
+    position: fixed;
+    opacity: 1;
+    width: 60%;
+    height: 80%;
+    top: 10%;
+    left: 20%;
+    transition: width 0s, height 0s, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.settingsMenuTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0 0;
+    user-select: none;
 }
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/

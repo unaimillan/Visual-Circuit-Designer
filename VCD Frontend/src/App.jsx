@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import {
     ReactInfiniteCanvas,
     COMPONENT_POSITIONS,
@@ -12,6 +12,19 @@ function App() {
     const [panelState, setPanelState] = useState(false)
     const [openSettings, setOpenSettings] = useState(false)
     const [activeButton, setActiveButton] = useState("cursor");
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && openSettings) {
+                setOpenSettings(false);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [openSettings]);
 
     const [openIndexes, setOpenIndexes] = useState([]);
     const menuItems = [
@@ -195,7 +208,7 @@ function App() {
                     />
                 </button>
 
-                <button className="openSettingsButton" onClick={() => toggleSettings()}>
+                <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
                     <img
                         src="/assets/settings/gear.svg"
                         alt="open/close settings"
@@ -203,6 +216,14 @@ function App() {
                         draggable="false"
                     />
                 </button>
+
+                <div className={`backdrop ${openSettings ? 'cover' : ''}`} onClick={() => setOpenSettings(false)}></div>
+                <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
+                    <p className={'settingsMenuTitle'}>Setting</p>
+
+
+                </div>
+
 
                 <div className={`panel ${panelState ? 'open' : ''}`}>
 
@@ -223,14 +244,14 @@ function App() {
                                     <div className="question" onClick={() => toggleItem(index)}>
                                         {item.question}
                                         <span className="arrow">
-                                            ▼
-                                        </span>
+                                        ▼
+                                    </span>
                                     </div>
 
                                     {openIndexes.includes(index) && (
                                         <div className="answer-grid">
                                             {item.answer.map((btn, btnIndex) =>
-                                                React.cloneElement(btn, { key: `item-${index}-btn-${btnIndex}` })
+                                                React.cloneElement(btn, {key: `item-${index}-btn-${btnIndex}`})
                                             )}
                                         </div>
                                     )}
