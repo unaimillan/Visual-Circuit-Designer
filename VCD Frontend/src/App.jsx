@@ -4,7 +4,7 @@ import './App.css'
 function App() {
     let activeButton, isButtonActive;
     const [panelState, setPanelState] = useState(false)
-    const [isBasicVisible, setIsBasicVisible] = useState(true);
+    // const [isBasicVisible, setIsBasicVisible] = useState(true);
     isButtonActive = false;
     activeButton = "mouse";
     //Обычная мышка - mouse
@@ -17,35 +17,53 @@ function App() {
     const menuItems = [
         {
             question: "1. Basic Logic Elements",
-            answer: [<img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/AND.svg" alt={"and"}/>,
-                <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>,
-                <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>,
-                <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NAND.svg" alt={"nand"}/>]
+            answer: [
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/AND.svg" alt={"and"}/>
+                </button>,
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>
+                </button>,
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>
+                </button>,
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NAND.svg" alt={"nand"}/>
+                </button>
+            ]
         },
         {
             question: "2. Advanced Logic Elements",
-            answer: [<img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>]
+            answer: [
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/OR.svg" alt={"or"}/>
+                </button>
+            ]
         },
         {
             question: "3. Pins",
-            answer: [<img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>]
+            answer: [
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NOT.svg" alt={"not"}/>
+                </button>
+            ]
         },
         {
             question: "4. Custom Logic Elements",
-            answer: [<img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NAND.svg" alt={"nand"}/>]
+            answer: [
+                <button className={`panelInnerButton`}>
+                    <img className={'buttonPicture'} src="../public/assets/Circuits%20Menu/NAND.svg" alt={"nand"}/>
+                </button>
+            ]
         }
     ];
 
     const toggleItem = (index) => {
-        setOpenIndexes(prevIndexes => {
-            if (prevIndexes.includes(index)) {
-                // Если индекс уже есть в массиве - удаляем
-                return prevIndexes.filter(i => i !== index);
-            } else {
-                // Если нет - добавляем
-                return [...prevIndexes, index];
-            }
-        });
+        setOpenIndexes(prevIndexes =>
+            prevIndexes.includes(index)
+                ? prevIndexes.filter(i => i !== index)
+                : [...prevIndexes, index]
+        );
     };
 
     return (
@@ -69,18 +87,18 @@ function App() {
                             <li
                                 key={index}
                                 className={`menu-item ${openIndexes.includes(index) ? 'active' : ''}`}
-                                onClick={() => toggleItem(index)}
                             >
-                                <div className="question">
+                                <div className="question" onClick={() => toggleItem(index)}>
                                     {item.question}
-                                    <span className="arrow">{openIndexes.includes(index) ? '▲' : '▼'}</span>
+                                    <span className="arrow">
+                                        ▼
+                                    </span>
                                 </div>
 
                                 {openIndexes.includes(index) && (
-
-                                    <ul>
+                                    <div className="answer-grid">
                                         {item.answer}
-                                    </ul>
+                                    </div>
                                 )}
                             </li>
                         ))}
@@ -113,7 +131,6 @@ function App() {
                     <img src="/assets/toolBar/text.svg" alt="text tool" className={"toolbarButtonIcon"}/>
                 </button>
             </div>
-
 
         </div>
     )
