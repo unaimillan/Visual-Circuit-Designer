@@ -1,5 +1,5 @@
 /*_______Open Menu_______*/
-.openMenuButton{
+.openMenuButton {
     position: fixed;
     top: 0.5rem;
     left: 0.5rem;
@@ -14,7 +14,7 @@
     user-select: none;
 }
 
-.openMenuButtonIcon{
+.openMenuButtonIcon {
     width: 1rem;
     height: 1rem;
     user-select: none;
@@ -32,7 +32,7 @@
 }
 
 /*_______Open Settings_______*/
-.openSettingsButton{
+.openSettingsButton {
     z-index: 501;
     position: fixed;
     top: 0.5rem;
@@ -59,13 +59,14 @@
     box-shadow: none;
 }
 
-.openSettingsButtonIcon{
-    width: 1rem; height: 1rem;
+.openSettingsButtonIcon {
+    width: 1rem;
+    height: 1rem;
     user-select: none;
 }
 
 /*_______Panel_______*/
-.panel{
+.panel {
     /*width: 15.33rem;*/
     position: fixed;
     top: 2.5rem;
@@ -77,7 +78,7 @@
     user-select: none;
 }
 
-.panel.open{
+.panel.open {
     transition: 0.2s ease;
     position: fixed;
     left: 0;
@@ -105,13 +106,13 @@
     box-shadow: none;
 }
 
-.panelTitle{
+.panelTitle {
     margin-top: 0.66rem;
     text-align: center;
     font-size: 1.32rem;
 }
 
-.buttonPicture{
+.buttonPicture {
     width: 2.66rem;
     align-items: center;
 }
@@ -154,12 +155,12 @@
     box-shadow: none;
 }
 
-.toolbarButtonIcon{
+.toolbarButtonIcon {
     width: 1.2rem;
     height: 1.2rem;
 }
 
-.toolbarButton.active{
+.toolbarButton.active {
     transition: 0.05s ease-out;
     background-color: #dbedff;
     box-shadow: none;
@@ -268,3 +269,56 @@
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
 /*cursor: pointer;*/
+
+
+#nav-icon4 {
+    margin: 0;
+    padding: 0;
+}
+
+#nav-icon4 span:nth-child(1) {
+    top: 0px;
+    -webkit-transform-origin: left center;
+    -moz-transform-origin: left center;
+    -o-transform-origin: left center;
+    transform-origin: left center;
+}
+
+#nav-icon4 span:nth-child(2) {
+    top: 18px;
+    -webkit-transform-origin: left center;
+    -moz-transform-origin: left center;
+    -o-transform-origin: left center;
+    transform-origin: left center;
+}
+
+#nav-icon4 span:nth-child(3) {
+    top: 36px;
+    -webkit-transform-origin: left center;
+    -moz-transform-origin: left center;
+    -o-transform-origin: left center;
+    transform-origin: left center;
+}
+
+#nav-icon4.open span:nth-child(1) {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: -3px;
+    left: 8px;
+}
+
+#nav-icon4.open span:nth-child(2) {
+    width: 0%;
+    opacity: 0;
+}
+
+#nav-icon4.open span:nth-child(3) {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    top: 39px;
+    left: 8px;
+}
