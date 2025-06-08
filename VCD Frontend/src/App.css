@@ -1,11 +1,14 @@
 /*_______Open Menu_______*/
 .openMenuButton{
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
     width: 2rem;
     height: 2rem;
-    margin-left: 0.33rem;
+    z-index: 500;
     background-color: #ffffff;
     border: none;
-    box-shadow: #e4e4e4 2px 2px 10px;
+    box-shadow: #e4e4e4 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
 }
@@ -28,12 +31,16 @@
 
 /*_______Open Settings_______*/
 .openSettingsButton{
+    z-index: 501;
+    position: fixed;
+    top: 0.5rem;
+    left: 2.5rem;
     width: 2rem;
     height: 2rem;
     margin-left: 0.33rem;
     background-color: #ffffff;
     border: none;
-    box-shadow: #e4e4e4 2px 2px 10px;
+    box-shadow: #e4e4e4 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
 }
@@ -50,17 +57,18 @@
 }
 
 .openSettingsButtonIcon{
-    width: 1.15rem; height: 1.15rem;
+    width: 1rem; height: 1rem;
 }
 
 /*_______Panel_______*/
 .panel{
     width: 15.33rem;
     position: fixed;
+    top: 2.5rem;
     left: -17.33rem;
     margin: 0.33rem 0 0 0.33rem;
     border-radius: 0.66rem;
-    box-shadow: #c6c6c6 2px 2px 10px;
+    box-shadow: #cdcdcd 1px 1px 5px;
     transition: 0.3s ease-in-out;
 }
 
@@ -73,7 +81,7 @@
 .panelInnerButton {
     background-color: #ffffff;
     border: none;
-    box-shadow: #c6c6c6 2px 2px 10px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.5rem;
     width: 3.33rem;
@@ -116,7 +124,7 @@
     z-index: 1000;
     padding: 0.466rem 0;
     background: #ffffff;
-    box-shadow: #c6c6c6 2px 2px 10px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     transition: transform 0.3s;
 }
 
@@ -126,7 +134,7 @@
     margin-left: 0.66rem;
     background-color: #ffffff;
     border: none;
-    box-shadow: #c6c6c6 2px 2px 10px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
 }
@@ -195,6 +203,28 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/*______Backdrop______*/
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.backdrop.cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный черный */
+    /*z-index: 998; !* Ниже меню, но выше остального контента *!*/
+    backdrop-filter: blur(2px); /* Размытие фона (опционально) */
+    transition: background-color 0.15s ease-out;
 }
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
