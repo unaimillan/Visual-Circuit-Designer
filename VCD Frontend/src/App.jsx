@@ -18,6 +18,7 @@ function App() {
                         src="../public/assets/circuitsMenu/AND.svg"
                         alt={"and"}
                     />
+                    <span className="buttonText">AND</span>
                 </button>,
 
                 <button className={`panelInnerButton`}>
@@ -26,6 +27,7 @@ function App() {
                          src="../public/assets/circuitsMenu/OR.svg"
                          alt={"or"}
                     />
+                    <span className="buttonText">OR</span>
                 </button>,
 
                 <button className={`panelInnerButton`}>
@@ -35,6 +37,7 @@ function App() {
                         src="../public/assets/circuitsMenu/NOT.svg"
                         alt={"not"}
                     />
+                    <span className="buttonText">NOT</span>
                 </button>,
 
                 <button className={`panelInnerButton`}>
@@ -44,6 +47,7 @@ function App() {
                         src="../public/assets/circuitsMenu/NAND.svg"
                         alt={"nand"}
                     />
+                    <span className="buttonText">NAND</span>
                 </button>,
 
                 <button className={`panelInnerButton`}>
@@ -53,6 +57,7 @@ function App() {
                         src="../public/assets/circuitsMenu/NOR.svg"
                         alt={"nor"}
                     />
+                    <span className="buttonText">NOR</span>
                 </button>,
                 <button className={`panelInnerButton`}>
                     <img
@@ -61,6 +66,7 @@ function App() {
                         src="../public/assets/circuitsMenu/XOR.svg"
                         alt={"xor"}
                     />
+                    <span className="buttonText">XOR</span>
                 </button>
             ]
         },

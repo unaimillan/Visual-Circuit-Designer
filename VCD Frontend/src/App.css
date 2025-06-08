@@ -114,6 +114,14 @@
 .buttonPicture{
     width: 2.66rem;
     align-items: center;
+    vertical-align: middle;
+}
+
+.buttonText{
+    vertical-align : bottom;
+    font-size: 10px;
+    text-align: center;
+    width: 100%;
 }
 
 /*_______ToolBar_______*/
@@ -158,13 +166,6 @@
     width: 1.2rem;
     height: 1.2rem;
 }
-
-.toolbarButton.active{
-    transition: 0.05s ease-out;
-    background-color: #dbedff;
-    box-shadow: none;
-}
-
 
 /*______Menu list______*/
 .question {
