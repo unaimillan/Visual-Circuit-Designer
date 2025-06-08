@@ -117,6 +117,10 @@ function App() {
         <div>
             <div className={`backdrop ${openSettings? 'cover' : ``}`} onClick={() => setOpenSettings(false)}></div>
 
+            <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
+
+            </div>
+
             <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
                 <img
                     src="/assets/circuitsMenu/menu.svg"

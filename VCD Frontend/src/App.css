@@ -234,12 +234,36 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный черный */
-    /*z-index: 998; !* Ниже меню, но выше остального контента *!*/
     backdrop-filter: blur(4px); /* Размытие фона (опционально) */
     transition: width 0s, height 0s, background-color 0.15s ease, backdrop-filter 0.15s ease;
+}
 
 
+/*______Settings______*/
+.settingsMenu {
+    position: fixed;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: -100%;
+    z-index: 2001;
+    opacity: 0;
+    /*left: 20%;*/
+    background-color: #ffffff;
+    box-shadow: #e4e4e4 1px 1px 5px;
+    border-radius: 0.66rem;
+    transition: width 0s 0.15s, height 0s 0.15s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
 
+}
+
+.settingsMenu.showed {
+    position: fixed;
+    opacity: 1;
+    width: 60%;
+    height: 80%;
+    top: 10%;
+    left: 20%;
+    transition: width 0s, height 0s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
 }
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
