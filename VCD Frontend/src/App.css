@@ -74,12 +74,12 @@
     margin: 0.33rem 0 0 0.33rem;
     border-radius: 0.66rem;
     box-shadow: #cdcdcd 1px 1px 5px;
-    transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in;
     user-select: none;
 }
 
 .panel.open {
-    transition: 0.2s ease;
+    transition: 0.3s ease-out;
     position: fixed;
     left: 0;
 }
