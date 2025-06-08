@@ -44,7 +44,7 @@
     box-shadow: none;
 }
 .openSettingsButtonIcon{
-    width: 1.15rem; height: 1.15rem;
+    width: 1rem; height: 1rem;
 }
 
 /*_______Panel_______*/
@@ -137,3 +137,25 @@
     background-color: #dbedff;
     box-shadow: none;
 }
+
+/*______Backdrop______*/
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+.backdrop.cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный черный */
+    /*z-index: 998; !* Ниже меню, но выше остального контента *!*/
+    backdrop-filter: blur(2px); /* Размытие фона (опционально) */
+    transition: background-color 0.15s ease-out;
+}
+

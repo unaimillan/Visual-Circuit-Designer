@@ -3,24 +3,29 @@ import './App.css'
 
 function App() {
   const [panelState, setPanelState] = useState(false)
+  const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor");
 
-  const toggleSettings = () => {}
+  const toggleSettings = () => {
+    console.log(openSettings)
+  }
 
 
   return (
     <div>
+      <div className={`backdrop ${openSettings? toggleSettings() : ``}`}></div>
+
       <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
         <img className={"openMenuButtonIcon"} src="/assets/Circuits%20Menu/menu.svg" alt="open/close menu"/>
       </button>
 
-      <button className="openSettingsButton" onClick={() => toggleSettings()}>
-        <img className={"openSettingsButtonIcon"} src="/assets/Settings/gear.svg" alt="open/close menu"/>
+      <button className="openSettingsButton" onClick={() => setOpenSettings()}>
+        <img className={"openSettingsButtonIcon"} src="/assets/Settings/gear.svg" alt="open/close settings"/>
       </button>
 
       <div className={`panel ${panelState ? 'open' : ''}`}>
         <p className={"panelText"}>
-          Меню
+          Menu
         </p>
 
         <button className={`panelInnerButton`}>
