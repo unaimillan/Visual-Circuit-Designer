@@ -1,18 +1,13 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="218.000000pt" height="128.000000pt" viewBox="0 0 218.000000 128.000000"
- preserveAspectRatio="xMidYMid meet">
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
 
-<g transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M580 1085 l0 -115 -185 0 c-178 0 -185 -1 -185 -20 0 -19 7 -20 185
--20 l185 0 0 -300 0 -300 -185 0 c-158 0 -185 -2 -185 -15 0 -13 27 -15 185
--15 l184 0 3 -117 3 -118 225 1 c195 1 235 4 303 22 263 71 443 252 482 485
-l6 37 184 0 c178 0 185 1 185 20 0 19 -7 20 -185 20 l-184 0 -6 38 c-32 208
--183 379 -402 459 -116 42 -203 53 -415 53 l-198 0 0 -115z m525 51 c297 -82
-489 -328 448 -572 -27 -157 -142 -302 -303 -381 -137 -67 -177 -75 -417 -80
-l-213 -5 0 532 0 532 213 -5 c155 -3 228 -8 272 -21z" stroke="black" stroke-width="30" />
-</g>
+ <g>
+  <title>Layer 1</title>
+  <path id="svg_13" d="m-453.63411,-377.87599l18.0907,8.3969l-18.0907,-8.3969z" opacity="NaN" stroke="#000" fill="none"/>
+  <line stroke-width="20" stroke="#000" id="svg_1" y2="217.15713" x2="239.67629" y1="217.15713" x1="86.98706" fill="none"/>
+  <line stroke-width="20" stroke="#000" id="svg_3" y2="387.82108" x2="239.67629" y1="387.82108" x1="86.98706" opacity="NaN" fill="none"/>
+  <path stroke="#000" stroke-width="20" id="svg_21" d="m238.82764,128.64119l161.17237,0l0,0c89.01306,0 161.17237,76.71995 161.17237,171.3588c0,94.63887 -72.15931,171.3588 -161.17237,171.3588l-161.17237,0l0,-342.7176z" fill="none"/>
+  <line stroke-width="20" stroke="#000" id="svg_22" y2="302.48911" x2="713.01291" y1="301.99998" x1="560.32368" fill="none"/>
+  <path id="svg_33" d="m175.0254,138.81935" opacity="NaN" stroke-width="10" stroke="#000" fill="none"/>
+  <path id="svg_34" d="m168.02509,133.81913" opacity="NaN" stroke-width="10" stroke="#000" fill="none"/>
+ </g>
 </svg>
