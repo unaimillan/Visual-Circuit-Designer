@@ -96,13 +96,13 @@ function App() {
         );
     };
 
-    // const toggleSettings = () => {
-    //   console.log(openSettings)
-    // }
+    const toggleSettings = () => {
+      console.log(openSettings)
+    }
 
     return (
         <div>
-            {/*<div className={`backdrop ${openSettings? toggleSettings() : ``}`}></div>*/}
+            <div className={`backdrop ${openSettings? 'cover' : ``}`} onClick={() => setOpenSettings(false)}></div>
 
             <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
                 <img
@@ -113,10 +113,10 @@ function App() {
                 />
             </button>
 
-            <button className="openSettingsButton" onClick={() => toggleSettings()}>
+            <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
                 <img
                     src="/assets/Settings/gear.svg"
-                    alt="open/close settings"
+                    alt="open settings"
                     className={"openSettingsButtonIcon"}
                     draggable="false"
                 />

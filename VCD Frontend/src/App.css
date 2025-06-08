@@ -216,11 +216,14 @@
 /*______Backdrop______*/
 .backdrop {
     position: fixed;
+    z-index: 2000;
     top: 0;
     left: 0;
     width: 0;
     height: 0;
     background-color: rgba(0, 0, 0, 0);
+    transition: width 0s, height 0s, background-color 0.15s ease, backdrop-filter 0.15s ease;
+
 }
 
 .backdrop.cover {
@@ -231,8 +234,11 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный черный */
     /*z-index: 998; !* Ниже меню, но выше остального контента *!*/
-    backdrop-filter: blur(2px); /* Размытие фона (опционально) */
-    transition: background-color 0.15s ease-out;
+    backdrop-filter: blur(4px); /* Размытие фона (опционально) */
+    transition: width 0s, height 0s, background-color 0.15s ease, backdrop-filter 0.15s ease;
+
+
+
 }
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
