@@ -15,7 +15,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/AND.svg"
+                        src="../public/assets/circuitsMenu/AND.svg"
                         alt={"and"}
                     />
                 </button>,
@@ -23,7 +23,7 @@ function App() {
                 <button className={`panelInnerButton`}>
                     <img className={'buttonPicture'}
                          draggable="false"
-                         src="../public/assets/Circuits%20Menu/OR.svg"
+                         src="../public/assets/circuitsMenu/OR.svg"
                          alt={"or"}
                     />
                 </button>,
@@ -32,7 +32,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/NOT.svg"
+                        src="../public/assets/circuitsMenu/NOT.svg"
                         alt={"not"}
                     />
                 </button>,
@@ -41,7 +41,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/NAND.svg"
+                        src="../public/assets/circuitsMenu/NAND.svg"
                         alt={"nand"}
                     />
                 </button>,
@@ -71,7 +71,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/OR.svg"
+                        src="../public/assets/circuitsMenu/OR.svg"
                         alt={"or"}
                     />
                 </button>
@@ -84,7 +84,7 @@ function App() {
                     <img
                       className={'buttonPicture'}
                       draggable="false"
-                      src="../public/assets/Circuits%20Menu/NOT.svg"
+                      src="../public/assets/circuitsMenu/NOT.svg"
                       alt={"not"}
                     />
                 </button>
@@ -97,7 +97,7 @@ function App() {
                     <img
                         className={'buttonPicture'}
                         draggable="false"
-                        src="../public/assets/Circuits%20Menu/NAND.svg"
+                        src="../public/assets/circuitsMenu/NAND.svg"
                         alt={"nand"}
                     />
                 </button>
@@ -123,7 +123,7 @@ function App() {
 
             <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
                 <img
-                    src="/assets/Circuits%20Menu/menu.svg"
+                    src="/assets/circuitsMenu/menu.svg"
                     alt="open/close menu"
                     className={"openMenuButtonIcon"}
                     draggable="false"
@@ -132,7 +132,7 @@ function App() {
 
             <button className="openSettingsButton" onClick={() => toggleSettings()}>
                 <img
-                    src="/assets/Settings/gear.svg"
+                    src="/assets/settings/gear.svg"
                     alt="open/close settings"
                     className={"openSettingsButtonIcon"}
                     draggable="false"
