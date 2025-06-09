@@ -201,7 +201,7 @@ function App() {
 
                 <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
                     <img
-                        src="/assets/circuitsMenu/menu.svg"
+                        src="../assets/circuitsMenu/menu.svg"
                         alt="open/close menu"
                         className={"openMenuButtonIcon"}
                         draggable="false"
@@ -210,7 +210,7 @@ function App() {
 
                 <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
                     <img
-                        src="/assets/settings/gear.svg"
+                        src="../assets/settings/gear.svg"
                         alt="open/close settings"
                         className={"openSettingsButtonIcon"}
                         draggable="false"
@@ -243,9 +243,7 @@ function App() {
                                 >
                                     <div className="question" onClick={() => toggleItem(index)}>
                                         {item.question}
-                                        <span className="arrow">
-                                        ▼
-                                    </span>
+                                        <img className={'arrow'} src="../assets/circuitsMenu/hide-arrow.svg" alt="show/hide arrow"/>
                                     </div>
 
                                     {openIndexes.includes(index) && (
@@ -267,7 +265,7 @@ function App() {
                         onClick={() => setActiveButton("cursor")}
                     >
                         <img
-                            src="/assets/toolBar/cursor.svg"
+                            src="../assets/toolBar/cursor.svg"
                             alt="cursor"
                             className={"toolbarButtonIcon"}
                             draggable="false"
@@ -279,7 +277,7 @@ function App() {
                         onClick={() => setActiveButton("hand")}
                     >
                         <img
-                            src="/assets/toolBar/hand.svg"
+                            src="../assets/toolBar/hand.svg"
                             alt="hand"
                             className={"toolbarButtonIcon"}
                             draggable="false"
@@ -291,7 +289,7 @@ function App() {
                         onClick={() => setActiveButton("sqwire")}
                     >
                         <img
-                            src="/assets/toolBar/line.svg"
+                            src="../assets/toolBar/line.svg"
                             alt="square wire"
                             className={"toolbarButtonIcon"}
                             draggable="false"
@@ -303,7 +301,7 @@ function App() {
                         onClick={() => setActiveButton("dwire")}
                     >
                         <img
-                            src="/assets/toolBar/line2.svg"
+                            src="../assets/toolBar/line2.svg"
                             alt="diagonal wire"
                             draggable="false"
                             className={"toolbarButtonIcon"}
@@ -315,7 +313,7 @@ function App() {
                         onClick={() => setActiveButton("eraser")}
                     >
                         <img
-                            src="/assets/toolBar/eraser.svg"
+                            src="../assets/toolBar/eraser.svg"
                             alt="eraser"
                             draggable="false"
                             className={"toolbarButtonIcon"}
@@ -327,7 +325,7 @@ function App() {
                         onClick={() => setActiveButton("text")}
                     >
                         <img
-                            src="/assets/toolBar/text.svg"
+                            src="../assets/toolBar/text.svg"
                             alt="text tool"
                             className={"toolbarButtonIcon"}
                             draggable="false"
