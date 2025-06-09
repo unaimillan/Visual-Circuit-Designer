@@ -14,7 +14,7 @@
     z-index: 500;
     background-color: #ffffff;
     border: none;
-    box-shadow: #e4e4e4 1px 1px 5px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
     user-select: none;
@@ -28,12 +28,12 @@
 
 .openMenuButton:hover {
     transition: 0.15s ease-out;
-    background-color: #f3f3f3;
+    background-color: #dadada;
 }
 
 .openMenuButton:active {
     transition: 0.05s ease-out;
-    background-color: #e1e1e1;
+    background-color: #e3e3e3;
     box-shadow: none;
 }
 
@@ -48,7 +48,7 @@
     margin-left: 0.33rem;
     background-color: #ffffff;
     border: none;
-    box-shadow: #e4e4e4 1px 1px 5px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
     user-select: none;
@@ -56,12 +56,12 @@
 
 .openSettingsButton:hover {
     transition: 0.15s ease-out;
-    background-color: #f6f6f6;
+    background-color: #dadada;
 }
 
 .openSettingsButton:active {
     transition: 0.05s ease-out;
-    background-color: #e1e1e1;
+    background-color: #e3e3e3;
     box-shadow: none;
 }
 
@@ -81,7 +81,7 @@
     margin: 0.33rem 0 0 0.33rem;
     border-radius: 0.66rem;
     background-color: #ffffff;
-    box-shadow: #cdcdcd 1px 1px 5px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.3s ease-in-out;
     user-select: none;
 }
@@ -105,7 +105,7 @@
 
 .panelInnerButton:hover {
     transition: 0.15s ease-out;
-    background-color: #f3f3f3;
+    background-color: #dadada;
 }
 
 .panelInnerButton:active {
@@ -162,7 +162,7 @@
 
 .toolbarButton:hover {
     transition: 0.15s ease-out;
-    background-color: #f3f3f3;
+    background-color: #dadada;
 }
 
 .toolbarButton:active {
@@ -276,7 +276,7 @@
     opacity: 0;
     /*left: 20%;*/
     background-color: #ffffff;
-    box-shadow: #e4e4e4 1px 1px 5px;
+    box-shadow: #c6c6c6 1px 1px 5px;
     border-radius: 0.66rem;
     transition: width 1s 0.15s, height 1s 0.15s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
 
