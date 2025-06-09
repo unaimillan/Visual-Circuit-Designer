@@ -1,4 +1,4 @@
-name: Issue created
+name: Issue closed
 on:
   issues:
     types:
@@ -10,7 +10,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - run: gh issue edit "$ISSUE_ID" --remove_labels "$LABELS"
+      - run: gh issue edit "$ISSUE_ID" --remove-label "$LABELS"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
