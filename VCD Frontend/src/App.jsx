@@ -237,9 +237,11 @@ function App() {
                                 >
                                     <div className="header" onClick={() => toggleItem(index)}>
                                         {item.header}
-                                        <span className="arrow">
-                                        ▼
-                                    </span>
+                                        <img
+                                            className={'arrow'}
+                                            src="../assets/circuitsMenu/hide-arrow.svg"
+                                            alt="show/hide arrow"
+                                        />
                                     </div>
 
                                     {openIndexes.includes(index) && (
