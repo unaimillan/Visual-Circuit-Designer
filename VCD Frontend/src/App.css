@@ -54,9 +54,19 @@
     user-select: none;
 }
 
+.openSettingsButton > img {
+    transition: 0.15s ease-in-out;
+    transform: rotate(0deg);
+}
+
 .openSettingsButton:hover {
     transition: 0.15s ease-out;
     background-color: #dadada;
+}
+
+.openSettingsButton:hover > img {
+    transition: 0.15s ease-in-out;
+    transform: rotate(-60deg);
 }
 
 .openSettingsButton:active {
@@ -66,8 +76,8 @@
 }
 
 .openSettingsButtonIcon {
-    width: 1rem;
-    height: 1rem;
+    width: 1.3rem;
+    height: 1.3rem;
     user-select: none;
 }
 
@@ -126,7 +136,7 @@
     vertical-align: middle;
 }
 
-.buttonText{
+.buttonText {
     vertical-align : bottom;
     font-size: 10px;
     text-align: center;

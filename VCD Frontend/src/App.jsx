@@ -211,13 +211,13 @@ function App() {
                     />
                 </button>
 
-                <div className={`backdrop ${openSettings ? 'cover' : ''}`} onClick={() => setOpenSettings(false)}></div>
-                <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
-                    <p className={'settingsMenuTitle'}>Settings</p>
-
-
+                <div className={`backdrop ${openSettings ? 'cover' : ''}`}
+                     onClick={() => setOpenSettings(false)}>
                 </div>
 
+                <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
+                    <p className={'settingsMenuTitle'}>Settings</p>
+                </div>
 
                 <div className={`panel ${panelState ? 'open' : ''}`}>
 
