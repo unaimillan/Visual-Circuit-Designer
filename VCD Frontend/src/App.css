@@ -4,6 +4,10 @@
     width: 98.7vw;
 }
 
+.react-flow__attribution {
+    display: none !important;
+}
+
 /*_______Open Menu_______*/
 .openMenuButton {
     position: fixed;

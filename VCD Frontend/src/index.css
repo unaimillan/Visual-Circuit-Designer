@@ -3,3 +3,8 @@ body {
     font-size: 13px;
     font-weight: 600;
 }
+
+#app {
+  width: 99vw;
+  height: 99vh;
+}

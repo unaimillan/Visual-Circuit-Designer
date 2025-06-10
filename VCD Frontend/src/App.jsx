@@ -1,17 +1,35 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useCallback } from 'react'
 import {
-    ReactInfiniteCanvas,
-    COMPONENT_POSITIONS,
-} from 'react-infinite-canvas';
-import {Controls} from './components/controls/index.tsx';
+    ReactFlow,
+    Controls,
+    Background,
+    addEdge,
+    SelectionMode,
+    useNodesState,
+    useEdgesState,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+
+import {initialNodes} from './components/nodes';
+import {initialEdges} from './components/edges';
+
+const panOnDrag = [1, 2];
 
 import './App.css'
 
 function App() {
-    const canvasRef = useRef(null);
     const [panelState, setPanelState] = useState(false)
     const [openSettings, setOpenSettings] = useState(false)
     const [activeButton, setActiveButton] = useState("cursor");
+
+    /* React Flow */
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    const onConnect = useCallback(
+        (connection) => setEdges((eds) => addEdge(connection, eds)),
+        [setEdges],
+    );
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -171,27 +189,21 @@ function App() {
     };
 
     return (
-        <div className="canvasContainer">
-            <ReactInfiniteCanvas
-                ref={canvasRef}
-                onCanvasMount={(canvasFunc) => {
-                    canvasFunc.fitContentToView({scale: 0.5});
-                }}
-                customComponents={[
-                    {
-                        component: (
-                            <Controls
-                                getCanvasState={() => {
-                                    return canvasRef.current?.getCanvasState();
-                                }}
-                            />
-                        ),
-                        position: COMPONENT_POSITIONS.BOTTOM_LEFT,
-                        offset: {x: 20, y: 20},
-                    },
-                ]}
+        <div style={{height: '100%'}}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                panOnScroll
+                selectionOnDrag
+                panOnDrag={panOnDrag}
+                selectionMode={SelectionMode.Partial}
             >
-            </ReactInfiniteCanvas>
+                <Background/>
+                <Controls/>
+            </ReactFlow>
             <div>
                 <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
                     <img
