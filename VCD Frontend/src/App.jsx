@@ -7,6 +7,7 @@ import {
     SelectionMode,
     useNodesState,
     useEdgesState,
+    MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -15,16 +16,18 @@ import {initialEdges} from './components/edges';
 
 import './App.css'
 
+const GAP_SIZE = 10;
+
 function App() {
     const [panelState, setPanelState] = useState(false)
     const [openSettings, setOpenSettings] = useState(false)
     const [activeButton, setActiveButton] = useState("cursor");
 
     /* React Flow */
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, , onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-    const [panOnDrag, setPanOnDrag] = useState(false);
+    const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
     const onConnect = useCallback(
         (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -200,9 +203,21 @@ function App() {
                 selectionOnDrag
                 panOnDrag={panOnDrag}
                 selectionMode={SelectionMode.Partial}
+                snapToGrid={true}
+                snapGrid={[GAP_SIZE, GAP_SIZE]}
+                minZoom={0.2}
+                maxZoom={10}
+                fitView fitViewOptions={{ padding: 0.2 }}
             >
-                <Background/>
+                <Background
+                    gap={GAP_SIZE}
+                    size={0.8}
+                />
                 <Controls/>
+                <MiniMap
+                    position="top-right"
+                    style={{ margin: 15 }}
+                />
             </ReactFlow>
             <div>
                 <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
@@ -274,7 +289,7 @@ function App() {
                         className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
                         onClick={() => {
                             setActiveButton("cursor")
-                            setPanOnDrag(false)
+                            setPanOnDrag([1, 2])
                         }
                         }
                     >
