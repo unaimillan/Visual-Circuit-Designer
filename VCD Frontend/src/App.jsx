@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback } from 'react'
+import React, {useEffect, useState, useCallback} from 'react';
 import {
     ReactFlow,
     Controls,
@@ -13,8 +13,6 @@ import '@xyflow/react/dist/style.css';
 import {initialNodes} from './components/nodes';
 import {initialEdges} from './components/edges';
 
-const panOnDrag = [1, 2];
-
 import './App.css'
 
 function App() {
@@ -25,6 +23,8 @@ function App() {
     /* React Flow */
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    const [panOnDrag, setPanOnDrag] = useState(false);
 
     const onConnect = useCallback(
         (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -272,7 +272,11 @@ function App() {
                 <div className={"toolbar"}>
                     <button
                         className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("cursor")}
+                        onClick={() => {
+                            setActiveButton("cursor")
+                            setPanOnDrag(false)
+                        }
+                        }
                     >
                         <img
                             src="../assets/toolBar/cursor.svg"
@@ -284,7 +288,11 @@ function App() {
 
                     <button
                         className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("hand")}
+                        onClick={() => {
+                            setActiveButton("hand")
+                            setPanOnDrag(true)
+                        }
+                        }
                     >
                         <img
                             src="../assets/toolBar/hand.svg"
