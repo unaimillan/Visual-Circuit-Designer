@@ -20,7 +20,7 @@ import './App.css'
 function App() {
     const [panelState, setPanelState] = useState(false)
     const [openSettings, setOpenSettings] = useState(false)
-    const [activeButton, setActiveButton] = useState("cursor");
+    const [activeButton, setActiveButton] = useState("cursor")
 
     /* React Flow */
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -52,7 +52,7 @@ function App() {
                 <button className={`panelInnerButton`}>
                     <img
                         className={'buttonPicture'}
-                        draggable="false"
+                        draggable="true"
                         src="../assets/circuitsMenu/AND.svg"
                         alt={"and"}
                     />

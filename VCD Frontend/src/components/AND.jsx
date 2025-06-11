@@ -17,7 +17,7 @@ function AndNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={AndGate} alt="AND Gate" width={100} height={100} />
+      <img src={AndGate} alt="AND Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <Handle
