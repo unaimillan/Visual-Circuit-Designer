@@ -1,10 +1,10 @@
-import { Handle, Position } from '@xyflow/react';
+import {Handle, Position} from '@xyflow/react';
 import OrGate from '../../assets/circuitsMenu/OR.svg';
 
 function OrNode({ isConnectable }) {
   return (
     <div
-        style={{
+      style={{
         width: 80,
         height: 70,
         position: 'relative',
@@ -17,7 +17,7 @@ function OrNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={OrGate} alt="OR Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }} />
+      <img src={OrGate} alt="OR Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <Handle
@@ -25,14 +25,16 @@ function OrNode({ isConnectable }) {
         position={Position.Left}
         id="input-1"
         style={{ top: 24, left: -1 }}
-        isConnectable={isConnectable}
+        // isConnectable={isConnectable}
+        connectionLimit={1}
       />
       <Handle
         type="target"
         position={Position.Left}
         id="input-2"
         style={{ top: 44, left: -1 }}
-        isConnectable={isConnectable}
+        // isConnectable={isConnectable}
+        connectionLimit={1}
       />
       <Handle
         type="source"

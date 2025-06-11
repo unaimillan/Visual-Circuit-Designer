@@ -1,10 +1,10 @@
-import { Handle, Position } from '@xyflow/react';
+import {Handle, Position} from '@xyflow/react';
 import AndGate from '../../assets/circuitsMenu/AND.svg';
 
 function AndNode({ isConnectable }) {
   return (
     <div
-        style={{
+      style={{
         width: 80,
         height: 70,
         position: 'relative',
@@ -25,7 +25,8 @@ function AndNode({ isConnectable }) {
         position={Position.Left}
         id="input-1"
         style={{ top: 24, left: -1 }}
-        isConnectable={isConnectable}
+        // isConnectable={isConnectable}
+        connectionLimit={1}
       />
       <Handle
         type="target"
@@ -33,6 +34,7 @@ function AndNode({ isConnectable }) {
         id="input-2"
         style={{ top: 44, left: -1 }}
         isConnectable={isConnectable}
+        connectionLimit={1}
       />
       <Handle
         type="source"

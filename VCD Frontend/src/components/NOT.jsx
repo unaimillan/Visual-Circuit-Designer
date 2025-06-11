@@ -1,10 +1,10 @@
-import { Handle, Position } from '@xyflow/react';
+import {Handle, Position} from '@xyflow/react';
 import NotGate from '../../assets/circuitsMenu/NOT.svg';
 
 function NotNode({ isConnectable }) {
   return (
     <div
-        style={{
+      style={{
         width: 80,
         height: 70,
         position: 'relative',
@@ -17,7 +17,7 @@ function NotNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }} />
+      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <Handle
@@ -25,7 +25,8 @@ function NotNode({ isConnectable }) {
         position={Position.Left}
         id="input-1"
         style={{ top: 34, left: -1 }}
-        isConnectable={isConnectable}
+        // isConnectable={isConnectable}
+        connectionLimit={1}
       />
       <Handle
         type="source"
