@@ -59,7 +59,9 @@ function App() {
             id: `${type}-${Date.now()}`,
             type, // Your custom node type
             position,
-            data: {}
+            data: {
+                customId: `${type}-${Date.now()}`,
+            }
         };
 
         setNodes((nds) => nds.concat(newNode));
@@ -69,6 +71,54 @@ function App() {
         (connection) => setEdges((eds) => addEdge(connection, eds)),
         [setEdges],
     );
+
+    const saveCircuit = () => {
+        const flowData = {
+            nodes: nodes.map(node => ({
+                id: node.id,
+                type: node.type,
+                position: node.position,
+                data: node.data,
+                // Include any other necessary node properties
+            })),
+            edges: edges.map(edge => ({
+                id: edge.id,
+                source: edge.source,
+                target: edge.target,
+                sourceHandle: edge.sourceHandle,
+                targetHandle: edge.targetHandle,
+                // Include any other necessary edge properties
+            }))
+        };
+
+        // Create downloadable JSON file
+        const dataStr = "data:text/json;charset=utf-8," +
+            encodeURIComponent(JSON.stringify(flowData, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "circuit.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    };
+
+    const loadCircuit = (event) => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(event.target.files[0]);
+        fileReader.onload = (e) => {
+            const circuitData = JSON.parse(e.target.result);
+
+            // Reset existing flow
+            setNodes([]);
+            setEdges([]);
+
+            // Add timeout to ensure reset completes
+            setTimeout(() => {
+                setNodes(circuitData.nodes || []);
+                setEdges(circuitData.edges || []);
+            }, 100);
+        };
+    };
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -176,6 +226,28 @@ function App() {
                         draggable="false"
                     />
                 </button>
+                <button onClick={saveCircuit}>Save Circuit</button>
+                <input
+                    type="file"
+                    accept=".json"
+                    onChange={loadCircuit}
+                    style={{ marginTop: '10px' }}
+                />
+
+                {/*<button*/}
+                {/*    onClick={saveCircuit}*/}
+                {/*    style={{*/}
+                {/*        marginTop: '20px',*/}
+                {/*        padding: '10px',*/}
+                {/*        background: '#4CAF50',*/}
+                {/*        color: 'white',*/}
+                {/*        border: 'none',*/}
+                {/*        borderRadius: '4px',*/}
+                {/*        cursor: 'pointer'*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    Save Circuit*/}
+                {/*</button>*/}
 
                 <div className={`backdrop ${openSettings ? 'cover' : ''}`}
                      onClick={() => setOpenSettings(false)}>
