@@ -1,17 +1,33 @@
+import AndNode from './AND.jsx';
+import NotNode from './NOT.jsx';
+import OrNode from "./OR.jsx";
+
+export const nodeTypes = {
+  andNode: AndNode,
+  orNode: OrNode,
+  notNode: NotNode,
+};
+
 export const initialNodes = [
   {
-    id: '1',
-    data: { label: 'Node 1' },
-    position: { x: 150, y: 0 },
-  },
-  {
-    id: '2',
-    data: { label: 'Node 2' },
-    position: { x: 0, y: 150 },
+    id: '0',
+    type: 'andNode',
+    position: { x: 400, y: 300 },
   },
   {
     id: '3',
-    data: { label: 'Node 3' },
-    position: { x: 300, y: 150 },
+    type: 'andNode',
+    position: { x: 400, y: 400 },
+  },
+  {
+    id: '1',
+    type: 'orNode',
+    data: { label: 'bruh' },
+    position: { x: 600, y: 350 },
+  },
+  {
+    id: '2',
+    type: 'notNode',
+    position: { x: 800, y: 350 },
   },
 ];

@@ -10,8 +10,8 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-import {initialNodes} from './components/nodes';
-import {initialEdges} from './components/edges';
+import { initialNodes, nodeTypes } from './components/nodes';
+import { initialEdges } from './components/edges';
 
 const panOnDrag = [1, 2];
 
@@ -199,9 +199,17 @@ function App() {
                 panOnScroll
                 selectionOnDrag
                 panOnDrag={panOnDrag}
+                nodeTypes={nodeTypes}
+                snapToGrid={true}
+                snapGrid={[10, 10]}
                 selectionMode={SelectionMode.Partial}
+                maxZoom={10}
+                minZoom={0.1}
             >
-                <Background/>
+                <Background
+                    gap={10}
+                    size={0.9}
+                />
                 <Controls/>
             </ReactFlow>
             <div>
