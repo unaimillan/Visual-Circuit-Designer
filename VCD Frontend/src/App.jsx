@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback } from 'react'
+import React, {useEffect, useState, useCallback} from 'react';
 import {
     ReactFlow,
     Controls,
@@ -7,15 +7,16 @@ import {
     SelectionMode,
     useNodesState,
     useEdgesState,
+    MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { initialNodes, nodeTypes } from './components/nodes';
 import { initialEdges } from './components/edges';
 
-const panOnDrag = [1, 2];
-
 import './App.css'
+
+const GAP_SIZE = 10;
 
 function App() {
     const [panelState, setPanelState] = useState(false)
@@ -25,6 +26,8 @@ function App() {
     /* React Flow */
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
     const onConnect = useCallback(
         (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -200,17 +203,21 @@ function App() {
                 selectionOnDrag
                 panOnDrag={panOnDrag}
                 nodeTypes={nodeTypes}
-                snapToGrid={true}
-                snapGrid={[10, 10]}
                 selectionMode={SelectionMode.Partial}
-                maxZoom={10}
+                snapToGrid={true}
+                snapGrid={[GAP_SIZE, GAP_SIZE]}
                 minZoom={0.1}
+                maxZoom={10}
+                fitView fitViewOptions={{ padding: 0.2 }}
             >
                 <Background
-                    gap={10}
-                    size={0.9}
+                    gap={GAP_SIZE}
+                    size={0.8}
                 />
                 <Controls/>
+                <MiniMap
+                    position="top-right"
+                />
             </ReactFlow>
             <div>
                 <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
@@ -280,7 +287,11 @@ function App() {
                 <div className={"toolbar"}>
                     <button
                         className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("cursor")}
+                        onClick={() => {
+                            setActiveButton("cursor")
+                            setPanOnDrag([1, 2])
+                        }
+                        }
                     >
                         <img
                             src="../assets/toolBar/cursor.svg"
@@ -292,7 +303,11 @@ function App() {
 
                     <button
                         className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("hand")}
+                        onClick={() => {
+                            setActiveButton("hand")
+                            setPanOnDrag(true)
+                        }
+                        }
                     >
                         <img
                             src="../assets/toolBar/hand.svg"
