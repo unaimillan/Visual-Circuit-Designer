@@ -17,7 +17,7 @@ function NotNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={NotGate} alt="AND Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }} />
+      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }} />
 
       {/* Handles */}
       <Handle

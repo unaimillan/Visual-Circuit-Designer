@@ -11,6 +11,10 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
+import AndGate from '../assets/circuitsMenu/AND.svg';
+import OrGate from '../assets/circuitsMenu/OR.svg';
+import NotGate from '../assets/circuitsMenu/NOT.svg';
+
 import { initialNodes, nodeTypes } from './components/nodes';
 import { initialEdges } from './components/edges';
 
@@ -24,10 +28,39 @@ function App() {
     const [activeButton, setActiveButton] = useState("cursor")
 
     /* React Flow */
+    const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
     const [panOnDrag, setPanOnDrag] = useState([1, 2]);
+
+    const onDragStart = (event, nodeType) => {
+        event.dataTransfer.setData('application/reactflow', nodeType);
+        event.dataTransfer.effectAllowed = 'move';
+    };
+
+    const onDrop = (event) => {
+        event.preventDefault();
+
+        const type = event.dataTransfer.getData('application/reactflow');
+        if (!type || !reactFlowInstance) return;
+
+        // Get drop position relative to canvas
+        const position = reactFlowInstance.screenToFlowPosition({
+            x: event.clientX,
+            y: event.clientY,
+        });
+
+        // Create new node
+        const newNode = {
+            id: `${type}-${Date.now()}`,
+            type, // Your custom node type
+            position,
+            data: {}
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+    };
 
     const onConnect = useCallback(
         (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -52,133 +85,29 @@ function App() {
         {
             header: "Basic Logic Elements",
             gates: [
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="true"
-                        src="../assets/circuitsMenu/AND.svg"
-                        alt={"and"}
-                    />
-                    <span className="buttonText">AND</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'}
-                         draggable="false"
-                         src="../assets/circuitsMenu/OR.svg"
-                         alt={"or"}
-                    />
-                    <span className="buttonText">OR</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/NOT.svg"
-                        alt={"not"}
-                    />
-                    <span className="buttonText">NOT</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/NAND.svg"
-                        alt={"nand"}
-                    />
-                    <span className="buttonText">NAND</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/NOR.svg"
-                        alt={"nor"}
-                    />
-                    <span className="buttonText">NOR</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/XOR.svg"
-                        alt={"xor"}
-                    />
-                    <span className="buttonText">XOR</span>
-                </button>
+                { id: 'andNode', label: 'AND', icon: AndGate },
+                { id: 'orNode', label: 'OR', icon: OrGate },
+                { id: 'notNode', label: 'NOT', icon: NotGate },
             ]
         },
         {
             header: "Advanced Logic Elements",
             gates: [
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/AND.svg"
-                        alt={"and"}
-                    />
-                    <span className="buttonText">AND</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'}
-                         draggable="false"
-                         src="../assets/circuitsMenu/OR.svg"
-                         alt={"or"}
-                    />
-                    <span className="buttonText">OR</span>
-                </button>,
+                { id: 'andNode', label: 'AND', icon: AndGate },
+                { id: 'orNode', label: 'OR', icon: OrGate },
             ]
         },
         {
             header: "Pins",
             gates: [
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/AND.svg"
-                        alt={"and"}
-                    />
-                    <span className="buttonText">AND</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'}
-                         draggable="false"
-                         src="../assets/circuitsMenu/OR.svg"
-                         alt={"or"}
-                    />
-                    <span className="buttonText">OR</span>
-                </button>,
+                { id: 'andNode', label: 'AND', icon: AndGate },
+                { id: 'notNode', label: 'NOT', icon: NotGate },
             ]
         },
         {
             header: "Custom Logic Elements",
             gates: [
-                <button className={`panelInnerButton`}>
-                    <img
-                        className={'buttonPicture'}
-                        draggable="false"
-                        src="../assets/circuitsMenu/AND.svg"
-                        alt={"and"}
-                    />
-                    <span className="buttonText">AND</span>
-                </button>,
-
-                <button className={`panelInnerButton`}>
-                    <img className={'buttonPicture'}
-                         draggable="false"
-                         src="../assets/circuitsMenu/OR.svg"
-                         alt={"or"}
-                    />
-                    <span className="buttonText">OR</span>
-                </button>,
+                { id: 'notNode', label: 'NOT', icon: NotGate },
             ]
         }
     ];
@@ -199,6 +128,9 @@ function App() {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onInit={setReactFlowInstance}
+                onDrop={onDrop}
+                onDragOver={(e) => e.preventDefault()}
                 panOnScroll
                 selectionOnDrag
                 panOnDrag={panOnDrag}
@@ -273,9 +205,21 @@ function App() {
 
                                     {openIndexes.includes(index) && (
                                         <div className="gates-grid">
-                                            {item.gates.map((btn, btnIndex) =>
-                                                React.cloneElement(btn, {key: `item-${index}-btn-${btnIndex}`})
-                                            )}
+                                            {item.gates.map((node) => (
+                                                <div
+                                                    key={node.id}
+                                                    className="dndnode"
+                                                    draggable
+                                                    onDragStart={(e) => onDragStart(e, node.id)}
+                                                >
+                                                    <img
+                                                        src={node.icon}
+                                                        alt={node.label}
+                                                        style={{ width: '50px', height: 'auto' }}
+                                                    />
+                                                    <span>{node.label}</span>
+                                                </div>
+                                            ))}
                                         </div>
                                     )}
                                 </li>

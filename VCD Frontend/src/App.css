@@ -282,7 +282,6 @@
     transition: width 0s, height 0s, background-color 0.15s ease, backdrop-filter 0.15s ease;
 }
 
-
 /*______Settings______*/
 .settingsMenu {
     position: fixed;
@@ -316,6 +315,28 @@
     font-size: 1.5rem;
     margin: 1.5rem 0 0 0;
     user-select: none;
+}
+
+/*______DragAndDrop______*/
+.dndnode {
+    padding: 8px;
+    border: 1px solid #1a192b;
+    border-radius: 4px;
+    cursor: move;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.dndnode img {
+    width: 50px;
+    height: auto;
+}
+
+/* Ensure handles are visible over images */
+.react-flow__handle {
+    z-index: 10;
 }
 
 /*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
