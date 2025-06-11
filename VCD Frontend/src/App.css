@@ -89,6 +89,7 @@
 /*_______Panel_______*/
 .panel {
     /*width: 15.33rem;*/
+    max-height: 70vh;
     z-index: 200;
     position: fixed;
     top: 2.5rem;

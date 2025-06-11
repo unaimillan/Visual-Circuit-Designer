@@ -14,11 +14,14 @@ import '@xyflow/react/dist/style.css';
 import AndGate from '../assets/circuitsMenu/AND.svg';
 import OrGate from '../assets/circuitsMenu/OR.svg';
 import NotGate from '../assets/circuitsMenu/NOT.svg';
+import NandGate from '../assets/circuitsMenu/NAND.svg';
+import NorGate from '../assets/circuitsMenu/NOR.svg';
+import XorGate from '../assets/circuitsMenu/XOR.svg';
 
 import { initialNodes, nodeTypes } from './components/nodes';
 import { initialEdges } from './components/edges';
 
-import './App.css'
+import './App.css';
 
 const GAP_SIZE = 10;
 
@@ -88,6 +91,9 @@ function App() {
                 { id: 'andNode', label: 'AND', icon: AndGate },
                 { id: 'orNode', label: 'OR', icon: OrGate },
                 { id: 'notNode', label: 'NOT', icon: NotGate },
+                { id: 'nandNode', label: 'NAND', icon: NandGate },
+                { id: 'norNode', label: 'NOR', icon: NorGate },
+                { id: 'xorNode', label: 'XOR', icon: XorGate },
             ]
         },
         {
@@ -143,6 +149,7 @@ function App() {
                 fitView fitViewOptions={{ padding: 0.2 }}
             >
                 <Background
+                    offset={[10.5, 5.5]}
                     gap={GAP_SIZE}
                     size={0.8}
                 />
