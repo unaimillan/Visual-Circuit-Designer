@@ -17,6 +17,8 @@ import NotGate from '../assets/circuitsMenu/NOT.svg';
 import NandGate from '../assets/circuitsMenu/NAND.svg';
 import NorGate from '../assets/circuitsMenu/NOR.svg';
 import XorGate from '../assets/circuitsMenu/XOR.svg';
+import InputGate from '../assets/circuitsMenu/input.svg';
+import OutputGate from '../assets/circuitsMenu/output.svg';
 
 import {initialNodes, nodeTypes} from './components/nodes';
 import {initialEdges} from './components/edges';
@@ -156,8 +158,8 @@ function App() {
     {
       header: "Pins",
       gates: [
-        { id: 'andNode', label: 'AND', icon: AndGate },
-        { id: 'notNode', label: 'NOT', icon: NotGate },
+        { id: 'inputNode', label: 'input', icon: InputGate },
+        { id: 'outputGate', label: 'output', icon: OutputGate },
       ]
     },
     {
