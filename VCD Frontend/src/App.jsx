@@ -8,6 +8,7 @@ import {
   useNodesState,
   useEdgesState,
   MiniMap,
+  // isValidConnection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -36,6 +37,10 @@ function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
+
+  const validateConnection = (connection) => {
+    return connection.source !== connection.target;
+  };
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -184,6 +189,7 @@ function App() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        isValidConnection={validateConnection}
         onInit={setReactFlowInstance}
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
