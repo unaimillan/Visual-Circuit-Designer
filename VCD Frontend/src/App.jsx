@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -12,6 +12,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import ContextMenu from './components/ContextMenu.jsx';
 
 import AndGate from '../assets/circuitsMenu/AND.svg';
 import OrGate from '../assets/circuitsMenu/OR.svg';
@@ -37,9 +38,11 @@ function App() {
 
   /* React Flow */
   const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
-  const store = useStoreApi();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [menu, setMenu] = useState(null);
+  const ref = useRef(null);
+  const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
@@ -80,6 +83,30 @@ function App() {
     (connection) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges],
   );
+
+  const onNodeContextMenu = useCallback(
+    (event, node) => {
+      // Prevent native context menu from showing
+      event.preventDefault();
+
+      // Calculate position of the context menu. We want to make sure it
+      // doesn't get positioned off-screen.
+      const pane = ref.current.getBoundingClientRect();
+      setMenu({
+        id: node.id,
+        name: node.type,
+        top: event.clientY < pane.height - 200 && event.clientY,
+        left: event.clientX < pane.width - 200 && event.clientX,
+        right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+        bottom:
+          event.clientY >= pane.height - 200 && pane.height - event.clientY,
+      });
+    },
+    [setMenu],
+  );
+
+  // Close the context menu if it's open whenever the window is clicked.
+  const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
   const getClosestEdge = useCallback((node) => {
     const { nodeLookup } = store.getState();
@@ -281,6 +308,7 @@ function App() {
   return (
     <div style={{ height: '100%' }}>
       <ReactFlow
+        ref={ref}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -288,6 +316,8 @@ function App() {
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
         onConnect={onConnect}
+        onPaneClick={onPaneClick}
+        onNodeContextMenu={onNodeContextMenu}
         isValidConnection={validateConnection}
         onInit={setReactFlowInstance}
         onDrop={onDrop}
@@ -301,7 +331,6 @@ function App() {
         snapGrid={[GAP_SIZE, GAP_SIZE]}
         minZoom={0.1}
         maxZoom={10}
-        fitView fitViewOptions={{ padding: 6 }}
       >
         <Background
           offset={[10.5, 5.5]}
@@ -312,6 +341,7 @@ function App() {
         <MiniMap
           position="top-right"
         />
+        {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
       <div>
         <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
