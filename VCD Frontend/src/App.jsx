@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -21,8 +21,8 @@ import XorGate from '../assets/circuitsMenu/XOR.svg';
 import InputGate from '../assets/circuitsMenu/input.svg';
 import OutputGate from '../assets/circuitsMenu/output.svg';
 
-import {initialNodes, nodeTypes} from './components/nodes';
-import {initialEdges} from './components/edges';
+import { initialNodes, nodeTypes } from './components/nodes';
+import { initialEdges } from './components/edges';
 
 import './App.css';
 
@@ -156,15 +156,15 @@ function App() {
     {
       header: "Advanced Logic Elements",
       gates: [
-        { id: 'andNode', label: 'AND', icon: AndGate },
-        { id: 'orNode', label: 'OR', icon: OrGate },
+        { id: 'inputNode', label: 'input', icon: InputGate },
+        { id: 'outputNode', label: 'output', icon: OutputGate },
       ]
     },
     {
       header: "Pins",
       gates: [
         { id: 'inputNode', label: 'input', icon: InputGate },
-        { id: 'outputGate', label: 'output', icon: OutputGate },
+        { id: 'outputNode', label: 'output', icon: OutputGate },
       ]
     },
     {
@@ -204,7 +204,7 @@ function App() {
         snapGrid={[GAP_SIZE, GAP_SIZE]}
         minZoom={0.1}
         maxZoom={10}
-        fitView fitViewOptions={{ padding: 0.2 }}
+        fitView fitViewOptions={{ padding: 6 }}
       >
         <Background
           offset={[10.5, 5.5]}
