@@ -8,7 +8,8 @@ import {
   useNodesState,
   useEdgesState,
   MiniMap,
-  // isValidConnection,
+  useStoreApi,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -27,6 +28,7 @@ import { initialEdges } from './components/edges';
 import './App.css';
 
 const GAP_SIZE = 10;
+const MIN_DISTANCE = 50;
 
 function App() {
   const [panelState, setPanelState] = useState(false)
@@ -35,8 +37,10 @@ function App() {
 
   /* React Flow */
   const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
+  const store = useStoreApi();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { getInternalNode } = useReactFlow();
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
@@ -55,16 +59,14 @@ function App() {
     const type = event.dataTransfer.getData('application/reactflow');
     if (!type || !reactFlowInstance) return;
 
-    // Get drop position relative to canvas
     const position = reactFlowInstance.screenToFlowPosition({
       x: event.clientX,
       y: event.clientY,
     });
 
-    // Create new node
     const newNode = {
       id: `${type}-${Date.now()}`,
-      type, // Your custom node type
+      type,
       position,
       data: {
         customId: `${type}-${Date.now()}`,
@@ -77,6 +79,99 @@ function App() {
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges],
+  );
+
+  const getClosestEdge = useCallback((node) => {
+    const { nodeLookup } = store.getState();
+    const internalNode = getInternalNode(node.id);
+
+    const closestNode = Array.from(nodeLookup.values()).reduce(
+      (res, n) => {
+        if (n.id !== internalNode.id) {
+          const dx =
+            n.internals.positionAbsolute.x -
+            internalNode.internals.positionAbsolute.x;
+          const dy =
+            n.internals.positionAbsolute.y -
+            internalNode.internals.positionAbsolute.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+
+          if (d < res.distance && d < MIN_DISTANCE) {
+            res.distance = d;
+            res.node = n;
+          }
+        }
+
+        return res;
+      },
+      {
+        distance: Number.MAX_VALUE,
+        node: null,
+      },
+    );
+
+    if (!closestNode.node) {
+      return null;
+    }
+
+    const closeNodeIsSource =
+      closestNode.node.internals.positionAbsolute.x <
+      internalNode.internals.positionAbsolute.x;
+
+    return {
+      id: closeNodeIsSource
+        ? `${closestNode.node.id}-${node.id}`
+        : `${node.id}-${closestNode.node.id}`,
+      source: closeNodeIsSource ? closestNode.node.id : node.id,
+      target: closeNodeIsSource ? node.id : closestNode.node.id,
+    };
+  }, [getInternalNode, store]);
+
+  const onNodeDrag = useCallback(
+    (_, node) => {
+      const closeEdge = getClosestEdge(node);
+
+      setEdges((es) => {
+        const nextEdges = es.filter((e) => e.className !== 'temp');
+
+        if (
+          closeEdge &&
+          !nextEdges.find(
+            (ne) =>
+              ne.source === closeEdge.source && ne.target === closeEdge.target,
+          )
+        ) {
+          closeEdge.className = 'temp';
+          nextEdges.push(closeEdge);
+        }
+
+        return nextEdges;
+      });
+    },
+    [getClosestEdge, setEdges],
+  );
+
+  const onNodeDragStop = useCallback(
+    (_, node) => {
+      const closeEdge = getClosestEdge(node);
+
+      setEdges((es) => {
+        const nextEdges = es.filter((e) => e.className !== 'temp');
+
+        if (
+          closeEdge &&
+          !nextEdges.find(
+            (ne) =>
+              ne.source === closeEdge.source && ne.target === closeEdge.target,
+          )
+        ) {
+          nextEdges.push(closeEdge);
+        }
+
+        return nextEdges;
+      });
+    },
+    [getClosestEdge, setEdges],
   );
 
   const saveCircuit = () => {
@@ -190,6 +285,8 @@ function App() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
         onConnect={onConnect}
         isValidConnection={validateConnection}
         onInit={setReactFlowInstance}
