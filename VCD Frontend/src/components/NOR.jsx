@@ -1,6 +1,8 @@
 import {Handle, Position} from '@xyflow/react';
 import NorGate from '../../assets/circuitsMenu/NOR.svg';
 
+import CustomHandle from './CustomHandle';
+
 function NorNode({ isConnectable }) {
   return (
     <div
@@ -20,21 +22,21 @@ function NorNode({ isConnectable }) {
       <img src={NorGate} alt="NOR Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
-      <Handle
+      <CustomHandle
         type="target"
         position={Position.Left}
         id="input-1"
         style={{ top: 24, left: -1 }}
-        // isConnectable={isConnectable}
-        connectionLimit={1}
+        isConnectable={isConnectable}
+        maxConnections={1}
       />
-      <Handle
+      <CustomHandle
         type="target"
         position={Position.Left}
         id="input-2"
         style={{ top: 44, left: -1 }}
-        // isConnectable={isConnectable}
-        connectionLimit={1}
+        isConnectable={isConnectable}
+        maxConnections={1}
       />
       <Handle
         type="source"
