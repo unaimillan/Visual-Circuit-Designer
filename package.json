@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@radix-ui/react-switch": "^1.2.5",
     "@xyflow/react": "^12.7.0",
     "reactflow": "^11.11.4"
   }

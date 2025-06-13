@@ -26,6 +26,7 @@ import OutputGate from '../assets/circuitsMenu/output.svg';
 import { initialNodes, nodeTypes } from './components/nodes';
 import { initialEdges } from './components/edges';
 
+
 import './CSS/App.css';
 import './CSS/settings.css';
 import './CSS/toolbar.css';
@@ -33,6 +34,24 @@ import './CSS/dnd.css';
 import './CSS/backdrop.css';
 import './CSS/menu.css';
 import './CSS/contextMenu.css';
+import './switch.jsx';
+import * as Switch from "@radix-ui/react-switch";
+
+// import { Switch } from "radix-ui";
+
+export function MySwitch() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <label htmlFor="my-switch">Toggle me</label>
+      <Switch.Root className="SwitchRoot" id="my-switch">
+        <Switch.Thumb className="SwitchThumb" />
+      </Switch.Root>
+    </div>
+  );
+}
+
+
+
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 50;
@@ -397,6 +416,14 @@ function App() {
 
         <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
           <p className={'settingsMenuTitle'}>Settings</p>
+
+          <div className="minimapSwitch">
+
+            <label htmlFor="showMinimaph"></label>
+            <MySwitch />
+          </div>
+
+
         </div>
 
         <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
