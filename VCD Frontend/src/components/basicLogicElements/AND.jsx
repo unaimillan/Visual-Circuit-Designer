@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
-import AndGate from '../../assets/circuitsMenu/AND.svg';
+import AndGate from '../../../assets/circuitsMenu/AND.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
 function AndNode({ isConnectable }) {
   return (

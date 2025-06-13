@@ -1,9 +1,9 @@
 import {Handle, Position} from '@xyflow/react';
-import NorGate from '../../assets/circuitsMenu/NOR.svg';
+import OrGate from '../../../assets/circuitsMenu/OR.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
-function NorNode({ isConnectable }) {
+function OrNode({ isConnectable }) {
   return (
     <div
       style={{
@@ -19,7 +19,7 @@ function NorNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={NorGate} alt="NOR Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
+      <img src={OrGate} alt="OR Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <CustomHandle
@@ -49,4 +49,4 @@ function NorNode({ isConnectable }) {
   );
 }
 
-export default NorNode;
+export default OrNode;

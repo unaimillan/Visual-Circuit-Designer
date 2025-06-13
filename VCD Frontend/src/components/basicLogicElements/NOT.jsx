@@ -1,9 +1,9 @@
-import { Position } from '@xyflow/react';
-import OutputGate from '../../assets/circuitsMenu/output.svg';
+import {Handle, Position} from '@xyflow/react';
+import NotGate from '../../../assets/circuitsMenu/NOT.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
-function outputNode({ isConnectable }) {
+function NotNode({ isConnectable }) {
   return (
     <div
       style={{
@@ -19,7 +19,7 @@ function outputNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={OutputGate} alt="Output Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
+      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <CustomHandle
@@ -30,8 +30,15 @@ function outputNode({ isConnectable }) {
         isConnectable={isConnectable}
         maxConnections={1}
       />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="output-1"
+        style={{ top: 34, left: 71 }}
+        isConnectable={isConnectable}
+      />
     </div>
   );
 }
 
-export default outputNode;
+export default NotNode;

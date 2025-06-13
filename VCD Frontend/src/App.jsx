@@ -3,6 +3,7 @@ import {
   ReactFlow,
   Controls,
   Background,
+  BackgroundVariant,
   addEdge,
   SelectionMode,
   useNodesState,
@@ -12,7 +13,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import ContextMenu from './components/ContextMenu.jsx';
+import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 
 import AndGate from '../assets/circuitsMenu/AND.svg';
 import OrGate from '../assets/circuitsMenu/OR.svg';
@@ -23,18 +24,37 @@ import XorGate from '../assets/circuitsMenu/XOR.svg';
 import InputGate from '../assets/circuitsMenu/input.svg';
 import OutputGate from '../assets/circuitsMenu/output.svg';
 
-import { initialNodes, nodeTypes } from './components/nodes';
-import { initialEdges } from './components/edges';
+import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
+import { initialEdges } from './components/codeComponents/edges.js';
+import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
+// export default SelectDemo;
 
-import './App.css';
+import './CSS/App.css';
+import './CSS/settings.css';
+import './CSS/toolbar.css';
+import './CSS/dnd.css';
+import './CSS/backdrop.css';
+import './CSS/circuitsMenu.css';
+import './CSS/contextMenu.css';
+import SelectDemo from "./components/codeComponents/select.jsx";
+import AccordionDemo from "./components/codeComponents/menuAccordion.jsx";
+
+import './components/codeComponents/switch.jsx';
+
+
+
+
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
 
 function App() {
-  const [panelState, setPanelState] = useState(false)
+  const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+
+  const [showMinimap, setShowMinimap] = useState(true)
+
 
   /* React Flow */
   const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
@@ -104,6 +124,7 @@ function App() {
     },
     [setMenu],
   );
+
 
   // Close the context menu if it's open whenever the window is clicked.
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
@@ -372,21 +393,23 @@ function App() {
       >
         <Background
           offset={[10.5, 5.5]}
+
           gap={GAP_SIZE}
           size={0.8}
+          // variant={BackgroundVariant.Lines}
         />
         <Controls/>
-        <MiniMap
+        {showMinimap && (<MiniMap className='miniMap'
           position="top-right"
-        />
+        />)}
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
       <div>
-        <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
+        <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
           <img
             src="../assets/circuitsMenu/menu.svg"
             alt="open/close menu"
-            className={"openMenuButtonIcon"}
+            className={"openCircuitsMenuButtonIcon"}
             draggable="false"
           />
         </button>
@@ -400,7 +423,7 @@ function App() {
           />
         </button>
 
-        <button onClick={saveCircuit}>Save Circuit</button>
+        <button className={""} onClick={saveCircuit}>Save Circuit</button>
         <input
           type="file"
           accept=".json"
@@ -429,17 +452,42 @@ function App() {
 
         <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
           <p className={'settingsMenuTitle'}>Settings</p>
+
+
+
+          <div className="minimapSwitchBlock">
+            <p className={'minimapSwitchLabel'}>Show mini-map</p>
+            <MinimapSwitch
+              className={'minimapSwitch'}
+              minimapState={showMinimap}
+              minimapToggle={setShowMinimap}
+            />
+          </div>
+
+          <div className="backgroundVariantBlock">
+            <p className={'minimapSwitchLabel'}>Canvas background</p>
+            <label htmlFor="selectBackground"></label>
+            <SelectDemo
+              className={'selectBG'}
+            />
+          </div>
+
+
         </div>
 
-        <div className={`panel ${panelState ? 'open' : ''}`}>
+        <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
 
           <div className="menu-container">
             <div className="menu-header">
-              <p className={"panelTitle"}>
+              <p className={"circuitsMenuTitle"}>
                 Menu
               </p>
               <div className="divider"></div>
             </div>
+
+            <AccordionDemo
+              className={'accordion'}
+            />
 
             <ol className="menu-items">
               {menuItems.map((item, index) => (
@@ -462,15 +510,16 @@ function App() {
                         <div
                           key={node.id}
                           className="dndnode"
-                          draggable
+                          draggable = {false}
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
                           <img
                             src={node.icon}
                             alt={node.label}
                             style={{ width: '50px', height: 'auto' }}
+                            draggable = {true}
                           />
-                          <span>{node.label}</span>
+                          <span draggable = {false}>{node.label}</span>
                         </div>
                       ))}
                     </div>
