@@ -437,13 +437,7 @@ function App() {
           />
         </button>
 
-        <button className={""} onClick={saveCircuit}>Save Circuit</button>
-        <input
-          type="file"
-          accept=".json"
-          onChange={loadCircuit}
-          style={{ marginTop: '10px' }}
-        />
+
 
         {/*<button*/}
         {/*    onClick={saveCircuit}*/}
@@ -488,7 +482,13 @@ function App() {
             />
           </div>
 
-
+          <button className={""} onClick={saveCircuit}>Save Circuit</button>
+          <input
+            type="file"
+            accept=".json"
+            onChange={loadCircuit}
+            style={{ marginTop: '10px' }}
+          />
         </div>
 
         <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
