@@ -25,6 +25,13 @@
 }
 
 .react-flow__edge.temp path {
-    stroke-dasharray: 5,5;
+    stroke-dasharray: 5;
     stroke: #666;
+    animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+    0% {
+        stroke-dashoffset: 10;
+    }
 }
