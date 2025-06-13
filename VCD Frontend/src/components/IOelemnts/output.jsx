@@ -1,7 +1,7 @@
 import { Position } from '@xyflow/react';
-import OutputGate from '../../assets/circuitsMenu/output.svg';
+import OutputGate from '../../../assets/circuitsMenu/output.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../CustomHandle.jsx';
 
 function outputNode({ isConnectable }) {
   return (

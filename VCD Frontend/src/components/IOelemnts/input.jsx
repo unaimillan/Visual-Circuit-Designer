@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import InputGate from '../../assets/circuitsMenu/input.svg';
+import InputGate from '../../../assets/circuitsMenu/input.svg';
 
 function inputNode({ isConnectable }) {
   return (

@@ -1,9 +1,9 @@
 import {Handle, Position} from '@xyflow/react';
-import NandGate from '../../assets/circuitsMenu/NAND.svg';
+import AndGate from '../../../assets/circuitsMenu/AND.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../CustomHandle.jsx';
 
-function NandNode({ isConnectable }) {
+function AndNode({ isConnectable }) {
   return (
     <div
       style={{
@@ -19,7 +19,7 @@ function NandNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={NandGate} alt="NAND Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
+      <img src={AndGate} alt="AND Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <CustomHandle
@@ -44,9 +44,10 @@ function NandNode({ isConnectable }) {
         id="output-1"
         style={{ top: 34, left: 71 }}
         isConnectable={isConnectable}
+        connectionCount={1}
       />
     </div>
   );
 }
 
-export default NandNode;
+export default AndNode;
