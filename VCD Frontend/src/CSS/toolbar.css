@@ -22,6 +22,7 @@
     box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
+
 }
 
 .toolbarButton:hover {
@@ -38,6 +39,11 @@
 .toolbarButtonIcon {
     width: 1.2rem;
     height: 1.2rem;
+    margin: auto;
+    display: block;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .toolbarButton.active {
