@@ -37,9 +37,12 @@ import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
 import SelectDemo from "./components/codeComponents/select.jsx";
-import AccordionDemo from "./components/codeComponents/menuAccordion.jsx";
 
 import './components/codeComponents/switch.jsx';
+
+
+
+let variant;
 
 
 
@@ -52,8 +55,17 @@ function App() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+  const [currentBG, setCurrentBG] = useState("dots")
 
   const [showMinimap, setShowMinimap] = useState(true)
+
+  if (currentBG === "dots") {
+    variant = BackgroundVariant.Dots;
+  } else if (currentBG === "cross") {
+    variant = BackgroundVariant.Cross;
+  } else {
+    variant = BackgroundVariant.Lines;
+  }
 
 
   /* React Flow */
@@ -64,6 +76,8 @@ function App() {
   const ref = useRef(null);
   const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
+
+
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
@@ -396,7 +410,7 @@ function App() {
 
           gap={GAP_SIZE}
           size={0.8}
-          // variant={BackgroundVariant.Lines}
+          variant={variant}
         />
         <Controls/>
         {showMinimap && (<MiniMap className='miniMap'
@@ -468,6 +482,8 @@ function App() {
             <p className={'minimapSwitchLabel'}>Canvas background</p>
             <label htmlFor="selectBackground"></label>
             <SelectDemo
+              currentBG={currentBG}
+              setCurrentBG={setCurrentBG}
               className={'selectBG'}
             />
           </div>
@@ -485,9 +501,6 @@ function App() {
               <div className="divider"></div>
             </div>
 
-            <AccordionDemo
-              className={'accordion'}
-            />
 
             <ol className="menu-items">
               {menuItems.map((item, index) => (
