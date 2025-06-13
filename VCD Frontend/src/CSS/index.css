@@ -4,6 +4,11 @@ body {
   font-weight: 600;
 }
 
+img {
+  display: block;
+  margin: auto;
+}
+
 #app {
   width: 98vw;
   height: 97vh;
