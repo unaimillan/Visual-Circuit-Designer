@@ -3,6 +3,7 @@ import {
   ReactFlow,
   Controls,
   Background,
+  BackgroundVariant,
   addEdge,
   SelectionMode,
   useNodesState,
@@ -12,7 +13,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import ContextMenu from './components/ContextMenu.jsx';
+import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 
 import AndGate from '../assets/circuitsMenu/AND.svg';
 import OrGate from '../assets/circuitsMenu/OR.svg';
@@ -23,32 +24,23 @@ import XorGate from '../assets/circuitsMenu/XOR.svg';
 import InputGate from '../assets/circuitsMenu/input.svg';
 import OutputGate from '../assets/circuitsMenu/output.svg';
 
-import { initialNodes, nodeTypes } from './components/nodes';
-import { initialEdges } from './components/edges';
-
+import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
+import { initialEdges } from './components/codeComponents/edges.js';
+import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
+// export default SelectDemo;
 
 import './CSS/App.css';
 import './CSS/settings.css';
 import './CSS/toolbar.css';
 import './CSS/dnd.css';
 import './CSS/backdrop.css';
-import './CSS/menu.css';
+import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
-import './switch.jsx';
-import * as Switch from "@radix-ui/react-switch";
+import SelectDemo from "./components/codeComponents/select.jsx";
+import AccordionDemo from "./components/codeComponents/menuAccordion.jsx";
 
-// import { Switch } from "radix-ui";
+import './components/codeComponents/switch.jsx';
 
-export function MySwitch() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <label htmlFor="my-switch">Toggle me</label>
-      <Switch.Root className="SwitchRoot" id="my-switch">
-        <Switch.Thumb className="SwitchThumb" />
-      </Switch.Root>
-    </div>
-  );
-}
 
 
 
@@ -60,6 +52,9 @@ function App() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+
+  const [showMinimap, setShowMinimap] = useState(true)
+
 
   /* React Flow */
   const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
@@ -129,6 +124,7 @@ function App() {
     },
     [setMenu],
   );
+
 
   // Close the context menu if it's open whenever the window is clicked.
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
@@ -359,13 +355,15 @@ function App() {
       >
         <Background
           offset={[10.5, 5.5]}
+
           gap={GAP_SIZE}
           size={0.8}
+          // variant={BackgroundVariant.Lines}
         />
         <Controls/>
-        <MiniMap
+        {showMinimap && (<MiniMap className='miniMap'
           position="top-right"
-        />
+        />)}
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
       <div>
@@ -417,10 +415,23 @@ function App() {
         <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
           <p className={'settingsMenuTitle'}>Settings</p>
 
-          <div className="minimapSwitch">
 
-            <label htmlFor="showMinimaph"></label>
-            <MySwitch />
+
+          <div className="minimapSwitchBlock">
+            <p className={'minimapSwitchLabel'}>Show mini-map</p>
+            <MinimapSwitch
+              className={'minimapSwitch'}
+              minimapState={showMinimap}
+              minimapToggle={setShowMinimap}
+            />
+          </div>
+
+          <div className="backgroundVariantBlock">
+            <p className={'minimapSwitchLabel'}>Canvas background</p>
+            <label htmlFor="selectBackground"></label>
+            <SelectDemo
+              className={'selectBG'}
+            />
           </div>
 
 
@@ -435,6 +446,10 @@ function App() {
               </p>
               <div className="divider"></div>
             </div>
+
+            <AccordionDemo
+              className={'accordion'}
+            />
 
             <ol className="menu-items">
               {menuItems.map((item, index) => (
@@ -457,15 +472,16 @@ function App() {
                         <div
                           key={node.id}
                           className="dndnode"
-                          draggable
+                          draggable = {false}
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
                           <img
                             src={node.icon}
                             alt={node.label}
                             style={{ width: '50px', height: 'auto' }}
+                            draggable = {true}
                           />
-                          <span>{node.label}</span>
+                          <span draggable = {false}>{node.label}</span>
                         </div>
                       ))}
                     </div>

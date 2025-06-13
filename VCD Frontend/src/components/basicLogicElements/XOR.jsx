@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
 import XorGate from '../../../assets/circuitsMenu/XOR.svg';
 
-import CustomHandle from '../CustomHandle.jsx';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
 function XorNode({ isConnectable }) {
   return (

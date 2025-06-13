@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
 import NorGate from '../../../assets/circuitsMenu/NOR.svg';
 
-import CustomHandle from '../CustomHandle.jsx';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
 function NorNode({ isConnectable }) {
   return (

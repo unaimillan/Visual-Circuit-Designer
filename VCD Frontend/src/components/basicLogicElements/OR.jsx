@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
 import OrGate from '../../../assets/circuitsMenu/OR.svg';
 
-import CustomHandle from '../CustomHandle.jsx';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
 function OrNode({ isConnectable }) {
   return (

@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
 import NotGate from '../../../assets/circuitsMenu/NOT.svg';
 
-import CustomHandle from '../CustomHandle.jsx';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
 function NotNode({ isConnectable }) {
   return (

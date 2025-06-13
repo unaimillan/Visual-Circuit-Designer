@@ -6,12 +6,12 @@
     position: fixed;
     top: 2.5rem;
     left: -17.33rem;
-    margin: 0.33rem 0 0 0.33rem;
-    border-radius: 0.66rem;
+    margin: 0.5rem 0 0 0.5rem;
+    border-radius: 0.5rem;
     background-color: #ffffff;
-    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.3s ease-in-out;
     user-select: none;
+    border: 0.05rem solid #cacaca;
 }
 
 .circuitsMenu.open {
@@ -23,7 +23,6 @@
 .circuitsMenuInnerButton {
     background-color: #ffffff;
     border: none;
-    box-shadow: #c6c6c6 1px 1px 5px;
     transition: 0.15s ease-out;
     border-radius: 0.5rem;
     width: 3.33rem;
@@ -93,10 +92,11 @@
     cursor: pointer;
     user-select: none;
     margin: 0.25rem;
+    transform: rotate(90deg);
 }
 
 .menu-item.active .arrow {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
 }
 
 
@@ -109,8 +109,7 @@
     height: 2rem;
     z-index: 500;
     background-color: #ffffff;
-    border: none;
-    box-shadow: #c6c6c6 1px 1px 5px;
+    border: #cacaca solid 0.07rem;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
     user-select: none;

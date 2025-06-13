@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
 import NandGate from '../../../assets/circuitsMenu/NAND.svg';
 
-import CustomHandle from '../CustomHandle.jsx';
+import CustomHandle from '../codeComponents/CustomHandle.jsx';
 
 function NandNode({ isConnectable }) {
   return (

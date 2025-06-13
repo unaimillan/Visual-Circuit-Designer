@@ -1,26 +1,28 @@
 .toolbar {
     user-select: none;
     display: flex;
-    width: 16.66rem;
-    border-radius: 0.66rem;
+    /*width: 17.26rem;*/
+
+    border-radius: 0.5rem;
     position: fixed;
     bottom: 1.32rem;
     right: 1.32rem;
     z-index: 1000;
-    padding: 0.466rem 0;
+    padding: 0.5rem 0 0.5rem 0.5rem;
     background: #ffffff;
-    box-shadow: #c6c6c6 1px 1px 5px;
+    border: #cacaca solid 0.05rem;
     transition: transform 0.3s;
 }
 
 .toolbarButton {
     width: 2rem;
     height: 2rem;
-    margin-left: 0.66rem;
+    gap: 0.5rem;
+    margin-right: 0.5rem;
     background-color: #ffffff;
-    border: none;
-    box-shadow: #c6c6c6 1px 1px 5px;
+    border: #d8d8d8 solid 0.05rem;
     transition: 0.15s ease-out;
+
     border-radius: 0.33rem;
 
 }
@@ -34,6 +36,7 @@
     transition: 0.05s ease-out;
     background-color: #dbedff;
     box-shadow: none;
+    border: #dbedff solid 0.05rem;
 }
 
 .toolbarButtonIcon {
@@ -50,4 +53,6 @@
     transition: 0.05s ease-out;
     background-color: #dbedff;
     box-shadow: none;
+    border: #dbedff solid 0.05rem;
+
 }
