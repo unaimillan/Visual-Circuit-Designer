@@ -26,13 +26,19 @@ import OutputGate from '../assets/circuitsMenu/output.svg';
 import { initialNodes, nodeTypes } from './components/nodes';
 import { initialEdges } from './components/edges';
 
-import './App.css';
+import './CSS/App.css';
+import './CSS/settings.css';
+import './CSS/toolbar.css';
+import './CSS/dnd.css';
+import './CSS/backdrop.css';
+import './CSS/menu.css';
+import './CSS/contextMenu.css';
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 50;
 
 function App() {
-  const [panelState, setPanelState] = useState(false)
+  const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
 
@@ -344,11 +350,11 @@ function App() {
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
       <div>
-        <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
+        <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
           <img
             src="../assets/circuitsMenu/menu.svg"
             alt="open/close menu"
-            className={"openMenuButtonIcon"}
+            className={"openCircuitsMenuButtonIcon"}
             draggable="false"
           />
         </button>
@@ -362,7 +368,7 @@ function App() {
           />
         </button>
 
-        <button onClick={saveCircuit}>Save Circuit</button>
+        <button className={""} onClick={saveCircuit}>Save Circuit</button>
         <input
           type="file"
           accept=".json"
@@ -393,11 +399,11 @@ function App() {
           <p className={'settingsMenuTitle'}>Settings</p>
         </div>
 
-        <div className={`panel ${panelState ? 'open' : ''}`}>
+        <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
 
           <div className="menu-container">
             <div className="menu-header">
-              <p className={"panelTitle"}>
+              <p className={"circuitsMenuTitle"}>
                 Menu
               </p>
               <div className="divider"></div>

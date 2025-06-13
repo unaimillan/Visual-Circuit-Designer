@@ -41,8 +41,8 @@ export default function ContextMenu({
       <p style={{ margin: '0.5em' }}>
         <small>node: {name}</small>
       </p>
-      <button onClick={duplicateNode}>duplicate</button>
-      <button onClick={deleteNode}>delete</button>
+      <button className={'contextMenuButton'} onClick={duplicateNode}>Duplicate</button>
+      <button className={'contextMenuButton'} onClick={deleteNode}>Delete</button>
     </div>
   );
 }

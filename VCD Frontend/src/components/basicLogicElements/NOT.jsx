@@ -1,9 +1,9 @@
 import {Handle, Position} from '@xyflow/react';
-import AndGate from '../../assets/circuitsMenu/AND.svg';
+import NotGate from '../../../assets/circuitsMenu/NOT.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../CustomHandle.jsx';
 
-function AndNode({ isConnectable }) {
+function NotNode({ isConnectable }) {
   return (
     <div
       style={{
@@ -19,22 +19,14 @@ function AndNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={AndGate} alt="AND Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
+      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <CustomHandle
         type="target"
         position={Position.Left}
         id="input-1"
-        style={{ top: 24, left: -1 }}
-        isConnectable={isConnectable}
-        maxConnections={1}
-      />
-      <CustomHandle
-        type="target"
-        position={Position.Left}
-        id="input-2"
-        style={{ top: 44, left: -1 }}
+        style={{ top: 34, left: -1 }}
         isConnectable={isConnectable}
         maxConnections={1}
       />
@@ -44,10 +36,9 @@ function AndNode({ isConnectable }) {
         id="output-1"
         style={{ top: 34, left: 71 }}
         isConnectable={isConnectable}
-        connectionCount={1}
       />
     </div>
   );
 }
 
-export default AndNode;
+export default NotNode;

@@ -1,0 +1,46 @@
+/*_______Canvas_______*/
+.canvasContainer {
+  height: 97vh;
+  width: 98vw;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+
+
+/*______Menu list______*/
+
+
+/*.menu-items {*/
+/*    list-style-type: decimal;*/
+/*    list-style-position: inside;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+
+/*.menu-items li {*/
+/*    margin: 0.5rem 0;*/
+/*}*/
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
+
+.
+
+/*короче надо будет потом сделать так чтобы в зависимости от инструмента у нас был разный курсор, когда мы наведены на наше поле*/
+/*cursor: pointer;*/

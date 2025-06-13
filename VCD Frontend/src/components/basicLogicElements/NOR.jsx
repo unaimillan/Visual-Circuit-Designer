@@ -1,9 +1,9 @@
 import {Handle, Position} from '@xyflow/react';
-import NotGate from '../../assets/circuitsMenu/NOT.svg';
+import NorGate from '../../../assets/circuitsMenu/NOR.svg';
 
-import CustomHandle from './CustomHandle';
+import CustomHandle from '../CustomHandle.jsx';
 
-function NotNode({ isConnectable }) {
+function NorNode({ isConnectable }) {
   return (
     <div
       style={{
@@ -19,14 +19,22 @@ function NotNode({ isConnectable }) {
         justifyContent: 'center',
       }}
     >
-      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
+      <img src={NorGate} alt="NOR Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <CustomHandle
         type="target"
         position={Position.Left}
         id="input-1"
-        style={{ top: 34, left: -1 }}
+        style={{ top: 24, left: -1 }}
+        isConnectable={isConnectable}
+        maxConnections={1}
+      />
+      <CustomHandle
+        type="target"
+        position={Position.Left}
+        id="input-2"
+        style={{ top: 44, left: -1 }}
         isConnectable={isConnectable}
         maxConnections={1}
       />
@@ -41,4 +49,4 @@ function NotNode({ isConnectable }) {
   );
 }
 
-export default NotNode;
+export default NorNode;

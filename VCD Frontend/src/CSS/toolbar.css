@@ -1,0 +1,47 @@
+.toolbar {
+    user-select: none;
+    display: flex;
+    width: 16.66rem;
+    border-radius: 0.66rem;
+    position: fixed;
+    bottom: 1.32rem;
+    right: 1.32rem;
+    z-index: 1000;
+    padding: 0.466rem 0;
+    background: #ffffff;
+    box-shadow: #c6c6c6 1px 1px 5px;
+    transition: transform 0.3s;
+}
+
+.toolbarButton {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0.66rem;
+    background-color: #ffffff;
+    border: none;
+    box-shadow: #c6c6c6 1px 1px 5px;
+    transition: 0.15s ease-out;
+    border-radius: 0.33rem;
+}
+
+.toolbarButton:hover {
+    transition: 0.15s ease-out;
+    background-color: #dadada;
+}
+
+.toolbarButton:active {
+    transition: 0.05s ease-out;
+    background-color: #dbedff;
+    box-shadow: none;
+}
+
+.toolbarButtonIcon {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.toolbarButton.active {
+    transition: 0.05s ease-out;
+    background-color: #dbedff;
+    box-shadow: none;
+}
