@@ -117,9 +117,6 @@
 }
 
 .openCircuitsMenuButtonIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 1.4rem;
     height: 1.4rem;
     user-select: none;
