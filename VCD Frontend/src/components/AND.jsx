@@ -44,7 +44,6 @@ function AndNode({ isConnectable }) {
         id="output-1"
         style={{ top: 34, left: 71 }}
         isConnectable={isConnectable}
-        connectionCount={1}
       />
     </div>
   );

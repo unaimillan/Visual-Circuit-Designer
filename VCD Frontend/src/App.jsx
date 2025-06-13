@@ -29,7 +29,7 @@ import { initialEdges } from './components/edges';
 import './App.css';
 
 const GAP_SIZE = 10;
-const MIN_DISTANCE = 50;
+const MIN_DISTANCE = 10;
 
 function App() {
   const [panelState, setPanelState] = useState(false)
@@ -47,9 +47,9 @@ function App() {
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
-  const validateConnection = (connection) => {
+  const validateConnection = useCallback((connection) => {
     return connection.source !== connection.target;
-  };
+  });
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -108,51 +108,100 @@ function App() {
   // Close the context menu if it's open whenever the window is clicked.
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
-  const getClosestEdge = useCallback((node) => {
+  const getClosestEdge = useCallback((draggedNode) => {
     const { nodeLookup } = store.getState();
-    const internalNode = getInternalNode(node.id);
+    const internalNode = getInternalNode(draggedNode.id);
+    if (!internalNode) return null;
 
-    const closestNode = Array.from(nodeLookup.values()).reduce(
-      (res, n) => {
-        if (n.id !== internalNode.id) {
-          const dx =
-            n.internals.positionAbsolute.x -
-            internalNode.internals.positionAbsolute.x;
-          const dy =
-            n.internals.positionAbsolute.y -
-            internalNode.internals.positionAbsolute.y;
-          const d = Math.sqrt(dx * dx + dy * dy);
+    const draggedHandles = internalNode.internals.handleBounds;
+    if (!draggedHandles) return null;
 
-          if (d < res.distance && d < MIN_DISTANCE) {
-            res.distance = d;
-            res.node = n;
+    const draggedPos = internalNode.internals.positionAbsolute;
+
+    let closestEdge = null;
+    let minDistance = MIN_DISTANCE;
+
+    nodeLookup.forEach((node) => {
+      if (node.id === draggedNode.id) return;
+
+      const nodeHandles = node.internals.handleBounds;
+      if (!nodeHandles) return;
+
+      const nodePos = node.internals.positionAbsolute;
+
+      // Check source->target connections
+      if (draggedHandles.source) {
+        draggedHandles.source.forEach((srcHandle) => {
+          const srcHandlePos = {
+            x: draggedPos.x + srcHandle.x + srcHandle.width / 2,
+            y: draggedPos.y + srcHandle.y + srcHandle.height / 2
+          };
+
+          if (nodeHandles.target) {
+            nodeHandles.target.forEach((tgtHandle) => {
+              const tgtHandlePos = {
+                x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
+                y: nodePos.y + tgtHandle.y + tgtHandle.height / 2
+              };
+
+              const dx = srcHandlePos.x - tgtHandlePos.x;
+              const dy = srcHandlePos.y - tgtHandlePos.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestEdge = {
+                  id: `temp-${internalNode.id}-${srcHandle.id}-to-${node.id}-${tgtHandle.id}`,
+                  source: internalNode.id,
+                  sourceHandle: srcHandle.id,
+                  target: node.id,
+                  targetHandle: tgtHandle.id,
+                  className: 'temp'
+                };
+              }
+            });
           }
-        }
+        });
+      }
 
-        return res;
-      },
-      {
-        distance: Number.MAX_VALUE,
-        node: null,
-      },
-    );
+      // Check target->source connections
+      if (draggedHandles.target) {
+        draggedHandles.target.forEach((tgtHandle) => {
+          const tgtHandlePos = {
+            x: draggedPos.x + tgtHandle.x + tgtHandle.width / 2,
+            y: draggedPos.y + tgtHandle.y + tgtHandle.height / 2
+          };
 
-    if (!closestNode.node) {
-      return null;
-    }
+          if (nodeHandles.source) {
+            nodeHandles.source.forEach((srcHandle) => {
+              const srcHandlePos = {
+                x: nodePos.x + srcHandle.x + srcHandle.width / 2,
+                y: nodePos.y + srcHandle.y + srcHandle.height / 2
+              };
 
-    const closeNodeIsSource =
-      closestNode.node.internals.positionAbsolute.x <
-      internalNode.internals.positionAbsolute.x;
+              const dx = tgtHandlePos.x - srcHandlePos.x;
+              const dy = tgtHandlePos.y - srcHandlePos.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
 
-    return {
-      id: closeNodeIsSource
-        ? `${closestNode.node.id}-${node.id}`
-        : `${node.id}-${closestNode.node.id}`,
-      source: closeNodeIsSource ? closestNode.node.id : node.id,
-      target: closeNodeIsSource ? node.id : closestNode.node.id,
-    };
-  }, [getInternalNode, store]);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestEdge = {
+                  id: `temp-${node.id}-${srcHandle.id}-to-${internalNode.id}-${tgtHandle.id}`,
+                  source: node.id,
+                  sourceHandle: srcHandle.id,
+                  target: internalNode.id,
+                  targetHandle: tgtHandle.id,
+                  className: 'temp'
+                };
+              }
+            });
+          }
+        });
+      }
+    });
+
+    return closestEdge;
+  }, [store, getInternalNode]);
 
   const onNodeDrag = useCallback(
     (_, node) => {
@@ -160,18 +209,9 @@ function App() {
 
       setEdges((es) => {
         const nextEdges = es.filter((e) => e.className !== 'temp');
-
-        if (
-          closeEdge &&
-          !nextEdges.find(
-            (ne) =>
-              ne.source === closeEdge.source && ne.target === closeEdge.target,
-          )
-        ) {
-          closeEdge.className = 'temp';
+        if (closeEdge !== null) {
           nextEdges.push(closeEdge);
         }
-
         return nextEdges;
       });
     },
@@ -180,19 +220,17 @@ function App() {
 
   const onNodeDragStop = useCallback(
     (_, node) => {
-      const closeEdge = getClosestEdge(node);
-
       setEdges((es) => {
         const nextEdges = es.filter((e) => e.className !== 'temp');
+        const closeEdge = getClosestEdge(node);
 
-        if (
-          closeEdge &&
-          !nextEdges.find(
-            (ne) =>
-              ne.source === closeEdge.source && ne.target === closeEdge.target,
-          )
-        ) {
-          nextEdges.push(closeEdge);
+        if (closeEdge) {
+          return addEdge({
+            source: closeEdge.source,
+            sourceHandle: closeEdge.sourceHandle,
+            target: closeEdge.target,
+            targetHandle: closeEdge.targetHandle
+          }, nextEdges);
         }
 
         return nextEdges;
