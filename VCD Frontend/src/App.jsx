@@ -26,7 +26,8 @@ import OutputGate from '../assets/circuitsMenu/output.svg';
 
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges, edgeTypes } from './components/codeComponents/edges.js';
-import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
+import { MinimapSwitch } from "./components/codeComponents/switch.jsx";
+import ConnectionLine from './components/codeComponents/ConnectionLine.jsx';
 // export default SelectDemo;
 
 import './CSS/App.css';
@@ -40,9 +41,6 @@ import SelectDemo from "./components/codeComponents/select.jsx";
 // import AccordionDemo from "./components/codeComponents/menuAccordion.jsx";
 
 import './components/codeComponents/switch.jsx';
-
-
-
 
 
 const GAP_SIZE = 10;
@@ -373,6 +371,7 @@ function App() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        connectionLineComponent={ConnectionLine}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
         onConnect={onConnect}
@@ -402,7 +401,7 @@ function App() {
         />
         <Controls/>
         {showMinimap && (<MiniMap className='miniMap'
-          position="top-right"
+                                  position="top-right"
         />)}
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
@@ -454,7 +453,6 @@ function App() {
 
         <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
           <p className={'settingsMenuTitle'}>Settings</p>
-
 
 
           <div className="minimapSwitchBlock">
@@ -512,16 +510,16 @@ function App() {
                         <div
                           key={node.id}
                           className="dndnode"
-                          draggable = {false}
+                          draggable={false}
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
                           <img
                             src={node.icon}
                             alt={node.label}
                             style={{ width: '50px', height: 'auto' }}
-                            draggable = {true}
+                            draggable={true}
                           />
-                          <span draggable = {false}>{node.label}</span>
+                          <span draggable={false}>{node.label}</span>
                         </div>
                       ))}
                     </div>

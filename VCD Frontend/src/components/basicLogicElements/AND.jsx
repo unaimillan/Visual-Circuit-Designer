@@ -2,6 +2,7 @@ import {Handle, Position} from '@xyflow/react';
 import AndGate from '../../../assets/circuitsMenu/AND.svg';
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
+import { memo } from "react";
 
 function AndNode({ isConnectable }) {
   return (
@@ -49,4 +50,4 @@ function AndNode({ isConnectable }) {
   );
 }
 
-export default AndNode;
+export default memo(AndNode);
