@@ -68,7 +68,9 @@ def generate_verilog_from_json(json_file_path):
             elif handle == "input-2":
                 gate["in2"] = input_info["verilog_name"]
 
-    verilog_code = "module GeneratedCircuit (\n"
+    verilog_code = "`timescale 1ns/1ps\n\n"
+
+    verilog_code += "module GeneratedCircuit (\n"
 
     input_ports = [info["verilog_name"] for info in inputs.values()]
     verilog_code += "    input " + ",\n    input ".join(input_ports) + ",\n"
@@ -109,7 +111,7 @@ def generate_verilog_from_json(json_file_path):
 if __name__ == "__main__":
     verilog_code = generate_verilog_from_json("circuit.json")
 
-    with open("top.v", "w") as f:
+    with open("cocotb/dut.v", "w") as f:
         f.write(verilog_code)
 
     print("Verilog code generated and written to top.v")

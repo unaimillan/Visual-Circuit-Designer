@@ -1,6 +1,6 @@
 TOPLEVEL_LANG = verilog
 VERILOG_SOURCES = \
-    ./top.v
+    ./cocotb/dut.v
 
 TOPLEVEL = GeneratedCircuit
 MODULE = cocotbTest
