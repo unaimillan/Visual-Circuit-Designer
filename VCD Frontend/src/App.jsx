@@ -523,16 +523,16 @@ function App() {
                         <div
                           key={node.id}
                           className="dndnode"
-                          draggable = {false}
+                          draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
                           <img
                             src={node.icon}
                             alt={node.label}
                             style={{ width: '50px', height: 'auto' }}
-                            draggable = {true}
+                            draggable = {false}
                           />
-                          <span draggable = {false}>{node.label}</span>
+                          <span>{node.label}</span>
                         </div>
                       ))}
                     </div>
