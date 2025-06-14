@@ -351,8 +351,6 @@ function App() {
     {
       header: "Advanced Logic Elements",
       gates: [
-        { id: 'inputNode', label: 'input', icon: InputGate },
-        { id: 'outputNode', label: 'output', icon: OutputGate },
       ]
     },
     {
@@ -365,7 +363,6 @@ function App() {
     {
       header: "Custom Logic Elements",
       gates: [
-        { id: 'notNode', label: 'NOT', icon: NotGate },
       ]
     }
   ];
