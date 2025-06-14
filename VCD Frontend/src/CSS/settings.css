@@ -33,6 +33,35 @@
     user-select: none;
 }
 
+.openProfileButton {
+    margin-top: 0.5rem;
+    margin-left: 1.5rem;
+    width: 39.5rem;
+    height: 5rem;
+    background-color: #ffffff;
+    box-shadow: #c6c6c6 1px 1px 5px;
+    border: #838383 solid 0.05rem;
+    border-radius: 0.5rem;
+}
+
+.openProfileButton:hover{
+    transition: 0.15s ease-out;
+    background-color: #dadada;
+}
+
+.defaultUserIcon {
+    width: 3rem;
+    height: 3rem;
+    border: #838383 solid 0.05rem;
+    border-radius: 3rem;
+    margin-left: 1rem;
+}
+
+.defaultUserName {
+    margin-left: 0.5rem;
+    vertical-align: 1.1rem;
+    font-size: 1rem;
+}
 
 
 /*______open settings button______*/
