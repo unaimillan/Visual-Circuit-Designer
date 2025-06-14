@@ -37,7 +37,7 @@ import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
 import SelectDemo from "./components/codeComponents/select.jsx";
-import AccordionDemo from "./components/codeComponents/menuAccordion.jsx";
+// import AccordionDemo from "./components/codeComponents/menuAccordion.jsx";
 
 import './components/codeComponents/switch.jsx';
 
@@ -487,9 +487,9 @@ function App() {
               <div className="divider"></div>
             </div>
 
-            <AccordionDemo
-              className={'accordion'}
-            />
+            {/*<AccordionDemo*/}
+            {/*  className={'accordion'}*/}
+            {/*/>*/}
 
             <ol className="menu-items">
               {menuItems.map((item, index) => (

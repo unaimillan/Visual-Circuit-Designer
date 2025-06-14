@@ -1,12 +1,13 @@
 /*_______circuits menu_______*/
 .circuitsMenu {
     /*width: 15.33rem;*/
-    max-height: 70vh;
+    max-height: 60vh;
     z-index: 200;
     position: fixed;
     top: 2.5rem;
     left: -20.33rem;
     margin: 0.5rem 0 0 0.5rem;
+    overflow: auto;
     border-radius: 0.5rem;
     background-color: #ffffff;
     transition: 0.3s ease-in-out;
