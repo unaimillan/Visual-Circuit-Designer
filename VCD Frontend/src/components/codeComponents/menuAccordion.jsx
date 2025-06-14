@@ -56,14 +56,39 @@ const AccordionDemo = () => (
     <Accordion.Item className="AccordionItem" value="item-1">
       <AccordionTrigger>menuItems[0].header</AccordionTrigger>
       <AccordionContent>
-        00000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
+        0000000000
       </AccordionContent>
     </Accordion.Item>
 
     <Accordion.Item className="AccordionItem" value="item-2">
       <AccordionTrigger>Is it unstyled?</AccordionTrigger>
       <AccordionContent>
-        1111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
+        11111111
       </AccordionContent>
     </Accordion.Item>
 
@@ -71,7 +96,16 @@ const AccordionDemo = () => (
       <AccordionTrigger>Can it be animated?</AccordionTrigger>
       <Accordion.Content className="AccordionContent">
         <div className="AccordionContentText">
-          22222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
+          2222222222
         </div>
       </Accordion.Content>
     </Accordion.Item>

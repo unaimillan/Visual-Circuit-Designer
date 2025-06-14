@@ -25,7 +25,7 @@ import InputGate from '../assets/circuitsMenu/input.svg';
 import OutputGate from '../assets/circuitsMenu/output.svg';
 
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
-import { initialEdges } from './components/codeComponents/edges.js';
+import { initialEdges, edgeTypes } from './components/codeComponents/edges.js';
 import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
 // export default SelectDemo;
 
@@ -247,6 +247,7 @@ function App() {
 
         if (closeEdge) {
           return addEdge({
+            type: closeEdge.type,
             source: closeEdge.source,
             sourceHandle: closeEdge.sourceHandle,
             target: closeEdge.target,
@@ -385,6 +386,7 @@ function App() {
         selectionOnDrag
         panOnDrag={panOnDrag}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         selectionMode={SelectionMode.Partial}
         snapToGrid={true}
         snapGrid={[GAP_SIZE, GAP_SIZE]}
