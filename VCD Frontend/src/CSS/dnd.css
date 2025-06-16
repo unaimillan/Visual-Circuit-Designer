@@ -1,0 +1,37 @@
+/*______DragAndDrop______*/
+.dndnode {
+    padding: 8px;
+
+    border: #c6c6c6 1px solid;
+    border-radius: 0.5rem;
+
+    cursor: move;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+}
+
+.dndnode img {
+    width: 50px;
+    height: auto;
+    user-select: none;
+}
+
+/* Ensure handles are visible over images */
+.react-flow__handle {
+    z-index: 10;
+}
+
+.react-flow__edge.temp path {
+    stroke-dasharray: 5;
+    stroke: #666;
+    animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+    0% {
+        stroke-dashoffset: 10;
+    }
+}

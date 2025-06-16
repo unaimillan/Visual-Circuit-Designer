@@ -1,10 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import {createRoot} from 'react-dom/client';
+import 'requestidlecallback-polyfill';
+import App from './App';
+import { ReactFlowProvider } from '@xyflow/react';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+import './CSS/index.css';
+
+const container = document.querySelector('#app');
+const root = createRoot(container);
+
+root.render(
+  <ReactFlowProvider>
     <App />
-  </StrictMode>,
-)
+  </ReactFlowProvider>
+);

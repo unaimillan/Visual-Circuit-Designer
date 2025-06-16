@@ -1,0 +1,58 @@
+.toolbar {
+    user-select: none;
+    display: flex;
+    /*width: 17.26rem;*/
+
+    border-radius: 0.5rem;
+    position: fixed;
+    bottom: 1.32rem;
+    right: 1.32rem;
+    z-index: 1000;
+    padding: 0.4rem 0 0.4rem 0.4rem;
+    background: #ffffff;
+    border: #cacaca solid 0.05rem;
+    transition: transform 0.3s;
+}
+
+.toolbarButton {
+    width: 2rem;
+    height: 2rem;
+    gap: 0.4rem;
+    margin-right: 0.4rem;
+    background-color: #ffffff;
+    border: #d8d8d8 solid 0.05rem;
+    transition: 0.15s ease-out;
+
+    border-radius: 0.33rem;
+
+}
+
+.toolbarButton:hover {
+    transition: 0.15s ease-out;
+    background-color: #dadada;
+}
+
+.toolbarButton:active {
+    transition: 0.05s ease-out;
+    background-color: #dbedff;
+    box-shadow: none;
+    border: #dbedff solid 0.05rem;
+}
+
+.toolbarButtonIcon {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: auto;
+    display: block;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.toolbarButton.active {
+    transition: 0.05s ease-out;
+    background-color: #dbedff;
+    box-shadow: none;
+    border: #dbedff solid 0.05rem;
+
+}

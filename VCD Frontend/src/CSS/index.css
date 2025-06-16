@@ -1,0 +1,12 @@
+body {
+  font-family: Montserrat, serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#app {
+  width: 98vw;
+  height: 97vh;
+}
+
+
