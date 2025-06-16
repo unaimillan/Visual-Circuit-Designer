@@ -26,7 +26,7 @@ import OutputGate from '../assets/circuitsMenu/output.svg';
 
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges } from './components/codeComponents/edges.js';
-import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
+import { MinimapSwitch } from "./components/codeComponents/switch.jsx";
 // export default SelectDemo;
 
 import './CSS/App.css';
@@ -41,11 +41,7 @@ import SelectDemo from "./components/codeComponents/select.jsx";
 import './components/codeComponents/switch.jsx';
 
 
-
 let variant;
-
-
-
 
 
 const GAP_SIZE = 10;
@@ -76,7 +72,6 @@ function App() {
   const ref = useRef(null);
   const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
-
 
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
@@ -322,6 +317,24 @@ function App() {
     };
   };
 
+  const spawnCircuit = (type) => {
+    const position = reactFlowInstance.screenToFlowPosition({
+      x: screen.availWidth / 2,
+      y: screen.availHeight / 2,
+    });
+
+    const newNode = {
+      id: `${type}-${Date.now()}`,
+      type: type,
+      position,
+      data: {
+        customId: `${type}-${Date.now()}`,
+      }
+    };
+
+    setNodes((nds) => nds.concat(newNode));
+  }
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && openSettings) {
@@ -350,8 +363,7 @@ function App() {
     },
     {
       header: "Advanced Logic Elements",
-      gates: [
-      ]
+      gates: []
     },
     {
       header: "Pins",
@@ -362,8 +374,7 @@ function App() {
     },
     {
       header: "Custom Logic Elements",
-      gates: [
-      ]
+      gates: []
     }
   ];
 
@@ -411,7 +422,7 @@ function App() {
         />
         <Controls/>
         {showMinimap && (<MiniMap className='miniMap'
-          position="top-right"
+                                  position="top-right"
         />)}
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
@@ -435,7 +446,6 @@ function App() {
         </button>
 
 
-
         {/*<button*/}
         {/*    onClick={saveCircuit}*/}
         {/*    style={{*/}
@@ -457,8 +467,6 @@ function App() {
 
         <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
           <p className={'settingsMenuTitle'}>Settings</p>
-
-
 
           <div className="minimapSwitchBlock">
             <p className={'minimapSwitchLabel'}>Show mini-map</p>
@@ -498,7 +506,6 @@ function App() {
               <div className="divider"></div>
             </div>
 
-
             <ol className="menu-items">
               {menuItems.map((item, index) => (
                 <li
@@ -523,13 +530,15 @@ function App() {
                           draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
+                          <button onClick={() => spawnCircuit(node.id)}>
                           <img
                             src={node.icon}
                             alt={node.label}
                             style={{ width: '50px', height: 'auto' }}
-                            draggable = {false}
+                            draggable={false}
                           />
-                          <span>{node.label}</span>
+                          <div className={"circuitsName"}>{node.label}</div>
+                          </button>
                         </div>
                       ))}
                     </div>

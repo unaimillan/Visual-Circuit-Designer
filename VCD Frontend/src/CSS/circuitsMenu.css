@@ -69,6 +69,10 @@
     align-items: center;
 }
 
+.circuitsName {
+    text-align: center;
+}
+
 .gates {
     padding: 0;
     animation: fadeIn 0.3s ease-in-out;
