@@ -38,11 +38,11 @@ export default function ContextMenu({
       className="context-menu"
       {...props}
     >
-      <p style={{ margin: '0.5em' }}>
-        <small>node: {name}</small>
+      <p style={{ margin: '0.5em', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.95rem', margin: '0.7rem 0 0.7rem 0'}}>Node: {name ? name.slice(0, -4) : ''}</p>
       </p>
-      <button className={'contextMenuButton'} onClick={duplicateNode}>Duplicate</button>
-      <button className={'contextMenuButton'} onClick={deleteNode}>Delete</button>
+      <button style={{margin: '0.5rem'}} className={'contextMenuButton'} onClick={duplicateNode}>Duplicate</button>
+      <button style={{margin: '0.5rem'}} className={'contextMenuButton'} onClick={deleteNode}>Delete</button>
     </div>
   );
 }

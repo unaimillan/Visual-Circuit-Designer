@@ -1,9 +1,9 @@
 /*______DragAndDrop______*/
 .dndnode {
     padding: 8px;
-    box-shadow: #c6c6c6 1px 1px 5px;
+
     border: #c6c6c6 1px solid;
-    border-radius: 0.66rem;
+    border-radius: 0.5rem;
 
     cursor: move;
     display: flex;
