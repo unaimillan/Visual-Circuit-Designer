@@ -24,9 +24,19 @@ import XorGate from '../assets/circuitsMenu/XOR.svg';
 import InputGate from '../assets/circuitsMenu/input.svg';
 import OutputGate from '../assets/circuitsMenu/output.svg';
 
+import MenuIcon from '../assets/circuitsMenu/menu.svg';
+import GearIcon from '../assets/settings/gear.svg';
+import HideArrowIcon from '../assets/circuitsMenu/hide-arrow.svg';
+import CursorIcon from '../assets/toolBar/cursor.svg';
+import HandIcon from '../assets/toolBar/hand.svg';
+import LineIcon from '../assets/toolBar/line.svg';
+import Line2Icon from '../assets/toolBar/line2.svg';
+import EraserIcon from '../assets/toolBar/eraser.svg';
+import TextIcon from '../assets/toolBar/text.svg';
+
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges } from './components/codeComponents/edges.js';
-import { MinimapSwitch } from "./components/codeComponents/switch.jsx";
+import { MinimapSwitch } from './components/codeComponents/switch.jsx';
 // export default SelectDemo;
 
 import './CSS/App.css';
@@ -36,7 +46,7 @@ import './CSS/dnd.css';
 import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
-import SelectDemo from "./components/codeComponents/select.jsx";
+import SelectDemo from './components/codeComponents/select.jsx';
 
 import './components/codeComponents/switch.jsx';
 
@@ -429,7 +439,7 @@ function App() {
       <div>
         <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
           <img
-            src="../assets/circuitsMenu/menu.svg"
+            src={MenuIcon}
             alt="open/close menu"
             className={"openCircuitsMenuButtonIcon"}
             draggable="false"
@@ -438,7 +448,7 @@ function App() {
 
         <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
           <img
-            src="../assets/settings/gear.svg"
+            src={GearIcon}
             alt="open/close settings"
             className={"openSettingsButtonIcon"}
             draggable="false"
@@ -516,7 +526,7 @@ function App() {
                     {item.header}
                     <img
                       className={'arrow'}
-                      src="../assets/circuitsMenu/hide-arrow.svg"
+                      src={HideArrowIcon}
                       alt="show/hide arrow"
                     />
                   </div>
@@ -559,7 +569,7 @@ function App() {
             }
           >
             <img
-              src="../assets/toolBar/cursor.svg"
+              src={CursorIcon}
               alt="cursor"
               className={"toolbarButtonIcon"}
               draggable="false"
@@ -575,7 +585,7 @@ function App() {
             }
           >
             <img
-              src="../assets/toolBar/hand.svg"
+              src={HandIcon}
               alt="hand"
               className={"toolbarButtonIcon"}
               draggable="false"
@@ -587,7 +597,7 @@ function App() {
             onClick={() => setActiveButton("sqwire")}
           >
             <img
-              src="../assets/toolBar/line.svg"
+              src={LineIcon}
               alt="square wire"
               className={"toolbarButtonIcon"}
               draggable="false"
@@ -599,7 +609,7 @@ function App() {
             onClick={() => setActiveButton("dwire")}
           >
             <img
-              src="../assets/toolBar/line2.svg"
+              src={Line2Icon}
               alt="diagonal wire"
               draggable="false"
               className={"toolbarButtonIcon"}
@@ -611,7 +621,7 @@ function App() {
             onClick={() => setActiveButton("eraser")}
           >
             <img
-              src="../assets/toolBar/eraser.svg"
+              src={EraserIcon}
               alt="eraser"
               draggable="false"
               className={"toolbarButtonIcon"}
@@ -623,7 +633,7 @@ function App() {
             onClick={() => setActiveButton("text")}
           >
             <img
-              src="../assets/toolBar/text.svg"
+              src={TextIcon}
               alt="text tool"
               className={"toolbarButtonIcon"}
               draggable="false"
