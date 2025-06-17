@@ -34,6 +34,7 @@
 }
 
 .openProfileButton {
+    display: flex;
     margin-top: 0.5rem;
     margin-left: 1.5rem;
     width: 39.5rem;
@@ -49,18 +50,21 @@
     background-color: #dadada;
 }
 
-.defaultUserIcon {
+.settingUserIcon {
     width: 3rem;
     height: 3rem;
     border: #838383 solid 0.05rem;
     border-radius: 3rem;
     margin-left: 1rem;
+    margin-top: 1rem;
 }
 
-.defaultUserName {
+.settingUserName {
     margin-left: 0.5rem;
-    vertical-align: 1.1rem;
     font-size: 1rem;
+    margin-top: 1.8rem;
+    color: black;
+    text-decoration: none;
 }
 
 
