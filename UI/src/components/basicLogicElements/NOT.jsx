@@ -1,12 +1,25 @@
 import {Handle, Position} from '@xyflow/react';
+import NotGate from '../../../assets/circuitsMenu/NOT.svg';
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconNOT} from "../../../assets/circuits-icons.jsx";
 
 function NotNode({ isConnectable }) {
   return (
-    <div className='circuit-button'>
-      <IconNOT SVGClassName={'circuit-button-icon'}/>
+    <div
+      style={{
+        width: 80,
+        height: 70,
+        position: 'relative',
+        border: '1px solid #555',
+        borderRadius: '4px',
+        background: '#fff',
+        display: 'flex',
+        boxSizing: 'border-box',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <img src={NotGate} alt="NOT Gate" style={{ objectFit: 'cover', maxWidth: '100%', height: '110%' }}/>
 
       {/* Handles */}
       <CustomHandle
@@ -21,7 +34,7 @@ function NotNode({ isConnectable }) {
         type="source"
         position={Position.Right}
         id="output-1"
-        style={{ top: 34, left: 72 }}
+        style={{ top: 34, left: 71 }}
         isConnectable={isConnectable}
       />
     </div>
