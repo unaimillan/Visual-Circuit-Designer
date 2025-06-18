@@ -1,7 +1,7 @@
-import {Handle, Position} from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconXOR} from "../../../assets/circuits-icons.jsx";
+import { IconXOR } from "../../../assets/circuits-icons.jsx";
 
 function XorNode({ isConnectable }) {
   return (

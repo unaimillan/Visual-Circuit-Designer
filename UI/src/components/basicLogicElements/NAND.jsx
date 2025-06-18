@@ -1,7 +1,7 @@
-import {Handle, Position} from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconNAND} from "../../../assets/circuits-icons.jsx";
+import { IconNAND } from "../../../assets/circuits-icons.jsx";
 
 function NandNode({ isConnectable }) {
   return (
