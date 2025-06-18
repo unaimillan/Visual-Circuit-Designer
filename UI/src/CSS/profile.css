@@ -1,0 +1,108 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  height: 5rem;
+  background-color: #e3e3e3;
+  border-bottom: 1px solid #c1c1c1;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-right: 15px;
+  margin-left: auto;
+}
+
+.profileUserName {
+  font-size: 1rem;
+  color: black;
+}
+
+.profileUserIcon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: white;
+  border: 1px solid #c1c1c1;
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  padding-top: 1rem;
+}
+
+.profile {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.profileToEdit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.userIconToEdit {
+  width: 12rem;
+  height: 12rem;
+  border: 1px solid #c1c1c1;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.userNameToEdit {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.editProfileButton {
+  width: 100%;
+  max-width: 15rem;
+  height: 2.8rem;
+  border: 1px solid #c1c1c1;
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.editProfileButton:hover {
+  background-color: #f0f0f0;
+}
+
+.editProfileButtonText {
+  display: flex;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.projectsPanel {
+  flex: 1;
+  padding: 2rem;
+  border-left: 1px solid #c1c1c1;
+}
+
+.projectPanelName {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+}

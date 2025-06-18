@@ -1,6 +1,6 @@
 /* reset */
 button {
-    all: unset;
+  all: unset;
 }
 
 .SelectTrigger {
@@ -23,7 +23,7 @@ button {
 }
 
 .SelectTrigger[data-placeholder] {
-    color: #000000;
+  color: #000000;
 }
 
 .SelectIcon {
@@ -41,7 +41,7 @@ button {
 }
 
 .SelectViewport {
-    padding: 5px;
+  padding: 5px;
 }
 
 .SelectItem {
@@ -56,33 +56,34 @@ button {
     position: relative;
     user-select: none;
 }
+
 .SelectItem[data-highlighted] {
     outline: none;
     background-color: var(--button-hover-color);
 }
 
 .SelectLabel {
-    padding: 0 25px;
-    font-size: 12px;
-    line-height: 25px;
-    color: #000000;
+  padding: 0 25px;
+  font-size: 12px;
+  line-height: 25px;
+  color: #000000;
 }
 
 .SelectItemIndicator {
-    position: absolute;
-    left: 0;
-    width: 25px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .SelectScrollButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 25px;
-    background-color: white;
-    color: yellowgreen;
-    cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  background-color: white;
+  color: yellowgreen;
+  cursor: default;
 }
