@@ -16,8 +16,12 @@
 
   --select-color: #dbedff;
 
-  --simulate-button-bg-color: #d6f1df; /* либо #C4E8D1 */
-  --simulate-button-text-color: #218358;
+  --simulate-start-button-bg-color: #d6f1df; /* либо #C4E8D1 */
+  --simulate-start-button-text-color: #218358;
+
+  --simulate-stop-button-bg-color: #ffdbdc;
+  --simulate-stop-button-text-color: #ce2c31;
+
 
   --minimap-mask-color: rgba(240, 240, 240, 0.6);
   --minimap-node-color: #e2e2e2;
@@ -43,8 +47,12 @@
 
   --select-color: #2a3b55;
 
-  --simulate-button-bg-color: #2e4b3c;
-  --simulate-button-text-color: #8fe7b4;
+  --simulate-start-button-bg-color: #325e45; /* тёмно-зелёный, не слишком яркий */
+  --simulate-start-button-text-color: #b4eac8; /* мятно-светлый, читабельный */
+
+  --simulate-stop-button-bg-color: #5a2c2d; /* глухой красный */
+  --simulate-stop-button-text-color: #ffb4b6; /* бледно-красный для текста */
+
 
   --minimap-mask-color: rgba(240, 240, 240, 0.1);
   --minimap-node-color: #323232;
@@ -68,8 +76,12 @@
 
   --select-color: #fbd1df;
 
-  --simulate-button-bg-color: #f8dfe9;
-  --simulate-button-text-color: #a24666;
+  --simulate-start-button-bg-color: #f1dce4; /* слегка розовый с зелёным подтоном */
+  --simulate-start-button-text-color: #7c3d51; /* глубокий тёмно-розовый/сливовый */
+
+  --simulate-stop-button-bg-color: #ffc8d0; /* чуть ярче, но сочетается */
+  --simulate-stop-button-text-color: #a1222d; /* ближе к цвету иконок */
+
 
   --minimap-mask-color: rgba(255, 240, 245, 0.6);
   --minimap-node-color: #fbdde6;
@@ -95,8 +107,12 @@
 
   --select-color: #33467c;
 
-  --simulate-button-bg-color: #7dcfff;
-  --simulate-button-text-color: #1a1b26;
+  --simulate-start-button-bg-color: #2d4f46; /* зелёный с холодным подтоном */
+  --simulate-start-button-text-color: #9ece6a; /* основной зелёный Tokyo Night */
+
+  --simulate-stop-button-bg-color: #553648; /* тёмно-красновато-сливовый */
+  --simulate-stop-button-text-color: #f7768e; /* акцентный розовый TN */
+
 
   --minimap-mask-color: rgba(30, 32, 48, 0.6);
   --minimap-node-color: #3b4261;
@@ -122,8 +138,12 @@
 
   --select-color: #b6e9c5;
 
-  --simulate-button-bg-color: #b0e3c2;
-  --simulate-button-text-color: #216a45;
+  --simulate-start-button-bg-color: #c4e8d1; /* слегка ярче, чем фон */
+  --simulate-start-button-text-color: #2f6d4a; /* гармонирует с остальными зелёными */
+
+  --simulate-stop-button-bg-color: #f8cccc; /* менее кислотный */
+  --simulate-stop-button-text-color: #ba3a3a; /* органично смотрится в природе */
+
 
   --minimap-mask-color: rgba(200, 255, 225, 0.5);
   --minimap-node-color: #c9e7d6;
@@ -147,8 +167,12 @@
 
   --select-color: rgba(249, 89, 89, 0.25);
 
-  --simulate-button-bg-color: #f95959;
-  --simulate-button-text-color: #1c1c1c;
+  --simulate-start-button-bg-color: #395039; /* землисто-коричневый с зелёным намёком */
+  --simulate-start-button-text-color: #76a182; /* мягкий зелёный, хороший контраст */
+
+  --simulate-stop-button-bg-color: #5c2d2d; /* глубокий красный/коричневый */
+  --simulate-stop-button-text-color: #f95959; /* главный акцент темы */
+
 
   --minimap-mask-color: rgba(255, 80, 80, 0.2);
   --minimap-node-color: #3a3a3a;
