@@ -339,7 +339,7 @@ function App() {
     {
       header: "Basic Logic Elements",
       gates: [
-        { id: 'andNode', label: 'AND', icon: AndNode },
+        { id: 'andNode', label: 'AND', icon: IconAND },
         { id: 'orNode', label: 'OR', icon: IconOR },
         { id: 'notNode', label: 'NOT', icon: IconNOT },
         { id: 'nandNode', label: 'NAND', icon: IconNAND },
@@ -434,21 +434,6 @@ function App() {
         </button>
 
 
-        {/*<button*/}
-        {/*    onClick={saveCircuit}*/}
-        {/*    style={{*/}
-        {/*        marginTop: '20px',*/}
-        {/*        padding: '10px',*/}
-        {/*        background: '#4CAF50',*/}
-        {/*        color: 'white',*/}
-        {/*        border: 'none',*/}
-        {/*        borderRadius: '4px',*/}
-        {/*        cursor: 'pointer'*/}
-        {/*    }}*/}
-        {/*>*/}
-        {/*    Save Circuit*/}
-        {/*</button>*/}
-
         <div className={`backdrop ${openSettings ? 'cover' : ''}`}
              onClick={() => setOpenSettings(false)}>
         </div>
@@ -527,13 +512,8 @@ function App() {
                           draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
+                          <node.icon SVGClassName={"dndnode-icon"} draggable="false"/>
 
-                          {/*<img*/}
-                          {/*  src={node.icon}*/}
-                          {/*  alt={node.label}*/}
-                          {/*  style={{ width: '50px', height: 'auto' }}*/}
-                          {/*  draggable = {false}*/}
-                          {/*/>*/}
                           <span>{node.label}</span>
                         </div>
                       ))}
