@@ -1,13 +1,12 @@
-import {Handle, Position} from '@xyflow/react';
+import {Handle, Position} from '@xyflow/react'
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconNOT} from "../../../assets/circuits-icons.jsx";
+import {IconNOT} from '../../../assets/circuits-icons.jsx'
 
 function NotNode({ isConnectable }) {
   return (
     <div className='circuit-button'>
       <IconNOT SVGClassName={'circuit-button-icon'}/>
-
       {/* Handles */}
       <CustomHandle
         type="target"
@@ -21,7 +20,7 @@ function NotNode({ isConnectable }) {
         type="source"
         position={Position.Right}
         id="output-1"
-        style={{ top: 34, left: 72 }}
+        style={{ top: 34, left: 71 }}
         isConnectable={isConnectable}
       />
     </div>
