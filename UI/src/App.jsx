@@ -15,30 +15,12 @@ import {
 import '@xyflow/react/dist/style.css';
 import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 
-import AndGate from '../assets/circuitsMenu/AND.svg';
-import OrGate from '../assets/circuitsMenu/OR.svg';
-import NotGate from '../assets/circuitsMenu/NOT.svg';
-import NandGate from '../assets/circuitsMenu/NAND.svg';
-import NorGate from '../assets/circuitsMenu/NOR.svg';
-import XorGate from '../assets/circuitsMenu/XOR.svg';
-import InputGate from '../assets/circuitsMenu/input.svg';
-import OutputGate from '../assets/circuitsMenu/output.svg';
-
-import MenuIcon from '../assets/circuitsMenu/menu.svg';
-import GearIcon from '../assets/settings/gear.svg';
-import HideArrowIcon from '../assets/circuitsMenu/hide-arrow.svg';
-import CursorIcon from '../assets/toolBar/cursor.svg';
-import HandIcon from '../assets/toolBar/hand.svg';
-import LineIcon from '../assets/toolBar/line.svg';
-import Line2Icon from '../assets/toolBar/line2.svg';
-import EraserIcon from '../assets/toolBar/eraser.svg';
-import TextIcon from '../assets/toolBar/text.svg';
-
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges } from './components/codeComponents/edges.js';
-import { MinimapSwitch } from './components/codeComponents/switch.jsx';
-// export default SelectDemo;
+import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
 
+
+import './CSS/variables.css';
 import './CSS/App.css';
 import './CSS/settings.css';
 import './CSS/toolbar.css';
@@ -46,32 +28,67 @@ import './CSS/dnd.css';
 import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
-import SelectDemo from './components/codeComponents/select.jsx';
+import {SelectCanvasBG, SelectTheme} from "./components/codeComponents/select.jsx";
 
 import './components/codeComponents/switch.jsx';
 
-
-let variant;
-
+import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
+import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
+import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
 
 function App() {
+  // Internal variables
   const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+
+  // Setting variables
+  let variant;
   const [currentBG, setCurrentBG] = useState("dots")
-
   const [showMinimap, setShowMinimap] = useState(true)
+  const [theme, setTheme] = useState('light');
 
-  if (currentBG === "dots") {
-    variant = BackgroundVariant.Dots;
-  } else if (currentBG === "cross") {
-    variant = BackgroundVariant.Cross;
-  } else {
-    variant = BackgroundVariant.Lines;
-  }
+  useEffect(() => {
+    const saved = localStorage.getItem('userSettings');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.currentBG) setCurrentBG(parsed.currentBG);
+        if (typeof parsed.showMinimap === 'boolean') setShowMinimap(parsed.showMinimap);
+        if (parsed.theme) setTheme(parsed.theme);
+        if (parsed.activeButton) setActiveButton(parsed.activeButton);
+        if (typeof parsed.openSettings === 'boolean') setOpenSettings(parsed.openSettings);
+        if (typeof parsed.circuitsMenuState === 'boolean') setCircuitsMenuState(parsed.circuitsMenuState);
+      } catch (e) {
+        console.error("Ошибка при загрузке настроек из localStorage", e);
+      }
+    }
+  }, []);
+
+  if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
+  else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
+  else { variant = BackgroundVariant.Lines; }
+
+  useEffect(() => {
+    // Устанавливаем data-theme на корневой элемент <html>
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+
+  useEffect(() => {
+    const settings = {
+      currentBG,
+      showMinimap,
+      theme,
+      activeButton,
+      openSettings,
+      circuitsMenuState,
+    };
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+  }, [currentBG, showMinimap, theme, activeButton, openSettings, circuitsMenuState]);
 
 
   /* React Flow */
@@ -363,12 +380,12 @@ function App() {
     {
       header: "Basic Logic Elements",
       gates: [
-        { id: 'andNode', label: 'AND', icon: AndGate },
-        { id: 'orNode', label: 'OR', icon: OrGate },
-        { id: 'notNode', label: 'NOT', icon: NotGate },
-        { id: 'nandNode', label: 'NAND', icon: NandGate },
-        { id: 'norNode', label: 'NOR', icon: NorGate },
-        { id: 'xorNode', label: 'XOR', icon: XorGate },
+        { id: 'andNode', label: 'AND', icon: IconAND },
+        { id: 'orNode', label: 'OR', icon: IconOR },
+        { id: 'notNode', label: 'NOT', icon: IconNOT },
+        { id: 'nandNode', label: 'NAND', icon: IconNAND },
+        { id: 'norNode', label: 'NOR', icon: IconNOR },
+        { id: 'xorNode', label: 'XOR', icon: IconXOR },
       ]
     },
     {
@@ -378,8 +395,8 @@ function App() {
     {
       header: "Pins",
       gates: [
-        { id: 'inputNode', label: 'input', icon: InputGate },
-        { id: 'outputNode', label: 'output', icon: OutputGate },
+        { id: 'inputNode', label: 'input', icon: IconInput },
+        { id: 'outputNode', label: 'output', icon: IconOutput },
       ]
     },
     {
@@ -425,51 +442,36 @@ function App() {
       >
         <Background
           offset={[10.5, 5.5]}
+          bgColor={"var(--canvas-bg-color)"}
+          color="var(--canvas-color)"
 
           gap={GAP_SIZE}
           size={0.8}
           variant={variant}
         />
-        <Controls/>
-        {showMinimap && (<MiniMap className='miniMap'
-                                  position="top-right"
+
+        <Controls className={'controls'}/>
+
+        {showMinimap && (
+          <MiniMap
+            className='miniMap'
+            bgColor={'var(--canvas-bg-color)'}
+            maskColor={'var(--minimap-mask-color)'}
+            nodeColor={'var(--minimap-node-color)'}
+            position="top-right"
+            style={{ borderRadius: '0.5rem', overflow: 'hidden' }}
         />)}
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
       <div>
         <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
-          <img
-            src={MenuIcon}
-            alt="open/close menu"
-            className={"openCircuitsMenuButtonIcon"}
-            draggable="false"
-          />
+          <IconMenu SVGClassName={"openCircuitsMenuButtonIcon"} draggable="false"/>
         </button>
 
         <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
-          <img
-            src={GearIcon}
-            alt="open/close settings"
-            className={"openSettingsButtonIcon"}
-            draggable="false"
-          />
+          <IconSettings SVGClassName={"openSettingsButtonIcon"} draggable="false"/>
         </button>
 
-
-        {/*<button*/}
-        {/*    onClick={saveCircuit}*/}
-        {/*    style={{*/}
-        {/*        marginTop: '20px',*/}
-        {/*        padding: '10px',*/}
-        {/*        background: '#4CAF50',*/}
-        {/*        color: 'white',*/}
-        {/*        border: 'none',*/}
-        {/*        borderRadius: '4px',*/}
-        {/*        cursor: 'pointer'*/}
-        {/*    }}*/}
-        {/*>*/}
-        {/*    Save Circuit*/}
-        {/*</button>*/}
 
         <div className={`backdrop ${openSettings ? 'cover' : ''}`}
              onClick={() => setOpenSettings(false)}>
@@ -488,12 +490,22 @@ function App() {
           </div>
 
           <div className="backgroundVariantBlock">
-            <p className={'minimapSwitchLabel'}>Canvas background</p>
+            <p className={'selectCanvasBG'}>Canvas background</p>
             <label htmlFor="selectBackground"></label>
-            <SelectDemo
+            <SelectCanvasBG
               currentBG={currentBG}
               setCurrentBG={setCurrentBG}
               className={'selectBG'}
+            />
+          </div>
+
+          <div className="backgroundVariantBlock">
+            <p className={'minimapSwitchLabel'}>Theme</p>
+            <label htmlFor="selectTheme"></label>
+            <SelectTheme
+              theme={theme}
+              setTheme={setTheme}
+              className={'selectTheme'}
             />
           </div>
 
@@ -524,14 +536,10 @@ function App() {
                 >
                   <div className="header" onClick={() => toggleItem(index)}>
                     {item.header}
-                    <img
-                      className={'arrow'}
-                      src={HideArrowIcon}
-                      alt="show/hide arrow"
-                    />
+                    <IconArrow SVGClassName={'arrow'} draggable="false" />
                   </div>
 
-                  {openIndexes.includes(index) && (
+                  <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
                     <div className="gates-grid">
                       {item.gates.map((node) => (
                         <div
@@ -540,19 +548,14 @@ function App() {
                           draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
-                          <button onClick={() => spawnCircuit(node.id)}>
-                          <img
-                            src={node.icon}
-                            alt={node.label}
-                            style={{ width: '50px', height: 'auto' }}
-                            draggable={false}
-                          />
-                          <div className={"circuitsName"}>{node.label}</div>
-                          </button>
+                          <node.icon SVGClassName="dndnode-icon" draggable="false" />
+                          <span>{node.label}</span>
                         </div>
                       ))}
                     </div>
-                  )}
+                  </div>
+
+
                 </li>
               ))}
             </ol>
@@ -562,87 +565,62 @@ function App() {
         <div className={"toolbar"}>
           <button
             className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-            onClick={() => {
-              setActiveButton("cursor")
-              setPanOnDrag([1, 2])
-            }
+              onClick={() => {
+                setActiveButton("cursor")
+                setPanOnDrag([1, 2])
+              }
             }
           >
-            <img
-              src={CursorIcon}
-              alt="cursor"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarCursor SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-            onClick={() => {
-              setActiveButton("hand")
-              setPanOnDrag(true)
-            }
+              onClick={() => {
+                setActiveButton("hand")
+                setPanOnDrag(true)
+              }
             }
           >
-            <img
-              src={HandIcon}
-              alt="hand"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarHand SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
             onClick={() => setActiveButton("sqwire")}
           >
-            <img
-              src={LineIcon}
-              alt="square wire"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarSquareWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
             onClick={() => setActiveButton("dwire")}
           >
-            <img
-              src={Line2Icon}
-              alt="diagonal wire"
-              draggable="false"
-              className={"toolbarButtonIcon"}
-            />
+            <IconToolbarDiagWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
             onClick={() => setActiveButton("eraser")}
           >
-            <img
-              src={EraserIcon}
-              alt="eraser"
-              draggable="false"
-              className={"toolbarButtonIcon"}
-            />
+            <IconToolbarEraser SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
             onClick={() => setActiveButton("text")}
           >
-            <img
-              src={TextIcon}
-              alt="text tool"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarText SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
         </div>
       </div>
     </div>
+
+
+
   );
 }
+
+
 
 export default App
