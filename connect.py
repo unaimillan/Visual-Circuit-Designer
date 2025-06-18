@@ -19,6 +19,7 @@ user_simulations = {}
 @sio.on("connect")
 async def connect(sid, environ):
     print(f"Client connected: {sid}")
+    await sio.emit("ready", room=sid)
 
 
 @sio.on("disconnect")
