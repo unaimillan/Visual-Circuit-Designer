@@ -1,111 +1,50 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   ReactFlow,
   Controls,
   Background,
-  BackgroundVariant,
   addEdge,
   SelectionMode,
   useNodesState,
   useEdgesState,
   MiniMap,
-  useStoreApi,
-  useReactFlow,
+  // isValidConnection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 
-import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
-import { initialEdges } from './components/codeComponents/edges.js';
-import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
+import AndGate from '../assets/circuitsMenu/AND.svg';
+import OrGate from '../assets/circuitsMenu/OR.svg';
+import NotGate from '../assets/circuitsMenu/NOT.svg';
+import NandGate from '../assets/circuitsMenu/NAND.svg';
+import NorGate from '../assets/circuitsMenu/NOR.svg';
+import XorGate from '../assets/circuitsMenu/XOR.svg';
+import InputGate from '../assets/circuitsMenu/input.svg';
+import OutputGate from '../assets/circuitsMenu/output.svg';
 
+import { initialNodes, nodeTypes } from './components/nodes';
+import { initialEdges } from './components/edges';
 
-import './CSS/variables.css';
-import './CSS/App.css';
-import './CSS/settings.css';
-import './CSS/toolbar.css';
-import './CSS/dnd.css';
-import './CSS/backdrop.css';
-import './CSS/circuitsMenu.css';
-import './CSS/contextMenu.css';
-import {SelectCanvasBG, SelectTheme} from "./components/codeComponents/select.jsx";
+import {io} from "socket.io-client";
 
-import './components/codeComponents/switch.jsx';
-
-import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
-import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
-import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
+import './App.css';
 
 const GAP_SIZE = 10;
-const MIN_DISTANCE = 10;
 
 function App() {
-  // Internal variables
-  const [circuitsMenuState, setCircuitsMenuState] = useState(false)
+  const [panelState, setPanelState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
-
-  // Setting variables
-  let variant;
-  const [currentBG, setCurrentBG] = useState("dots")
-  const [showMinimap, setShowMinimap] = useState(true)
-  const [theme, setTheme] = useState('light');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('userSettings');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.currentBG) setCurrentBG(parsed.currentBG);
-        if (typeof parsed.showMinimap === 'boolean') setShowMinimap(parsed.showMinimap);
-        if (parsed.theme) setTheme(parsed.theme);
-        if (parsed.activeButton) setActiveButton(parsed.activeButton);
-        if (typeof parsed.openSettings === 'boolean') setOpenSettings(parsed.openSettings);
-        if (typeof parsed.circuitsMenuState === 'boolean') setCircuitsMenuState(parsed.circuitsMenuState);
-      } catch (e) {
-        console.error("Ошибка при загрузке настроек из localStorage", e);
-      }
-    }
-  }, []);
-
-  if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
-  else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
-  else { variant = BackgroundVariant.Lines; }
-
-  useEffect(() => {
-    // Устанавливаем data-theme на корневой элемент <html>
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-
-  useEffect(() => {
-    const settings = {
-      currentBG,
-      showMinimap,
-      theme,
-      activeButton,
-      openSettings,
-      circuitsMenuState,
-    };
-    localStorage.setItem('userSettings', JSON.stringify(settings));
-  }, [currentBG, showMinimap, theme, activeButton, openSettings, circuitsMenuState]);
-
 
   /* React Flow */
   const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [menu, setMenu] = useState(null);
-  const ref = useRef(null);
-  const store = useStoreApi();
-  const { getInternalNode } = useReactFlow();
-
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
-  const validateConnection = useCallback((connection) => {
+  const validateConnection = (connection) => {
     return connection.source !== connection.target;
-  });
+  };
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -118,14 +57,16 @@ function App() {
     const type = event.dataTransfer.getData('application/reactflow');
     if (!type || !reactFlowInstance) return;
 
+    // Get drop position relative to canvas
     const position = reactFlowInstance.screenToFlowPosition({
       x: event.clientX,
       y: event.clientY,
     });
 
+    // Create new node
     const newNode = {
       id: `${type}-${Date.now()}`,
-      type,
+      type, // Your custom node type
       position,
       data: {
         customId: `${type}-${Date.now()}`,
@@ -138,162 +79,6 @@ function App() {
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges],
-  );
-
-  const onNodeContextMenu = useCallback(
-    (event, node) => {
-      // Prevent native context menu from showing
-      event.preventDefault();
-
-      // Calculate position of the context menu. We want to make sure it
-      // doesn't get positioned off-screen.
-      const pane = ref.current.getBoundingClientRect();
-      setMenu({
-        id: node.id,
-        name: node.type,
-        top: event.clientY < pane.height - 200 && event.clientY,
-        left: event.clientX < pane.width - 200 && event.clientX,
-        right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-        bottom:
-          event.clientY >= pane.height - 200 && pane.height - event.clientY,
-      });
-    },
-    [setMenu],
-  );
-
-
-  // Close the context menu if it's open whenever the window is clicked.
-  const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
-
-  const getClosestEdge = useCallback((draggedNode) => {
-    const { nodeLookup } = store.getState();
-    const internalNode = getInternalNode(draggedNode.id);
-    if (!internalNode) return null;
-
-    const draggedHandles = internalNode.internals.handleBounds;
-    if (!draggedHandles) return null;
-
-    const draggedPos = internalNode.internals.positionAbsolute;
-
-    let closestEdge = null;
-    let minDistance = MIN_DISTANCE;
-
-    nodeLookup.forEach((node) => {
-      if (node.id === draggedNode.id) return;
-
-      const nodeHandles = node.internals.handleBounds;
-      if (!nodeHandles) return;
-
-      const nodePos = node.internals.positionAbsolute;
-
-      // Check source->target connections
-      if (draggedHandles.source) {
-        draggedHandles.source.forEach((srcHandle) => {
-          const srcHandlePos = {
-            x: draggedPos.x + srcHandle.x + srcHandle.width / 2,
-            y: draggedPos.y + srcHandle.y + srcHandle.height / 2
-          };
-
-          if (nodeHandles.target) {
-            nodeHandles.target.forEach((tgtHandle) => {
-              const tgtHandlePos = {
-                x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
-                y: nodePos.y + tgtHandle.y + tgtHandle.height / 2
-              };
-
-              const dx = srcHandlePos.x - tgtHandlePos.x;
-              const dy = srcHandlePos.y - tgtHandlePos.y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-
-              if (distance < minDistance) {
-                minDistance = distance;
-                closestEdge = {
-                  id: `temp-${internalNode.id}-${srcHandle.id}-to-${node.id}-${tgtHandle.id}`,
-                  source: internalNode.id,
-                  sourceHandle: srcHandle.id,
-                  target: node.id,
-                  targetHandle: tgtHandle.id,
-                  className: 'temp'
-                };
-              }
-            });
-          }
-        });
-      }
-
-      // Check target->source connections
-      if (draggedHandles.target) {
-        draggedHandles.target.forEach((tgtHandle) => {
-          const tgtHandlePos = {
-            x: draggedPos.x + tgtHandle.x + tgtHandle.width / 2,
-            y: draggedPos.y + tgtHandle.y + tgtHandle.height / 2
-          };
-
-          if (nodeHandles.source) {
-            nodeHandles.source.forEach((srcHandle) => {
-              const srcHandlePos = {
-                x: nodePos.x + srcHandle.x + srcHandle.width / 2,
-                y: nodePos.y + srcHandle.y + srcHandle.height / 2
-              };
-
-              const dx = tgtHandlePos.x - srcHandlePos.x;
-              const dy = tgtHandlePos.y - srcHandlePos.y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-
-              if (distance < minDistance) {
-                minDistance = distance;
-                closestEdge = {
-                  id: `temp-${node.id}-${srcHandle.id}-to-${internalNode.id}-${tgtHandle.id}`,
-                  source: node.id,
-                  sourceHandle: srcHandle.id,
-                  target: internalNode.id,
-                  targetHandle: tgtHandle.id,
-                  className: 'temp'
-                };
-              }
-            });
-          }
-        });
-      }
-    });
-
-    return closestEdge;
-  }, [store, getInternalNode]);
-
-  const onNodeDrag = useCallback(
-    (_, node) => {
-      const closeEdge = getClosestEdge(node);
-
-      setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== 'temp');
-        if (closeEdge !== null) {
-          nextEdges.push(closeEdge);
-        }
-        return nextEdges;
-      });
-    },
-    [getClosestEdge, setEdges],
-  );
-
-  const onNodeDragStop = useCallback(
-    (_, node) => {
-      setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== 'temp');
-        const closeEdge = getClosestEdge(node);
-
-        if (closeEdge) {
-          return addEdge({
-            source: closeEdge.source,
-            sourceHandle: closeEdge.sourceHandle,
-            target: closeEdge.target,
-            targetHandle: closeEdge.targetHandle
-          }, nextEdges);
-        }
-
-        return nextEdges;
-      });
-    },
-    [getClosestEdge, setEdges],
   );
 
   const saveCircuit = () => {
@@ -320,7 +105,7 @@ function App() {
       encodeURIComponent(JSON.stringify(flowData, null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "circuit.json");
+    downloadAnchorNode.setAttribute("download", "circuitSample.json");
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -344,24 +129,6 @@ function App() {
     };
   };
 
-  const spawnCircuit = (type) => {
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: screen.availWidth / 2,
-      y: screen.availHeight / 2,
-    });
-
-    const newNode = {
-      id: `${type}-${Date.now()}`,
-      type: type,
-      position,
-      data: {
-        customId: `${type}-${Date.now()}`,
-      }
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  }
-
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && openSettings) {
@@ -380,28 +147,33 @@ function App() {
     {
       header: "Basic Logic Elements",
       gates: [
-        { id: 'andNode', label: 'AND', icon: IconAND },
-        { id: 'orNode', label: 'OR', icon: IconOR },
-        { id: 'notNode', label: 'NOT', icon: IconNOT },
-        { id: 'nandNode', label: 'NAND', icon: IconNAND },
-        { id: 'norNode', label: 'NOR', icon: IconNOR },
-        { id: 'xorNode', label: 'XOR', icon: IconXOR },
+        { id: 'andNode', label: 'AND', icon: AndGate },
+        { id: 'orNode', label: 'OR', icon: OrGate },
+        { id: 'notNode', label: 'NOT', icon: NotGate },
+        { id: 'nandNode', label: 'NAND', icon: NandGate },
+        { id: 'norNode', label: 'NOR', icon: NorGate },
+        { id: 'xorNode', label: 'XOR', icon: XorGate },
       ]
     },
     {
       header: "Advanced Logic Elements",
-      gates: []
+      gates: [
+        { id: 'inputNode', label: 'input', icon: InputGate },
+        { id: 'outputNode', label: 'output', icon: OutputGate },
+      ]
     },
     {
       header: "Pins",
       gates: [
-        { id: 'inputNode', label: 'input', icon: IconInput },
-        { id: 'outputNode', label: 'output', icon: IconOutput },
+        { id: 'inputNode', label: 'input', icon: InputGate },
+        { id: 'outputNode', label: 'output', icon: OutputGate },
       ]
     },
     {
       header: "Custom Logic Elements",
-      gates: []
+      gates: [
+        { id: 'notNode', label: 'NOT', icon: NotGate },
+      ]
     }
   ];
 
@@ -416,16 +188,11 @@ function App() {
   return (
     <div style={{ height: '100%' }}>
       <ReactFlow
-        ref={ref}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeDrag={onNodeDrag}
-        onNodeDragStop={onNodeDragStop}
         onConnect={onConnect}
-        onPaneClick={onPaneClick}
-        onNodeContextMenu={onNodeContextMenu}
         isValidConnection={validateConnection}
         onInit={setReactFlowInstance}
         onDrop={onDrop}
@@ -439,39 +206,59 @@ function App() {
         snapGrid={[GAP_SIZE, GAP_SIZE]}
         minZoom={0.1}
         maxZoom={10}
+        fitView fitViewOptions={{ padding: 6 }}
       >
         <Background
           offset={[10.5, 5.5]}
-          bgColor={"var(--canvas-bg-color)"}
-          color="var(--canvas-color)"
-
           gap={GAP_SIZE}
           size={0.8}
-          variant={variant}
         />
-
-        <Controls className={'controls'}/>
-
-        {showMinimap && (
-          <MiniMap
-            className='miniMap'
-            bgColor={'var(--canvas-bg-color)'}
-            maskColor={'var(--minimap-mask-color)'}
-            nodeColor={'var(--minimap-node-color)'}
-            position="top-right"
-            style={{ borderRadius: '0.5rem', overflow: 'hidden' }}
-        />)}
-        {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+        <Controls/>
+        <MiniMap
+          position="top-right"
+        />
       </ReactFlow>
       <div>
-        <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
-          <IconMenu SVGClassName={"openCircuitsMenuButtonIcon"} draggable="false"/>
+        <button className="openMenuButton" onClick={() => setPanelState(!panelState)}>
+          <img
+            src="../assets/circuitsMenu/menu.svg"
+            alt="open/close menu"
+            className={"openMenuButtonIcon"}
+            draggable="false"
+          />
         </button>
 
         <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
-          <IconSettings SVGClassName={"openSettingsButtonIcon"} draggable="false"/>
+          <img
+            src="../assets/settings/gear.svg"
+            alt="open/close settings"
+            className={"openSettingsButtonIcon"}
+            draggable="false"
+          />
         </button>
 
+        <button onClick={saveCircuit}>Save Circuit</button>
+        <input
+          type="file"
+          accept=".json"
+          onChange={loadCircuit}
+          style={{ marginTop: '10px' }}
+        />
+
+        {/*<button*/}
+        {/*    onClick={saveCircuit}*/}
+        {/*    style={{*/}
+        {/*        marginTop: '20px',*/}
+        {/*        padding: '10px',*/}
+        {/*        background: '#4CAF50',*/}
+        {/*        color: 'white',*/}
+        {/*        border: 'none',*/}
+        {/*        borderRadius: '4px',*/}
+        {/*        cursor: 'pointer'*/}
+        {/*    }}*/}
+        {/*>*/}
+        {/*    Save Circuit*/}
+        {/*</button>*/}
 
         <div className={`backdrop ${openSettings ? 'cover' : ''}`}
              onClick={() => setOpenSettings(false)}>
@@ -479,50 +266,13 @@ function App() {
 
         <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
           <p className={'settingsMenuTitle'}>Settings</p>
-
-          <div className="minimapSwitchBlock">
-            <p className={'minimapSwitchLabel'}>Show mini-map</p>
-            <MinimapSwitch
-              className={'minimapSwitch'}
-              minimapState={showMinimap}
-              minimapToggle={setShowMinimap}
-            />
-          </div>
-
-          <div className="backgroundVariantBlock">
-            <p className={'selectCanvasBG'}>Canvas background</p>
-            <label htmlFor="selectBackground"></label>
-            <SelectCanvasBG
-              currentBG={currentBG}
-              setCurrentBG={setCurrentBG}
-              className={'selectBG'}
-            />
-          </div>
-
-          <div className="backgroundVariantBlock">
-            <p className={'minimapSwitchLabel'}>Theme</p>
-            <label htmlFor="selectTheme"></label>
-            <SelectTheme
-              theme={theme}
-              setTheme={setTheme}
-              className={'selectTheme'}
-            />
-          </div>
-
-          <button className={""} onClick={saveCircuit}>Save Circuit</button>
-          <input
-            type="file"
-            accept=".json"
-            onChange={loadCircuit}
-            style={{ marginTop: '10px' }}
-          />
         </div>
 
-        <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
+        <div className={`panel ${panelState ? 'open' : ''}`}>
 
           <div className="menu-container">
             <div className="menu-header">
-              <p className={"circuitsMenuTitle"}>
+              <p className={"panelTitle"}>
                 Menu
               </p>
               <div className="divider"></div>
@@ -536,10 +286,14 @@ function App() {
                 >
                   <div className="header" onClick={() => toggleItem(index)}>
                     {item.header}
-                    <IconArrow SVGClassName={'arrow'} draggable="false" />
+                    <img
+                      className={'arrow'}
+                      src="../assets/circuitsMenu/hide-arrow.svg"
+                      alt="show/hide arrow"
+                    />
                   </div>
 
-                  <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
+                  {openIndexes.includes(index) && (
                     <div className="gates-grid">
                       {item.gates.map((node) => (
                         <div
@@ -548,14 +302,16 @@ function App() {
                           draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
-                          <node.icon SVGClassName="dndnode-icon" draggable="false" />
+                          <img
+                            src={node.icon}
+                            alt={node.label}
+                            style={{ width: '50px', height: 'auto' }}
+                          />
                           <span>{node.label}</span>
                         </div>
                       ))}
                     </div>
-                  </div>
-
-
+                  )}
                 </li>
               ))}
             </ol>
@@ -565,62 +321,87 @@ function App() {
         <div className={"toolbar"}>
           <button
             className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-              onClick={() => {
-                setActiveButton("cursor")
-                setPanOnDrag([1, 2])
-              }
+            onClick={() => {
+              setActiveButton("cursor")
+              setPanOnDrag([1, 2])
+            }
             }
           >
-            <IconToolbarCursor SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+            <img
+              src="../assets/toolBar/cursor.svg"
+              alt="cursor"
+              className={"toolbarButtonIcon"}
+              draggable="false"
+            />
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-              onClick={() => {
-                setActiveButton("hand")
-                setPanOnDrag(true)
-              }
+            onClick={() => {
+              setActiveButton("hand")
+              setPanOnDrag(true)
+            }
             }
           >
-            <IconToolbarHand SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+            <img
+              src="../assets/toolBar/hand.svg"
+              alt="hand"
+              className={"toolbarButtonIcon"}
+              draggable="false"
+            />
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
             onClick={() => setActiveButton("sqwire")}
           >
-            <IconToolbarSquareWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+            <img
+              src="../assets/toolBar/line.svg"
+              alt="square wire"
+              className={"toolbarButtonIcon"}
+              draggable="false"
+            />
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
             onClick={() => setActiveButton("dwire")}
           >
-            <IconToolbarDiagWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+            <img
+              src="../assets/toolBar/line2.svg"
+              alt="diagonal wire"
+              draggable="false"
+              className={"toolbarButtonIcon"}
+            />
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
             onClick={() => setActiveButton("eraser")}
           >
-            <IconToolbarEraser SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+            <img
+              src="../assets/toolBar/eraser.svg"
+              alt="eraser"
+              draggable="false"
+              className={"toolbarButtonIcon"}
+            />
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
             onClick={() => setActiveButton("text")}
           >
-            <IconToolbarText SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+            <img
+              src="../assets/toolBar/text.svg"
+              alt="text tool"
+              className={"toolbarButtonIcon"}
+              draggable="false"
+            />
           </button>
         </div>
       </div>
     </div>
-
-
-
   );
 }
-
-
 
 export default App
