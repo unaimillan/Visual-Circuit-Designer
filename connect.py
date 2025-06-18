@@ -7,7 +7,10 @@ import socketio
 from cocotbTest import run_cocotb_test
 
 
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=[
+    "http://visual-circuit-designer.ru",
+    "http://185.221.215.173:3000" # dev
+    "http://185.221.215.173/"])
 app = FastAPI()
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
