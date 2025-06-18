@@ -1,17 +1,23 @@
-/*
-Палитра цветов:
+.controls {
+  border: var(--external-border-color) solid 0.07rem;
+  background-color: var(--menu-bg-color);
+  border-radius: 0.2rem;
+  overflow: hidden;
+  box-shadow: none;
+}
 
-  Светлая тема:
-Фон менюшек (основной цвет): #ffffff
-Фон канваса: #ffffff
-Цвет выделения (нажатая кнопка, выделение в react-flow, switch): #DBEDFFFF
-Цвет внешней рамки (меню, контекстное меню): #cacaca
-Цвет внутренней рамки (кнопки в меню): dadada
+.controls button {
+  background-color: var(--button-color);
+  border-bottom: var(--internal-border-color) solid 0.07rem;
+}
 
+.controls button:hover {
+  background-color: var(--button-hover-color);
+}
 
-
-*/
-
+.controls button svg {
+  color: var(--svg-color);
+}
 
 /*_______Canvas_______*/
 .canvasContainer {

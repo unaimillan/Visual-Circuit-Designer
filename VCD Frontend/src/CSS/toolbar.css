@@ -20,7 +20,7 @@
     gap: 0.4rem;
     margin-right: 0.4rem;
     background-color: var(--menu-bg-color);
-    border:  solid 0.05rem;
+    border: var(--internal-border-color) solid 0.05rem;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;
 }

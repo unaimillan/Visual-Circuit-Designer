@@ -44,7 +44,7 @@
     width: 2rem;
     height: 2rem;
     margin-left: 0.33rem;
-    background-color: var(--menu-bg-color);
+    background-color: var(--button-color);
     border: var(--external-border-color) solid 0.07rem;
     transition: 0.15s ease-out;
     border-radius: 0.33rem;

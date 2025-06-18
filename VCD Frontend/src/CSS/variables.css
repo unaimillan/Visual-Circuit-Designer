@@ -5,8 +5,10 @@ var(--)
  */
 
 :root {
-    --canvas-color: #ffffff;
+    --canvas-bg-color: #ffffff;
+    --canvas-color: #efefef;
     --menu-bg-color: #ffffff;
+    --switch-bg-color: #818181;
 
     --external-border-color: #cacaca;
     --internal-border-color: #dadada;
@@ -22,35 +24,99 @@ var(--)
 
     --simulate-button-bg-color: #d6f1df; /* либо #C4E8D1 */
     --simulate-button-text-color: #218358;
-    transition: all 5s ease;
+
+    --minimap-mask-color: rgba(240, 240, 240, 0.6);
+    --minimap-node-color: #e2e2e2;
+
+    transition: all 0s;
 }
 
 [data-theme='dark'] {
-    --canvas-color: #121212;                  /* Фон канвы */
-    --menu-bg-color: #1e1e1e;                 /* Фон меню */
+    --canvas-bg-color: #151515;
+    --canvas-color: #232323;
+    --menu-bg-color: #1e1e1e;
+    --switch-bg-color: #555555;
 
-    --external-border-color: #2f2f2f;         /* Внешняя граница */
-    --internal-border-color: #3a3a3a;         /* Внутренняя граница */
+    --external-border-color: #2f2f2f;
+    --internal-border-color: #3a3a3a;
 
-    --text-color: #e0e0e0;                    /* Основной текст */
-    --svg-color: #ffffff;                     /* Цвет SVG */
+    --text-color: #e0e0e0;
+    --svg-color: #ffffff;
 
-    --button-color: #1e1e1e;                  /* Фон обычной кнопки */
-    --button-hover-color: #2a2a2a;            /* Фон при наведении */
-    --button-active-color: #333333;           /* Фон при нажатии */
+    --button-color: #1e1e1e;
+    --button-hover-color: #2a2a2a;
+    --button-active-color: #333333;
 
-    --select-color: #2a3b55;                  /* Цвет выделения */
+    --select-color: #2a3b55;
 
-    --simulate-button-bg-color: #2e4b3c;      /* Фон кнопки симуляции */
-    --simulate-button-text-color: #8fe7b4;    /* Текст на кнопке симуляции */
+    --simulate-button-bg-color: #2e4b3c;
+    --simulate-button-text-color: #8fe7b4;
+
+    --minimap-mask-color: rgba(240, 240, 240, 0.1);
+    --minimap-node-color: #323232;
 }
+
+[data-theme='pick-me'] {
+    --canvas-bg-color: #fff4f7;
+    --canvas-color: #ffe6ec;
+    --menu-bg-color: #fff0f5;
+    --switch-bg-color: #c6a5af;
+
+    --external-border-color: #f3c6d4;
+    --internal-border-color: #f7d5e2;
+
+    --text-color: #4a2b31; /* тёмный розовато-коричневый для контраста */
+    --svg-color: #681824;
+
+    --button-color: #ffe4ed;
+    --button-hover-color: #ffd6e4;
+    --button-active-color: #ffc8db;
+
+    --select-color: #fbd1df;
+
+    --simulate-button-bg-color: #f8dfe9;
+    --simulate-button-text-color: #a24666;
+
+    --minimap-mask-color: rgba(255, 240, 245, 0.6);
+    --minimap-node-color: #fbdde6;
+
+    transition: all 0s;
+}
+
+[data-theme='tokyo-night'] {
+    --canvas-bg-color: #1a1b26; /* основа */
+    --canvas-color: #24283b;   /* внутренний фон */
+    --menu-bg-color: #1f2335;
+    --switch-bg-color: #7aa2f7;
+
+    --external-border-color: #414868;
+    --internal-border-color: #3b4261;
+
+    --text-color: #c0caf5;
+    --svg-color: #c0caf5;
+
+    --button-color: #1f2335;
+    --button-hover-color: #2a2f4a;
+    --button-active-color: #3b4261;
+
+    --select-color: #33467c;
+
+    --simulate-button-bg-color: #7dcfff;
+    --simulate-button-text-color: #1a1b26;
+
+    --minimap-mask-color: rgba(30, 32, 48, 0.6);
+    --minimap-node-color: #3b4261;
+
+    transition: all 0s;
+}
+
 
 
 
 /*Theme template*/
 
 /*[data-theme='theme-name'] {*/
-/*    --canvas-color: #;                  !* Фон канвы *!*/
+/*    --canvas-color: #;                  !* Фон канваса *!*/
 /*    --menu-bg-color: #;                 !* Фон меню *!*/
 
 /*    --external-border-color: #;         !* Внешняя граница *!*/

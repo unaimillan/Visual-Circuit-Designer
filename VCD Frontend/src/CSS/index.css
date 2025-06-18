@@ -2,7 +2,7 @@ body {
   font-family: Montserrat, serif;
   font-size: 13px;
   font-weight: 600;
-  background-color: var(--canvas-color);
+  background-color: var(--canvas-bg-color);
 }
 
 #app {

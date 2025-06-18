@@ -28,13 +28,14 @@ import './CSS/dnd.css';
 import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
-import SelectDemo from "./components/codeComponents/select.jsx";
+import {SelectCanvasBG, SelectTheme} from "./components/codeComponents/select.jsx";
 
 import './components/codeComponents/switch.jsx';
 
 import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
 import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
 import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
+import AndNode from "./components/basicLogicElements/AND.jsx";
 
 
 
@@ -64,10 +65,6 @@ function App() {
     // Устанавливаем data-theme на корневой элемент <html>
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
 
 
   /* React Flow */
@@ -342,7 +339,7 @@ function App() {
     {
       header: "Basic Logic Elements",
       gates: [
-        { id: 'andNode', label: 'AND', icon: IconAND },
+        { id: 'andNode', label: 'AND', icon: AndNode },
         { id: 'orNode', label: 'OR', icon: IconOR },
         { id: 'notNode', label: 'NOT', icon: IconNOT },
         { id: 'nandNode', label: 'NAND', icon: IconNAND },
@@ -406,15 +403,24 @@ function App() {
       >
         <Background
           offset={[10.5, 5.5]}
-          bgColor={"var(--canvas-color)"}
+          bgColor={"var(--canvas-bg-color)"}
+          color="var(--canvas-color)"
 
           gap={GAP_SIZE}
           size={0.8}
           variant={variant}
         />
-        <Controls/>
-        {showMinimap && (<MiniMap className='miniMap'
-          position="top-right"
+
+        <Controls className={'controls'}/>
+
+        {showMinimap && (
+          <MiniMap
+            className='miniMap'
+            bgColor={'var(--canvas-bg-color)'}
+            maskColor={'var(--minimap-mask-color)'}
+            nodeColor={'var(--minimap-node-color)'}
+            position="top-right"
+            style={{ borderRadius: '0.5rem', overflow: 'hidden' }}
         />)}
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
       </ReactFlow>
@@ -427,9 +433,6 @@ function App() {
           <IconSettings SVGClassName={"openSettingsButtonIcon"} draggable="false"/>
         </button>
 
-        <button className="dark-theme-button" style={{border: '0.05rem solid #000000'}} onClick={toggleTheme}>
-          типа делат тёмни тема
-        </button>
 
         {/*<button*/}
         {/*    onClick={saveCircuit}*/}
@@ -465,12 +468,22 @@ function App() {
           </div>
 
           <div className="backgroundVariantBlock">
-            <p className={'minimapSwitchLabel'}>Canvas background</p>
+            <p className={'selectCanvasBG'}>Canvas background</p>
             <label htmlFor="selectBackground"></label>
-            <SelectDemo
+            <SelectCanvasBG
               currentBG={currentBG}
               setCurrentBG={setCurrentBG}
               className={'selectBG'}
+            />
+          </div>
+
+          <div className="backgroundVariantBlock">
+            <p className={'minimapSwitchLabel'}>Theme</p>
+            <label htmlFor="selectTheme"></label>
+            <SelectTheme
+              theme={theme}
+              setTheme={setTheme}
+              className={'selectTheme'}
             />
           </div>
 
@@ -515,12 +528,12 @@ function App() {
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
 
-                          <img
-                            src={node.icon}
-                            alt={node.label}
-                            style={{ width: '50px', height: 'auto' }}
-                            draggable = {false}
-                          />
+                          {/*<img*/}
+                          {/*  src={node.icon}*/}
+                          {/*  alt={node.label}*/}
+                          {/*  style={{ width: '50px', height: 'auto' }}*/}
+                          {/*  draggable = {false}*/}
+                          {/*/>*/}
                           <span>{node.label}</span>
                         </div>
                       ))}

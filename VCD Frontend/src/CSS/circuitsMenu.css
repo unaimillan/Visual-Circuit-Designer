@@ -11,7 +11,7 @@
     border-radius: 0.5rem;
     background-color: var(--menu-bg-color);
     color: var(--text-color);
-    transition: 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out, color 0s, background-color 0s;
     user-select: none;
     border: 0.05rem solid var(--external-border-color);
 }
