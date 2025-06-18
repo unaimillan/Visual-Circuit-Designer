@@ -32,7 +32,7 @@ import {SelectCanvasBG, SelectTheme} from "./components/codeComponents/select.js
 
 import './components/codeComponents/switch.jsx';
 
-import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
+import {IconSettings, IconMenu, IconArrow, IconStart, IconStop, IconLoading} from '../assets/ui-icons.jsx';
 import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
 import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
 
@@ -49,6 +49,7 @@ function App() {
   let variant;
   const [currentBG, setCurrentBG] = useState("dots")
   const [showMinimap, setShowMinimap] = useState(true)
+  const [simulateState, setSimulateState] = useState("idle") //idle - ничего не происходит, awaiting - ждем ответ от сервера, running - запущено (опционально error)
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -67,6 +68,60 @@ function App() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (openSettings) return;
+
+      // Mac: e.metaKey (Command), Windows: e.ctrlKey (Control)
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+      if (isCtrlOrCmd && e.key === "m") {
+        e.preventDefault();
+        setCircuitsMenuState(prev => !prev)
+      }
+
+      if (isCtrlOrCmd && e.key === "1") {
+        e.preventDefault();
+        setActiveButton("cursor")
+      }
+
+      if (isCtrlOrCmd && e.key === "2") {
+        e.preventDefault();
+        setActiveButton("hand")
+      }
+
+      if (isCtrlOrCmd && e.key === "3") {
+        e.preventDefault();
+        setActiveButton("sqwire")
+      }
+
+      if (isCtrlOrCmd && e.key === "4") {
+        e.preventDefault();
+        setActiveButton("dwire")
+      }
+
+      if (isCtrlOrCmd && e.key === "5") {
+        e.preventDefault();
+        setActiveButton("eraser")
+      }
+
+      if (isCtrlOrCmd && e.key === "6") {
+        e.preventDefault();
+        setActiveButton("text")
+      }
+
+      // if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "s") {
+      //   e.preventDefault();
+      //   console.log("Ctrl + Shift + S pressed");
+      //   myFunctionTwo();
+      // }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [openSettings]);
+
 
   if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
   else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
@@ -554,8 +609,6 @@ function App() {
                       ))}
                     </div>
                   </div>
-
-
                 </li>
               ))}
             </ol>
@@ -563,6 +616,18 @@ function App() {
         </div>
 
         <div className={"toolbar"}>
+
+          <button
+            className={`simulate-button ${simulateState ? "stop" : "start"}`}
+            onClick={() => console.log(simulateState)}
+          >
+            {simulateState==="idle" && (<IconLoading SVGClassName={`simulate-button-svg idle`} draggable="false"/>)}
+            {simulateState==="awaiting" && (<IconLoading SVGClassName={`simulate-button-svg awaiting`} draggable="false"/>)}
+            {simulateState==="running" && (<IconStop SVGClassName={`simulate-button-svg running`} draggable="false"/>)}
+          </button>
+
+          <div className={'toolbar-separator'}></div>
+
           <button
             className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
               onClick={() => {
