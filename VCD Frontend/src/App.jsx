@@ -33,10 +33,9 @@ import {
 } from 'react-router-dom';
 
 
-
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges } from './components/codeComponents/edges.js';
-import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
+import { MinimapSwitch } from "./components/codeComponents/switch.jsx";
 // export default SelectDemo;
 
 import './CSS/App.css';
@@ -50,7 +49,6 @@ import SelectDemo from "./components/codeComponents/select.jsx";
 import './pages/profile.jsx'
 
 import './components/codeComponents/switch.jsx';
-
 
 
 let variant;
@@ -84,7 +82,6 @@ function App() {
   const ref = useRef(null);
   const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
-
 
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
@@ -387,269 +384,268 @@ function App() {
   };
 
   return (
-      <Router>
-        <div style={{ height: '100%' }}>
-          <Routes>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/" element={
-              <>
-                <ReactFlow
-                    ref={ref}
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onNodeDrag={onNodeDrag}
-                    onNodeDragStop={onNodeDragStop}
-                    onConnect={onConnect}
-                    onPaneClick={onPaneClick}
-                    onNodeContextMenu={onNodeContextMenu}
-                    isValidConnection={validateConnection}
-                    onInit={setReactFlowInstance}
-                    onDrop={onDrop}
-                    onDragOver={(e) => e.preventDefault()}
-                    panOnScroll
-                    selectionOnDrag
-                    panOnDrag={panOnDrag}
-                    nodeTypes={nodeTypes}
-                    selectionMode={SelectionMode.Partial}
-                    snapToGrid={true}
-                    snapGrid={[GAP_SIZE, GAP_SIZE]}
-                    minZoom={0.1}
-                    maxZoom={10}
-                >
-                  <Background
-                      offset={[10.5, 5.5]}
+    <Router>
+      <div style={{ height: '100%' }}>
+        <Routes>
+          <Route path="/profile" element={<Profile/>}/>
+          <Route path="/" element={
+            <>
+              <ReactFlow
+                ref={ref}
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onNodeDrag={onNodeDrag}
+                onNodeDragStop={onNodeDragStop}
+                onConnect={onConnect}
+                onPaneClick={onPaneClick}
+                onNodeContextMenu={onNodeContextMenu}
+                isValidConnection={validateConnection}
+                onInit={setReactFlowInstance}
+                onDrop={onDrop}
+                onDragOver={(e) => e.preventDefault()}
+                panOnScroll
+                selectionOnDrag
+                panOnDrag={panOnDrag}
+                nodeTypes={nodeTypes}
+                selectionMode={SelectionMode.Partial}
+                snapToGrid={true}
+                snapGrid={[GAP_SIZE, GAP_SIZE]}
+                minZoom={0.1}
+                maxZoom={10}
+              >
+                <Background
+                  offset={[10.5, 5.5]}
 
-                      gap={GAP_SIZE}
-                      size={0.8}
-                      variant={variant}
+                  gap={GAP_SIZE}
+                  size={0.8}
+                  variant={variant}
+                />
+                <Controls/>
+                {showMinimap && (<MiniMap className='miniMap'
+                                          position="top-right"
+                />)}
+                {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+              </ReactFlow>
+              <div>
+                <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
+                  <img
+                    src="../assets/circuitsMenu/menu.svg"
+                    alt="open/close menu"
+                    className={"openCircuitsMenuButtonIcon"}
+                    draggable="false"
                   />
-                  <Controls/>
-                  {showMinimap && (<MiniMap className='miniMap'
-                                            position="top-right"
-                  />)}
-                  {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-                </ReactFlow>
-                <div>
-                  <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
+                </button>
+
+                <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
+                  <img
+                    src="../assets/settings/gear.svg"
+                    alt="open/close settings"
+                    className={"openSettingsButtonIcon"}
+                    draggable="false"
+                  />
+                </button>
+
+
+                {/*<button*/}
+                {/*    onClick={saveCircuit}*/}
+                {/*    style={{*/}
+                {/*        marginTop: '20px',*/}
+                {/*        padding: '10px',*/}
+                {/*        background: '#4CAF50',*/}
+                {/*        color: 'white',*/}
+                {/*        border: 'none',*/}
+                {/*        borderRadius: '4px',*/}
+                {/*        cursor: 'pointer'*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    Save Circuit*/}
+                {/*</button>*/}
+
+                <div className={`backdrop ${openSettings ? 'cover' : ''}`}
+                     onClick={() => setOpenSettings(false)}>
+                </div>
+
+                <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
+                  <p className={'settingsMenuTitle'}>Settings</p>
+
+                  <Link to="/profile" className="openProfileButton" style={{ textDecoration: 'none' }}>
                     <img
-                        src="../assets/circuitsMenu/menu.svg"
-                        alt="open/close menu"
-                        className={"openCircuitsMenuButtonIcon"}
-                        draggable="false"
+                      className='settingUserIcon'
+                      src="../assets/circuitsMenu/userIcon.png"
+                      alt={UserIcon}
                     />
-                  </button>
+                    <span className='settingUserName'>UserName</span>
+                  </Link>
 
-                  <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
-                    <img
-                        src="../assets/settings/gear.svg"
-                        alt="open/close settings"
-                        className={"openSettingsButtonIcon"}
-                        draggable="false"
-                    />
-                  </button>
-
-
-
-                  {/*<button*/}
-                  {/*    onClick={saveCircuit}*/}
-                  {/*    style={{*/}
-                  {/*        marginTop: '20px',*/}
-                  {/*        padding: '10px',*/}
-                  {/*        background: '#4CAF50',*/}
-                  {/*        color: 'white',*/}
-                  {/*        border: 'none',*/}
-                  {/*        borderRadius: '4px',*/}
-                  {/*        cursor: 'pointer'*/}
-                  {/*    }}*/}
-                  {/*>*/}
-                  {/*    Save Circuit*/}
-                  {/*</button>*/}
-
-                  <div className={`backdrop ${openSettings ? 'cover' : ''}`}
-                       onClick={() => setOpenSettings(false)}>
-                  </div>
-
-                  <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
-                    <p className={'settingsMenuTitle'}>Settings</p>
-
-                    <Link to="/profile" className="openProfileButton" style={{ textDecoration: 'none' }}>
-                      <img
-                          className='settingUserIcon'
-                          src="../assets/circuitsMenu/userIcon.png"
-                          alt={UserIcon}
-                      />
-                      <span className='settingUserName'>UserName</span>
-                    </Link>
-
-                    <div className="minimapSwitchBlock">
-                      <p className={'minimapSwitchLabel'}>Show mini-map</p>
-                      <MinimapSwitch
-                          className={'minimapSwitch'}
-                          minimapState={showMinimap}
-                          minimapToggle={setShowMinimap}
-                      />
-                    </div>
-
-                    <div className="backgroundVariantBlock">
-                      <p className={'minimapSwitchLabel'}>Canvas background</p>
-                      <label htmlFor="selectBackground"></label>
-                      <SelectDemo
-                          currentBG={currentBG}
-                          setCurrentBG={setCurrentBG}
-                          className={'selectBG'}
-                      />
-                    </div>
-
-                    <button className={""} onClick={saveCircuit}>Save Circuit</button>
-                    <input
-                        type="file"
-                        accept=".json"
-                        onChange={loadCircuit}
-                        style={{ marginTop: '10px' }}
+                  <div className="minimapSwitchBlock">
+                    <p className={'minimapSwitchLabel'}>Show mini-map</p>
+                    <MinimapSwitch
+                      className={'minimapSwitch'}
+                      minimapState={showMinimap}
+                      minimapToggle={setShowMinimap}
                     />
                   </div>
 
-                  <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
-
-                    <div className="menu-container">
-                      <div className="menu-header">
-                        <p className={"circuitsMenuTitle"}>
-                          Menu
-                        </p>
-                        <div className="divider"></div>
-                      </div>
-
-
-                      <ol className="menu-items">
-                        {menuItems.map((item, index) => (
-                            <li
-                                key={index}
-                                className={`menu-item ${openIndexes.includes(index) ? 'active' : ''}`}
-                            >
-                              <div className="header" onClick={() => toggleItem(index)}>
-                                {item.header}
-                                <img
-                                    className={'arrow'}
-                                    src="../assets/circuitsMenu/hide-arrow.svg"
-                                    alt="show/hide arrow"
-                                />
-                              </div>
-
-                              {openIndexes.includes(index) && (
-                                  <div className="gates-grid">
-                                    {item.gates.map((node) => (
-                                        <div
-                                            key={node.id}
-                                            className="dndnode"
-                                            draggable = {false}
-                                            onDragStart={(e) => onDragStart(e, node.id)}
-                                        >
-                                          <img
-                                              src={node.icon}
-                                              alt={node.label}
-                                              style={{ width: '50px', height: 'auto' }}
-                                              draggable = {true}
-                                          />
-                                          <span draggable = {false}>{node.label}</span>
-                                        </div>
-                                    ))}
-                                  </div>
-                              )}
-                            </li>
-                        ))}
-                      </ol>
-                    </div>
+                  <div className="backgroundVariantBlock">
+                    <p className={'minimapSwitchLabel'}>Canvas background</p>
+                    <label htmlFor="selectBackground"></label>
+                    <SelectDemo
+                      currentBG={currentBG}
+                      setCurrentBG={setCurrentBG}
+                      className={'selectBG'}
+                    />
                   </div>
 
-                  <div className={"toolbar"}>
-                    <button
-                        className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-                        onClick={() => {
-                          setActiveButton("cursor")
-                          setPanOnDrag([1, 2])
-                        }
-                        }
-                    >
-                      <img
-                          src="../assets/toolBar/cursor.svg"
-                          alt="cursor"
-                          className={"toolbarButtonIcon"}
-                          draggable="false"
-                      />
-                    </button>
+                  <button className={""} onClick={saveCircuit}>Save Circuit</button>
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={loadCircuit}
+                    style={{ marginTop: '10px' }}
+                  />
+                </div>
 
-                    <button
-                        className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-                        onClick={() => {
-                          setActiveButton("hand")
-                          setPanOnDrag(true)
-                        }
-                        }
-                    >
-                      <img
-                          src="../assets/toolBar/hand.svg"
-                          alt="hand"
-                          className={"toolbarButtonIcon"}
-                          draggable="false"
-                      />
-                    </button>
+                <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
 
-                    <button
-                        className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("sqwire")}
-                    >
-                      <img
-                          src="../assets/toolBar/line.svg"
-                          alt="square wire"
-                          className={"toolbarButtonIcon"}
-                          draggable="false"
-                      />
-                    </button>
+                  <div className="menu-container">
+                    <div className="menu-header">
+                      <p className={"circuitsMenuTitle"}>
+                        Menu
+                      </p>
+                      <div className="divider"></div>
+                    </div>
 
-                    <button
-                        className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("dwire")}
-                    >
-                      <img
-                          src="../assets/toolBar/line2.svg"
-                          alt="diagonal wire"
-                          draggable="false"
-                          className={"toolbarButtonIcon"}
-                      />
-                    </button>
 
-                    <button
-                        className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("eraser")}
-                    >
-                      <img
-                          src="../assets/toolBar/eraser.svg"
-                          alt="eraser"
-                          draggable="false"
-                          className={"toolbarButtonIcon"}
-                      />
-                    </button>
+                    <ol className="menu-items">
+                      {menuItems.map((item, index) => (
+                        <li
+                          key={index}
+                          className={`menu-item ${openIndexes.includes(index) ? 'active' : ''}`}
+                        >
+                          <div className="header" onClick={() => toggleItem(index)}>
+                            {item.header}
+                            <img
+                              className={'arrow'}
+                              src="../assets/circuitsMenu/hide-arrow.svg"
+                              alt="show/hide arrow"
+                            />
+                          </div>
 
-                    <button
-                        className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
-                        onClick={() => setActiveButton("text")}
-                    >
-                      <img
-                          src="../assets/toolBar/text.svg"
-                          alt="text tool"
-                          className={"toolbarButtonIcon"}
-                          draggable="false"
-                      />
-                    </button>
+                          {openIndexes.includes(index) && (
+                            <div className="gates-grid">
+                              {item.gates.map((node) => (
+                                <div
+                                  key={node.id}
+                                  className="dndnode"
+                                  draggable={false}
+                                  onDragStart={(e) => onDragStart(e, node.id)}
+                                >
+                                  <img
+                                    src={node.icon}
+                                    alt={node.label}
+                                    style={{ width: '50px', height: 'auto' }}
+                                    draggable={true}
+                                  />
+                                  <span draggable={false}>{node.label}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ol>
                   </div>
                 </div>
-              </>
-            } />
-          </Routes>
-        </div>
-      </Router>
+
+                <div className={"toolbar"}>
+                  <button
+                    className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveButton("cursor")
+                      setPanOnDrag([1, 2])
+                    }
+                    }
+                  >
+                    <img
+                      src="../assets/toolBar/cursor.svg"
+                      alt="cursor"
+                      className={"toolbarButtonIcon"}
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveButton("hand")
+                      setPanOnDrag(true)
+                    }
+                    }
+                  >
+                    <img
+                      src="../assets/toolBar/hand.svg"
+                      alt="hand"
+                      className={"toolbarButtonIcon"}
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
+                    onClick={() => setActiveButton("sqwire")}
+                  >
+                    <img
+                      src="../assets/toolBar/line.svg"
+                      alt="square wire"
+                      className={"toolbarButtonIcon"}
+                      draggable="false"
+                    />
+                  </button>
+
+                  <button
+                    className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
+                    onClick={() => setActiveButton("dwire")}
+                  >
+                    <img
+                      src="../assets/toolBar/line2.svg"
+                      alt="diagonal wire"
+                      draggable="false"
+                      className={"toolbarButtonIcon"}
+                    />
+                  </button>
+
+                  <button
+                    className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
+                    onClick={() => setActiveButton("eraser")}
+                  >
+                    <img
+                      src="../assets/toolBar/eraser.svg"
+                      alt="eraser"
+                      draggable="false"
+                      className={"toolbarButtonIcon"}
+                    />
+                  </button>
+
+                  <button
+                    className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
+                    onClick={() => setActiveButton("text")}
+                  >
+                    <img
+                      src="../assets/toolBar/text.svg"
+                      alt="text tool"
+                      className={"toolbarButtonIcon"}
+                      draggable="false"
+                    />
+                  </button>
+                </div>
+              </div>
+            </>
+          }/>
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

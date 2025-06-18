@@ -1,95 +1,97 @@
 /* reset */
 button {
-    all: unset;
+  all: unset;
 }
 
 .SelectTrigger {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 4px;
-    padding: 0 15px;
-    font-size: 13px;
-    line-height: 1;
-    height: 35px;
-    gap: 5px;
-    background-color: white;
-    color: #1b1b1b;
-    border: 1px solid #1b1b1b;
-    z-index: 10000;
-    /*border: 10px solid;*/
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 13px;
+  line-height: 1;
+  height: 35px;
+  gap: 5px;
+  background-color: white;
+  color: #1b1b1b;
+  border: 1px solid #1b1b1b;
+  z-index: 10000;
+  /*border: 10px solid;*/
 
 
 }
 
 .SelectTrigger:hover {
-    background-color: #efefef;
+  background-color: #efefef;
 }
+
 .SelectTrigger[data-placeholder] {
-    color: #000000;
+  color: #000000;
 }
 
 .SelectIcon {
-    color: #000000;
+  color: #000000;
 }
 
 .SelectContent {
-    overflow: hidden;
-    background-color: white;
-    border-radius: 6px;
-    z-index: 10000;
-    box-shadow:
-            0 10px 38px -10px rgba(22, 23, 24, 0.35),
-            0 10px 20px -15px rgba(22, 23, 24, 0.2);
+  overflow: hidden;
+  background-color: white;
+  border-radius: 6px;
+  z-index: 10000;
+  box-shadow: 0 10px 38px -10px rgba(22, 23, 24, 0.35),
+  0 10px 20px -15px rgba(22, 23, 24, 0.2);
 }
 
 .SelectViewport {
-    padding: 5px;
+  padding: 5px;
 }
 
 .SelectItem {
-    font-size: 13px;
-    line-height: 1;
-    color: #000000;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    height: 25px;
-    padding: 0 35px 0 25px;
-    position: relative;
-    user-select: none;
+  font-size: 13px;
+  line-height: 1;
+  color: #000000;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+  padding: 0 35px 0 25px;
+  position: relative;
+  user-select: none;
 }
+
 .SelectItem[data-disabled] {
-    color: #9f7f7f;
-    pointer-events: none;
+  color: #9f7f7f;
+  pointer-events: none;
 }
+
 .SelectItem[data-highlighted] {
-    outline: none;
-    background-color: #e6e6e6;
-    color: #000000;
+  outline: none;
+  background-color: #e6e6e6;
+  color: #000000;
 }
 
 .SelectLabel {
-    padding: 0 25px;
-    font-size: 12px;
-    line-height: 25px;
-    color: #000000;
+  padding: 0 25px;
+  font-size: 12px;
+  line-height: 25px;
+  color: #000000;
 }
 
 .SelectItemIndicator {
-    position: absolute;
-    left: 0;
-    width: 25px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .SelectScrollButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 25px;
-    background-color: white;
-    color: yellowgreen;
-    cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  background-color: white;
+  color: yellowgreen;
+  cursor: default;
 }
