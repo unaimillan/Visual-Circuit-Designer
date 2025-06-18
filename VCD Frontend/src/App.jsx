@@ -15,20 +15,12 @@ import {
 import '@xyflow/react/dist/style.css';
 import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 
-import AndGate from '../assets/circuitsMenu/AND.svg';
-import OrGate from '../assets/circuitsMenu/OR.svg';
-import NotGate from '../assets/circuitsMenu/NOT.svg';
-import NandGate from '../assets/circuitsMenu/NAND.svg';
-import NorGate from '../assets/circuitsMenu/NOR.svg';
-import XorGate from '../assets/circuitsMenu/XOR.svg';
-import InputGate from '../assets/circuitsMenu/input.svg';
-import OutputGate from '../assets/circuitsMenu/output.svg';
-
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges } from './components/codeComponents/edges.js';
 import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
-// export default SelectDemo;
 
+
+import './CSS/variables.css';
 import './CSS/App.css';
 import './CSS/settings.css';
 import './CSS/toolbar.css';
@@ -40,11 +32,9 @@ import SelectDemo from "./components/codeComponents/select.jsx";
 
 import './components/codeComponents/switch.jsx';
 
-
-
-let variant;
-
-
+import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
+import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
+import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
 
 
 
@@ -52,20 +42,32 @@ const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
 
 function App() {
+  // Internal variables
   const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+
+  // Setting variables
+  let variant;
   const [currentBG, setCurrentBG] = useState("dots")
-
   const [showMinimap, setShowMinimap] = useState(true)
+  const [theme, setTheme] = useState('light');
 
-  if (currentBG === "dots") {
-    variant = BackgroundVariant.Dots;
-  } else if (currentBG === "cross") {
-    variant = BackgroundVariant.Cross;
-  } else {
-    variant = BackgroundVariant.Lines;
-  }
+  if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
+  else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
+  else { variant = BackgroundVariant.Lines; }
+
+
+
+
+  useEffect(() => {
+    // Устанавливаем data-theme на корневой элемент <html>
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
 
   /* React Flow */
@@ -340,12 +342,12 @@ function App() {
     {
       header: "Basic Logic Elements",
       gates: [
-        { id: 'andNode', label: 'AND', icon: AndGate },
-        { id: 'orNode', label: 'OR', icon: OrGate },
-        { id: 'notNode', label: 'NOT', icon: NotGate },
-        { id: 'nandNode', label: 'NAND', icon: NandGate },
-        { id: 'norNode', label: 'NOR', icon: NorGate },
-        { id: 'xorNode', label: 'XOR', icon: XorGate },
+        { id: 'andNode', label: 'AND', icon: IconAND },
+        { id: 'orNode', label: 'OR', icon: IconOR },
+        { id: 'notNode', label: 'NOT', icon: IconNOT },
+        { id: 'nandNode', label: 'NAND', icon: IconNAND },
+        { id: 'norNode', label: 'NOR', icon: IconNOR },
+        { id: 'xorNode', label: 'XOR', icon: IconXOR },
       ]
     },
     {
@@ -356,8 +358,8 @@ function App() {
     {
       header: "Pins",
       gates: [
-        { id: 'inputNode', label: 'input', icon: InputGate },
-        { id: 'outputNode', label: 'output', icon: OutputGate },
+        { id: 'inputNode', label: 'input', icon: IconInput },
+        { id: 'outputNode', label: 'output', icon: IconOutput },
       ]
     },
     {
@@ -404,6 +406,7 @@ function App() {
       >
         <Background
           offset={[10.5, 5.5]}
+          bgColor={"var(--canvas-color)"}
 
           gap={GAP_SIZE}
           size={0.8}
@@ -417,24 +420,16 @@ function App() {
       </ReactFlow>
       <div>
         <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
-          <img
-            src="../assets/circuitsMenu/menu.svg"
-            alt="open/close menu"
-            className={"openCircuitsMenuButtonIcon"}
-            draggable="false"
-          />
+          <IconMenu SVGClassName={"openCircuitsMenuButtonIcon"} draggable="false"/>
         </button>
 
         <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
-          <img
-            src="../assets/settings/gear.svg"
-            alt="open/close settings"
-            className={"openSettingsButtonIcon"}
-            draggable="false"
-          />
+          <IconSettings SVGClassName={"openSettingsButtonIcon"} draggable="false"/>
         </button>
 
-
+        <button className="dark-theme-button" style={{border: '0.05rem solid #000000'}} onClick={toggleTheme}>
+          типа делат тёмни тема
+        </button>
 
         {/*<button*/}
         {/*    onClick={saveCircuit}*/}
@@ -507,11 +502,7 @@ function App() {
                 >
                   <div className="header" onClick={() => toggleItem(index)}>
                     {item.header}
-                    <img
-                      className={'arrow'}
-                      src="../assets/circuitsMenu/hide-arrow.svg"
-                      alt="show/hide arrow"
-                    />
+                    <IconArrow SVGClassName={'arrow'} draggable="false" />
                   </div>
 
                   {openIndexes.includes(index) && (
@@ -523,6 +514,7 @@ function App() {
                           draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
+
                           <img
                             src={node.icon}
                             alt={node.label}
@@ -543,82 +535,52 @@ function App() {
         <div className={"toolbar"}>
           <button
             className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-            onClick={() => {
-              setActiveButton("cursor")
-              setPanOnDrag([1, 2])
-            }
+              onClick={() => {
+                setActiveButton("cursor")
+                setPanOnDrag([1, 2])
+              }
             }
           >
-            <img
-              src="../assets/toolBar/cursor.svg"
-              alt="cursor"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarCursor SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-            onClick={() => {
-              setActiveButton("hand")
-              setPanOnDrag(true)
-            }
+              onClick={() => {
+                setActiveButton("hand")
+                setPanOnDrag(true)
+              }
             }
           >
-            <img
-              src="../assets/toolBar/hand.svg"
-              alt="hand"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarHand SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
             onClick={() => setActiveButton("sqwire")}
           >
-            <img
-              src="../assets/toolBar/line.svg"
-              alt="square wire"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarSquareWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
             onClick={() => setActiveButton("dwire")}
           >
-            <img
-              src="../assets/toolBar/line2.svg"
-              alt="diagonal wire"
-              draggable="false"
-              className={"toolbarButtonIcon"}
-            />
+            <IconToolbarDiagWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
             onClick={() => setActiveButton("eraser")}
           >
-            <img
-              src="../assets/toolBar/eraser.svg"
-              alt="eraser"
-              draggable="false"
-              className={"toolbarButtonIcon"}
-            />
+            <IconToolbarEraser SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
           <button
             className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
             onClick={() => setActiveButton("text")}
           >
-            <img
-              src="../assets/toolBar/text.svg"
-              alt="text tool"
-              className={"toolbarButtonIcon"}
-              draggable="false"
-            />
+            <IconToolbarText SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
         </div>
       </div>

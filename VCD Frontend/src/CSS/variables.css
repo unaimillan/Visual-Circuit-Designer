@@ -1,0 +1,71 @@
+/*
+
+var(--)
+
+ */
+
+:root {
+    --canvas-color: #ffffff;
+    --menu-bg-color: #ffffff;
+
+    --external-border-color: #cacaca;
+    --internal-border-color: #dadada;
+
+    --text-color: #000000;
+    --svg-color: #000000;
+
+    --button-color: #ffffff;
+    --button-hover-color: #ffffff;
+    --button-active-color: #ffffff;
+
+    --select-color: #dbedff;
+
+    --simulate-button-bg-color: #d6f1df; /* либо #C4E8D1 */
+    --simulate-button-text-color: #218358;
+    transition: all 5s ease;
+}
+
+[data-theme='dark'] {
+    --canvas-color: #121212;                  /* Фон канвы */
+    --menu-bg-color: #1e1e1e;                 /* Фон меню */
+
+    --external-border-color: #2f2f2f;         /* Внешняя граница */
+    --internal-border-color: #3a3a3a;         /* Внутренняя граница */
+
+    --text-color: #e0e0e0;                    /* Основной текст */
+    --svg-color: #ffffff;                     /* Цвет SVG */
+
+    --button-color: #1e1e1e;                  /* Фон обычной кнопки */
+    --button-hover-color: #2a2a2a;            /* Фон при наведении */
+    --button-active-color: #333333;           /* Фон при нажатии */
+
+    --select-color: #2a3b55;                  /* Цвет выделения */
+
+    --simulate-button-bg-color: #2e4b3c;      /* Фон кнопки симуляции */
+    --simulate-button-text-color: #8fe7b4;    /* Текст на кнопке симуляции */
+}
+
+
+
+/*Theme template*/
+
+/*[data-theme='theme-name'] {*/
+/*    --canvas-color: #;                  !* Фон канвы *!*/
+/*    --menu-bg-color: #;                 !* Фон меню *!*/
+
+/*    --external-border-color: #;         !* Внешняя граница *!*/
+/*    --internal-border-color: #;         !* Внутренняя граница *!*/
+
+/*    --text-color: #;                    !* Основной текст *!*/
+/*    --svg-color: #;                     !* Цвет SVG *!*/
+
+/*    --button-color: #;                  !* Фон обычной кнопки *!*/
+/*    --button-hover-color: #;            !* Фон при наведении *!*/
+/*    --button-active-color: #;           !* Фон при нажатии *!*/
+
+/*    --select-color: #;                  !* Цвет выделения *!*/
+
+/*    --simulate-button-bg-color: #;      !* Фон кнопки симуляции *!*/
+/*    --simulate-button-text-color: #;    !* Текст на кнопке симуляции *!*/
+/*}*/
+
