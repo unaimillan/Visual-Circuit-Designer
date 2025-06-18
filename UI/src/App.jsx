@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   ReactFlow,
   Controls,
@@ -15,8 +15,8 @@ import {
 import '@xyflow/react/dist/style.css';
 import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 
-import {initialNodes, nodeTypes} from './components/codeComponents/nodes.js';
-import {initialEdges} from './components/codeComponents/edges.js';
+import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
+import { initialEdges } from './components/codeComponents/edges.js';
 import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
 import {
   BrowserRouter as Router,
@@ -33,32 +33,14 @@ import './CSS/dnd.css';
 import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
-
-import Profile from "./pages/profile.jsx"
-
 import {SelectCanvasBG, SelectTheme} from "./components/codeComponents/select.jsx";
-import './pages/profile.jsx'
+import Profile from "./pages/profile.jsx";
 
 import './components/codeComponents/switch.jsx';
-import {IconSettings, IconMenu, IconArrow, IconUser} from '../assets/ui-icons.jsx';
-import {
-  IconToolbarCursor,
-  IconToolbarEraser,
-  IconToolbarHand,
-  IconToolbarSquareWire,
-  IconToolbarDiagWire,
-  IconToolbarText
-} from "../assets/toolbar-icons.jsx";
-import {
-  IconAND,
-  IconNAND,
-  IconInput,
-  IconNOT,
-  IconXOR,
-  IconOutput,
-  IconNOR,
-  IconOR
-} from "../assets/circuits-icons.jsx";
+
+import {IconSettings, IconMenu, IconArrow, IconStart, IconStop, IconUser, IconLoading} from '../assets/ui-icons.jsx';
+import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
+import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
@@ -68,6 +50,8 @@ function App() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+  const [simulateState, setSimulateState] = useState("idle")
+
 
   // Setting variables
   let variant;
@@ -92,13 +76,63 @@ function App() {
     }
   }, []);
 
-  if (currentBG === "dots") {
-    variant = BackgroundVariant.Dots;
-  } else if (currentBG === "cross") {
-    variant = BackgroundVariant.Cross;
-  } else {
-    variant = BackgroundVariant.Lines;
-  }
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (openSettings) return;
+
+      // Mac: e.metaKey (Command), Windows: e.ctrlKey (Control)
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+      if (isCtrlOrCmd && e.key === "m") {
+        e.preventDefault();
+        setCircuitsMenuState(prev => !prev)
+      }
+
+      if (isCtrlOrCmd && e.key === "1") {
+        e.preventDefault();
+        setActiveButton("cursor")
+      }
+
+      if (isCtrlOrCmd && e.key === "2") {
+        e.preventDefault();
+        setActiveButton("hand")
+      }
+
+      if (isCtrlOrCmd && e.key === "3") {
+        e.preventDefault();
+        setActiveButton("sqwire")
+      }
+
+      if (isCtrlOrCmd && e.key === "4") {
+        e.preventDefault();
+        setActiveButton("dwire")
+      }
+
+      if (isCtrlOrCmd && e.key === "5") {
+        e.preventDefault();
+        setActiveButton("eraser")
+      }
+
+      if (isCtrlOrCmd && e.key === "6") {
+        e.preventDefault();
+        setActiveButton("text")
+      }
+
+      // if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "s") {
+      //   e.preventDefault();
+      //   console.log("Ctrl + Shift + S pressed");
+      //   myFunctionTwo();
+      // }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [openSettings]);
+
+
+  if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
+  else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
+  else { variant = BackgroundVariant.Lines; }
 
   useEffect(() => {
     // Устанавливаем data-theme на корневой элемент <html>
@@ -118,13 +152,6 @@ function App() {
     localStorage.setItem('userSettings', JSON.stringify(settings));
   }, [currentBG, showMinimap, theme, activeButton, openSettings, circuitsMenuState]);
 
-  if (currentBG === "dots") {
-    variant = BackgroundVariant.Dots;
-  } else if (currentBG === "cross") {
-    variant = BackgroundVariant.Cross;
-  } else {
-    variant = BackgroundVariant.Lines;
-  }
 
   /* React Flow */
   const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
@@ -201,7 +228,7 @@ function App() {
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
   const getClosestEdge = useCallback((draggedNode) => {
-    const {nodeLookup} = store.getState();
+    const { nodeLookup } = store.getState();
     const internalNode = getInternalNode(draggedNode.id);
     if (!internalNode) return null;
 
@@ -379,23 +406,23 @@ function App() {
     };
   };
 
-  // const spawnCircuit = (type) => {
-  //   const position = reactFlowInstance.screenToFlowPosition({
-  //     x: screen.availWidth / 2,
-  //     y: screen.availHeight / 2,
-  //   });
-  //
-  //   const newNode = {
-  //     id: `${type}-${Date.now()}`,
-  //     type: type,
-  //     position,
-  //     data: {
-  //       customId: `${type}-${Date.now()}`,
-  //     }
-  //   };
-  //
-  //   setNodes((nds) => nds.concat(newNode));
-  // }
+  const spawnCircuit = (type) => {
+    const position = reactFlowInstance.screenToFlowPosition({
+      x: screen.availWidth / 2,
+      y: screen.availHeight / 2,
+    });
+
+    const newNode = {
+      id: `${type}-${Date.now()}`,
+      type: type,
+      position,
+      data: {
+        customId: `${type}-${Date.now()}`,
+      }
+    };
+
+    setNodes((nds) => nds.concat(newNode));
+  }
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -415,12 +442,12 @@ function App() {
     {
       header: "Basic Logic Elements",
       gates: [
-        {id: 'andNode', label: 'AND', icon: IconAND},
-        {id: 'orNode', label: 'OR', icon: IconOR},
-        {id: 'notNode', label: 'NOT', icon: IconNOT},
-        {id: 'nandNode', label: 'NAND', icon: IconNAND},
-        {id: 'norNode', label: 'NOR', icon: IconNOR},
-        {id: 'xorNode', label: 'XOR', icon: IconXOR},
+        { id: 'andNode', label: 'AND', icon: IconAND },
+        { id: 'orNode', label: 'OR', icon: IconOR },
+        { id: 'notNode', label: 'NOT', icon: IconNOT },
+        { id: 'nandNode', label: 'NAND', icon: IconNAND },
+        { id: 'norNode', label: 'NOR', icon: IconNOR },
+        { id: 'xorNode', label: 'XOR', icon: IconXOR },
       ]
     },
     {
@@ -430,8 +457,8 @@ function App() {
     {
       header: "Pins",
       gates: [
-        {id: 'inputNode', label: 'input', icon: IconInput},
-        {id: 'outputNode', label: 'output', icon: IconOutput},
+        { id: 'inputNode', label: 'input', icon: IconInput },
+        { id: 'outputNode', label: 'output', icon: IconOutput },
       ]
     },
     {
@@ -588,51 +615,63 @@ function App() {
                           <IconArrow SVGClassName={'arrow'} draggable="false"/>
                         </div>
 
-                        <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
-                          <div className="gates-grid">
-                            {item.gates.map((node) => (
-                              <div
-                                key={node.id}
-                                className="dndnode"
-                                draggable
-                                onDragStart={(e) => onDragStart(e, node.id)}
-                              >
-                                <node.icon SVGClassName="dndnode-icon" draggable="false"/>
-                                <span>{node.label}</span>
-                              </div>
-                            ))}
+                          <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
+                            <div className="gates-grid">
+                              {item.gates.map((node) => (
+                                <div
+                                  key={node.id}
+                                  className="dndnode"
+                                  draggable
+                                  onDragStart={(e) => onDragStart(e, node.id)}
+                                >
+                                  <button onClick={() => spawnCircuit(node.id)}>
+                                    <node.icon SVGClassName="dndnode-icon" draggable="false"/>
+                                    <div className={"circuitsName"}>{node.label}</div>
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-
-
-                      </li>
-                    ))}
-                  </ol>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
                 </div>
-              </div>
 
-              <div className={"toolbar"}>
-                <button
-                  className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveButton("cursor")
-                    setPanOnDrag([1, 2])
-                  }
-                  }
-                >
-                  <IconToolbarCursor SVGClassName={`toolbarButtonIcon`} draggable="false"/>
-                </button>
+        <div className={"toolbar"}>
 
-                <button
-                  className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveButton("hand")
-                    setPanOnDrag(true)
-                  }
-                  }
-                >
-                  <IconToolbarHand SVGClassName={`toolbarButtonIcon`} draggable="false"/>
-                </button>
+          <button
+            className={`simulate-button ${simulateState ? "stop" : "start"}`}
+            onClick={() => console.log(simulateState)}
+          >
+            {simulateState==="idle" && (<IconLoading SVGClassName={`simulate-button-svg idle`} draggable="false"/>)}
+            {simulateState==="awaiting" && (<IconLoading SVGClassName={`simulate-button-svg awaiting`} draggable="false"/>)}
+            {simulateState==="running" && (<IconStop SVGClassName={`simulate-button-svg running`} draggable="false"/>)}
+          </button>
+
+          <div className={'toolbar-separator'}></div>
+
+          <button
+            className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
+              onClick={() => {
+                setActiveButton("cursor")
+                setPanOnDrag([1, 2])
+              }
+            }
+          >
+            <IconToolbarCursor SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+          </button>
+
+          <button
+            className={`toolbarButton ${activeButton === "hand" ? 'active' : ''}`}
+              onClick={() => {
+                setActiveButton("hand")
+                setPanOnDrag(true)
+              }
+            }
+          >
+            <IconToolbarHand SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+          </button>
 
                 <button
                   className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
