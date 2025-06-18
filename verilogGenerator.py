@@ -1,10 +1,6 @@
-import json
-
-def generate_verilog_from_json(json_file_path):
-    with open(json_file_path) as file:
-        data = json.load(file)
-    nodes = data["nodes"]
-    edges = data["edges"]
+def generate_verilog_from_json(circuit_json_data: dict) -> str:
+    nodes = circuit_json_data["nodes"]
+    edges = circuit_json_data["edges"]
 
     inputs = {}
     outputs = {}
@@ -109,7 +105,7 @@ def generate_verilog_from_json(json_file_path):
 
 
 if __name__ == "__main__":
-    verilog_code = generate_verilog_from_json("circuit.json")
+    verilog_code = generate_verilog_from_json("circuitSample.json")
 
     with open("cocotb/dut.v", "w") as f:
         f.write(verilog_code)

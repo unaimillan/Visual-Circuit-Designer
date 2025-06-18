@@ -1,25 +1,86 @@
-import json
 import os
-import socket
+import queue
 import threading
-import time
-
+import socketio
 import cocotb
 from cocotb.triggers import Timer
 
 
-HOST = '127.0.0.1'
-PORT = 52525
+@cocotb.test()
+async def interactive_test(dut):
+    user_sid = os.environ['USER_SID']
+    sio_client = socketio.AsyncClient()
 
-signal_values = {}
-processed_outputs = {}
-new_data_event = threading.Event()
-stop_flag = False
+    inputs_queue = queue.Queue()
+    stop_event = threading.Event()
 
-def run_cocotb_test(sim_path, sid):
+    sio = socketio.Client()
+
+    @sio.event
+    def connect():
+        dut._log.info("Socket.IO connected to main server")
+        sio.emit('register_simulation', {'user_sid': user_sid})
+
+    @sio.event
+    def simulation_inputs(data):
+        dut._log.info(f"Received inputs: {data}")
+        inputs_queue.put(data)
+
+    @sio.event
+    def disconnect():
+        dut._log.info("Socket.IO disconnected")
+        stop_event.set()
+
+    @sio.event
+    def stop_simulation():
+        dut._log.info("Stop signal received")
+        stop_event.set()
+
+    def socket_thread():
+        try:
+            sio.connect('http://localhost:8000', wait=True)
+            sio.wait()
+        except Exception as e:
+            dut._log.error(f"Socket.IO failed: {e}")
+            stop_event.set()
+
+    threading.Thread(target=socket_thread, daemon=True).start()
+
+    await Timer(1, units='us')
+
+    while not stop_event.is_set():
+        try:
+            data = inputs_queue.get(timeout=0.1)
+            for name, value in data.items():
+                if hasattr(dut, name):
+                    getattr(dut, name).value = value
+                else:
+                    dut._log.warning(f"Signal {name} not found")
+
+            await Timer(1, units='ns')
+
+            outputs = {
+                name: int(getattr(dut, name).value)
+                for name in dir(dut)
+                if name.startswith("out_")
+            }
+
+            dut._log.info(f"OUTPUTS: {outputs}")
+
+            sio.emit('simulation_outputs', {'user_sid': user_sid, 'outputs': outputs})
+
+        except queue.Empty:
+            await Timer(100, units='us')
+
+    await sio_client.disconnect()
+
+
+def run_cocotb_test(sim_path, user_sid):
+    os.environ['USER_SID'] = user_sid
+
     from cocotb.runner import get_runner
-
     runner = get_runner("icarus")
+
     runner.build(
         verilog_sources=[os.path.join(sim_path, "dut.v")],
         hdl_toplevel="GeneratedCircuit",
@@ -29,69 +90,4 @@ def run_cocotb_test(sim_path, sid):
     runner.test(
         hdl_toplevel="GeneratedCircuit",
         test_module="cocotbTest",
-        plusargs=[f"SIM_PATH={sim_path}"],
     )
-
-def socket_server(dut):
-    global signal_values, new_data_event, stop_flag, SOCK
-
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, PORT))
-        s.listen()
-        dut._log.info("Socket server listening for connections...")
-        conn, addr = s.accept()
-        with conn:
-            dut._log.info(f"Connected by {addr}")
-            while True:
-                data = conn.recv(4096)
-                if not data:
-                    break
-                msg = json.loads(data.decode())
-                if msg.get("cmd") == "STOP":
-                    stop_flag = True
-                    new_data_event.set()
-                    break
-                elif msg.get("cmd") == "TICK":
-                    inputs = msg.get("inputs", {})
-
-                    signal_values = inputs
-                    new_data_event.set()
-
-                    while new_data_event.is_set():
-                        time.sleep(0.001)
-
-                    conn.sendall(json.dumps({"outputs": processed_outputs}).encode())
-
-
-@cocotb.test()
-async def interactive_test(dut):
-    threading.Thread(target=socket_server, args=(dut,), daemon=True).start()
-    dut._log.info("Socket server started in cocotb test")
-
-    global signal_values, new_data_event, stop_flag, processed_outputs
-
-    while not stop_flag:
-        dut._log.info("Waiting for new input from socket...")
-        while not new_data_event.is_set():
-            await Timer(1, units='ns')
-
-        if stop_flag:
-            dut._log.info("Stop flag received, ending simulation...")
-            break
-
-        for name, value in signal_values.items():
-            if hasattr(dut, name):
-                setattr(dut, name, value)
-            else:
-                dut._log.warning(f"Signal {name} not found in DUT")
-
-        await Timer(1, units='ns')
-
-        processed_outputs = {
-            name: int(getattr(dut, name).value)
-            for name in dir(dut)
-            if name.startswith("out_")
-        }
-        dut._log.info(f"Outputs: {processed_outputs}")
-
-        new_data_event.clear()

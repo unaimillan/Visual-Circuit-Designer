@@ -105,7 +105,7 @@ function App() {
       encodeURIComponent(JSON.stringify(flowData, null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "circuit.json");
+    downloadAnchorNode.setAttribute("download", "circuitSample.json");
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();

@@ -2,15 +2,26 @@ import socketio
 import json
 import threading
 import time
+from socketio.exceptions import ConnectionError
 
 
 sio = socketio.Client()
+ADDRESS = 'http://127.0.0.1:8000'
 
-sio.connect('http://127.0.0.1:8000')
-print("Connected to server")
+try:
+    sio.connect(ADDRESS)
+    print("Connected to server")
+except ConnectionError:
+    print("Failed to connect to server")
+    exit(0)
 
-with open("circuit.json") as f:
+with open("circuitSample.json") as f:
     circuit_json = json.load(f)
+#
+# @sio.event
+# def simulation_outputs(data):
+#     user_sid = data['user_sid']
+#     print("Received simulation outputs: ", data)
 
 
 def send_commands():
@@ -48,13 +59,18 @@ def send_commands():
             print(f"Sent set_inputs command with {inputs}")
 
         elif choice == "3":
-            sio.emit("stop_simulation", {})
+            sio.emit("stop_simulation")
             print("Sent stop_simulation command")
 
         elif choice == "4":
-            sio.emit("stop_simulation", {})
-            sio.disconnect()
-            print("Disconnected from server")
+            try:
+                sio.emit("stop_simulation", {})
+                sio.disconnect()
+                print("Disconnected from server")
+            except Exception:
+                print("Failed to disconnect from server")
+            finally:
+                print("Exiting...")
             break
 
         else:
@@ -85,6 +101,6 @@ try:
     while True:
         time.sleep(1)
 except KeyboardInterrupt:
-    sio.emit("stop_simulation", {})
+    sio.emit("stop_simulation")
     sio.disconnect()
     print("\nDisconnected by user")
