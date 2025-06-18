@@ -48,10 +48,16 @@ export const SelectTheme = ({theme, setTheme}) => (
         </Select.ScrollUpButton>
         <Select.Viewport className="SelectViewport">
           <Select.Group>
-            <SelectItem value="light">Light</SelectItem>
-            <SelectItem value="dark">Dark</SelectItem>
+            <SelectItem value="light">Light☀️</SelectItem>
+            <SelectItem value="dark">Dark🌙</SelectItem>
             <SelectItem value="pick-me">Pick-me!🎀</SelectItem>
-            <SelectItem value="tokyo-night">Tokyo Night</SelectItem>
+            <SelectItem value="tokyo-night">Tokyo Night🌃</SelectItem>
+            <SelectItem value="green-nature">Green Nature🍃</SelectItem>
+            <SelectItem value="solar-red">Solar Red🔥</SelectItem>
+
+
+
+
           </Select.Group>
         </Select.Viewport>
       </Select.Content>
