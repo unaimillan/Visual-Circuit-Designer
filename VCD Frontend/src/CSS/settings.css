@@ -22,7 +22,7 @@
     height: 80%;
     top: 10%;
     left: 15%;
-    transition: width 0s, height 0s, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition: width 0s, height 0s, background-color 0.2s ease-in-out, backdrop-filter 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
 .settingsMenuTitle {

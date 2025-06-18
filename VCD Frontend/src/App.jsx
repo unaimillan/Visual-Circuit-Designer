@@ -35,9 +35,6 @@ import './components/codeComponents/switch.jsx';
 import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
 import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
 import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
-import AndNode from "./components/basicLogicElements/AND.jsx";
-
-
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
@@ -54,17 +51,44 @@ function App() {
   const [showMinimap, setShowMinimap] = useState(true)
   const [theme, setTheme] = useState('light');
 
+  useEffect(() => {
+    const saved = localStorage.getItem('userSettings');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.currentBG) setCurrentBG(parsed.currentBG);
+        if (typeof parsed.showMinimap === 'boolean') setShowMinimap(parsed.showMinimap);
+        if (parsed.theme) setTheme(parsed.theme);
+        if (parsed.activeButton) setActiveButton(parsed.activeButton);
+        if (typeof parsed.openSettings === 'boolean') setOpenSettings(parsed.openSettings);
+        if (typeof parsed.circuitsMenuState === 'boolean') setCircuitsMenuState(parsed.circuitsMenuState);
+      } catch (e) {
+        console.error("Ошибка при загрузке настроек из localStorage", e);
+      }
+    }
+  }, []);
+
   if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
   else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
   else { variant = BackgroundVariant.Lines; }
-
-
-
 
   useEffect(() => {
     // Устанавливаем data-theme на корневой элемент <html>
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+
+  useEffect(() => {
+    const settings = {
+      currentBG,
+      showMinimap,
+      theme,
+      activeButton,
+      openSettings,
+      circuitsMenuState,
+    };
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+  }, [currentBG, showMinimap, theme, activeButton, openSettings, circuitsMenuState]);
 
 
   /* React Flow */
@@ -503,7 +527,7 @@ function App() {
                     <IconArrow SVGClassName={'arrow'} draggable="false" />
                   </div>
 
-                  {openIndexes.includes(index) && (
+                  <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
                     <div className="gates-grid">
                       {item.gates.map((node) => (
                         <div
@@ -512,13 +536,14 @@ function App() {
                           draggable
                           onDragStart={(e) => onDragStart(e, node.id)}
                         >
-                          <node.icon SVGClassName={"dndnode-icon"} draggable="false"/>
-
+                          <node.icon SVGClassName="dndnode-icon" draggable="false" />
                           <span>{node.label}</span>
                         </div>
                       ))}
                     </div>
-                  )}
+                  </div>
+
+
                 </li>
               ))}
             </ol>
@@ -578,7 +603,12 @@ function App() {
         </div>
       </div>
     </div>
+
+
+
   );
 }
+
+
 
 export default App
