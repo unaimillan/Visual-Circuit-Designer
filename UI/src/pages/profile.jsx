@@ -5,7 +5,7 @@ import UserIcon from "../../assets/circuitsMenu/userIcon.png"
 const Profile = () => {
   return (
     <div className="profile-container">
-      <div className="header">
+      <div className="header2">
         <div className="user-info">
           <div className='profileUserName'>UserName</div>
           <img className='profileUserIcon'

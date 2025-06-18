@@ -41,7 +41,7 @@ import './pages/profile.jsx'
 
 import './components/codeComponents/switch.jsx';
 
-import { IconSettings, IconMenu, IconArrow } from '../assets/ui-icons.jsx';
+import { IconSettings, IconMenu, IconArrow, IconLoading, IconStop, IconStart } from '../assets/ui-icons.jsx';
 import {
   IconToolbarCursor,
   IconToolbarEraser,
@@ -74,7 +74,7 @@ function App() {
   let variant;
   const [currentBG, setCurrentBG] = useState("dots")
   const [showMinimap, setShowMinimap] = useState(true)
-  const [simulateState, setSimulateState] = useState("idle") //idle - ничего не происходит, awaiting - ждем ответ от сервера, running - запущено (опционально error)
+  const [simulateState,] = useState("idle") //idle - ничего не происходит, awaiting - ждем ответ от сервера, running - запущено (опционально error)
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -646,8 +646,10 @@ function App() {
                                   draggable
                                   onDragStart={(e) => onDragStart(e, node.id)}
                                 >
-                                  <node.icon SVGClassName="dndnode-icon" draggable="false"/>
-                                  <span>{node.label}</span>
+                                  <button onClick={() => spawnCircuit(node.id)}>
+                                    <node.icon SVGClassName="dndnode-icon" draggable="false"/>
+                                    <div className={"circuitsName"}>{node.label}</div>
+                                  </button>
                                 </div>
                               ))}
                             </div>
@@ -734,4 +736,5 @@ function App() {
 
   );
 }
+
 export default App
