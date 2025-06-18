@@ -57,7 +57,7 @@
 
 .userNameToEdit {
     position: absolute;
-    top: 16.5rem;
+    top: 17rem;
     font-size: 1.2rem;
 }
 
@@ -66,7 +66,7 @@
     height: 2.5rem;
     border: #838383 solid 0.05rem;
     border-radius: 0.5rem;
-    margin-top: 19rem;
+    margin-top: 20rem;
     margin-left: -15rem;
 }
 
@@ -79,4 +79,18 @@
     display: flex;
     justify-content: center;
     font-size: 1.2rem;
+}
+
+.projectsPanel {
+    border-right: #c1c1c1 solid 0.05rem;
+    width: 80%;
+    height: 100%;
+    margin-left: -58rem;
+}
+
+.projectPanelName {
+    position: absolute;
+    font-size: 2rem;
+    margin-left: 118.5rem;
+    top: 6rem;
 }

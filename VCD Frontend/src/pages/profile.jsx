@@ -23,6 +23,11 @@ const Profile = () => {
                     </div>
                 </button>
             </div>
+            <div className='projectsPanel'>
+                <span className='projectPanelName'>
+                    My projects
+                </span>
+            </div>
         </div>
     );
 };
