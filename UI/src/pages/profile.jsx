@@ -1,6 +1,5 @@
 import React from 'react';
 import "../CSS/profile.css"
-import UserIcon from "../../assets/circuitsMenu/userIcon.png"
 
 const Profile = () => {
   return (
@@ -30,9 +29,9 @@ const Profile = () => {
         </div>
         <div className="vertical-separator"></div>
         <div className='projectsPanel'>
-                <span className='projectPanelName'>
-                    My projects
-                </span>
+          <span className='projectPanelName'>
+            My projects
+          </span>
         </div>
       </div>
     </div>
