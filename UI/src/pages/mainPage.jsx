@@ -35,14 +35,6 @@ import { Link } from "react-router-dom";
 
 import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
-import { io } from 'socket.io-client';
-
-const socket = io('http://localhost:8000',
-  {
-    transports: ['websocket'],
-    path: '/socket.io'
-  });
-
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
 
@@ -54,21 +46,6 @@ export default function Main() {
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to backend, my socket ID:", socket.id);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected from backend.");
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-    };
-  }, []);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
