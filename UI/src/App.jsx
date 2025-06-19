@@ -18,7 +18,12 @@ import ContextMenu from './components/codeComponents/ContextMenu.jsx';
 import { initialNodes, nodeTypes } from './components/codeComponents/nodes.js';
 import { initialEdges } from './components/codeComponents/edges.js';
 import {MinimapSwitch} from "./components/codeComponents/switch.jsx";
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
 
 import './CSS/variables.css';
 import './CSS/App.css';
@@ -29,10 +34,11 @@ import './CSS/backdrop.css';
 import './CSS/circuitsMenu.css';
 import './CSS/contextMenu.css';
 import {SelectCanvasBG, SelectTheme} from "./components/codeComponents/select.jsx";
+import Profile from "./pages/profile.jsx";
 
 import './components/codeComponents/switch.jsx';
 
-import {IconSettings, IconMenu, IconArrow} from '../assets/ui-icons.jsx';
+import {IconSettings, IconMenu, IconArrow, IconStart, IconStop, IconUser, IconLoading} from '../assets/ui-icons.jsx';
 import {IconToolbarCursor, IconToolbarEraser, IconToolbarHand, IconToolbarSquareWire, IconToolbarDiagWire, IconToolbarText} from "../assets/toolbar-icons.jsx";
 import {IconAND, IconNAND, IconInput, IconNOT, IconXOR, IconOutput, IconNOR, IconOR} from "../assets/circuits-icons.jsx";
 
@@ -44,6 +50,8 @@ function App() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false)
   const [openSettings, setOpenSettings] = useState(false)
   const [activeButton, setActiveButton] = useState("cursor")
+  const [simulateState, setSimulateState] = useState("idle")
+
 
   // Setting variables
   let variant;
@@ -67,6 +75,60 @@ function App() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (openSettings) return;
+
+      // Mac: e.metaKey (Command), Windows: e.ctrlKey (Control)
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+      if (isCtrlOrCmd && e.key === "m") {
+        e.preventDefault();
+        setCircuitsMenuState(prev => !prev)
+      }
+
+      if (isCtrlOrCmd && e.key === "1") {
+        e.preventDefault();
+        setActiveButton("cursor")
+      }
+
+      if (isCtrlOrCmd && e.key === "2") {
+        e.preventDefault();
+        setActiveButton("hand")
+      }
+
+      if (isCtrlOrCmd && e.key === "3") {
+        e.preventDefault();
+        setActiveButton("sqwire")
+      }
+
+      if (isCtrlOrCmd && e.key === "4") {
+        e.preventDefault();
+        setActiveButton("dwire")
+      }
+
+      if (isCtrlOrCmd && e.key === "5") {
+        e.preventDefault();
+        setActiveButton("eraser")
+      }
+
+      if (isCtrlOrCmd && e.key === "6") {
+        e.preventDefault();
+        setActiveButton("text")
+      }
+
+      // if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "s") {
+      //   e.preventDefault();
+      //   console.log("Ctrl + Shift + S pressed");
+      //   myFunctionTwo();
+      // }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [openSettings]);
+
 
   if (currentBG === "dots") { variant = BackgroundVariant.Dots; }
   else if (currentBG === "cross") { variant = BackgroundVariant.Cross; }
@@ -98,7 +160,7 @@ function App() {
   const [menu, setMenu] = useState(null);
   const ref = useRef(null);
   const store = useStoreApi();
-  const { getInternalNode } = useReactFlow();
+  const {getInternalNode} = useReactFlow();
 
 
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
@@ -414,155 +476,181 @@ function App() {
   };
 
   return (
-    <div style={{ height: '100%' }}>
-      <ReactFlow
-        ref={ref}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeDrag={onNodeDrag}
-        onNodeDragStop={onNodeDragStop}
-        onConnect={onConnect}
-        onPaneClick={onPaneClick}
-        onNodeContextMenu={onNodeContextMenu}
-        isValidConnection={validateConnection}
-        onInit={setReactFlowInstance}
-        onDrop={onDrop}
-        onDragOver={(e) => e.preventDefault()}
-        panOnScroll
-        selectionOnDrag
-        panOnDrag={panOnDrag}
-        nodeTypes={nodeTypes}
-        selectionMode={SelectionMode.Partial}
-        snapToGrid={true}
-        snapGrid={[GAP_SIZE, GAP_SIZE]}
-        minZoom={0.1}
-        maxZoom={10}
-      >
-        <Background
-          offset={[10.5, 5.5]}
-          bgColor={"var(--canvas-bg-color)"}
-          color="var(--canvas-color)"
+    <Router>
+      <div style={{height: '100%'}}>
+        <Routes>
+          <Route path="/profile" element={<Profile/>}/>
+          <Route path="/" element={
+            <>
+              <ReactFlow
+                ref={ref}
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onNodeDrag={onNodeDrag}
+                onNodeDragStop={onNodeDragStop}
+                onConnect={onConnect}
+                onPaneClick={onPaneClick}
+                onNodeContextMenu={onNodeContextMenu}
+                isValidConnection={validateConnection}
+                onInit={setReactFlowInstance}
+                onDrop={onDrop}
+                onDragOver={(e) => e.preventDefault()}
+                panOnScroll
+                selectionOnDrag
+                panOnDrag={panOnDrag}
+                nodeTypes={nodeTypes}
+                selectionMode={SelectionMode.Partial}
+                snapToGrid={true}
+                snapGrid={[GAP_SIZE, GAP_SIZE]}
+                minZoom={0.1}
+                maxZoom={10}
+              >
+                <Background
+                  offset={[10.5, 5.5]}
+                  bgColor={"var(--canvas-bg-color)"}
+                  color="var(--canvas-color)"
 
-          gap={GAP_SIZE}
-          size={0.8}
-          variant={variant}
-        />
+                  gap={GAP_SIZE}
+                  size={0.8}
+                  variant={variant}
+                />
 
-        <Controls className={'controls'}/>
+                <Controls className={'controls'}/>
 
-        {showMinimap && (
-          <MiniMap
-            className='miniMap'
-            bgColor={'var(--canvas-bg-color)'}
-            maskColor={'var(--minimap-mask-color)'}
-            nodeColor={'var(--minimap-node-color)'}
-            position="top-right"
-            style={{ borderRadius: '0.5rem', overflow: 'hidden' }}
-        />)}
-        {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-      </ReactFlow>
-      <div>
-        <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
-          <IconMenu SVGClassName={"openCircuitsMenuButtonIcon"} draggable="false"/>
-        </button>
-
-        <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
-          <IconSettings SVGClassName={"openSettingsButtonIcon"} draggable="false"/>
-        </button>
+                {showMinimap && (
+                  <MiniMap
+                    className='miniMap'
+                    bgColor={'var(--canvas-bg-color)'}
+                    maskColor={'var(--minimap-mask-color)'}
+                    nodeColor={'var(--minimap-node-color)'}
+                    position="top-right"
+                    style={{borderRadius: '0.5rem', overflow: 'hidden'}}
+                  />)}
+                {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+              </ReactFlow>
 
 
-        <div className={`backdrop ${openSettings ? 'cover' : ''}`}
-             onClick={() => setOpenSettings(false)}>
-        </div>
+              <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
+                <IconMenu SVGClassName={"openCircuitsMenuButtonIcon"} draggable="false"/>
+              </button>
 
-        <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
-          <p className={'settingsMenuTitle'}>Settings</p>
+              <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
+                <IconSettings SVGClassName={"openSettingsButtonIcon"} draggable="false"/>
+              </button>
 
-          <div className="minimapSwitchBlock">
-            <p className={'minimapSwitchLabel'}>Show mini-map</p>
-            <MinimapSwitch
-              className={'minimapSwitch'}
-              minimapState={showMinimap}
-              minimapToggle={setShowMinimap}
-            />
-          </div>
 
-          <div className="backgroundVariantBlock">
-            <p className={'selectCanvasBG'}>Canvas background</p>
-            <label htmlFor="selectBackground"></label>
-            <SelectCanvasBG
-              currentBG={currentBG}
-              setCurrentBG={setCurrentBG}
-              className={'selectBG'}
-            />
-          </div>
+              <div className={`backdrop ${openSettings ? 'cover' : ''}`}
+                   onClick={() => setOpenSettings(false)}>
+              </div>
 
-          <div className="backgroundVariantBlock">
-            <p className={'minimapSwitchLabel'}>Theme</p>
-            <label htmlFor="selectTheme"></label>
-            <SelectTheme
-              theme={theme}
-              setTheme={setTheme}
-              className={'selectTheme'}
-            />
-          </div>
+              <div className={`settingsMenu ${openSettings ? 'showed' : ''}`}>
+                <p className={'settingsMenuTitle'}>Settings</p>
 
-          <button className={""} onClick={saveCircuit}>Save Circuit</button>
-          <input
-            type="file"
-            accept=".json"
-            onChange={loadCircuit}
-            style={{ marginTop: '10px' }}
-          />
-        </div>
+                <Link to="/profile" className="openProfileButton" style={{textDecoration: 'none'}}>
 
-        <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
+                  <IconUser SVGClassName={'settingUserIcon'}/>
 
-          <div className="menu-container">
-            <div className="menu-header">
-              <p className={"circuitsMenuTitle"}>
-                Menu
-              </p>
-              <div className="divider"></div>
-            </div>
+                  <span className='settingUserName'>UserName</span>
+                </Link>
 
-            <ol className="menu-items">
-              {menuItems.map((item, index) => (
-                <li
-                  key={index}
-                  className={`menu-item ${openIndexes.includes(index) ? 'active' : ''}`}
-                >
-                  <div className="header" onClick={() => toggleItem(index)}>
-                    {item.header}
-                    <IconArrow SVGClassName={'arrow'} draggable="false" />
+
+                <div className="minimapSwitchBlock">
+                  <p className={'minimapSwitchLabel'}>Show mini-map</p>
+                  <MinimapSwitch
+                    className={'minimapSwitch'}
+                    minimapState={showMinimap}
+                    minimapToggle={setShowMinimap}
+                  />
+                </div>
+
+                <div className="backgroundVariantBlock">
+                  <p className={'selectCanvasBG'}>Canvas background</p>
+                  <label htmlFor="selectBackground"></label>
+                  <SelectCanvasBG
+                    currentBG={currentBG}
+                    setCurrentBG={setCurrentBG}
+                    className={'selectBG'}
+                  />
+                </div>
+
+                <div className="backgroundVariantBlock">
+                  <p className={'minimapSwitchLabel'}>Theme</p>
+                  <label htmlFor="selectTheme"></label>
+                  <SelectTheme
+                    theme={theme}
+                    setTheme={setTheme}
+                    className={'selectTheme'}
+                  />
+                </div>
+
+                <button className={""} onClick={saveCircuit}>Save Circuit</button>
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={loadCircuit}
+                  style={{marginTop: '10px'}}
+                />
+              </div>
+
+              <div className={`circuitsMenu ${circuitsMenuState ? 'open' : ''}`}>
+
+                <div className="menu-container">
+                  <div className="menu-header">
+                    <p className={"circuitsMenuTitle"}>
+                      Menu
+                    </p>
+                    <div className="divider"></div>
                   </div>
 
-                  <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
-                    <div className="gates-grid">
-                      {item.gates.map((node) => (
-                        <div
-                          key={node.id}
-                          className="dndnode"
-                          draggable
-                          onDragStart={(e) => onDragStart(e, node.id)}
-                        >
-                          <node.icon SVGClassName="dndnode-icon" draggable="false" />
-                          <span>{node.label}</span>
+                  <ol className="menu-items">
+                    {menuItems.map((item, index) => (
+                      <li
+                        key={index}
+                        className={`menu-item ${openIndexes.includes(index) ? 'active' : ''}`}
+                      >
+                        <div className="header" onClick={() => toggleItem(index)}>
+                          {item.header}
+                          <IconArrow SVGClassName={'arrow'} draggable="false"/>
                         </div>
+
+                          <div className={`gates-grid-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
+                            <div className="gates-grid">
+                              {item.gates.map((node) => (
+                                <div
+                                  key={node.id}
+                                  className="dndnode"
+                                  draggable
+                                  onDragStart={(e) => onDragStart(e, node.id)}
+                                >
+                                  <button onClick={() => spawnCircuit(node.id)}>
+                                    <node.icon SVGClassName="dndnode-icon" draggable="false"/>
+                                    <div className={"circuitsName"}>{node.label}</div>
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </li>
                       ))}
-                    </div>
+                    </ol>
                   </div>
-
-
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
+                </div>
 
         <div className={"toolbar"}>
+
+          <button
+            className={`simulate-button ${simulateState ? "stop" : "start"}`}
+            onClick={() => console.log(simulateState)}
+          >
+            {simulateState==="idle" && (<IconLoading SVGClassName={`simulate-button-svg idle`} draggable="false"/>)}
+            {simulateState==="awaiting" && (<IconLoading SVGClassName={`simulate-button-svg awaiting`} draggable="false"/>)}
+            {simulateState==="running" && (<IconStop SVGClassName={`simulate-button-svg running`} draggable="false"/>)}
+          </button>
+
+          <div className={'toolbar-separator'}></div>
+
           <button
             className={`toolbarButton ${activeButton === "cursor" ? 'active' : ''}`}
               onClick={() => {
@@ -585,42 +673,39 @@ function App() {
             <IconToolbarHand SVGClassName={`toolbarButtonIcon`} draggable="false"/>
           </button>
 
-          <button
-            className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
-            onClick={() => setActiveButton("sqwire")}
-          >
-            <IconToolbarSquareWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
-          </button>
+                <button
+                  className={`toolbarButton ${activeButton === "sqwire" ? 'active' : ''}`}
+                  onClick={() => setActiveButton("sqwire")}
+                >
+                  <IconToolbarSquareWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+                </button>
 
-          <button
-            className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
-            onClick={() => setActiveButton("dwire")}
-          >
-            <IconToolbarDiagWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
-          </button>
+                <button
+                  className={`toolbarButton ${activeButton === "dwire" ? 'active' : ''}`}
+                  onClick={() => setActiveButton("dwire")}
+                >
+                  <IconToolbarDiagWire SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+                </button>
 
-          <button
-            className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
-            onClick={() => setActiveButton("eraser")}
-          >
-            <IconToolbarEraser SVGClassName={`toolbarButtonIcon`} draggable="false"/>
-          </button>
+                <button
+                  className={`toolbarButton ${activeButton === "eraser" ? 'active' : ''}`}
+                  onClick={() => setActiveButton("eraser")}
+                >
+                  <IconToolbarEraser SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+                </button>
 
-          <button
-            className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
-            onClick={() => setActiveButton("text")}
-          >
-            <IconToolbarText SVGClassName={`toolbarButtonIcon`} draggable="false"/>
-          </button>
-        </div>
+                <button
+                  className={`toolbarButton ${activeButton === "text" ? 'active' : ''}`}
+                  onClick={() => setActiveButton("text")}
+                >
+                  <IconToolbarText SVGClassName={`toolbarButtonIcon`} draggable="false"/>
+                </button>
+              </div>
+            </>
+          }/>
+        </Routes>
       </div>
-    </div>
-
-
-
+    </Router>
   );
 }
-
-
-
 export default App

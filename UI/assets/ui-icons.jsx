@@ -19,3 +19,57 @@ export const IconArrow = ({SVGClassName}) => (
       fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
   </svg>
 );
+
+export const IconStart= ({SVGClassName}) => (
+  <svg viewBox="0 0 24 24" fill="none" className={SVGClassName} xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.6582 9.28638C18.098 10.1862 18.8178 10.6361 19.0647 11.2122C19.2803 11.7152 19.2803 12.2847 19.0647 12.7878C18.8178 13.3638 18.098 13.8137 16.6582 14.7136L9.896 18.94C8.29805 19.9387 7.49907 20.4381 6.83973 20.385C6.26501 20.3388 5.73818 20.0469 5.3944 19.584C5 19.053 5 18.1108 5 16.2264V7.77357C5 5.88919 5 4.94701 5.3944 4.41598C5.73818 3.9531 6.26501 3.66111 6.83973 3.6149C7.49907 3.5619 8.29805 4.06126 9.896 5.05998L16.6582 9.28638Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+  </svg>
+);
+
+export const IconStop = ({SVGClassName}) => (
+  <svg className={SVGClassName}  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 19.75H7C6.27065 19.75 5.57118 19.4603 5.05546 18.9445C4.53973 18.4288 4.25 17.7293 4.25 17V7C4.25 6.27065 4.53973 5.57118 5.05546 5.05546C5.57118 4.53973 6.27065 4.25 7 4.25H17C17.7293 4.25 18.4288 4.53973 18.9445 5.05546C19.4603 5.57118 19.75 6.27065 19.75 7V17C19.75 17.7293 19.4603 18.4288 18.9445 18.9445C18.4288 19.4603 17.7293 19.75 17 19.75ZM7 5.75C6.66848 5.75 6.35054 5.8817 6.11612 6.11612C5.8817 6.35054 5.75 6.66848 5.75 7V17C5.75 17.3315 5.8817 17.6495 6.11612 17.8839C6.35054 18.1183 6.66848 18.25 7 18.25H17C17.3315 18.25 17.6495 18.1183 17.8839 17.8839C18.1183 17.6495 18.25 17.3315 18.25 17V7C18.25 6.66848 18.1183 6.35054 17.8839 6.11612C17.6495 5.8817 17.3315 5.75 17 5.75H7Z" fill="currentColor"/>
+  </svg>
+);
+
+export const IconLoading = ({SVGClassName}) => (
+  <svg
+    width="24"
+    height="24"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    className={SVGClassName}
+  >
+    <style>
+      {`
+      .spinner_V8m1 {
+        transform-origin: center;
+        animation: spinner_zKoa 2s linear infinite;
+      }
+      .spinner_V8m1 circle {
+        stroke-linecap: round;
+        animation: spinner_YpZS 1.5s ease-in-out infinite;
+      }
+      @keyframes spinner_zKoa {
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes spinner_YpZS {
+        0% { stroke-dasharray: 0 150; stroke-dashoffset: 0; }
+        47.5% { stroke-dasharray: 42 150; stroke-dashoffset: -16; }
+        95%, 100% { stroke-dasharray: 42 150; stroke-dashoffset: -59; }
+      }
+    `}
+    </style>
+    <g className="spinner_V8m1">
+      <circle cx="12" cy="12" r="9.5" fill="none" strokeWidth="3" />
+    </g>
+  </svg>
+
+);
+
+export const IconUser = ({SVGClassName}) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={SVGClassName}>
+    <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
