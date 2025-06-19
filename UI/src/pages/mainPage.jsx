@@ -33,6 +33,8 @@ import UserIcon from '../../assets/userIcon.png';
 
 import { Link } from "react-router-dom";
 
+import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
+
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
 
@@ -54,6 +56,8 @@ export default function Main() {
   const { getInternalNode } = useReactFlow();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
+
+  const socketRef = useRef(null);
 
   //Load saved settings from localStorage
   useEffect(() => {
@@ -137,7 +141,7 @@ export default function Main() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-
+  // Я не знаю, что это
   // const validateConnection = useCallback((connection) => {
   //   return connection.source !== connection.target;
   // }, []);
@@ -148,6 +152,7 @@ export default function Main() {
   };
 
 
+  //Create new node after dragAndDrop
   const onDrop = (event) => {
     event.preventDefault();
     const type = event.dataTransfer.getData('application/reactflow');
@@ -425,6 +430,15 @@ export default function Main() {
         activeButton={activeButton}
         setActiveButton={setActiveButton}
         setPanOnDrag={setPanOnDrag}
+        onSimulateClick={() =>
+          handleSimulateClick({
+            simulateState,
+            setSimulateState,
+            socketRef,
+            nodes,
+            edges
+          })
+        }
       />
     </>
   );

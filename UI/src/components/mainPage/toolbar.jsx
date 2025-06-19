@@ -1,5 +1,6 @@
 import React from "react";
-import { IconStop, IconLoading } from "../../../assets/ui-icons.jsx";
+import {IconStop, IconLoading, IconStart} from "../../../assets/ui-icons.jsx";
+
 import {
   IconToolbarCursor,
   IconToolbarEraser,
@@ -9,15 +10,16 @@ import {
   IconToolbarText
 } from "../../../assets/toolbar-icons.jsx";
 
-export default function Toolbar({ simulateState, activeButton, setActiveButton, setPanOnDrag }) {
+export default function Toolbar({ simulateState, activeButton, setActiveButton, setPanOnDrag, onSimulateClick}) {
   return (
     <div className="toolbar">
       <button
         className={`simulate-button ${simulateState}`}
-        onClick={() => console.log(simulateState)}
+        onClick={onSimulateClick}
+
       >
         {simulateState === "idle" && (
-          <IconLoading SVGClassName="simulate-button-svg idle" draggable="false" />
+          <IconStart SVGClassName="simulate-button-svg idle" draggable="false" />
         )}
         {simulateState === "awaiting" && (
           <IconLoading SVGClassName="simulate-button-svg awaiting" draggable="false" />
