@@ -233,6 +233,7 @@ export default function Main() {
 
     setNodes((nds) => nds.concat(newNode));
   };
+
   const getClosestEdge = useCallback((draggedNode) => {
     const { nodeLookup } = store.getState();
     const internalNode = getInternalNode(draggedNode.id);
