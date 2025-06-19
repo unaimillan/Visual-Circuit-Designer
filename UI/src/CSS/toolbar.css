@@ -75,7 +75,7 @@
   z-index: 1000;
 }
 
-.simulate-button.start {
+.simulate-button.idle {
   background-color: var(--simulate-start-button-bg-color);
 }
 
@@ -83,7 +83,7 @@
     background-color: var(--simulate-loading-button-bg-color);
 }
 
-.simulate-button.stop {
+.simulate-button.running {
   background-color: var(--simulate-stop-button-bg-color);
 }
 
