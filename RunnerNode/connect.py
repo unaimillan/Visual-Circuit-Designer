@@ -9,8 +9,10 @@ from cocotbTest import run_cocotb_test
 
 sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=[
     "http://visual-circuit-designer.ru",
-    "http://185.221.215.173:3000" # dev
-    "http://185.221.215.173/"])
+    "https://visual-circuit-designer.ru",
+    "http://185.221.215.173",
+    "https://185.221.215.173",
+    "http://localhost:5173"])   # dev origin
 app = FastAPI()
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
@@ -19,7 +21,6 @@ user_simulations = {}
 @sio.on("connect")
 async def connect(sid, environ):
     print(f"Client connected: {sid}")
-    await sio.emit("ready", room=sid)
 
 
 @sio.on("disconnect")
