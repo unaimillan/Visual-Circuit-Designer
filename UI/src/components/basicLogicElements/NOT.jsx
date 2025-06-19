@@ -1,7 +1,7 @@
-import {Handle, Position} from '@xyflow/react'
+import { Position } from '@xyflow/react'
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconNOT} from '../../../assets/circuits-icons.jsx'
+import { IconNOT } from '../../../assets/circuits-icons.jsx'
 
 function NotNode({ isConnectable }) {
   return (
@@ -16,7 +16,7 @@ function NotNode({ isConnectable }) {
         isConnectable={isConnectable}
         maxConnections={1}
       />
-      <Handle
+      <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"

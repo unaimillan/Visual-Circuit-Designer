@@ -1,4 +1,4 @@
-import { Handle, Position } from '@xyflow/react';
+import { Position } from '@xyflow/react';
 
 import CustomHandle from '../codeComponents/CustomHandle.jsx';
 import { IconNAND } from "../../../assets/circuits-icons.jsx";
@@ -25,7 +25,7 @@ function NandNode({ isConnectable }) {
         isConnectable={isConnectable}
         maxConnections={1}
       />
-      <Handle
+      <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"

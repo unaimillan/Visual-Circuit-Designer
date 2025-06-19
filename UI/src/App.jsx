@@ -531,6 +531,9 @@ function App() {
                 ref={ref}
                 nodes={nodes}
                 edges={edges}
+                defaultEdgeOptions={{
+                  style: { stroke: "var(--svg-color)", strokeWidth: 2 },
+                }}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onNodeDrag={onNodeDrag}
