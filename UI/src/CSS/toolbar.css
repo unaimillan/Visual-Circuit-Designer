@@ -87,6 +87,10 @@
   background-color: var(--simulate-stop-button-bg-color);
 }
 
+.simulate-button.error {
+    background-color: var(--simulate-error-button-bg-color);
+}
+
 
 .simulate-button-svg.idle {
     width: 1.5rem;
@@ -118,4 +122,15 @@
   align-items: center;
   color: var(--simulate-stop-button-text-color);
   transform: scale(1.1);
+}
+
+.simulate-button-svg.error {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: auto;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    color: var(--simulate-error-button-text-color);
+    transform: scale(1.1);
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import {IconStop, IconLoading, IconStart} from "../../../assets/ui-icons.jsx";
+import {IconStop, IconLoading, IconStart, IconError} from "../../../assets/ui-icons.jsx";
 
 import {
   IconToolbarCursor,
@@ -26,6 +26,9 @@ export default function Toolbar({ simulateState, activeButton, setActiveButton, 
         )}
         {simulateState === "running" && (
           <IconStop SVGClassName="simulate-button-svg running" draggable="false" />
+        )}
+        {simulateState === "error" && (
+          <IconError SVGClassName="simulate-button-svg error" draggable="false" />
         )}
       </button>
 

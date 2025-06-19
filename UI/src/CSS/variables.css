@@ -11,7 +11,7 @@
   --svg-color: #000000;
 
   --button-color: #ffffff;
-  --button-hover-color: #ffffff;
+  --button-hover-color: #e6e6e6;
   --button-active-color: #ffffff;
 
   --select-color: #dbedff;
@@ -24,6 +24,9 @@
 
     --simulate-stop-button-bg-color: #ffdbdc;
     --simulate-stop-button-text-color: #ce2c31;
+
+  --simulate-error-button-bg-color: #ffbdbd;
+  --simulate-error-button-text-color: #831616;
 
 
 

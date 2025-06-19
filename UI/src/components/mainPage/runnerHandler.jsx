@@ -21,6 +21,19 @@ export const handleSimulateClick = ({
     return;
   }
 
+  if (simulateState === "error") {
+    console.log("Ignored error. Back to idle");
+
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+      socketRef.current = null;
+      console.log("❌ Socket manually disconnected during awaiting");
+    }
+
+    setSimulateState("idle");
+    return;
+  }
+
   if (simulateState === "idle") {
     setSimulateState("awaiting");
 
@@ -42,9 +55,9 @@ export const handleSimulateClick = ({
 
       socketRef.current.on("error", (data) => {
         console.error("❌ Simulation error:", data);
-        setSimulateState("idle");
         socketRef.current.disconnect();
         socketRef.current = null;
+        setSimulateState("error");
       });
 
       socketRef.current.on("disconnect", () => {

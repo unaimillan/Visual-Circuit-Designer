@@ -110,7 +110,7 @@ export default function Main() {
         return;
       }
 
-      //Ctrl + 1...6 - Change selected tool
+      //1...6 - Change selected tool
       const hotkeys = {
         "1": () => {
           setActiveButton("cursor");
