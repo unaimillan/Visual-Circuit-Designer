@@ -224,7 +224,7 @@ export default function Main() {
   const saveCircuit = () => {
     const flowData = {
       nodes: nodes.map(n => ({ id: n.id, type: n.type, position: n.position, data: n.data })),
-      edges: edges.map(e => ({ id: e.id, source: e.source, target: e.target }))
+      edges: edges.map(e => ({ id: e.id, source: e.source, target: e.target, sourceHandle: e.sourceHandle, targetHandle: e.targetHandle }))
     };
 
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(flowData, null, 2));
