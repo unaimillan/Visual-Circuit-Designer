@@ -365,6 +365,7 @@ export default function Main() {
         onInit={setReactFlowInstance}
         nodeTypes={nodeTypes}
         panOnDrag={panOnDrag}
+        selectionOnDrag
         panOnScroll
         snapToGrid
         snapGrid={[GAP_SIZE, GAP_SIZE]}
