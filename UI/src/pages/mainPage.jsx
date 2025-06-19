@@ -33,6 +33,14 @@ import UserIcon from '../../assets/userIcon.png';
 
 import { Link } from "react-router-dom";
 
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:8000',
+  {
+    transports: ['websocket'],
+    path: '/socket.io'
+  });
+
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 10;
 
@@ -44,6 +52,21 @@ export default function Main() {
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to backend, my socket ID:", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from backend.");
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, []);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -87,7 +110,6 @@ export default function Main() {
   }, [currentBG, showMinimap, theme, activeButton, openSettings, circuitsMenuState]);
 
 
-
   //Hotkeys handler
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -109,14 +131,20 @@ export default function Main() {
 
       //Ctrl + 1...6 - Change selected tool
       const hotkeys = {
-        "1": () => { setActiveButton("cursor"); setPanOnDrag([1, 2]); },
-        "2": () => { setActiveButton("hand"); setPanOnDrag(true); },
+        "1": () => {
+          setActiveButton("cursor");
+          setPanOnDrag([1, 2]);
+        },
+        "2": () => {
+          setActiveButton("hand");
+          setPanOnDrag(true);
+        },
         "3": () => setActiveButton("sqwire"),
         "4": () => setActiveButton("dwire"),
         "5": () => setActiveButton("eraser"),
         "6": () => setActiveButton("text"),
       };
-      if ( hotkeys[e.key]) {
+      if (hotkeys[e.key]) {
         e.preventDefault();
         hotkeys[e.key]();
       }
@@ -129,7 +157,6 @@ export default function Main() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [openSettings]);
-
 
 
   //Sets current theme to the whole document (наверное)
@@ -343,6 +370,9 @@ export default function Main() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        defaultEdgeOptions={{
+          style: { stroke: "var(--svg-color)", strokeWidth: 2 },
+        }}
         onNodeContextMenu={onNodeContextMenu}
         onPaneClick={onPaneClick}
         onConnect={onConnect}
@@ -368,7 +398,7 @@ export default function Main() {
           size={0.8}
           variant={variant}
         />
-        <Controls className="controls" />
+        <Controls className="controls"/>
         {showMinimap && (
           <MiniMap
             className="miniMap"
@@ -383,34 +413,34 @@ export default function Main() {
       </ReactFlow>
 
       <button className="openCircuitsMenuButton" onClick={() => setCircuitsMenuState(!circuitsMenuState)}>
-        <IconMenu SVGClassName="openCircuitsMenuButtonIcon" draggable="false" />
+        <IconMenu SVGClassName="openCircuitsMenuButtonIcon" draggable="false"/>
       </button>
 
       <button onClick={() => setOpenSettings(true)} className="openSettingsButton">
-        <IconSettings SVGClassName="openSettingsButtonIcon" draggable="false" />
+        <IconSettings SVGClassName="openSettingsButtonIcon" draggable="false"/>
       </button>
 
-      <div className={`backdrop ${openSettings ? "cover" : ""}`} onClick={() => setOpenSettings(false)} />
+      <div className={`backdrop ${openSettings ? "cover" : ""}`} onClick={() => setOpenSettings(false)}/>
       <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
         <p className="settingsMenuTitle">Settings</p>
         <Link to="/profile" className="openProfileButton" style={{ textDecoration: "none" }}>
-          <img className="settingUserIcon" src={UserIcon} alt="User" />
+          <img className="settingUserIcon" src={UserIcon} alt="User"/>
           <span className="settingUserName">UserName</span>
         </Link>
         <div className="minimapSwitchBlock">
           <p className="minimapSwitchLabel">Show mini-map</p>
-          <MinimapSwitch className="minimapSwitch" minimapState={showMinimap} minimapToggle={setShowMinimap} />
+          <MinimapSwitch className="minimapSwitch" minimapState={showMinimap} minimapToggle={setShowMinimap}/>
         </div>
         <div className="backgroundVariantBlock">
           <p className="selectCanvasBG">Canvas background</p>
-          <SelectCanvasBG currentBG={currentBG} setCurrentBG={setCurrentBG} className="selectBG" />
+          <SelectCanvasBG currentBG={currentBG} setCurrentBG={setCurrentBG} className="selectBG"/>
         </div>
         <div className="backgroundVariantBlock">
           <p className="minimapSwitchLabel">Theme</p>
-          <SelectTheme theme={theme} setTheme={setTheme} className="selectTheme" />
+          <SelectTheme theme={theme} setTheme={setTheme} className="selectTheme"/>
         </div>
         <button onClick={saveCircuit}>Save Circuit</button>
-        <input type="file" accept=".json" onChange={loadCircuit} style={{ marginTop: "10px" }} />
+        <input type="file" accept=".json" onChange={loadCircuit} style={{ marginTop: "10px" }}/>
       </div>
 
       <CircuitsMenu

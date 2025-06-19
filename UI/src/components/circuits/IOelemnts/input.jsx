@@ -1,5 +1,7 @@
-import { Handle, Position } from '@xyflow/react';
-import {IconInput} from "../../../../assets/circuits-icons.jsx";
+import { Position } from '@xyflow/react';
+
+import CustomHandle from '../../codeComponents/CustomHandle.jsx';
+import {IconInput} from '../../../../assets/circuits-icons.jsx';
 
 function inputNode({ isConnectable }) {
   return (
@@ -7,7 +9,7 @@ function inputNode({ isConnectable }) {
       <IconInput SVGClassName={'circuit-button-icon'}/>
 
       {/* Handles */}
-      <Handle
+      <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"

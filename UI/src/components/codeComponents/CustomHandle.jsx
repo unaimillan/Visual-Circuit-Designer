@@ -10,9 +10,9 @@ const CustomHandle = (props) => {
   ).length;
 
   return (
-    <Handle
+    <Handle className={"customHandle"}
       {...props}
-      isConnectable={connectionCount < props.maxConnections}
+      isConnectable={connectionCount < props.maxConnections || props.maxConnections === undefined}
     />
   );
 };
