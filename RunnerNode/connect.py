@@ -8,9 +8,10 @@ from cocotbTest import run_cocotb_test
 
 
 sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=[
+    "http://localhost:5173",
     "http://visual-circuit-designer.ru",
-    "http://185.221.215.173:3000" # dev
-    "http://185.221.215.173/"])
+    "http://185.221.215.173:3000", # dev
+    "http://185.221.215.173"])
 app = FastAPI()
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
@@ -50,6 +51,8 @@ async def run_simulation(sid, circuit_data):
     sim_id = str(uuid.uuid4())
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
+
+    print("DEBUG: ", circuit_data, type(circuit_data))
 
     verilog_code = generate_verilog_from_json(circuit_data)
 

@@ -1,4 +1,4 @@
-import { io } from "socket.io-client";
+import { io } from "socket.io-client"
 
 export const handleSimulateClick = ({
                                       simulateState,
@@ -22,7 +22,6 @@ export const handleSimulateClick = ({
   }
 
   if (simulateState === "idle") {
-    console.log("🟢 установка awaiting");
     setSimulateState("awaiting");
 
     if (!socketRef.current) {
@@ -75,11 +74,12 @@ export const handleSimulateClick = ({
       })),
     };
 
+    console.log(JSON.stringify(flowData, null, 2));
     socketRef.current.emit(
       "run_simulation",
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(flowData, null, 2))
+      flowData
     );
+
 
     // НЕ переключай simulateState вручную — сервер сам вызовет setSimulateState("running")
   }
