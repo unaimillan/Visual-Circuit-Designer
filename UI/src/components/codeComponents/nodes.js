@@ -1,11 +1,11 @@
-import AndNode from '../basicLogicElements/AND.jsx';
-import OrNode from "../basicLogicElements/OR.jsx";
-import NotNode from '../basicLogicElements/NOT.jsx';
-import NandNode from '../basicLogicElements/NAND.jsx';
-import NorNode from "../basicLogicElements/NOR.jsx";
-import XorNode from "../basicLogicElements/XOR.jsx";
-import InputNode from "../IOelemnts/input.jsx"
-import OutputNode from "../IOelemnts/output.jsx"
+import AndNode from '../circuits/basicLogicElements/AND.jsx';
+import OrNode from "../circuits/basicLogicElements/OR.jsx";
+import NotNode from '../circuits/basicLogicElements/NOT.jsx';
+import NandNode from '../circuits/basicLogicElements/NAND.jsx';
+import NorNode from "../circuits/basicLogicElements/NOR.jsx";
+import XorNode from "../circuits/basicLogicElements/XOR.jsx";
+import InputNode from "../circuits/IOelemnts/input.jsx"
+import OutputNode from "../circuits/IOelemnts/output.jsx"
 
 export const nodeTypes = {
   andNode: AndNode,

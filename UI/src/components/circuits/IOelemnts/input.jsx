@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import {IconInput} from "../../../assets/circuits-icons.jsx";
+import {IconInput} from "../../../../assets/circuits-icons.jsx";
 
 function inputNode({ isConnectable }) {
   return (

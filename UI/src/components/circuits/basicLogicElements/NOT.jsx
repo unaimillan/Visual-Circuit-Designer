@@ -1,7 +1,7 @@
 import {Handle, Position} from '@xyflow/react';
 
-import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconNOT} from "../../../assets/circuits-icons.jsx";
+import CustomHandle from '../../codeComponents/CustomHandle.jsx';
+import {IconNOT} from "../../../../assets/circuits-icons.jsx";
 
 function NotNode({ isConnectable }) {
   return (
