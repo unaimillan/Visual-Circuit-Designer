@@ -1,7 +1,5 @@
-#include <cstdio>
-#include <cstdlib>
+#include "app.hpp"
+#include <Poco/Util/ServerApplication.h>
+#include <iostream>
 
-int main(int, char**) {
-    printf("Hello, world!\n");
-    return EXIT_SUCCESS;
-}
+POCO_SERVER_MAIN(AppAuthServer);
