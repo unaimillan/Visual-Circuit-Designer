@@ -20,7 +20,7 @@ function NotNode({ isConnectable }) {
         type="source"
         position={Position.Right}
         id="output-1"
-        style={{ top: 34, left: 72 }}
+        style={{ top: 34, left: 71 }}
         isConnectable={isConnectable}
       />
     </div>
