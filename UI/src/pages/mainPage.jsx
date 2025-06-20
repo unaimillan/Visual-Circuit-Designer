@@ -36,7 +36,7 @@ import { Link } from "react-router-dom";
 import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
 const GAP_SIZE = 10;
-const MIN_DISTANCE = 10;
+const MIN_DISTANCE = 1;
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -261,52 +261,73 @@ export default function Main() {
       if (!nodeHandles) return;
       const nodePos = node.internals.positionAbsolute;
 
-      const compare = (src, tgt, srcPos, tgtPos) => {
-        const dx = srcPos.x - tgtPos.x;
-        const dy = srcPos.y - tgtPos.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestEdge = {
-            id: `temp-${src}-${tgt}`,
-            source: src,
-            sourceHandle: 'a',
-            target: tgt,
-            targetHandle: 'a',
-            className: 'temp'
+      // Check source->target connections
+      if (draggedHandles.source) {
+        draggedHandles.source.forEach((srcHandle) => {
+          const srcHandlePos = {
+            x: draggedPos.x + srcHandle.x + srcHandle.width / 2,
+            y: draggedPos.y + srcHandle.y + srcHandle.height / 2
           };
-        }
-      };
 
-      if (draggedHandles.source && nodeHandles.target) {
-        draggedHandles.source.forEach(src => {
-          const srcPos = {
-            x: draggedPos.x + src.x + src.width / 2,
-            y: draggedPos.y + src.y + src.height / 2,
-          };
-          nodeHandles.target.forEach(tgt => {
-            const tgtPos = {
-              x: nodePos.x + tgt.x + tgt.width / 2,
-              y: nodePos.y + tgt.y + tgt.height / 2,
-            };
-            compare(draggedNode.id, node.id, srcPos, tgtPos);
-          });
+          if (nodeHandles.target) {
+            nodeHandles.target.forEach((tgtHandle) => {
+              const tgtHandlePos = {
+                x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
+                y: nodePos.y + tgtHandle.y + tgtHandle.height / 2
+              };
+
+              const dx = srcHandlePos.x - tgtHandlePos.x;
+              const dy = srcHandlePos.y - tgtHandlePos.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestEdge = {
+                  id: `temp-${internalNode.id}-${srcHandle.id}-to-${node.id}-${tgtHandle.id}`,
+                  source: internalNode.id,
+                  sourceHandle: srcHandle.id,
+                  target: node.id,
+                  targetHandle: tgtHandle.id,
+                  className: 'temp'
+                };
+              }
+            });
+          }
         });
       }
 
-      if (draggedHandles.target && nodeHandles.source) {
-        draggedHandles.target.forEach(tgt => {
-          const tgtPos = {
-            x: draggedPos.x + tgt.x + tgt.width / 2,
-            y: draggedPos.y + tgt.y + tgt.height / 2,
+      // Check target->source connections
+      if (draggedHandles.target) {
+        draggedHandles.target.forEach((tgtHandle) => {
+          const tgtHandlePos = {
+            x: draggedPos.x + tgtHandle.x + tgtHandle.width / 2,
+            y: draggedPos.y + tgtHandle.y + tgtHandle.height / 2
           };
-          nodeHandles.source.forEach(src => {
-            const srcPos = {
-              x: nodePos.x + src.x + src.width / 2,
-              y: nodePos.y + src.y + src.height / 2,
-            };
-            compare(node.id, draggedNode.id, srcPos, tgtPos);
-          });
+
+          if (nodeHandles.source) {
+            nodeHandles.source.forEach((srcHandle) => {
+              const srcHandlePos = {
+                x: nodePos.x + srcHandle.x + srcHandle.width / 2,
+                y: nodePos.y + srcHandle.y + srcHandle.height / 2
+              };
+
+              const dx = tgtHandlePos.x - srcHandlePos.x;
+              const dy = tgtHandlePos.y - srcHandlePos.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestEdge = {
+                  id: `temp-${node.id}-${srcHandle.id}-to-${internalNode.id}-${tgtHandle.id}`,
+                  source: node.id,
+                  sourceHandle: srcHandle.id,
+                  target: internalNode.id,
+                  targetHandle: tgtHandle.id,
+                  className: 'temp'
+                };
+              }
+            });
+          }
         });
       }
     });
