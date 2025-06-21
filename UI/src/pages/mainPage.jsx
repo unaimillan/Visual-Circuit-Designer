@@ -412,7 +412,7 @@ export default function Main() {
           bgColor="var(--canvas-bg-color)"
           color="var(--canvas-color)"
           gap={GAP_SIZE}
-          size={0.8}
+          size={1.6}
           variant={variant}
         />
         <Controls className="controls"/>
