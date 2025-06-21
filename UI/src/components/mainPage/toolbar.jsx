@@ -10,7 +10,7 @@ import {
   IconToolbarText
 } from "../../../assets/toolbar-icons.jsx";
 
-export default function Toolbar({ simulateState, activeAction, setActiveAction, activeWire, setActiveWire, activeButton, setActiveButton, setPanOnDrag, onSimulateClick}) {
+export default function Toolbar({ simulateState, activeAction, setActiveAction, activeWire, setActiveWire, activeButton, setActiveButton, setPanOnDrag, setWireType, onSimulateClick}) {
   return (
     <div className="toolbar">
       <button
@@ -57,15 +57,21 @@ export default function Toolbar({ simulateState, activeAction, setActiveAction, 
       <div className="toolbar-separator"></div>
 
       <button
-        className={`toolbarButton ${activeWire === "sqwire" ? "active" : ""}`}
-        onClick={() => setActiveWire("sqwire")}
+        className={`toolbarButton ${activeWire === "stepWire" ? "active" : ""}`}
+        onClick={() => {
+          setActiveWire("stepWire")
+          setWireType("step");
+        }}
       >
         <IconToolbarSquareWire SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
 
       <button
-        className={`toolbarButton ${activeWire === "dwire" ? "active" : ""}`}
-        onClick={() => setActiveWire("dwire")}
+        className={`toolbarButton ${activeWire === "straightWire" ? "active" : ""}`}
+        onClick={() => {
+          setActiveWire("straightWire");
+          setWireType("straight");
+        }}
       >
         <IconToolbarDiagWire SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>

@@ -42,7 +42,7 @@ export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
-  const [activeWire, setActiveWire] = useState("sqwire");
+  const [activeWire, setActiveWire] = useState("stepWire");
   const [activeButton, setActiveButton] = useState("text");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
@@ -51,6 +51,7 @@ export default function Main() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [wireType, setWireType] = useState("step");
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
@@ -126,8 +127,14 @@ export default function Main() {
           setActiveAction("hand");
           setPanOnDrag(true);
         },
-        "3": () => setActiveWire("sqwire"),
-        "4": () => setActiveWire("dwire"),
+        "3": () => {
+          setActiveWire("stepWire");
+          setWireType("step");
+        },
+        "4": () => {
+          setActiveWire("straightWire");
+          setWireType("straight");
+        },
         "5": () => setActiveButton("eraser"),
         "6": () => setActiveButton("text"),
       };
@@ -380,6 +387,7 @@ export default function Main() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         defaultEdgeOptions={{
+          type: wireType,
           style: { stroke: "var(--svg-color)", strokeWidth: 2 },
         }}
         onNodeContextMenu={onNodeContextMenu}
@@ -469,6 +477,7 @@ export default function Main() {
         activeButton={activeButton}
         setActiveButton={setActiveButton}
         setPanOnDrag={setPanOnDrag}
+        setWireType={setWireType}
         onSimulateClick={() =>
           handleSimulateClick({
             simulateState,
