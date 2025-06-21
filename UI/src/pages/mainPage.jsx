@@ -59,7 +59,9 @@ const MIN_DISTANCE = 1;
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
-  const [activeButton, setActiveButton] = useState("cursor");
+  const [activeAction, setActiveAction] = useState("cursor");
+  const [activeWire, setActiveWire] = useState("stepWire");
+  const [activeButton, setActiveButton] = useState("text");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
@@ -67,13 +69,14 @@ export default function Main() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [wireType, setWireType] = useState("step");
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
   const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [panOnDrag, setPanOnDrag] = useState([1, 2]);
+  const [panOnDrag, setPanOnDrag] = useState([2]);
 
   const socketRef = useRef(null);
 
@@ -90,6 +93,8 @@ export default function Main() {
         if (parsed.currentBG) setCurrentBG(parsed.currentBG);
         if (typeof parsed.showMinimap === 'boolean') setShowMinimap(parsed.showMinimap);
         if (parsed.theme) setTheme(parsed.theme);
+        if (parsed.activeAction) setActiveAction(parsed.activeAction);
+        if (parsed.activeWire) setActiveWire(parsed.activeWire);
         if (parsed.activeButton) setActiveButton(parsed.activeButton);
         if (typeof parsed.openSettings === 'boolean') setOpenSettings(parsed.openSettings);
         if (typeof parsed.circuitsMenuState === 'boolean') setCircuitsMenuState(parsed.circuitsMenuState);
@@ -105,12 +110,14 @@ export default function Main() {
       currentBG,
       showMinimap,
       theme,
+      activeAction,
+      activeWire,
       activeButton,
       openSettings,
       circuitsMenuState,
     };
     localStorage.setItem('userSettings', JSON.stringify(settings));
-  }, [currentBG, showMinimap, theme, activeButton, openSettings, circuitsMenuState]);
+  }, [currentBG, showMinimap, theme, activeAction, activeWire, activeButton, openSettings, circuitsMenuState]);
 
 
   //Hotkeys handler
@@ -135,15 +142,21 @@ export default function Main() {
       //1...6 - Change selected tool
       const hotkeys = {
         "1": () => {
-          setActiveButton("cursor");
-          setPanOnDrag([1, 2]);
+          setActiveAction("cursor");
+          setPanOnDrag([2]);
         },
         "2": () => {
-          setActiveButton("hand");
+          setActiveAction("hand");
           setPanOnDrag(true);
         },
-        "3": () => setActiveButton("sqwire"),
-        "4": () => setActiveButton("dwire"),
+        "3": () => {
+          setActiveWire("stepWire");
+          setWireType("step");
+        },
+        "4": () => {
+          setActiveWire("straightWire");
+          setWireType("straight");
+        },
         "5": () => setActiveButton("eraser"),
         "6": () => setActiveButton("text"),
       };
@@ -397,7 +410,7 @@ export default function Main() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         defaultEdgeOptions={{
-          style: { stroke: "var(--svg-color)", strokeWidth: 2 },
+          type: wireType,
         }}
         onNodeContextMenu={onNodeContextMenu}
         onPaneClick={onPaneClick}
@@ -418,7 +431,7 @@ export default function Main() {
         maxZoom={10}
       >
         <Background
-          offset={[10.5, 5.5]}
+          offset={[10.5, 5]}
           bgColor="var(--canvas-bg-color)"
           color="var(--canvas-color)"
           gap={GAP_SIZE}
@@ -479,9 +492,14 @@ export default function Main() {
       <Toolbar
         simulateState={simulateState}
         setSimulateState={setSimulateState}
+        activeAction={activeAction}
+        setActiveAction={setActiveAction}
+        activeWire={activeWire}
+        setActiveWire={setActiveWire}
         activeButton={activeButton}
         setActiveButton={setActiveButton}
         setPanOnDrag={setPanOnDrag}
+        setWireType={setWireType}
         onSimulateClick={() =>
           handleSimulateClick({
             simulateState,

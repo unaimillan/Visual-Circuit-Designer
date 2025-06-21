@@ -10,7 +10,7 @@ import {
   IconToolbarText
 } from "../../../assets/toolbar-icons.jsx";
 
-export default function Toolbar({ simulateState, activeButton, setActiveButton, setPanOnDrag, onSimulateClick}) {
+export default function Toolbar({ simulateState, activeAction, setActiveAction, activeWire, setActiveWire, activeButton, setActiveButton, setPanOnDrag, setWireType, onSimulateClick}) {
   return (
     <div className="toolbar">
       <button
@@ -35,38 +35,48 @@ export default function Toolbar({ simulateState, activeButton, setActiveButton, 
       <div className="toolbar-separator"></div>
 
       <button
-        className={`toolbarButton ${activeButton === "cursor" ? "active" : ""}`}
+        className={`toolbarButton ${activeAction === "cursor" ? "active" : ""}`}
         onClick={() => {
-          setActiveButton("cursor");
-          setPanOnDrag([1, 2]);
+          setActiveAction("cursor");
+          setPanOnDrag([2]);
         }}
       >
         <IconToolbarCursor SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
 
       <button
-        className={`toolbarButton ${activeButton === "hand" ? "active" : ""}`}
+        className={`toolbarButton ${activeAction === "hand" ? "active" : ""}`}
         onClick={() => {
-          setActiveButton("hand");
+          setActiveAction("hand");
           setPanOnDrag(true);
         }}
       >
         <IconToolbarHand SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
 
+      <div className="toolbar-separator"></div>
+
       <button
-        className={`toolbarButton ${activeButton === "sqwire" ? "active" : ""}`}
-        onClick={() => setActiveButton("sqwire")}
+        className={`toolbarButton ${activeWire === "stepWire" ? "active" : ""}`}
+        onClick={() => {
+          setActiveWire("stepWire")
+          setWireType("step");
+        }}
       >
         <IconToolbarSquareWire SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
 
       <button
-        className={`toolbarButton ${activeButton === "dwire" ? "active" : ""}`}
-        onClick={() => setActiveButton("dwire")}
+        className={`toolbarButton ${activeWire === "straightWire" ? "active" : ""}`}
+        onClick={() => {
+          setActiveWire("straightWire");
+          setWireType("straight");
+        }}
       >
         <IconToolbarDiagWire SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
+
+      <div className="toolbar-separator"></div>
 
       <button
         className={`toolbarButton ${activeButton === "eraser" ? "active" : ""}`}
