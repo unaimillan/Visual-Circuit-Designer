@@ -20,7 +20,7 @@ function InputNode({ isConnectable, data}) {
         <IconInput SVGClassName="circuit-button-icon" />
       </div>
 
-      {simulateState  !== "idle" &&
+      {simulateState  === "running" &&
       <div className="switch-wrapper">
         <SvgSwitch
           checked={inputState}
