@@ -2,7 +2,8 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
+  useContext, createContext,
 } from 'react';
 
 import {
@@ -35,6 +36,23 @@ import { Link } from "react-router-dom";
 
 import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
+
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const SimulateStateContext = createContext({
+  simulateState: 'idle',
+  setSimulateState: () => {},
+});
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useSimulateState() {
+  const ctx = useContext(SimulateStateContext);
+  if (!ctx) {
+    throw new Error('useSimulateState must be used within SimulateStateProvider');
+  }
+  return ctx;
+}
+
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 1;
 
@@ -44,7 +62,7 @@ export default function Main() {
   const [activeButton, setActiveButton] = useState("cursor");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
-  const [simulateState, setSimulateState] = useState("error");
+  const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -58,6 +76,10 @@ export default function Main() {
   const [panOnDrag, setPanOnDrag] = useState([1, 2]);
 
   const socketRef = useRef(null);
+
+
+
+
 
   //Load saved settings from localStorage
   useEffect(() => {
@@ -237,7 +259,7 @@ export default function Main() {
       id: `${type}-${Date.now()}`,
       type,
       position,
-      data: { customId: `${type}-${Date.now()}` }
+      data: { customId: `${type}-${Date.now()}`, simState: simulateState}
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -366,6 +388,7 @@ export default function Main() {
         BackgroundVariant.Lines;
 
   return (
+    <SimulateStateContext.Provider value={{ simulateState, setSimulateState }}>
     <>
       <ReactFlow
         ref={ref}
@@ -470,5 +493,6 @@ export default function Main() {
         }
       />
     </>
+    </SimulateStateContext.Provider>
   );
 }

@@ -2,11 +2,13 @@ import React, { useState, useCallback } from "react";
 import { IconArrow } from "../../../assets/ui-icons.jsx";
 import {
   IconAND, IconOR, IconNOT, IconNAND, IconNOR, IconXOR,
-  IconInput, IconOutput, IconSwitchOn
+  IconInput, IconOutput
 } from "../../../assets/circuits-icons.jsx";
 
 export default function CircuitsMenu({ circuitsMenuState, onDragStart, spawnCircuit }) {
   const [openIndexes, setOpenIndexes] = useState([]);
+
+
 
   const toggleItem = useCallback((index) => {
     setOpenIndexes((prevIndexes) =>
@@ -37,7 +39,6 @@ export default function CircuitsMenu({ circuitsMenuState, onDragStart, spawnCirc
       gates: [
         { id: 'inputNode', label: 'input', icon: IconInput },
         { id: 'outputNode', label: 'output', icon: IconOutput },
-        { id: 'switchNode', label: 'switch', icon: IconSwitchOn }
       ]
     },
     {
