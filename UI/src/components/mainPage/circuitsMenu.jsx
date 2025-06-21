@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { IconArrow } from "../../../assets/ui-icons.jsx";
 import {
   IconAND, IconOR, IconNOT, IconNAND, IconNOR, IconXOR,
-  IconInput, IconOutput
+  IconInput, IconOutput, IconSwitchOn
 } from "../../../assets/circuits-icons.jsx";
 
 export default function CircuitsMenu({ circuitsMenuState, onDragStart, spawnCircuit }) {
@@ -25,7 +25,7 @@ export default function CircuitsMenu({ circuitsMenuState, onDragStart, spawnCirc
         { id: 'notNode', label: 'NOT', icon: IconNOT },
         { id: 'nandNode', label: 'NAND', icon: IconNAND },
         { id: 'norNode', label: 'NOR', icon: IconNOR },
-        { id: 'xorNode', label: 'XOR', icon: IconXOR },
+        { id: 'xorNode', label: 'XOR', icon: IconXOR }
       ]
     },
     {
@@ -37,6 +37,7 @@ export default function CircuitsMenu({ circuitsMenuState, onDragStart, spawnCirc
       gates: [
         { id: 'inputNode', label: 'input', icon: IconInput },
         { id: 'outputNode', label: 'output', icon: IconOutput },
+        { id: 'switchNode', label: 'switch', icon: IconSwitchOn }
       ]
     },
     {

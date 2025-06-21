@@ -59,3 +59,19 @@
   object-fit: cover;
   /*transform: scale(1.23);*/
 }
+
+
+.switch-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.switchNodeButton {
+  width: 70%;
+  height: 70%;
+}

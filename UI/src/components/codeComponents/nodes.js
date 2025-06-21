@@ -6,6 +6,7 @@ import NorNode from "../circuits/basicLogicElements/NOR.jsx";
 import XorNode from "../circuits/basicLogicElements/XOR.jsx";
 import InputNode from "../circuits/IOelemnts/input.jsx"
 import OutputNode from "../circuits/IOelemnts/output.jsx"
+import SwitchNode from "../circuits/IOelemnts/switch.jsx";
 
 export const nodeTypes = {
   andNode: AndNode,
@@ -15,7 +16,8 @@ export const nodeTypes = {
   norNode: NorNode,
   xorNode: XorNode,
   inputNode: InputNode,
-  outputNode: OutputNode
+  outputNode: OutputNode,
+  switchNode: SwitchNode
 };
 
 export const initialNodes = [

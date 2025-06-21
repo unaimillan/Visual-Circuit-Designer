@@ -44,7 +44,7 @@ export default function Main() {
   const [activeButton, setActiveButton] = useState("cursor");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
-  const [simulateState, setSimulateState] = useState("idle");
+  const [simulateState, setSimulateState] = useState("error");
   const [theme, setTheme] = useState("light");
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
