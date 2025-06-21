@@ -388,7 +388,6 @@ export default function Main() {
         onEdgesChange={onEdgesChange}
         defaultEdgeOptions={{
           type: wireType,
-          style: { stroke: "var(--svg-color)", strokeWidth: 2 },
         }}
         onNodeContextMenu={onNodeContextMenu}
         onPaneClick={onPaneClick}
