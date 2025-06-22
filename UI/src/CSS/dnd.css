@@ -1,54 +1,77 @@
 /*______DragAndDrop______*/
 .dndnode {
-    padding: 8px;
-    border: var(--internal-border-color) 0.05rem solid;
-    border-radius: 0.5rem;
-    cursor: move;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    user-select: none;
+  padding: 8px;
+  border: var(--internal-border-color) 0.05rem solid;
+  border-radius: 0.5rem;
+  cursor: move;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
 }
 
 .dndnode svg {
-    width: 50px;
-    height: auto;
-    user-select: none;
+  width: 50px;
+  height: auto;
+  user-select: none;
 }
 
 /* Ensure handles are visible over images */
 .react-flow__handle {
-    z-index: 10;
+  z-index: 10;
 }
 
 .react-flow__edge.temp path {
-    stroke-dasharray: 5;
-    stroke: #666;
-    animation: dashdraw 0.5s linear infinite;
+  stroke-dasharray: 5;
+  stroke: #666;
+  animation: dashdraw 0.5s linear infinite;
 }
 
 @keyframes dashdraw {
-    0% {
-        stroke-dashoffset: 10;
-    }
+  0% {
+    stroke-dashoffset: 10;
+  }
 }
 
-.circuit-button{
-    width: 80px;
-    height: 70px;
-    position: relative;
-    border: 0.05rem solid var(--external-border-color);
-    border-radius: 4px;
-    background: var(--canvas-color);
-    display: flex;
-    box-sizing: border-box;
-    align-items: center;
-    justify-content: center;
+.circuit-button {
+  width: 80px;
+  height: 70px;
+  position: relative;
+  border: 0.05rem solid var(--external-border-color);
+  border-radius: 4px;
+  background: var(--canvas-color);
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
 }
 
 .circuit-button-icon {
-    color: var(--svg-color);
-    object-fit: cover;
-    transform: scale(1.23);
+  color: var(--svg-color);
+  object-fit: cover;
+  transform: scale(1.23);
+}
+
+.customHandle {
+  background: var(--svg-color);
+  border: 0.05rem solid var(--external-border-color);
+  object-fit: cover;
+  /*transform: scale(1.23);*/
+}
+
+
+.switch-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.switchNodeButton {
+  width: 70%;
+  height: 70%;
 }
