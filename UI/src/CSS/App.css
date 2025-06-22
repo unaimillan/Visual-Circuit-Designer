@@ -1,7 +1,28 @@
+.controls {
+  border: var(--external-border-color) solid 0.07rem;
+  background-color: var(--menu-bg-color);
+  border-radius: 0.2rem;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.controls button {
+  background-color: var(--button-color);
+  border-bottom: var(--internal-border-color) solid 0.07rem;
+}
+
+.controls button:hover {
+  background-color: var(--button-hover-color);
+}
+
+.controls button svg {
+  color: var(--svg-color);
+}
+
 /*_______Canvas_______*/
 .canvasContainer {
-  height: 97vh;
-  width: 98vw;
+  height: 100vh;
+  width: 100vw;
 }
 
 .react-flow__attribution {
@@ -21,5 +42,33 @@
 
 
 
+.circuit-button.input{
+  position: relative;
+  width: 100px;
+  height: 50px;
+}
 
+
+
+/* SVG‑иконка занимает весь контейнер */
+.input-icon-wrapper {
+  width: 100%;
+  height: 100%;
+  transform: scale(1.5);
+}
+
+.circuit-button.input .circuit-button-icon {
+  width: 100%;
+  height: 100%;
+}
+
+/* Обёртка для переключателя — поверх, но без влияния на размеры */
+.switch-wrapper {
+  position: absolute;
+  transform: scale(0.6) translateX(-20px) translateY(2px);
+}
+
+.switch-wrapper.hide {
+  visibility: hidden;
+}
 

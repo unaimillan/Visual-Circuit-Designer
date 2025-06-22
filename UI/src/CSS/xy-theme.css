@@ -1,0 +1,23 @@
+.react-flow__edges {
+  z-index: 10;
+}
+
+.react-flow__nodes {
+  z-index: 5;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+  stroke: var(--svg-color);
+}
+
+/* Hovered edge */
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--select-color);
+}
+
+/* Selected edge */
+.react-flow__edge.selectable.selected .react-flow__edge-path {
+  stroke-width: 3;
+  stroke: var(--select-color);
+}
