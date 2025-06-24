@@ -117,19 +117,18 @@ export default function Main() {
   useEffect(() => {
     const saved = localStorage.getItem("userSettings");
     if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.currentBG) setCurrentBG(parsed.currentBG);
-        if (typeof parsed.showMinimap === "boolean")
-          setShowMinimap(parsed.showMinimap);
-        if (parsed.theme) setTheme(parsed.theme);
-        if (parsed.activeAction) setActiveAction(parsed.activeAction);
-        if (parsed.activeWire) setActiveWire(parsed.activeWire);
-        if (parsed.activeButton) setActiveButton(parsed.activeButton);
-        if (typeof parsed.openSettings === "boolean")
-          setOpenSettings(parsed.openSettings);
-        if (typeof parsed.circuitsMenuState === "boolean")
-          setCircuitsMenuState(parsed.circuitsMenuState);
-
+      const parsed = JSON.parse(saved);
+      if (parsed.currentBG) setCurrentBG(parsed.currentBG);
+      if (typeof parsed.showMinimap === "boolean")
+        setShowMinimap(parsed.showMinimap);
+      if (parsed.theme) setTheme(parsed.theme);
+      if (parsed.activeAction) setActiveAction(parsed.activeAction);
+      if (parsed.activeWire) setActiveWire(parsed.activeWire);
+      if (parsed.activeButton) setActiveButton(parsed.activeButton);
+      if (typeof parsed.openSettings === "boolean")
+        setOpenSettings(parsed.openSettings);
+      if (typeof parsed.circuitsMenuState === "boolean")
+        setCircuitsMenuState(parsed.circuitsMenuState);
     }
   }, []);
 
@@ -161,22 +160,22 @@ export default function Main() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       //deleting by clicking delete/backspace(delete for windows and macOS, backspace for windows)
-      if (e.key === 'Delete' || e.key === 'Backspace') {
+      if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
         const currentNodes = nodesRef.current;
         const currentEdges = edgesRef.current;
-        const selectedNodes = currentNodes.filter(node => node.selected);
-        const selectedEdges = currentEdges.filter(edge => edge.selected);
+        const selectedNodes = currentNodes.filter((node) => node.selected);
+        const selectedEdges = currentEdges.filter((edge) => edge.selected);
         if (selectedNodes.length === 0 && selectedEdges.length === 0) return;
-        const nodeIdsToRemove = selectedNodes.map(node => node.id);
+        const nodeIdsToRemove = selectedNodes.map((node) => node.id);
         const newNodes = currentNodes.filter(
-            node => !nodeIdsToRemove.includes(node.id)
+          (node) => !nodeIdsToRemove.includes(node.id),
         );
         const newEdges = currentEdges.filter(
-            edge =>
-                !selectedEdges.some(selected => selected.id === edge.id) &&
-                !nodeIdsToRemove.includes(edge.source) &&
-                !nodeIdsToRemove.includes(edge.target)
+          (edge) =>
+            !selectedEdges.some((selected) => selected.id === edge.id) &&
+            !nodeIdsToRemove.includes(edge.source) &&
+            !nodeIdsToRemove.includes(edge.target),
         );
         setNodes(newNodes);
         setEdges(newEdges);
@@ -227,11 +226,9 @@ export default function Main() {
       if (e.key === "Escape" && openSettings) {
         setOpenSettings(false);
       }
-
-
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [openSettings]);
 
   //Sets current theme to the whole document (наверное)
