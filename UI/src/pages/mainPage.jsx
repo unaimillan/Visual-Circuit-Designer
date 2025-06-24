@@ -68,8 +68,8 @@ export default function Main() {
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [wireType, setWireType] = useState("step");
   const [menu, setMenu] = useState(null);
 
@@ -81,11 +81,42 @@ export default function Main() {
 
   const socketRef = useRef(null);
 
-  //Load saved settings from localStorage
+  const nodesRef = useRef(nodes);
+  const edgesRef = useRef(edges);
+
+  useEffect(() => {
+    const savedCircuit = localStorage.getItem("savedCircuit");
+    if (savedCircuit) {
+      try {
+        const circuitData = JSON.parse(savedCircuit);
+        setNodes(circuitData.nodes || []);
+        setEdges(circuitData.edges || []);
+      } catch (e) {
+        setNodes(initialNodes);
+        setEdges(initialEdges);
+      }
+    } else {
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, []);
+
+  useEffect(() => {
+    const circuitData = JSON.stringify({ nodes, edges });
+    localStorage.setItem("savedCircuit", circuitData);
+  }, [nodes, edges]);
+
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+
+  useEffect(() => {
+    edgesRef.current = edges;
+  }, [edges]);
+
   useEffect(() => {
     const saved = localStorage.getItem("userSettings");
     if (saved) {
-      try {
         const parsed = JSON.parse(saved);
         if (parsed.currentBG) setCurrentBG(parsed.currentBG);
         if (typeof parsed.showMinimap === "boolean")
@@ -98,9 +129,7 @@ export default function Main() {
           setOpenSettings(parsed.openSettings);
         if (typeof parsed.circuitsMenuState === "boolean")
           setCircuitsMenuState(parsed.circuitsMenuState);
-      } catch (e) {
-        console.error("Ошибка при загрузке настроек из localStorage", e);
-      }
+
     }
   }, []);
 
@@ -131,6 +160,27 @@ export default function Main() {
   //Hotkeys handler
   useEffect(() => {
     const handleKeyDown = (e) => {
+      //deleting by clicking delete/backspace(delete for windows and macOS, backspace for windows)
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault();
+        const currentNodes = nodesRef.current;
+        const currentEdges = edgesRef.current;
+        const selectedNodes = currentNodes.filter(node => node.selected);
+        const selectedEdges = currentEdges.filter(edge => edge.selected);
+        if (selectedNodes.length === 0 && selectedEdges.length === 0) return;
+        const nodeIdsToRemove = selectedNodes.map(node => node.id);
+        const newNodes = currentNodes.filter(
+            node => !nodeIdsToRemove.includes(node.id)
+        );
+        const newEdges = currentEdges.filter(
+            edge =>
+                !selectedEdges.some(selected => selected.id === edge.id) &&
+                !nodeIdsToRemove.includes(edge.source) &&
+                !nodeIdsToRemove.includes(edge.target)
+        );
+        setNodes(newNodes);
+        setEdges(newEdges);
+      }
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
       //Ctrl + Shift + S - Open/close settings
@@ -177,9 +227,11 @@ export default function Main() {
       if (e.key === "Escape" && openSettings) {
         setOpenSettings(false);
       }
+
+
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [openSettings]);
 
   //Sets current theme to the whole document (наверное)
