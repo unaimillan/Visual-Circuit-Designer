@@ -63,7 +63,6 @@ export default function Main() {
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
   const [activeWire, setActiveWire] = useState("stepWire");
-  const [activeButton, setActiveButton] = useState("text");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
@@ -125,7 +124,6 @@ export default function Main() {
       if (parsed.theme) setTheme(parsed.theme);
       if (parsed.activeAction) setActiveAction(parsed.activeAction);
       if (parsed.activeWire) setActiveWire(parsed.activeWire);
-      if (parsed.activeButton) setActiveButton(parsed.activeButton);
       if (typeof parsed.openSettings === "boolean")
         setOpenSettings(parsed.openSettings);
       if (typeof parsed.circuitsMenuState === "boolean")
@@ -141,7 +139,6 @@ export default function Main() {
       theme,
       activeAction,
       activeWire,
-      activeButton,
       openSettings,
       circuitsMenuState,
     };
@@ -152,7 +149,6 @@ export default function Main() {
     theme,
     activeAction,
     activeWire,
-    activeButton,
     openSettings,
     circuitsMenuState,
   ]);
@@ -215,8 +211,8 @@ export default function Main() {
           setActiveWire("straightWire");
           setWireType("straight");
         },
-        5: () => setActiveButton("eraser"),
-        6: () => setActiveButton("text"),
+        5: () => setActiveAction("eraser"),
+        6: () => setActiveAction("text"),
       };
       if (hotkeys[e.key]) {
         e.preventDefault();
@@ -632,8 +628,6 @@ export default function Main() {
           setActiveAction={setActiveAction}
           activeWire={activeWire}
           setActiveWire={setActiveWire}
-          activeButton={activeButton}
-          setActiveButton={setActiveButton}
           setPanOnDrag={setPanOnDrag}
           setWireType={setWireType}
           onSimulateClick={() =>

@@ -21,8 +21,6 @@ export default function Toolbar({
   setActiveAction,
   activeWire,
   setActiveWire,
-  activeButton,
-  setActiveButton,
   setPanOnDrag,
   setWireType,
   onSimulateClick,
@@ -112,15 +110,15 @@ export default function Toolbar({
       <div className="toolbar-separator"></div>
 
       <button
-        className={`toolbarButton ${activeButton === "eraser" ? "active" : ""}`}
-        onClick={() => setActiveButton("eraser")}
+        className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
+        onClick={() => setActiveAction("eraser")}
       >
         <IconToolbarEraser SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
 
       <button
-        className={`toolbarButton ${activeButton === "text" ? "active" : ""}`}
-        onClick={() => setActiveButton("text")}
+        className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
+        onClick={() => setActiveAction("text")}
       >
         <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
