@@ -3,31 +3,34 @@ import { useReactFlow } from "@xyflow/react";
 import { SelectWireType } from "../mainPage/select.jsx";
 
 export default function EdgeContextMenu({
-                                          id,
-                                          name,
-                                          top,
-                                          left,
-                                          right,
-                                          bottom,
-                                          ...props
-                                        }) {
+  id,
+  name,
+  top,
+  left,
+  right,
+  bottom,
+  ...props
+}) {
   const { setEdges, getEdges } = useReactFlow();
   const [currentType, setCurrentType] = useState(name);
 
   // Update type if edge changes externally
   useEffect(() => {
-    const edge = getEdges().find(e => e.id === id);
+    const edge = getEdges().find((e) => e.id === id);
     if (edge) setCurrentType(edge.type);
   }, [id, getEdges]);
 
-  const changeEdgeType = useCallback((newType) => {
-    setCurrentType(newType);
-    setEdges(edges =>
-      edges.map(edge =>
-        edge.id === id ? { ...edge, type: newType } : edge
-      )
-    );
-  }, [id, setEdges]);
+  const changeEdgeType = useCallback(
+    (newType) => {
+      setCurrentType(newType);
+      setEdges((edges) =>
+        edges.map((edge) =>
+          edge.id === id ? { ...edge, type: newType } : edge,
+        ),
+      );
+    },
+    [id, setEdges],
+  );
 
   const deleteEdge = useCallback(() => {
     setEdges((edges) => edges.filter((edge) => edge.id !== id));

@@ -268,7 +268,7 @@ export default function Main() {
     setMenu({
       id: node.id,
       name: node.type,
-      type: 'node',
+      type: "node",
       top: event.clientY < pane.height - 200 && event.clientY,
       left: event.clientX < pane.width - 200 && event.clientX,
       right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
@@ -282,7 +282,7 @@ export default function Main() {
     setMenu({
       id: edge.id,
       name: edge.type,
-      type: 'edge',
+      type: "edge",
       top: event.clientY < pane.height - 200 && event.clientY,
       left: event.clientX < pane.width - 200 && event.clientX,
       right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
@@ -537,8 +537,12 @@ export default function Main() {
               style={{ borderRadius: "0.5rem" }}
             />
           )}
-          {menu && menu.type === 'node' && <NodeContextMenu onClick={onPaneClick} {...menu} />}
-          {menu && menu.type === 'edge' && <EdgeContextMenu onClick={onPaneClick} {...menu} />}
+          {menu && menu.type === "node" && (
+            <NodeContextMenu onClick={onPaneClick} {...menu} />
+          )}
+          {menu && menu.type === "edge" && (
+            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+          )}
         </ReactFlow>
 
         <button
