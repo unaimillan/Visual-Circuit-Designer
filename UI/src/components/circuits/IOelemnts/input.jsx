@@ -6,13 +6,26 @@ import { useSimulateState } from '../../../pages/mainPage.jsx';
 
 import {useEffect, useState} from "react";
 
-function InputNode({ isConnectable, data}) {
-  const { simulateState } = useSimulateState();
+function InputNode({ id, isConnectable, data}) {
+  const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
 
-  useEffect(() => {
-    setInputState(data.simState);
-  }, [data.simState]);
+    useEffect(() => {
+        setInputState(data.value || false);
+    }, [data.value]);
+
+    // Обработчик изменения состояния
+    const handleChange = (newValue) => {
+        setInputState(newValue);
+
+        // Отправляем изменение на сервер
+        if (simulateState === "running" && updateInputState) {
+            updateInputState(id, newValue);
+        }
+
+        // Обновляем данные узла (опционально)
+        data.value = newValue;
+    };
 
   return (
     <div className='circuit-button input'>
@@ -24,7 +37,7 @@ function InputNode({ isConnectable, data}) {
       <div className="switch-wrapper">
         <SvgSwitch
           checked={inputState}
-          onChange={setInputState}
+          onChange={handleChange}
           className="circuit-switch-input"
         />
       </div>

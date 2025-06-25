@@ -36,12 +36,14 @@ import { Link } from "react-router-dom";
 
 import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
+import { updateInputState} from "../components/mainPage/runnerHandler.jsx";
 
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: 'idle',
   setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -272,7 +274,7 @@ export default function Main() {
       id: `${type}-${Date.now()}`,
       type,
       position,
-      data: { customId: `${type}-${Date.now()}`, simState: simulateState}
+      data: { customId: `${type}-${Date.now()}`, simState: simulateState, value: false}
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -401,7 +403,7 @@ export default function Main() {
         BackgroundVariant.Lines;
 
   return (
-    <SimulateStateContext.Provider value={{ simulateState, setSimulateState }}>
+    <SimulateStateContext.Provider value={{ simulateState, setSimulateState, updateInputState }}>
     <>
       <ReactFlow
         ref={ref}
