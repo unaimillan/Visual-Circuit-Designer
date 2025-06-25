@@ -20,23 +20,23 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 
-import CircuitsMenu from '../components/mainPage/circuitsMenu.jsx';
-import Toolbar from '../components/mainPage/toolbar.jsx';
+import CircuitsMenu from '../components/codeComponents/mainPage/circuitsMenu.jsx';
+import Toolbar from '../components/codeComponents/mainPage/toolbar.jsx';
 import ContextMenu from '../components/codeComponents/ContextMenu';
 
 import { initialNodes, nodeTypes } from '../components/codeComponents/nodes';
 import { initialEdges } from '../components/codeComponents/edges';
-import { MinimapSwitch } from "../components/mainPage/switch.jsx";
-import { SelectCanvasBG, SelectTheme } from "../components/mainPage/select.jsx";
+import { MinimapSwitch } from "../components/codeComponents/mainPage/switch.jsx";
+import { SelectCanvasBG, SelectTheme } from "../components/codeComponents/mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from '../../assets/ui-icons';
 import UserIcon from '../../assets/userIcon.png';
 
 import { Link } from "react-router-dom";
 
-import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
+import { handleSimulateClick } from "../components/codeComponents/mainPage/runnerHandler.jsx";
 
-import { updateInputState} from "../components/mainPage/runnerHandler.jsx";
+import { updateInputState} from "../components/codeComponents/mainPage/runnerHandler.jsx";
 
 
 // eslint-disable-next-line react-refresh/only-export-components

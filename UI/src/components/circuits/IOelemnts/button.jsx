@@ -10,22 +10,22 @@ function InputNode({ id, isConnectable, data}) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
 
-    useEffect(() => {
-        setInputState(data.value || false);
-    }, [data.value]);
+  useEffect(() => {
+    setInputState(data.value || false);
+  }, [data.value]);
 
-    // Обработчик изменения состояния
-    const handleChange = (newValue) => {
-        setInputState(newValue);
+  // Обработчик изменения состояния
+  const handleChange = (newValue) => {
+    setInputState(newValue);
 
-        // Отправляем изменение на сервер
-        if (simulateState === "running" && updateInputState) {
-            updateInputState(id, newValue);
-        }
+    // Отправляем изменение на сервер
+    if (simulateState === "running" && updateInputState) {
+      updateInputState(id, newValue);
+    }
 
-        // Обновляем данные узла (опционально)
-        data.value = newValue;
-    };
+    // Обновляем данные узла (опционально)
+    data.value = newValue;
+  };
 
   return (
     <div className='circuit-button input'>
@@ -34,13 +34,13 @@ function InputNode({ id, isConnectable, data}) {
       </div>
 
       {simulateState  !== "idle" &&
-      <div className="switch-wrapper">
-        <SvgSwitch
-          checked={inputState}
-          onChange={handleChange}
-          className="circuit-switch-input"
-        />
-      </div>
+        <div className="switch-wrapper">
+          <SvgSwitch
+            checked={inputState}
+            onChange={handleChange}
+            className="circuit-switch-input"
+          />
+        </div>
       }
 
       {/* Handles */}

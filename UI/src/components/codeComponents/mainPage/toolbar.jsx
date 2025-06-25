@@ -1,5 +1,5 @@
 import React from "react";
-import {IconStop, IconLoading, IconStart, IconError} from "../../../assets/ui-icons.jsx";
+import {IconStop, IconLoading, IconStart, IconError} from "../../../../assets/ui-icons.jsx";
 
 import {
   IconToolbarCursor,
@@ -8,7 +8,7 @@ import {
   IconToolbarSquareWire,
   IconToolbarDiagWire,
   IconToolbarText
-} from "../../../assets/toolbar-icons.jsx";
+} from "../../../../assets/toolbar-icons.jsx";
 
 export default function Toolbar({ simulateState, activeAction, setActiveAction, activeWire, setActiveWire, activeButton, setActiveButton, setPanOnDrag, setWireType, onSimulateClick}) {
   return (

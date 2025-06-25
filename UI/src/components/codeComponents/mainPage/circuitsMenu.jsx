@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
-import { IconArrow } from "../../../assets/ui-icons.jsx";
+import { IconArrow } from "../../../../assets/ui-icons.jsx";
 import {
   IconAND, IconOR, IconNOT, IconNAND, IconNOR, IconXOR,
   IconInput, IconOutput
-} from "../../../assets/circuits-icons.jsx";
+} from "../../../../assets/circuits-icons.jsx";
 
 export default function CircuitsMenu({ circuitsMenuState, onDragStart, spawnCircuit }) {
   const [openIndexes, setOpenIndexes] = useState([]);

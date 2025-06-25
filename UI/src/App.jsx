@@ -3,14 +3,14 @@ import Profile from "./pages/profile.jsx"
 
 import '@xyflow/react/dist/style.css';
 
-import './CSS/variables.css';
-import './CSS/App.css';
-import './CSS/settings.css';
-import './CSS/toolbar.css';
-import './CSS/dnd.css';
-import './CSS/backdrop.css';
-import './CSS/circuitsMenu.css';
-import './CSS/contextMenu.css';
+import './components/CSS/variables.css';
+import './components/CSS/App.css';
+import './components/CSS/settings.css';
+import './components/CSS/toolbar.css';
+import './components/CSS/dnd.css';
+import './components/CSS/backdrop.css';
+import './components/CSS/circuitsMenu.css';
+import './components/CSS/contextMenu.css';
 
 import {
   BrowserRouter as Router,
@@ -18,7 +18,7 @@ import {
   Route,
 } from 'react-router-dom';
 
-import './components/mainPage/switch.jsx';
+import './components/codeComponents/mainPage/switch.jsx';
 
 function App() {
   return (
