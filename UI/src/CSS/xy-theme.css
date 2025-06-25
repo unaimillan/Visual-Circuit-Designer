@@ -21,3 +21,14 @@
   stroke-width: 3;
   stroke: var(--select-color);
 }
+
+.react-flow__handle {
+  background: var(--svg-color);
+  border: 0.05rem solid var(--external-border-color);
+  object-fit: cover;
+  transition: filter 0.2s;
+}
+
+.react-flow__handle:hover {
+  background: var(--select-color);
+}
