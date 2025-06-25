@@ -73,7 +73,7 @@ async def interactive_test(dut):
             await Timer(100, units='us')
 
     # await sio_client.disconnect()
-    await sio.disconnect()
+    sio.disconnect()
 
 
 def run_cocotb_test(sim_path, user_sid):

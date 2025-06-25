@@ -86,7 +86,6 @@ export const handleSimulateClick = ({
           }
 
           if (sendInputStates) {
-            console.log("📤 Sending initial input states:", initialStates);
             sendInputStates(initialStates);
           }
         } else {

@@ -36,6 +36,13 @@ async def disconnect(sid):
             user_simulations.pop(user_id)
 
 
+@sio.on('register_simulation')
+async def register_simulation(sid, data):
+    user_sid = data['user_sid']
+    user_simulations[user_sid] = sid
+    print(f"Registered simulation: user={user_sid} sim={sid}")
+
+
 @sio.on("run_simulation")
 async def run_simulation(sid, circuit_data):
     if sid in user_simulations:
@@ -45,8 +52,6 @@ async def run_simulation(sid, circuit_data):
     sim_id = str(uuid.uuid4())
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
-
-    user_simulations[sid] = sim_id
 
     verilog_code = generate_verilog_from_json(circuit_data)
 
