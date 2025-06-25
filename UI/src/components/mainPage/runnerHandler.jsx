@@ -41,11 +41,11 @@ export const handleSimulateClick = ({
     console.log("[Simulation] 🚀 Starting simulation (awaiting connection)");
     setSimulateState("awaiting");
 
-    // Собираем все входные узлы и их начальные состояния
     const inputNodes = nodes.filter(node => node.type === 'inputNode');
     allInputStates = {};
     inputNodes.forEach(node => {
-      allInputStates[node.id] = node.data.value || false;
+      const val = node.data.value;
+      allInputStates[node.id] = val === 1 || val === '1' ? 1 : 0;
     });
 
     // Инициализация сокета
@@ -54,6 +54,15 @@ export const handleSimulateClick = ({
         transports: ["websocket"],
         path: "/socket.io",
       });
+
+      sendInputStates = (changedInputs) => {
+        if (!socketRef.current) {
+          console.warn("⚠️ Cannot send input states: socket not connected");
+          return;
+        }
+        console.log("📤 Sending changed input states:", changedInputs);
+        socketRef.current.emit("set_inputs", { inputs: changedInputs });
+      };
 
       socketRef.current.on("ready", () => {
         console.log("✅ Connected to runner (ready)");
@@ -64,9 +73,24 @@ export const handleSimulateClick = ({
         for (const nodeId in allInputStates) {
           initialStates[`in_${nodeId}`] = allInputStates[nodeId];
         }
-        if (sendInputStates) {
-          console.log("[Simulation] ⚡ Sending initial states:", initialStates);
-          sendInputStates(initialStates);
+      });
+
+      socketRef.current.on("status", (data) => {
+        if (data.msg === "Simulation started") {
+          console.log("✅ Simulation is ready (status confirmed)");
+          setSimulateState("running");
+
+          const initialStates = {};
+          for (const nodeId in allInputStates) {
+            initialStates[`in_${nodeId}`] = allInputStates[nodeId];
+          }
+
+          if (sendInputStates) {
+            console.log("📤 Sending initial input states:", initialStates);
+            sendInputStates(initialStates);
+          }
+        } else {
+          console.log("ℹ️ Simulation status:", data);
         }
       });
 
@@ -92,16 +116,6 @@ export const handleSimulateClick = ({
         sendInputStates = null;
       });
     }
-
-    // Определяем функцию для отправки состояний
-    sendInputStates = (changedInputs) => {
-      if (!socketRef.current || simulateState !== "running") {
-        console.warn("⚠️ Cannot send input states: simulation not running");
-        return;
-      }
-      console.log("📤 Sending changed input states:", changedInputs);
-      socketRef.current.emit("input_states", changedInputs);
-    };
 
     // Отправляем данные схемы
     const flowData = {
@@ -154,6 +168,5 @@ export const updateInputState = (nodeId, value) => {
   }
 
   // 3. Отправляем ВСЕ состояния
-  console.log("Sending input states: ", fullStatesToSend)
   sendInputStates(fullStatesToSend);
 };
