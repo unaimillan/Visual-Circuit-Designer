@@ -62,7 +62,7 @@ export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
-  const [activeWire, setActiveWire] = useState("stepWire");
+  const [activeWire, setActiveWire] = useState("step");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
@@ -70,7 +70,6 @@ export default function Main() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [wireType, setWireType] = useState("step");
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
@@ -99,7 +98,7 @@ export default function Main() {
       setNodes(initialNodes);
       setEdges(initialEdges);
     }
-  }, []);
+  }, [setEdges, setNodes]);
 
   useEffect(() => {
     const circuitData = JSON.stringify({ nodes, edges });
@@ -203,14 +202,8 @@ export default function Main() {
           setActiveAction("hand");
           setPanOnDrag(true);
         },
-        3: () => {
-          setActiveWire("stepWire");
-          setWireType("step");
-        },
-        4: () => {
-          setActiveWire("straightWire");
-          setWireType("straight");
-        },
+        3: () => setActiveWire("step"),
+        4: () => setActiveWire("straight"),
         5: () => setActiveAction("eraser"),
         6: () => setActiveAction("text"),
       };
@@ -504,7 +497,7 @@ export default function Main() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           defaultEdgeOptions={{
-            type: wireType,
+            type: activeWire,
           }}
           onNodeContextMenu={onNodeContextMenu}
           onEdgeContextMenu={onEdgeContextMenu}
@@ -590,7 +583,7 @@ export default function Main() {
               minimapToggle={setShowMinimap}
             />
           </div>
-          <div className="backgroundVariantBlock">
+          <div className="selectVariantBlock">
             <div className="selectCanvasBG">Canvas background</div>
             <SelectCanvasBG
               currentBG={currentBG}
@@ -598,7 +591,7 @@ export default function Main() {
               className="selectBG"
             />
           </div>
-          <div className="backgroundVariantBlock">
+          <div className="selectVariantBlock">
             <div className="minimapSwitchLabel">Theme</div>
             <SelectTheme
               theme={theme}
@@ -629,7 +622,6 @@ export default function Main() {
           activeWire={activeWire}
           setActiveWire={setActiveWire}
           setPanOnDrag={setPanOnDrag}
-          setWireType={setWireType}
           onSimulateClick={() =>
             handleSimulateClick({
               simulateState,

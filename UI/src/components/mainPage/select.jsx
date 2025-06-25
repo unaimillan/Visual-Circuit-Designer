@@ -11,15 +11,15 @@ import "../../CSS/select.css";
 export const SelectCanvasBG = ({ currentBG, setCurrentBG }) => (
   <Select.Root value={currentBG} onValueChange={setCurrentBG}>
     <Select.Trigger className="SelectTrigger" aria-label="canvas-bg">
-      <Select.Value placeholder="Select background" />
+      <Select.Value placeholder="Select background"/>
       <Select.Icon className="SelectIcon">
-        <ChevronDownIcon />
+        <ChevronDownIcon/>
       </Select.Icon>
     </Select.Trigger>
     <Select.Portal>
       <Select.Content className="SelectContent">
         <Select.ScrollUpButton className="SelectScrollButton">
-          <ChevronUpIcon />
+          <ChevronUpIcon/>
         </Select.ScrollUpButton>
         <Select.Viewport className="SelectViewport">
           <Select.Group>
@@ -36,15 +36,15 @@ export const SelectCanvasBG = ({ currentBG, setCurrentBG }) => (
 export const SelectTheme = ({ theme, setTheme }) => (
   <Select.Root value={theme} onValueChange={setTheme}>
     <Select.Trigger className="SelectTrigger" aria-label="Food">
-      <Select.Value placeholder="Select theme" />
+      <Select.Value placeholder="Select theme"/>
       <Select.Icon className="SelectIcon">
-        <ChevronDownIcon />
+        <ChevronDownIcon/>
       </Select.Icon>
     </Select.Trigger>
     <Select.Portal>
       <Select.Content className="SelectContent">
         <Select.ScrollUpButton className="SelectScrollButton">
-          <ChevronUpIcon />
+          <ChevronUpIcon/>
         </Select.ScrollUpButton>
         <Select.Viewport className="SelectViewport">
           <Select.Group>
@@ -54,6 +54,33 @@ export const SelectTheme = ({ theme, setTheme }) => (
             <SelectItem value="tokyo-night">Tokyo Night🌃</SelectItem>
             <SelectItem value="green-nature">Green Nature🍃</SelectItem>
             <SelectItem value="solar-red">Solar Red🔥</SelectItem>
+          </Select.Group>
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Portal>
+  </Select.Root>
+);
+
+export const SelectWireType = ({ wireType, setWireType }) => (
+  <Select.Root value={wireType} onValueChange={setWireType}>
+    <Select.Trigger className="SelectTriggerWire" aria-label="Food">
+      <div className="SelectValueWrapper">
+        <Select.Value placeholder="Select type"/>
+      </div>
+      <Select.Icon className="SelectIcon">
+        <ChevronDownIcon/>
+      </Select.Icon>
+    </Select.Trigger>
+    <Select.Portal>
+      <Select.Content className="SelectContent">
+        <Select.ScrollUpButton className="SelectScrollButton">
+          <ChevronUpIcon/>
+        </Select.ScrollUpButton>
+        <Select.Viewport className="SelectViewport">
+          <Select.Group>
+            <SelectItem value="step">Step</SelectItem>
+            <SelectItem value="straight">Straight</SelectItem>
+            <SelectItem value="default">Bezier</SelectItem>
           </Select.Group>
         </Select.Viewport>
       </Select.Content>
@@ -71,7 +98,7 @@ const SelectItem = React.forwardRef(
       >
         <Select.ItemText>{children}</Select.ItemText>
         <Select.ItemIndicator className="SelectItemIndicator">
-          <CheckIcon />
+          <CheckIcon/>
         </Select.ItemIndicator>
       </Select.Item>
     );

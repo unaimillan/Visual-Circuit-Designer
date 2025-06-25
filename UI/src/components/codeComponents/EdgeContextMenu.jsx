@@ -1,5 +1,6 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useReactFlow } from "@xyflow/react";
+import { SelectWireType } from "../mainPage/select.jsx";
 
 export default function EdgeContextMenu({
                                           id,
@@ -10,11 +11,22 @@ export default function EdgeContextMenu({
                                           bottom,
                                           ...props
                                         }) {
-  const { setEdges } = useReactFlow();
-  const changeEdgeType = useCallback((wireType) => {
-    setEdges((edges) => edges.map(edge =>
-      edge.id === id ? { ...edge, type: wireType } : edge
-    ));
+  const { setEdges, getEdges } = useReactFlow();
+  const [currentType, setCurrentType] = useState(name);
+
+  // Update type if edge changes externally
+  useEffect(() => {
+    const edge = getEdges().find(e => e.id === id);
+    if (edge) setCurrentType(edge.type);
+  }, [id, getEdges]);
+
+  const changeEdgeType = useCallback((newType) => {
+    setCurrentType(newType);
+    setEdges(edges =>
+      edges.map(edge =>
+        edge.id === id ? { ...edge, type: newType } : edge
+      )
+    );
   }, [id, setEdges]);
 
   const deleteEdge = useCallback(() => {
@@ -29,30 +41,14 @@ export default function EdgeContextMenu({
     >
       <div style={{ margin: "0.5em", textAlign: "center" }}>
         <div style={{ fontSize: "0.95rem", margin: "0.7rem 0 0.7rem 0" }}>
-          Wire type: {name ? name : ""}
+          Wire type:
         </div>
       </div>
-      <button
-        style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
-        onClick={() => changeEdgeType('straight')}
-      >
-        Straight type
-      </button>
-      <button
-        style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
-        onClick={() => changeEdgeType('step')}
-      >
-        Step type
-      </button>
-      <button
-        style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
-        onClick={() => changeEdgeType('default')}
-      >
-        Bezier type
-      </button>
+      <SelectWireType
+        wireType={currentType}
+        setWireType={changeEdgeType}
+        className="selectWireType"
+      />
       <button
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}

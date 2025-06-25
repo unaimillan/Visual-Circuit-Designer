@@ -22,7 +22,6 @@ export default function Toolbar({
   activeWire,
   setActiveWire,
   setPanOnDrag,
-  setWireType,
   onSimulateClick,
 }) {
   return (
@@ -82,10 +81,9 @@ export default function Toolbar({
       <div className="toolbar-separator"></div>
 
       <button
-        className={`toolbarButton ${activeWire === "stepWire" ? "active" : ""}`}
+        className={`toolbarButton ${activeWire === "step" ? "active" : ""}`}
         onClick={() => {
-          setActiveWire("stepWire");
-          setWireType("step");
+          setActiveWire("step");
         }}
       >
         <IconToolbarSquareWire
@@ -95,10 +93,9 @@ export default function Toolbar({
       </button>
 
       <button
-        className={`toolbarButton ${activeWire === "straightWire" ? "active" : ""}`}
+        className={`toolbarButton ${activeWire === "straight" ? "active" : ""}`}
         onClick={() => {
-          setActiveWire("straightWire");
-          setWireType("straight");
+          setActiveWire("straight");
         }}
       >
         <IconToolbarDiagWire
