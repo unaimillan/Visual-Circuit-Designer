@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useReactFlow } from "@xyflow/react";
 
-export default function ContextMenu({
+export default function NodeContextMenu({
   id,
   name,
   top,
@@ -38,11 +38,11 @@ export default function ContextMenu({
       className="context-menu"
       {...props}
     >
-      <p style={{ margin: "0.5em", textAlign: "center" }}>
-        <p style={{ fontSize: "0.95rem", margin: "0.7rem 0 0.7rem 0" }}>
-          Node: {name ? name.slice(0, -4) : ""}
-        </p>
-      </p>
+      <div style={{ margin: "0.5em", textAlign: "center" }}>
+        <div style={{ fontSize: "0.95rem", margin: "0.7rem 0 0.7rem 0" }}>
+          Logic gate type: {name ? name.slice(0, -4) : ""}
+        </div>
+      </div>
       <button
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}

@@ -23,7 +23,8 @@ import {
 
 import CircuitsMenu from "../components/mainPage/circuitsMenu.jsx";
 import Toolbar from "../components/mainPage/toolbar.jsx";
-import ContextMenu from "../components/codeComponents/ContextMenu";
+import NodeContextMenu from "../components/codeComponents/NodeContextMenu.jsx";
+import EdgeContextMenu from "../components/codeComponents/EdgeContextMenu.jsx";
 
 import { initialNodes, nodeTypes } from "../components/codeComponents/nodes";
 import { initialEdges } from "../components/codeComponents/edges";
@@ -278,6 +279,21 @@ export default function Main() {
     setMenu({
       id: node.id,
       name: node.type,
+      type: 'node',
+      top: event.clientY < pane.height - 200 && event.clientY,
+      left: event.clientX < pane.width - 200 && event.clientX,
+      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
+    });
+  }, []);
+
+  const onEdgeContextMenu = useCallback((event, edge) => {
+    event.preventDefault();
+    const pane = ref.current.getBoundingClientRect();
+    setMenu({
+      id: edge.id,
+      name: edge.type,
+      type: 'edge',
       top: event.clientY < pane.height - 200 && event.clientY,
       left: event.clientX < pane.width - 200 && event.clientX,
       right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
@@ -495,6 +511,7 @@ export default function Main() {
             type: wireType,
           }}
           onNodeContextMenu={onNodeContextMenu}
+          onEdgeContextMenu={onEdgeContextMenu}
           onPaneClick={onPaneClick}
           onConnect={onConnect}
           onNodeDrag={onNodeDrag}
@@ -531,7 +548,8 @@ export default function Main() {
               style={{ borderRadius: "0.5rem" }}
             />
           )}
-          {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+          {menu && menu.type === 'node' && <NodeContextMenu onClick={onPaneClick} {...menu} />}
+          {menu && menu.type === 'edge' && <EdgeContextMenu onClick={onPaneClick} {...menu} />}
         </ReactFlow>
 
         <button
@@ -559,7 +577,7 @@ export default function Main() {
           onClick={() => setOpenSettings(false)}
         />
         <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
-          <p className="settingsMenuTitle">Settings</p>
+          <div className="settingsMenuTitle">Settings</div>
           <Link
             to="/profile"
             className="openProfileButton"
@@ -569,7 +587,7 @@ export default function Main() {
             <span className="settingUserName">UserName</span>
           </Link>
           <div className="minimapSwitchBlock">
-            <p className="minimapSwitchLabel">Show mini-map</p>
+            <div className="minimapSwitchLabel">Show mini-map</div>
             <MinimapSwitch
               className="minimapSwitch"
               minimapState={showMinimap}
@@ -577,7 +595,7 @@ export default function Main() {
             />
           </div>
           <div className="backgroundVariantBlock">
-            <p className="selectCanvasBG">Canvas background</p>
+            <div className="selectCanvasBG">Canvas background</div>
             <SelectCanvasBG
               currentBG={currentBG}
               setCurrentBG={setCurrentBG}
@@ -585,7 +603,7 @@ export default function Main() {
             />
           </div>
           <div className="backgroundVariantBlock">
-            <p className="minimapSwitchLabel">Theme</p>
+            <div className="minimapSwitchLabel">Theme</div>
             <SelectTheme
               theme={theme}
               setTheme={setTheme}
