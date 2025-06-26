@@ -1,12 +1,11 @@
 import { Position } from '@xyflow/react';
 
 import CustomHandle from '../../codeComponents/CustomHandle.jsx';
-import {IconInput} from '../../../../assets/circuits-icons.jsx';
 import { useSimulateState } from '../../../pages/mainPage.jsx';
 
 import {useEffect, useState} from "react";
 
-function InputNode({ id, isConnectable, data}) {
+function InputNodeSwitch({ id, isConnectable, data}) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
 
@@ -14,7 +13,6 @@ function InputNode({ id, isConnectable, data}) {
     setInputState(data.value || false);
   }, [data.value]);
 
-  // Обработчик изменения состояния
   const handleChange = (newValue) => {
     setInputState(newValue);
 
@@ -29,26 +27,23 @@ function InputNode({ id, isConnectable, data}) {
 
   return (
     <div className='circuit-button input'>
-      <div className="input-icon-wrapper">
-        <IconInput SVGClassName="circuit-button-icon" />
-      </div>
+      <p className={"input-text"}>Switch</p>
 
-      {simulateState  !== "idle" &&
-        <div className="switch-wrapper">
+
+        <div className={`switch-wrapper ${simulateState === "idle" ? 'deactivated' : '' }`}>
           <SvgSwitch
             checked={inputState}
             onChange={handleChange}
-            className="circuit-switch-input"
+            SWGclassName="circuit-switch-input"
           />
         </div>
-      }
 
       {/* Handles */}
       <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"
-        style={{ top: 25, left: 92}}
+        style={{ top: 40, left: 52.2}}
         isConnectable={isConnectable}
       />
     </div>
@@ -57,10 +52,10 @@ function InputNode({ id, isConnectable, data}) {
 
 
 // Вместо @radix-ui/react-switch
-const SvgSwitch = ({ checked, onChange, SWclassName }) => {
+const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
   return (
     <svg
-      className={SWclassName}
+      className={SWGclassName}
       width="42"
       height="25"
       viewBox="0 0 42 25"
@@ -90,4 +85,4 @@ const SvgSwitch = ({ checked, onChange, SWclassName }) => {
 };
 
 
-export default InputNode;
+export default InputNodeSwitch;
