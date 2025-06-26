@@ -1,28 +1,38 @@
 /*______settings______*/
 .settingsMenu {
-    position: fixed;
-    width: 0;
-    height: 0;
-    top: 0;
-    left: -100%;
-    z-index: 2001;
-    opacity: 0;
-    /*left: 20%;*/
-    background-color: var(--menu-bg-color);
-    color: var(--text-color);
-    border-radius: 0.5rem;
-    border: var(--external-border-color) solid 0.05rem;
-    transition: width 1s 0.15s, height 1s 0.15s, background-color 0.15s ease-in-out, backdrop-filter 0.15s ease-in-out, opacity 0.15s ease-in-out;
+  position: fixed;
+  width: 0;
+  height: 0;
+  top: 0;
+  left: -100%;
+  z-index: 2001;
+  opacity: 0;
+  /*left: 20%;*/
+  background-color: var(--menu-bg-color);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  border: var(--external-border-color) solid 0.05rem;
+  transition:
+    width 1s 0.15s,
+    height 1s 0.15s,
+    background-color 0.15s ease-in-out,
+    backdrop-filter 0.15s ease-in-out,
+    opacity 0.15s ease-in-out;
 }
 
 .settingsMenu.showed {
-    position: fixed;
-    opacity: 1;
-    width: 70%;
-    height: 80%;
-    top: 10%;
-    left: 15%;
-    transition: width 0s, height 0s, background-color 0.2s ease-in-out, backdrop-filter 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  position: fixed;
+  opacity: 1;
+  width: 70%;
+  height: 80%;
+  top: 10%;
+  left: 15%;
+  transition:
+    width 0s,
+    height 0s,
+    background-color 0.2s ease-in-out,
+    backdrop-filter 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
 }
 
 .settingsMenuTitle {
@@ -39,105 +49,104 @@
   margin-left: 5%;
   width: 90%;
   height: 5rem;
-  background-color: #ffffff;
-  box-shadow: #c6c6c6 1px 1px 5px;
-  border: #838383 solid 0.05rem;
+  background-color: var(--button-color);
+  border: var(--external-border-color) solid 0.05rem;
   border-radius: 0.5rem;
 }
 
 .openProfileButton:hover {
   transition: 0.15s ease-out;
-  background-color: #dadada;
+  background-color: var(--button-hover-color);
 }
 
 .settingUserIcon {
+  color: var(--text-color);
+  background-color: white;
   width: 3rem;
   height: 3rem;
-  border: #838383 solid 0.05rem;
+  border: var(--internal-border-color) solid 0.05rem;
   border-radius: 3rem;
   margin-left: 1rem;
   margin-top: 1rem;
 }
 
 .settingUserName {
+  color: var(--text-color);
   margin-left: 0.5rem;
   font-size: 1rem;
   margin-top: 1.8rem;
-  color: black;
   text-decoration: none;
 }
 
-
 /*______open settings button______*/
 .openSettingsButton {
-    z-index: 501;
-    position: fixed;
-    top: 0.5rem;
-    left: 2.64rem;
-    width: 2rem;
-    height: 2rem;
-    margin-left: 0.33rem;
-    background-color: var(--button-color);
-    border: var(--external-border-color) solid 0.07rem;
-    transition: 0.15s ease-out;
-    border-radius: 0.33rem;
-    user-select: none;
+  z-index: 501;
+  position: fixed;
+  top: 0.5rem;
+  left: 2.64rem;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.33rem;
+  background-color: var(--button-color);
+  border: var(--external-border-color) solid 0.07rem;
+  transition: 0.15s ease-out;
+  border-radius: 0.33rem;
+  user-select: none;
 }
 
-
+.openSettingsButton > img {
+  transition: 0.1s ease-in-out;
+  transform: rotate(0deg);
+}
 
 .openSettingsButton:hover {
-    transition: 0.15s ease-out;
-    background-color: var(--button-hover-color);
+  transition: 0.15s ease-out;
+  background-color: var(--button-hover-color);
 }
 
 .openSettingsButton:hover > svg {
-    transition: 0.15s ease-in-out;
-    transform: rotate(-60deg);
+  transition: 0.15s ease-in-out;
+  transform: rotate(-60deg);
 }
 
 .openSettingsButton:active {
-    transition: 0.05s ease-out;
-    background-color: var(--button-active-color);
-    box-shadow: none;
+  transition: 0.05s ease-out;
+  background-color: var(--button-active-color);
+  box-shadow: none;
 }
 
 .openSettingsButtonIcon {
-    color: var(--svg-color);
-    width: 1.3rem;
-    height: 1.3rem;
-    user-select: none;
-    margin: auto;
-    display: block;
-    justify-content: center;
-    align-items: center;
+  color: var(--svg-color);
+  width: 1.3rem;
+  height: 1.3rem;
+  user-select: none;
+  margin: auto;
+  display: block;
+  justify-content: center;
+  align-items: center;
 }
 
-.minimapSwitchBlock{
-    /*border: black solid 1px;*/
-    margin: 1rem;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem 0.5rem 1rem;
+.minimapSwitchBlock {
+  /*border: black solid 1px;*/
+  margin: 1rem;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem 0.5rem 1rem;
 }
 
-.backgroundVariantBlock{
-    /*border: black solid 1px;*/
-    margin: 1rem;
-    padding: 0.5rem 1rem 0.5rem 1rem;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
+.backgroundVariantBlock {
+  /*border: black solid 1px;*/
+  margin: 1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/*Хзззззз*/
 .minimapSwitchLabel {
   font-size: 1rem;
   justify-content: flex-start;
 }
-
-

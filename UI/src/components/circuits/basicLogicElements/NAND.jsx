@@ -1,12 +1,12 @@
-import {Handle, Position} from '@xyflow/react';
+import { Position } from "@xyflow/react";
 
-import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconNOR} from "../../../assets/circuits-icons.jsx";
+import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import { IconNAND } from "../../../../assets/circuits-icons.jsx";
 
-function NorNode({ isConnectable }) {
+function NandNode({ isConnectable }) {
   return (
-    <div className='circuit-button'>
-      <IconNOR SVGClassName={'circuit-button-icon'}/>
+    <div className="circuit-button">
+      <IconNAND SVGClassName={"circuit-button-icon"} />
 
       {/* Handles */}
       <CustomHandle
@@ -25,7 +25,7 @@ function NorNode({ isConnectable }) {
         isConnectable={isConnectable}
         maxConnections={1}
       />
-      <Handle
+      <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"
@@ -36,4 +36,4 @@ function NorNode({ isConnectable }) {
   );
 }
 
-export default NorNode;
+export default NandNode;

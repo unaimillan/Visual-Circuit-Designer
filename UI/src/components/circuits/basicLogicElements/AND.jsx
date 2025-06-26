@@ -1,12 +1,12 @@
-import {Handle, Position} from '@xyflow/react';
+import { Position } from "@xyflow/react";
 
-import CustomHandle from '../codeComponents/CustomHandle.jsx';
-import {IconXOR} from "../../../assets/circuits-icons.jsx";
+import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import { IconAND } from "../../../../assets/circuits-icons.jsx";
 
-function XorNode({ isConnectable }) {
+function AndNode({ isConnectable }) {
   return (
-    <div className='circuit-button'>
-      <IconXOR SVGClassName={'circuit-button-icon'}/>
+    <div className="circuit-button">
+      <IconAND SVGClassName={"circuit-button-icon"} />
 
       {/* Handles */}
       <CustomHandle
@@ -25,7 +25,7 @@ function XorNode({ isConnectable }) {
         isConnectable={isConnectable}
         maxConnections={1}
       />
-      <Handle
+      <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"
@@ -36,4 +36,4 @@ function XorNode({ isConnectable }) {
   );
 }
 
-export default XorNode;
+export default AndNode;
