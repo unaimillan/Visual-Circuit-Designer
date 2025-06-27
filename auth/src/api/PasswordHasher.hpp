@@ -1,15 +1,21 @@
 #pragma once
+#include <Poco/Random.h>
+#include <array>
 #include <cstdint>
 #include <string>
-#include <array>
-#include <Poco/Random.h>
 
 class PasswordHasher {
 public:
-    std::array<uint8_t, 64> genSalt();
-    std::string encryptPassword(const std::string& password, const std::array<uint8_t, 64>& salt);
-    bool verifyPassword(const std::string& password, const std::string& hash, const std::array<uint8_t, 64>& salt);
+  std::array< uint8_t, 64 > genSalt();
+  std::string               encryptPassword(
+                    std::string const& password, std::array< uint8_t, 64 > const& salt
+                );
+  bool verifyPassword(
+      std::string const&               password,
+      std::string const&               hash,
+      std::array< uint8_t, 64 > const& salt
+  );
 
 private:
-    Poco::Random m_prng;
+  Poco::Random m_prng;
 };
