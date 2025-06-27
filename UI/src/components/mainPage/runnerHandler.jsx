@@ -5,7 +5,7 @@ import {IconCloseCross} from "../../../assets/ui-icons.jsx";
 
 let allInputStates = {};
 let sendInputStates = null;
-let debugMessages = 2; //0-только error, 1 - error + connect + disconnect, 2 - all
+let debugMessages = 0; //0-только error, 1 - error + connect + disconnect, 2 - all
 // let hoverMessage = "Start simulation"
 // { out_output1: 1, out_output2: 0 }
 

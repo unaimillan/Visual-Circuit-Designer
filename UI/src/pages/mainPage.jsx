@@ -38,6 +38,8 @@ import { Link } from "react-router-dom";
 import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "../components/mainPage/runnerHandler.jsx";
+import { Toaster } from "react-hot-toast";
+
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -493,6 +495,30 @@ export default function Main() {
           )}
           {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
         </ReactFlow>
+
+        <Toaster
+          position="top-center"
+          toastOptions={{
+
+            style: {
+              backgroundColor: 'var(--menu-bg-color)',
+              color:'var(--text-color)',
+              fontSize: '12px',
+              borderRadius: '0.5rem',
+              padding: '10px 10px 10px 10px',
+              border: '0.05rem solid var(--external-border-color)',
+              fontFamily: 'Montserrat, serif',
+
+            },
+            duration: 10000,
+            error: {
+              style: {
+                padding: '10px 30px 10px 10px',
+              },
+            },
+
+          }}
+        />
 
         <button
           className="openCircuitsMenuButton"
