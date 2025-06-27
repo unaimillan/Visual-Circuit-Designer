@@ -7,7 +7,7 @@ import socketio
 from cocotbTest import run_cocotb_test
 
 
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=[
+sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins=[
     "http://visual-circuit-designer.ru",
     "https://visual-circuit-designer.ru",
     "http://185.221.215.173",
@@ -29,19 +29,25 @@ async def disconnect(sid):
     print(f"Client disconnected: {sid}")
     if sid in user_simulations:
         sim_sid = user_simulations.pop(sid)
-        await sio.emit('stop_simulation', room=sim_sid)
+        await sio.emit("stop_simulation", room=sim_sid)
 
     for user_id, sim_id in list(user_simulations.items()):
         if sim_id == sid:
             user_simulations.pop(user_id)
 
 
-@sio.on('register_simulation')
+@sio.on("register_simulation")
 async def register_simulation(sid, data):
-    user_sid = data['user_sid']
+    user_sid = data["user_sid"]
     user_simulations[user_sid] = sid
-    await sio.emit("status", {"msg": "Simulation started"}, room=sid)
+    await sio.emit("simulation_ready", room=user_sid)
     print(f"Registered simulation: user={user_sid} sim={sid}")
+
+
+@sio.on("internal_simulation_error")
+async def internal_simulation_error(sid, data):
+    user_sid = data["user_sid"]
+    await sio.emit("error", {"msg": data["msg"]}, room=user_sid)
 
 
 @sio.on("run_simulation")
@@ -54,7 +60,11 @@ async def run_simulation(sid, circuit_data):
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
 
-    verilog_code = generate_verilog_from_json(circuit_data)
+    try:
+        verilog_code = generate_verilog_from_json(circuit_data)
+    except Exception as e:
+        await sio.emit("error", {"msg": str(e)}, room=sim_id)
+        return
 
     verilog_path = os.path.join(sim_path, "dut.v")
     with open(verilog_path, "w") as f:
@@ -74,18 +84,17 @@ async def set_inputs(sid, data):
         return
 
     sim_sid = user_simulations[sid]
-    print(data["inputs"])
-    await sio.emit('simulation_inputs', data['inputs'], room=sim_sid)
+    await sio.emit("simulation_inputs", data["inputs"], room=sim_sid)
 
 
 @sio.on("stop_simulation")
 async def stop_simulation(sid):
     if sid in user_simulations:
         sim_sid = user_simulations.pop(sid)
-        await sio.emit('stop_simulation', room=sim_sid)
+        await sio.emit("stop_simulation", room=sim_sid)
 
 
-@sio.on('simulation_outputs')
+@sio.on("simulation_outputs")
 async def simulation_outputs(sid, data):
-    user_sid = data['user_sid']
-    await sio.emit('simulation_outputs', data['outputs'], room=user_sid)
+    user_sid = data["user_sid"]
+    await sio.emit("simulation_outputs", data["outputs"], room=user_sid)

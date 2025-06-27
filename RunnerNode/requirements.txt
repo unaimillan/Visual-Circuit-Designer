@@ -38,3 +38,4 @@ cocotb~=1.9.2
 typing_extensions~=4.12.2
 pydantic_core~=2.20.1
 eventlet~=0.40.0
+uvicorn[standard]

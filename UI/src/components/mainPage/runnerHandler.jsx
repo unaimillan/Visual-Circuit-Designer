@@ -3,8 +3,6 @@ import { updateOutputStates } from "../codeComponents/outputStateManager.js";
 
 let allInputStates = {};
 let sendInputStates = null;
-// let hoverMessage = "Start simulation"
-// { out_output1: 1, out_output2: 0 }
 
 export const handleSimulateClick = ({
   simulateState,
@@ -40,17 +38,23 @@ export const handleSimulateClick = ({
   }
 
   if (simulateState === "idle") {
-    // console.log("[runner_handler]: Trying to connect.");
+    console.log("[Simulation] 🚀 Starting simulation (awaiting connection)");
     setSimulateState("awaiting");
 
-    const inputNodes = nodes.filter((node) => node.type === "inputNode");
+    const inputNodes = nodes.filter(
+      (node) =>
+        node.type === "inputNode" ||
+        node.type === "inputNodeSwitch" ||
+        node.type === "inputNodeButton",
+    );
+
     allInputStates = {};
     inputNodes.forEach((node) => {
       const val = node.data.value;
       allInputStates[node.id] = val === 1 || val === "1" ? 1 : 0;
     });
 
-    // Инициализация сокета
+    // Initialize socket connection
     if (!socketRef.current) {
       socketRef.current = io("http://localhost:8000", {
         transports: ["websocket"],
@@ -74,29 +78,19 @@ export const handleSimulateClick = ({
       socketRef.current.on("ready", () => {
         console.log("[handler]: Connected to runner ✅");
         setSimulateState("running");
+      });
 
-        // Отправляем начальные состояния после подключения
+      socketRef.current.on("simulation_ready", () => {
+        console.log("✅ Simulation is running");
+        setSimulateState("running");
+
         const initialStates = {};
         for (const nodeId in allInputStates) {
           initialStates[`in_${nodeId}`] = allInputStates[nodeId];
         }
-      });
 
-      socketRef.current.on("status", (data) => {
-        if (data.msg === "Simulation started") {
-          console.log("[runner]: Simulation is started ✅");
-          setSimulateState("running");
-
-          const initialStates = {};
-          for (const nodeId in allInputStates) {
-            initialStates[`in_${nodeId}`] = allInputStates[nodeId];
-          }
-
-          if (sendInputStates) {
-            sendInputStates(initialStates);
-          }
-        } else {
-          console.log("[runner]: Simulation status:", data);
+        if (sendInputStates) {
+          sendInputStates(initialStates);
         }
       });
 
@@ -105,6 +99,7 @@ export const handleSimulateClick = ({
         updateOutputStates(data);
       });
 
+      // Handle errors
       socketRef.current.on("error", (data) => {
         console.error("[runner]: Simulation error ❌:", data);
         if (socketRef.current) {
@@ -124,7 +119,6 @@ export const handleSimulateClick = ({
       });
     }
 
-    // Отправляем данные схемы
     const flowData = {
       nodes: nodes.map((n) => ({
         id: n.id,
@@ -162,10 +156,8 @@ export const updateInputState = (nodeId, value) => {
     return;
   }
 
-  // 1. Обновляем локальное состояние только для измененного узла
   allInputStates[nodeId] = value;
 
-  // 2. Формируем полный набор состояний для отправки
   const fullStatesToSend = {};
   for (const [id, val] of Object.entries(allInputStates)) {
     let valToSend;
@@ -174,6 +166,5 @@ export const updateInputState = (nodeId, value) => {
     fullStatesToSend[`in_${id}`] = valToSend;
   }
 
-  // 3. Отправляем ВСЕ состояния
   sendInputStates(fullStatesToSend);
 };
