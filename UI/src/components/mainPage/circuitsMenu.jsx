@@ -22,7 +22,7 @@ export default function CircuitsMenu({
     setOpenIndexes((prevIndexes) =>
       prevIndexes.includes(index)
         ? prevIndexes.filter((i) => i !== index)
-        : [...prevIndexes, index]
+        : [...prevIndexes, index],
     );
   }, []);
 
