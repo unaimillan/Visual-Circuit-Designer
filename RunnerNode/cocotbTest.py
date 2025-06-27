@@ -9,7 +9,7 @@ from cocotb.triggers import Timer
 @cocotb.test()
 async def interactive_test(dut):
     user_sid = os.environ['USER_SID']
-    sio_client = socketio.AsyncClient()
+    # sio_client = socketio.AsyncClient()
 
     inputs_queue = queue.Queue()
     stop_event = threading.Event()
@@ -72,7 +72,8 @@ async def interactive_test(dut):
         except queue.Empty:
             await Timer(100, units='us')
 
-    await sio_client.disconnect()
+    # await sio_client.disconnect()
+    sio.disconnect()
 
 
 def run_cocotb_test(sim_path, user_sid):

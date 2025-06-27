@@ -40,6 +40,7 @@ async def disconnect(sid):
 async def register_simulation(sid, data):
     user_sid = data['user_sid']
     user_simulations[user_sid] = sid
+    await sio.emit("status", {"msg": "Simulation started"}, room=sid)
     print(f"Registered simulation: user={user_sid} sim={sid}")
 
 
@@ -64,7 +65,6 @@ async def run_simulation(sid, circuit_data):
         args=(sim_path, sid)
     )
     p.start()
-    await sio.emit("status", {"msg": "Simulation started"}, room=sid)
 
 
 @sio.on("set_inputs")
@@ -74,6 +74,7 @@ async def set_inputs(sid, data):
         return
 
     sim_sid = user_simulations[sid]
+    print(data["inputs"])
     await sio.emit('simulation_inputs', data['inputs'], room=sim_sid)
 
 

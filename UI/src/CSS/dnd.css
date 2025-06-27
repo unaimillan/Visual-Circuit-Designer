@@ -73,3 +73,78 @@
   width: 70%;
   height: 70%;
 }
+
+.circuit-button.input {
+  width: 60px;
+  height: 80px;
+  position: relative;
+  border: 0.05rem solid var(--external-border-color);
+  border-radius: 4px;
+  background: var(--canvas-color);
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-text {
+  position: absolute;
+  margin-top: 0.3rem;
+  top: 0;
+  font-size: 0.6rem;
+  color: var(--text-color);
+}
+
+.switch-wrapper {
+  align-content: center;
+  justify-content: center;
+  position: absolute;
+  left: 20px;
+  transition: 0.15s ease;
+}
+
+.switch-wrapper.deactivated {
+  transition: 0.15s ease;
+  pointer-events: none;
+}
+
+.led-icon {
+  position: absolute;
+  top: 27px;
+  left: 16px;
+
+  transform: rotate(45deg);
+}
+
+.button-wrapper {
+  align-content: center;
+  justify-content: center;
+  position: absolute;
+  left: 10px;
+  transition: 0.15s ease;
+  pointer-events: all;
+}
+
+.button-wrapper.deactivated {
+  transition: 0.15s ease;
+  pointer-events: none;
+}
+
+.button-icon {
+  background-color: #007bff;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  position: fixed;
+  top: 20px;
+  left: 10px;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  border-radius: 999rem;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.button-icon.clicked {
+  background-color: #808080;
+}
