@@ -21,23 +21,23 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import CircuitsMenu from "../components/mainPage/circuitsMenu.jsx";
-import Toolbar from "../components/mainPage/toolbar.jsx";
-import ContextMenu from "../components/codeComponents/ContextMenu";
+import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
+import Toolbar from "./mainPage/toolbar.jsx";
+import ContextMenu from "../codeComponents/ContextMenu.jsx";
 
-import { initialNodes, nodeTypes } from "../components/codeComponents/nodes";
-import { initialEdges } from "../components/codeComponents/edges";
-import { MinimapSwitch } from "../components/mainPage/switch.jsx";
-import { SelectCanvasBG, SelectTheme } from "../components/mainPage/select.jsx";
+import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
+import { initialEdges } from "../codeComponents/edges.js";
+import { MinimapSwitch } from "./mainPage/switch.jsx";
+import { SelectCanvasBG, SelectTheme } from "./mainPage/select.jsx";
 
-import { IconSettings, IconMenu } from "../../assets/ui-icons";
-import UserIcon from "../../assets/userIcon.png";
+import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import UserIcon from "../../../assets/userIcon.png";
 
 import { Link } from "react-router-dom";
 
-import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
+import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
-import { updateInputState } from "../components/mainPage/runnerHandler.jsx";
+import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
 
 
@@ -524,26 +524,21 @@ export default function Main() {
           className="openCircuitsMenuButton"
           onClick={() => setCircuitsMenuState(!circuitsMenuState)}
         >
-          <IconMenu
-            SVGClassName="openCircuitsMenuButtonIcon"
-            draggable="false"
-          />
+          <IconMenu SVGClassName="openCircuitsMenuButtonIcon" draggable="false"/>
         </button>
 
         <button
-          onClick={() => setOpenSettings(true)}
           className="openSettingsButton"
+          onClick={() => setOpenSettings(true)}
         >
-          <IconSettings
-            SVGClassName="openSettingsButtonIcon"
-            draggable="false"
-          />
+          <IconSettings SVGClassName="openSettingsButtonIcon" draggable="false"/>
         </button>
 
         <div
           className={`backdrop ${openSettings ? "cover" : ""}`}
           onClick={() => setOpenSettings(false)}
         />
+
         <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
           <p className="settingsMenuTitle">Settings</p>
           <Link

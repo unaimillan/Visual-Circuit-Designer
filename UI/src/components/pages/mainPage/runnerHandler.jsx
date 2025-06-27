@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
-import { updateOutputStates } from "../codeComponents/outputStateManager.js";
+import { updateOutputStates } from "../../codeComponents/outputStateManager.js";
 import toast from "react-hot-toast";
-import { IconCloseCross } from "../../../assets/ui-icons.jsx";
+import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 
 let allInputStates = {};
 let sendInputStates = null;

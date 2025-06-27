@@ -1,7 +1,7 @@
 import { Position } from "@xyflow/react";
 
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import { useSimulateState } from "../../../pages/mainPage.jsx";
+import { useSimulateState } from "../../pages/mainPage.jsx";
 
 import { useEffect, useState } from "react";
 

@@ -4,7 +4,7 @@ import {
   IconLoading,
   IconStart,
   IconError,
-} from "../../../assets/ui-icons.jsx";
+} from "../../../../assets/ui-icons.jsx";
 
 import {
   IconToolbarCursor,
@@ -13,7 +13,7 @@ import {
   IconToolbarSquareWire,
   IconToolbarDiagWire,
   IconToolbarText,
-} from "../../../assets/toolbar-icons.jsx";
+} from "../../../../assets/toolbar-icons.jsx";
 
 export default function Toolbar({
   simulateState,

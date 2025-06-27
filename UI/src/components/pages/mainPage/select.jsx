@@ -6,7 +6,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@radix-ui/react-icons";
-import "../../CSS/select.css";
+import "../../../CSS/select.css";
 
 export const SelectCanvasBG = ({ currentBG, setCurrentBG }) => (
   <Select.Root value={currentBG} onValueChange={setCurrentBG}>
