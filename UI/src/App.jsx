@@ -28,31 +28,27 @@ function App() {
         <Toaster
           position="top-center"
           toastOptions={{
-
             style: {
-              backgroundColor: 'var(--menu-bg-color)',
-              color:'var(--text-color)',
-              fontSize: '12px',
-              borderRadius: '0.5rem',
-              padding: '10px 10px 10px 10px',
-              border: '0.05rem solid var(--external-border-color)',
-              fontFamily: 'Montserrat, serif',
-
+              backgroundColor: "var(--menu-bg-color)",
+              color: "var(--text-color)",
+              fontSize: "12px",
+              borderRadius: "0.5rem",
+              padding: "10px 10px 10px 10px",
+              border: "0.05rem solid var(--external-border-color)",
+              fontFamily: "Montserrat, serif",
             },
             duration: 10000,
             error: {
               style: {
-                padding: '10px 30px 10px 10px',
+                padding: "10px 30px 10px 10px",
                 // background: '#ff5252',
               },
             },
-
           }}
         />
       </div>
     </Router>
   );
 }
-
 
 export default App;
