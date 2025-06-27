@@ -11,13 +11,13 @@ def generate_verilog_from_json(circuit_json_data: dict) -> str:
         node_id = node["id"]
         node_type = node["type"]
 
-        if node_type == "inputNode":
+        if node_type in ["inputNode", "inputNodeSwitch", "inputNodeButton"]:
             inputs[node_id] = {
                 "verilog_name": f"in_{node_id.replace('-', '_')}",
                 "connected_to": []
             }
 
-        elif node_type == "outputNode":
+        elif node_type in ["outputNode", "outputNodeLed"]:
             outputs[node_id] = {
                 "verilog_name": f"out_{node_id.replace('-', '_')}",
                 "source": None

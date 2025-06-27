@@ -1,7 +1,12 @@
 import { io } from "socket.io-client";
+import {updateOutputStates} from "../codeComponents/outputStateManager.js";
 
 let allInputStates = {};
 let sendInputStates = null;
+
+
+
+
 
 export const handleSimulateClick = ({
                                       simulateState,
@@ -85,6 +90,8 @@ export const handleSimulateClick = ({
 
       socketRef.current.on("simulation_outputs", (data) => {
         console.log("📨 Simulation data received:", data);
+        updateOutputStates(data);
+        // { out_output1: 1, out_output2: 0 }
       });
 
       // Handle errors
