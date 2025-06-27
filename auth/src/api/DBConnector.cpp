@@ -1,5 +1,7 @@
 #include "DBConnector.hpp"
+
 #include "UserCredentials.hpp"
+
 #include <Poco/Data/PostgreSQL/PostgreSQLException.h>
 #include <Poco/Data/Statement.h>
 #include <Poco/Exception.h>
@@ -14,26 +16,28 @@ DBConnector::DBConnector(Session& dbSession)
     : m_db(dbSession) {}
 
 void DBConnector::createUser(UserCredentials user) {
-    Statement sql(m_db);
+  Statement sql(m_db);
 
-    try {
-        sql << "INSERT INTO users (name, username, email, salt, password_hash) VALUES ($1, $2, $3, $4, $5)",
-            use(user.name),
-            use(user.username),
-            use(user.email),
-            use(user.salt),
-            use(user.passwordHash);
+  try {
+    sql << "INSERT INTO users (name, username, email, salt, password_hash) "
+           "VALUES ($1, $2, $3, $4, $5)",
+        use(user.name), use(user.username), use(user.email), use(user.salt),
+        use(user.passwordHash);
 
-        sql.execute();
-    } catch (const Poco::Data::PostgreSQL::StatementException& e) {
-        // TODO: Handle username and email constraints
-        /*
-        if(strcmp(e.sqlState(), "23505") == 0) {
-        }
-        */
-        throw;
-    } catch (const Poco::Exception& e) {
-        Poco::Util::Application::instance().logger().error("[ERROR] DBConnector::createUser: Exception %s:\n%s\n", std::string(e.className()), e.displayText());
-        throw;
+    sql.execute();
+  } catch (Poco::Data::PostgreSQL::StatementException const& e) {
+    // TODO: Handle username and email constraints
+    /*
+    if(strcmp(e.sqlState(), "23505") == 0) {
     }
+    */
+    throw;
+  } catch (Poco::Exception const& e) {
+    Poco::Util::Application::instance().logger().error(
+        "[ERROR] DBConnector::createUser: Exception %s:\n%s\n",
+        std::string(e.className()),
+        e.displayText()
+    );
+    throw;
+  }
 }

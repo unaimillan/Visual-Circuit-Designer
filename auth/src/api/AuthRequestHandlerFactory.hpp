@@ -1,5 +1,6 @@
 #pragma once
 #include "DBConnector.hpp"
+
 #include <Poco/Net/HTTPRequestHandlerFactory.h>
 
 using Poco::Net::HTTPRequestHandler;
@@ -11,8 +12,8 @@ public:
   AuthRequestHandlerFactory(DBConnector& db);
 
 public:
-  HTTPRequestHandler*
-  createRequestHandler(HTTPServerRequest const& request) override;
+  HTTPRequestHandler* createRequestHandler(HTTPServerRequest const& request
+  ) override;
 
 private:
   DBConnector& m_db;

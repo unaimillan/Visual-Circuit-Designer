@@ -8,7 +8,6 @@ using Poco::Net::HTTPServerResponse;
 
 class NotFoundHandler : public HTTPRequestHandler {
 public:
-  void handleRequest(
-      HTTPServerRequest& request, HTTPServerResponse& response
-  ) override;
+  void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response)
+      override;
 };

@@ -8,14 +8,13 @@ using Poco::Net::HTTPRequestHandler;
 using Poco::Net::HTTPServerRequest;
 using Poco::Net::HTTPServerResponse;
 
-class RegistrationHandler: public HTTPRequestHandler {
+class RegistrationHandler : public HTTPRequestHandler {
 public:
-    RegistrationHandler(DBConnector& db);
+  RegistrationHandler(DBConnector& db);
 
 public:
-  void handleRequest(
-      HTTPServerRequest& request, HTTPServerResponse& response
-  ) override;
+  void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response)
+      override;
 
 private:
   DBConnector& m_db;

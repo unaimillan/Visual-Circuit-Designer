@@ -63,52 +63,56 @@ namespace Poco::Data {
       TypeHandler< std::string >::extract(
           pos++, username, defVal.username, pExt
       );
-      TypeHandler< std::string >::extract(
-          pos++, email, defVal.email, pExt
-      );
+      TypeHandler< std::string >::extract(pos++, email, defVal.email, pExt);
       TypeHandler< std::string >::extract(pos++, name, defVal.name, pExt);
       TypeHandler< std::string >::extract(
           pos++, createdAt, defVal.createdAt, pExt
       );
-      obj.id = id;
-      obj.username = username;
-      obj.email = email;
-      obj.name = name;
+      obj.id        = id;
+      obj.username  = username;
+      obj.email     = email;
+      obj.name      = name;
       obj.createdAt = createdAt;
     }
   };
 
   template<>
-  class TypeHandler<struct UserCredentials> {
+  class TypeHandler< struct UserCredentials > {
     static void bind(
         size_t                    pos,
         UserCredentials const&    obj,
         AbstractBinder::Ptr       pBinder,
         AbstractBinder::Direction dir
     ) {
-      TypeHandler<User>::bind(pos, obj, pBinder, dir);
-      pos += TypeHandler<User>::size();
-      TypeHandler<std::string>::bind(pos++, obj.passwordHash, pBinder, dir);
-      TypeHandler<std::string>::bind(pos++, obj.salt, pBinder, dir);
+      TypeHandler< User >::bind(pos, obj, pBinder, dir);
+      pos += TypeHandler< User >::size();
+      TypeHandler< std::string >::bind(pos++, obj.passwordHash, pBinder, dir);
+      TypeHandler< std::string >::bind(pos++, obj.salt, pBinder, dir);
     }
 
-    static size_t size() { return TypeHandler<User>::size() + 2; }
+    static size_t size() { return TypeHandler< User >::size() + 2; }
 
-    static void
-    prepare(size_t pos, UserCredentials const& obj, AbstractPreparator::Ptr pPrepare) {
-      TypeHandler<User>::prepare(pos, obj, pPrepare);
-      pos += TypeHandler<User>::size();
-      TypeHandler<std::string>::prepare(pos++, obj.passwordHash, pPrepare);
-      TypeHandler<std::string>::prepare(pos++, obj.salt, pPrepare);
+    static void prepare(
+        size_t pos, UserCredentials const& obj, AbstractPreparator::Ptr pPrepare
+    ) {
+      TypeHandler< User >::prepare(pos, obj, pPrepare);
+      pos += TypeHandler< User >::size();
+      TypeHandler< std::string >::prepare(pos++, obj.passwordHash, pPrepare);
+      TypeHandler< std::string >::prepare(pos++, obj.salt, pPrepare);
     }
 
     static void extract(
-        size_t pos, UserCredentials& obj, UserCredentials const& defVal, AbstractExtractor::Ptr pExt
+        size_t                 pos,
+        UserCredentials&       obj,
+        UserCredentials const& defVal,
+        AbstractExtractor::Ptr pExt
     ) {
-      TypeHandler<User>::extract(pos, obj, defVal, pExt);
-      pos += TypeHandler<User>::size();
-      TypeHandler<std::string>::extract(pos++, obj.passwordHash, defVal.passwordHash, pExt);
-      TypeHandler<std::string>::extract(pos++, obj.salt, defVal.salt, pExt);
+      TypeHandler< User >::extract(pos, obj, defVal, pExt);
+      pos += TypeHandler< User >::size();
+      TypeHandler< std::string >::extract(
+          pos++, obj.passwordHash, defVal.passwordHash, pExt
+      );
+      TypeHandler< std::string >::extract(pos++, obj.salt, defVal.salt, pExt);
     }
   };
 } // namespace Poco::Data
