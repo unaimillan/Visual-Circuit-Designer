@@ -4,10 +4,6 @@ import {updateOutputStates} from "../codeComponents/outputStateManager.js";
 let allInputStates = {};
 let sendInputStates = null;
 
-
-
-
-
 export const handleSimulateClick = ({
                                       simulateState,
                                       setSimulateState,
@@ -46,7 +42,12 @@ export const handleSimulateClick = ({
     console.log("[Simulation] 🚀 Starting simulation (awaiting connection)");
     setSimulateState("awaiting");
 
-    const inputNodes = nodes.filter(node => node.type === 'inputNode');
+    const inputNodes = nodes.filter(node =>
+    node.type === 'inputNode' ||
+    node.type === 'inputNodeSwitch' ||
+    node.type === 'inputNodeButton'
+    );
+
     allInputStates = {};
     inputNodes.forEach(node => {
       const val = node.data.value;

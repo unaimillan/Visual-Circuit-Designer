@@ -11,8 +11,7 @@ from cocotb.runner import get_runner
 
 @cocotb.test()
 async def interactive_test(dut):
-    user_sid = os.environ['user_sid']
-    # sio_client = socketio.AsyncClient()
+    user_sid = os.environ["user_sid"]
 
     inputs_queue = queue.Queue()
     stop_event = threading.Event()
@@ -22,7 +21,7 @@ async def interactive_test(dut):
     @sio.event
     def connect():
         dut._log.info("Socket.IO connected to main server")
-        sio.emit('register_simulation', {'user_sid': user_sid})
+        sio.emit("register_simulation", {"user_sid": user_sid})
 
     @sio.event
     def simulation_inputs(data):
@@ -41,7 +40,7 @@ async def interactive_test(dut):
 
     def socket_thread():
         try:
-            sio.connect('http://localhost:8000', wait=True)
+            sio.connect("http://localhost:8000", wait=True)
             sio.wait()
         except Exception as e:
             dut._log.error(f"Socket.IO failed: {e}")
@@ -49,7 +48,7 @@ async def interactive_test(dut):
 
     threading.Thread(target=socket_thread, daemon=True).start()
 
-    await Timer(1, units='us')
+    await Timer(1, units="us")
 
     while not stop_event.is_set():
         try:
@@ -60,7 +59,7 @@ async def interactive_test(dut):
                 else:
                     dut._log.warning(f"Signal {name} not found")
 
-            await Timer(1, units='ns')
+            await Timer(1, units="ns")
 
             outputs = {
                 name: int(getattr(dut, name).value)
@@ -70,17 +69,16 @@ async def interactive_test(dut):
 
             dut._log.info(f"OUTPUTS: {outputs}")
 
-            sio.emit('simulation_outputs', {'user_sid': user_sid, 'outputs': outputs})
+            sio.emit("simulation_outputs", {"user_sid": user_sid, "outputs": outputs})
 
         except queue.Empty:
-            await Timer(100, units='us')
+            await Timer(100, units="us")
 
-    # await sio_client.disconnect()
     sio.disconnect()
 
 
 def run_cocotb_test(sim_path, user_sid):
-    os.environ['user_sid'] = user_sid
+    os.environ["user_sid"] = user_sid
     runner = get_runner("icarus")
 
     try:
@@ -107,10 +105,10 @@ def handle_simulation_error(user_sid, error_msg):
     try:
         print(f"[ERROR] {error_msg}")
         error_sio = socketio.Client()
-        error_sio.connect('http://localhost:8000')
-        error_sio.emit('internal_simulation_error', {
-            'user_sid': user_sid,
-            'msg': error_msg
+        error_sio.connect("http://localhost:8000")
+        error_sio.emit("internal_simulation_error", {
+            "user_sid": user_sid,
+            "msg": error_msg
         })
         time.sleep(0.5)
         error_sio.disconnect()
