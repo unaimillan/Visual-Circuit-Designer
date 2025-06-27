@@ -60,7 +60,6 @@
   /*transform: scale(1.23);*/
 }
 
-
 .switch-icon-wrapper {
   width: 40px;
   height: 40px;
@@ -69,7 +68,6 @@
   align-items: center;
   justify-content: center;
 }
-
 
 .switchNodeButton {
   width: 70%;
@@ -97,7 +95,7 @@
   color: var(--text-color);
 }
 
-.switch-wrapper{
+.switch-wrapper {
   align-content: center;
   justify-content: center;
   position: absolute;
@@ -105,13 +103,13 @@
   transition: 0.15s ease;
 }
 
-.switch-wrapper.deactivated{
-    opacity: 0.4;
-    transition: 0.15s ease;
-    pointer-events: none;
+.switch-wrapper.deactivated {
+  opacity: 0.4;
+  transition: 0.15s ease;
+  pointer-events: none;
 }
 
-.led-icon{
+.led-icon {
   position: absolute;
   top: 27px;
   left: 16px;
@@ -125,20 +123,20 @@
   position: absolute;
   left: 10px;
   transition: 0.15s ease;
-  pointer-events: all
+  pointer-events: all;
 }
 
-.button-wrapper.deactivated{
+.button-wrapper.deactivated {
   opacity: 0.4;
   transition: 0.15s ease;
   pointer-events: none;
 }
 
-.button-icon{
+.button-icon {
   background-color: #007bff;
   width: 3rem;
   border: none;
-  borderRadius: 0.33rem;
+  borderradius: 0.33rem;
   /*cursor: inputState ? 'default' : 'pointer',*/
   user-select: none;
   transition: background-color 0.2s ease;
@@ -147,4 +145,3 @@
 .button-icon.clicked {
   background-color: #808080;
 }
-

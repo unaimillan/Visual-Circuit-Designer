@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import {updateOutputStates} from "../codeComponents/outputStateManager.js";
+import { updateOutputStates } from "../codeComponents/outputStateManager.js";
 
 let allInputStates = {};
 let sendInputStates = null;
@@ -7,13 +7,12 @@ let sendInputStates = null;
 // { out_output1: 1, out_output2: 0 }
 
 export const handleSimulateClick = ({
-                                      simulateState,
-                                      setSimulateState,
-                                      socketRef,
-                                      nodes,
-                                      edges,
-                                    }) => {
-
+  simulateState,
+  setSimulateState,
+  socketRef,
+  nodes,
+  edges,
+}) => {
   if (simulateState === "awaiting") {
     console.log("[handler]: Cancelled connecting 🟡");
 
@@ -44,11 +43,11 @@ export const handleSimulateClick = ({
     // console.log("[runner_handler]: Trying to connect.");
     setSimulateState("awaiting");
 
-    const inputNodes = nodes.filter(node => node.type === 'inputNode');
+    const inputNodes = nodes.filter((node) => node.type === "inputNode");
     allInputStates = {};
-    inputNodes.forEach(node => {
+    inputNodes.forEach((node) => {
       const val = node.data.value;
-      allInputStates[node.id] = val === 1 || val === '1' ? 1 : 0;
+      allInputStates[node.id] = val === 1 || val === "1" ? 1 : 0;
     });
 
     // Инициализация сокета
@@ -60,10 +59,15 @@ export const handleSimulateClick = ({
 
       sendInputStates = (changedInputs) => {
         if (!socketRef.current) {
-          console.warn("[handler]: Cannot send input states, socket not connected ⚠️");
+          console.warn(
+            "[handler]: Cannot send input states, socket not connected ⚠️",
+          );
           return;
         }
-        console.log("📤[handler]: Sending changed input states:", changedInputs);
+        console.log(
+          "📤[handler]: Sending changed input states:",
+          changedInputs,
+        );
         socketRef.current.emit("set_inputs", { inputs: changedInputs });
       };
 
@@ -165,7 +169,7 @@ export const updateInputState = (nodeId, value) => {
   const fullStatesToSend = {};
   for (const [id, val] of Object.entries(allInputStates)) {
     let valToSend;
-    if (val) valToSend= 1;
+    if (val) valToSend = 1;
     if (!val) valToSend = 0;
     fullStatesToSend[`in_${id}`] = valToSend;
   }

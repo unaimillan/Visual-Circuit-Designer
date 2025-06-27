@@ -1,11 +1,11 @@
 // noinspection DuplicatedCode
 
-import {useState, useRef, useEffect} from "react";
-import {useSimulateState} from "../../../pages/mainPage.jsx";
+import { useState, useRef, useEffect } from "react";
+import { useSimulateState } from "../../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import {Position} from "@xyflow/react";
+import { Position } from "@xyflow/react";
 
-function InputNodeButton({ id, isConnectable, data}) {
+function InputNodeButton({ id, isConnectable, data }) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
   const cooldownRef = useRef(false);
@@ -32,7 +32,7 @@ function InputNodeButton({ id, isConnectable, data}) {
     handleChange(true);
   };
 
-  const handlePressUp= (e) => {
+  const handlePressUp = (e) => {
     e.stopPropagation();
     e.preventDefault();
 
@@ -45,38 +45,30 @@ function InputNodeButton({ id, isConnectable, data}) {
     }, delay);
   };
 
-
-
   return (
-    <div className='circuit-button input'>
+    <div className="circuit-button input">
       <p className={"input-text"}>Button</p>
 
       <div
-        className={`button-wrapper ${simulateState === `idle` ? 'deactivated' : '' }`}
+        className={`button-wrapper ${simulateState === `idle` ? "deactivated" : ""}`}
         onPointerDownCapture={handlePressDown}
         onPointerUpCapture={handlePressUp}
       >
-
         <button
           draggable={false}
-          className={`button-icon ${inputState ? 'clicked' : ''}`}
-        >
-        </button>
+          className={`button-icon ${inputState ? "clicked" : ""}`}
+        ></button>
       </div>
 
       <CustomHandle
         type="source"
         position={Position.Right}
         id="output-1"
-        style={{ top: 40, left: 52.2, zIndex: '1000000' }}
+        style={{ top: 40, left: 52.2, zIndex: "1000000" }}
         isConnectable={isConnectable}
       />
-
     </div>
   );
 }
 
 export default InputNodeButton;
-
-
-
