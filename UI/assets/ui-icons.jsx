@@ -163,3 +163,11 @@ export const IconUser = ({ SVGClassName }) => (
     />
   </svg>
 );
+
+
+export const IconCloseCross = ({ SVGClassName }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={SVGClassName}>
+    <path d="M16 8L8 16M8.00001 8L16 16" stroke="currentColor" strokeWidth="1.5" stroke-linecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
