@@ -54,7 +54,6 @@ function InputNodeButton({ id, isConnectable, data }) {
         onPointerDownCapture={handlePressDown}
         onPointerUpCapture={handlePressUp}
       >
-
         {/*<button*/}
         {/*  draggable={false}*/}
         {/*  className={`button-icon ${inputState ? "clicked" : ""}`}*/}
