@@ -50,6 +50,23 @@ export default function NodeContextMenu({
       >
         Duplicate
       </button>
+      <div style={{ display: "flex" }}>
+        <button
+          style={{ width: "24%" }}
+          className={"contextMenuButton"}
+          onClick={deleteNode}
+        >
+          -90
+        </button>
+        <button
+          style={{ width: "24%" }}
+          className={"contextMenuButton"}
+          onClick={deleteNode}
+        >
+          +90
+        </button>
+
+      </div>
       <button
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}
