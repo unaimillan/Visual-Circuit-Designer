@@ -61,6 +61,33 @@ export const SelectTheme = ({ theme, setTheme }) => (
   </Select.Root>
 );
 
+export const SelectWireType = ({ wireType, setWireType }) => (
+  <Select.Root value={wireType} onValueChange={setWireType}>
+    <Select.Trigger className="SelectTriggerWire" aria-label="Food">
+      <div className="SelectValueWrapper">
+        <Select.Value placeholder="Select type" />
+      </div>
+      <Select.Icon className="SelectIcon">
+        <ChevronDownIcon />
+      </Select.Icon>
+    </Select.Trigger>
+    <Select.Portal>
+      <Select.Content className="SelectContent">
+        <Select.ScrollUpButton className="SelectScrollButton">
+          <ChevronUpIcon />
+        </Select.ScrollUpButton>
+        <Select.Viewport className="SelectViewport">
+          <Select.Group>
+            <SelectItem value="step">Step</SelectItem>
+            <SelectItem value="straight">Straight</SelectItem>
+            <SelectItem value="default">Bezier</SelectItem>
+          </Select.Group>
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Portal>
+  </Select.Root>
+);
+
 const SelectItem = React.forwardRef(
   ({ children, className, ...props }, forwardedRef) => {
     return (
