@@ -1,14 +1,17 @@
 import os
 import queue
 import threading
+import time
+
 import socketio
 import cocotb
 from cocotb.triggers import Timer
+from cocotb.runner import get_runner
 
 
 @cocotb.test()
 async def interactive_test(dut):
-    user_sid = os.environ['USER_SID']
+    user_sid = os.environ['user_sid']
     # sio_client = socketio.AsyncClient()
 
     inputs_queue = queue.Queue()
@@ -77,18 +80,39 @@ async def interactive_test(dut):
 
 
 def run_cocotb_test(sim_path, user_sid):
-    os.environ['USER_SID'] = user_sid
-
-    from cocotb.runner import get_runner
+    os.environ['user_sid'] = user_sid
     runner = get_runner("icarus")
 
-    runner.build(
-        verilog_sources=[os.path.join(sim_path, "dut.v")],
-        hdl_toplevel="GeneratedCircuit",
-        build_dir=os.path.join(sim_path, "build")
-    )
+    try:
+        runner.build(
+            verilog_sources=[os.path.join(sim_path, "dut.v")],
+            hdl_toplevel="GeneratedCircuit",
+            build_dir=os.path.join(sim_path, "build")
+        )
 
-    runner.test(
-        hdl_toplevel="GeneratedCircuit",
-        test_module="cocotbTest",
-    )
+        runner.test(
+            hdl_toplevel="GeneratedCircuit",
+            test_module="cocotbTest",
+        )
+    except Exception as e:
+        handle_simulation_error(user_sid, f"Simulation error: {str(e)}")
+    except SystemExit as se:
+        if se.code != 0:
+            handle_simulation_error(user_sid, f"SystemExit with code {se.code}")
+    except BaseException as be:
+        handle_simulation_error(user_sid, f"Critical error: {str(be)}")
+
+
+def handle_simulation_error(user_sid, error_msg):
+    try:
+        print(f"[ERROR] {error_msg}")
+        error_sio = socketio.Client()
+        error_sio.connect('http://localhost:8000')
+        error_sio.emit('internal_simulation_error', {
+            'user_sid': user_sid,
+            'msg': error_msg
+        })
+        time.sleep(0.5)
+        error_sio.disconnect()
+    except Exception as e:
+        print(f"[CRITICAL] Failed to emit error: {e}")

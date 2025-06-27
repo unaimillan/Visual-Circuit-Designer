@@ -105,9 +105,9 @@ def generate_verilog_from_json(circuit_json_data: dict) -> str:
 
 
 if __name__ == "__main__":
-    verilog_code = generate_verilog_from_json("circuitSample.json")
+    verilog_code_test = generate_verilog_from_json(open("circuitSample.json").read().__dict__)
 
     with open("cocotb/dut.v", "w") as f:
-        f.write(verilog_code)
+        f.write(verilog_code_test)
 
     print("Verilog code generated and written to top.v")

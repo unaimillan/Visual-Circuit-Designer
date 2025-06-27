@@ -48,7 +48,7 @@ export const handleSimulateClick = ({
       allInputStates[node.id] = val === 1 || val === '1' ? 1 : 0;
     });
 
-    // Инициализация сокета
+    // Initialize socket connection
     if (!socketRef.current) {
       socketRef.current = io("http://localhost:8000", {
         transports: ["websocket"],
@@ -65,31 +65,21 @@ export const handleSimulateClick = ({
       };
 
       socketRef.current.on("ready", () => {
-        console.log("✅ Connected to runner (ready)");
+        console.log("✅ Connected to runner");
+        setSimulateState("running");
+      });
+
+      socketRef.current.on("simulation_ready", () => {
+        console.log("✅ Simulation is running");
         setSimulateState("running");
 
-        // Отправляем начальные состояния после подключения
         const initialStates = {};
         for (const nodeId in allInputStates) {
           initialStates[`in_${nodeId}`] = allInputStates[nodeId];
         }
-      });
 
-      socketRef.current.on("status", (data) => {
-        if (data.msg === "Simulation started") {
-          console.log("✅ Simulation is ready (status confirmed)");
-          setSimulateState("running");
-
-          const initialStates = {};
-          for (const nodeId in allInputStates) {
-            initialStates[`in_${nodeId}`] = allInputStates[nodeId];
-          }
-
-          if (sendInputStates) {
-            sendInputStates(initialStates);
-          }
-        } else {
-          console.log("ℹ️ Simulation status:", data);
+        if (sendInputStates) {
+          sendInputStates(initialStates);
         }
       });
 
@@ -97,6 +87,7 @@ export const handleSimulateClick = ({
         console.log("📨 Simulation data received:", data);
       });
 
+      // Handle errors
       socketRef.current.on("error", (data) => {
         console.error("❌ Simulation error:", data);
         if (socketRef.current) {
@@ -116,7 +107,6 @@ export const handleSimulateClick = ({
       });
     }
 
-    // Отправляем данные схемы
     const flowData = {
       nodes: nodes.map((n) => ({
         id: n.id,
@@ -154,10 +144,8 @@ export const updateInputState = (nodeId, value) => {
     return;
   }
 
-  // 1. Обновляем локальное состояние только для измененного узла
   allInputStates[nodeId] = value;
 
-  // 2. Формируем полный набор состояний для отправки
   const fullStatesToSend = {};
   for (const [id, val] of Object.entries(allInputStates)) {
     let valToSend;
@@ -166,6 +154,5 @@ export const updateInputState = (nodeId, value) => {
     fullStatesToSend[`in_${id}`] = valToSend;
   }
 
-  // 3. Отправляем ВСЕ состояния
   sendInputStates(fullStatesToSend);
 };

@@ -40,8 +40,14 @@ async def disconnect(sid):
 async def register_simulation(sid, data):
     user_sid = data['user_sid']
     user_simulations[user_sid] = sid
-    await sio.emit("status", {"msg": "Simulation started"}, room=sid)
+    await sio.emit("simulation_ready", room=user_sid)
     print(f"Registered simulation: user={user_sid} sim={sid}")
+
+
+@sio.on("internal_simulation_error")
+async def internal_simulation_error(sid, data):
+    user_sid = data['user_sid']
+    await sio.emit("error", {"msg": data["msg"]}, room=user_sid)
 
 
 @sio.on("run_simulation")
@@ -54,7 +60,11 @@ async def run_simulation(sid, circuit_data):
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
 
-    verilog_code = generate_verilog_from_json(circuit_data)
+    try:
+        verilog_code = generate_verilog_from_json(circuit_data)
+    except Exception as e:
+        await sio.emit("error", {"msg": str(e)}, room=sim_id)
+        return
 
     verilog_path = os.path.join(sim_path, "dut.v")
     with open(verilog_path, "w") as f:
@@ -74,7 +84,6 @@ async def set_inputs(sid, data):
         return
 
     sim_sid = user_simulations[sid]
-    print(data["inputs"])
     await sio.emit('simulation_inputs', data['inputs'], room=sim_sid)
 
 
