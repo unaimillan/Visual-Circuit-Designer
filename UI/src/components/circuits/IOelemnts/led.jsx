@@ -1,7 +1,7 @@
-import { Position } from '@xyflow/react';
-import { useEffect, useState } from 'react';
-import { subscribeToOutput } from '../../codeComponents/outputStateManager.js';
-import CustomHandle from '../../codeComponents/CustomHandle.jsx';
+import { Position } from "@xyflow/react";
+import { useEffect, useState } from "react";
+import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
+import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 
 function OutputNodeLed({ isConnectable, id }) {
   const [isActive, setIsActive] = useState(false);
@@ -18,17 +18,20 @@ function OutputNodeLed({ isConnectable, id }) {
   }, [id]);
 
   return (
-    <div className='circuit-button input'>
+    <div className="circuit-button input">
       <p className={"input-text"}>LED</p>
       <div className={`led-wrapper`}>
-        <Led isActive={isActive} SVGclassName={`led-icon ${isActive ? 'active' : ''}`} />
+        <Led
+          isActive={isActive}
+          SVGclassName={`led-icon ${isActive ? "active" : ""}`}
+        />
       </div>
 
       <CustomHandle
         type="target"
         position={Position.Left}
         id="input-1"
-        style={{ top: 40, left: 0}}
+        style={{ top: 40, left: 0 }}
         isConnectable={isConnectable}
         maxConnections={1}
       />
@@ -36,14 +39,18 @@ function OutputNodeLed({ isConnectable, id }) {
   );
 }
 
-
-
-const Led = ({ isActive, SVGclassName}) => {
+const Led = ({ isActive, SVGclassName }) => {
   return (
     <svg width="25" height="25" viewBox="0 0 25 25" className={SVGclassName}>
       <defs>
         <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
-          <feDropShadow dx="0" dy="0" stdDeviation="1.5" floodColor="red" floodOpacity="0.8" />
+          <feDropShadow
+            dx="0"
+            dy="0"
+            stdDeviation="1.5"
+            floodColor="red"
+            floodOpacity="0.8"
+          />
         </filter>
       </defs>
 
@@ -56,11 +63,11 @@ const Led = ({ isActive, SVGclassName}) => {
         ry="4"
         stroke="black"
         strokeWidth="1"
-        fill={isActive ? 'red' : 'none'}
-        filter={isActive ? 'url(#glow)' : 'none'}
+        fill={isActive ? "red" : "none"}
+        filter={isActive ? "url(#glow)" : "none"}
       />
     </svg>
   );
-}
+};
 
 export default OutputNodeLed;

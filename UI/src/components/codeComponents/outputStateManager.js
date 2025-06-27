@@ -14,7 +14,7 @@ export function updateOutputStates(newStates) {
   // Обновляем глобальное состояние
   allOutputStates = {
     ...allOutputStates,
-    ...newStates
+    ...newStates,
   };
 
   // Уведомляем подписчиков только об изменениях

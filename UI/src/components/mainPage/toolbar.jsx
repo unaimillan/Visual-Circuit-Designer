@@ -1,5 +1,10 @@
 import React from "react";
-import {IconStop, IconLoading, IconStart, IconError} from "../../../assets/ui-icons.jsx";
+import {
+  IconStop,
+  IconLoading,
+  IconStart,
+  IconError,
+} from "../../../assets/ui-icons.jsx";
 
 import {
   IconToolbarCursor,
@@ -7,28 +12,47 @@ import {
   IconToolbarHand,
   IconToolbarSquareWire,
   IconToolbarDiagWire,
-  IconToolbarText
+  IconToolbarText,
 } from "../../../assets/toolbar-icons.jsx";
 
-export default function Toolbar({ simulateState, activeAction, setActiveAction, activeWire, setActiveWire, activeButton, setActiveButton, setPanOnDrag, setWireType, onSimulateClick}) {
+export default function Toolbar({
+  simulateState,
+  activeAction,
+  setActiveAction,
+  activeWire,
+  setActiveWire,
+  setPanOnDrag,
+  onSimulateClick,
+}) {
   return (
     <div className="toolbar">
       <button
         className={`simulate-button ${simulateState}`}
         onClick={onSimulateClick}
-
       >
         {simulateState === "idle" && (
-          <IconStart SVGClassName="simulate-button-svg idle" draggable="false" />
+          <IconStart
+            SVGClassName="simulate-button-svg idle"
+            draggable="false"
+          />
         )}
         {simulateState === "awaiting" && (
-          <IconLoading SVGClassName="simulate-button-svg awaiting" draggable="false" />
+          <IconLoading
+            SVGClassName="simulate-button-svg awaiting"
+            draggable="false"
+          />
         )}
         {simulateState === "running" && (
-          <IconStop SVGClassName="simulate-button-svg running" draggable="false" />
+          <IconStop
+            SVGClassName="simulate-button-svg running"
+            draggable="false"
+          />
         )}
         {simulateState === "error" && (
-          <IconError SVGClassName="simulate-button-svg error" draggable="false" />
+          <IconError
+            SVGClassName="simulate-button-svg error"
+            draggable="false"
+          />
         )}
       </button>
 
@@ -57,37 +81,41 @@ export default function Toolbar({ simulateState, activeAction, setActiveAction, 
       <div className="toolbar-separator"></div>
 
       <button
-        className={`toolbarButton ${activeWire === "stepWire" ? "active" : ""}`}
+        className={`toolbarButton ${activeWire === "step" ? "active" : ""}`}
         onClick={() => {
-          setActiveWire("stepWire")
-          setWireType("step");
+          setActiveWire("step");
         }}
       >
-        <IconToolbarSquareWire SVGClassName="toolbarButtonIcon" draggable="false" />
+        <IconToolbarSquareWire
+          SVGClassName="toolbarButtonIcon"
+          draggable="false"
+        />
       </button>
 
       <button
-        className={`toolbarButton ${activeWire === "straightWire" ? "active" : ""}`}
+        className={`toolbarButton ${activeWire === "straight" ? "active" : ""}`}
         onClick={() => {
-          setActiveWire("straightWire");
-          setWireType("straight");
+          setActiveWire("straight");
         }}
       >
-        <IconToolbarDiagWire SVGClassName="toolbarButtonIcon" draggable="false" />
+        <IconToolbarDiagWire
+          SVGClassName="toolbarButtonIcon"
+          draggable="false"
+        />
       </button>
 
       <div className="toolbar-separator"></div>
 
       <button
-        className={`toolbarButton ${activeButton === "eraser" ? "active" : ""}`}
-        onClick={() => setActiveButton("eraser")}
+        className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
+        onClick={() => setActiveAction("eraser")}
       >
         <IconToolbarEraser SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
 
       <button
-        className={`toolbarButton ${activeButton === "text" ? "active" : ""}`}
-        onClick={() => setActiveButton("text")}
+        className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
+        onClick={() => setActiveAction("text")}
       >
         <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
       </button>
