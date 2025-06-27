@@ -68,7 +68,7 @@
   visibility: hidden;
 }
 
-.close-cross{
+.close-cross {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -80,7 +80,7 @@
   flex-shrink: 0;
 }
 
-.toast-notification{
+.toast-notification {
   display: flex;
   align-items: center;
   justify-content: space-between;

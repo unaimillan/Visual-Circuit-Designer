@@ -506,7 +506,6 @@ export default function Main() {
               padding: "10px 25px 10px 10px",
               border: "0.05rem solid var(--external-border-color)",
               fontFamily: "Montserrat, serif",
-
             },
             duration: 5000,
             error: {
