@@ -136,10 +136,15 @@
 
 .button-icon {
   background-color: #007bff;
-  width: 3rem;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  position: fixed;
+  top: 20px;
+  left:10px;
+  width: 1.5rem;
+  height: 1.5rem;
   border: none;
-  borderradius: 0.33rem;
-  /*cursor: inputState ? 'default' : 'pointer',*/
+  border-radius: 999rem;
   user-select: none;
   transition: background-color 0.2s ease;
 }
