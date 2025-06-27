@@ -520,14 +520,20 @@ export default function Main() {
           className="openCircuitsMenuButton"
           onClick={() => setCircuitsMenuState(!circuitsMenuState)}
         >
-          <IconMenu SVGClassName="openCircuitsMenuButtonIcon" draggable="false"/>
+          <IconMenu
+            SVGClassName="openCircuitsMenuButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <button
           className="openSettingsButton"
           onClick={() => setOpenSettings(true)}
         >
-          <IconSettings SVGClassName="openSettingsButtonIcon" draggable="false"/>
+          <IconSettings
+            SVGClassName="openSettingsButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <div

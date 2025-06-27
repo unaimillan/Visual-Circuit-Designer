@@ -15,7 +15,9 @@ export const setLogLevel = (level) => {
 
 export const logMessage = (msg, level = LOG_LEVELS.IMPORTANT) => {
   if (level <= currentLogLevel) {
-    const levelLabel = Object.keys(LOG_LEVELS).find((k) => LOG_LEVELS[k] === level);
+    const levelLabel = Object.keys(LOG_LEVELS).find(
+      (k) => LOG_LEVELS[k] === level,
+    );
     console.log(`[${levelLabel}]:`, msg);
   }
 };
