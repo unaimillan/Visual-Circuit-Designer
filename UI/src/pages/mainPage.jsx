@@ -97,8 +97,10 @@ export default function Main() {
         if (parsed.activeAction) setActiveAction(parsed.activeAction);
         if (parsed.activeWire) setActiveWire(parsed.activeWire);
         if (parsed.activeButton) setActiveButton(parsed.activeButton);
-        if (typeof parsed.openSettings === 'boolean') setOpenSettings(parsed.openSettings);
-        if (typeof parsed.circuitsMenuState === 'boolean') setCircuitsMenuState(parsed.circuitsMenuState);
+        if (typeof parsed.openSettings === "boolean")
+          setOpenSettings(parsed.openSettings);
+        if (typeof parsed.circuitsMenuState === "boolean")
+          setCircuitsMenuState(parsed.circuitsMenuState);
       } catch (e) {
         console.error("Ошибка при загрузке настроек из localStorage", e);
       }
