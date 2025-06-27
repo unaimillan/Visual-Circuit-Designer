@@ -98,16 +98,16 @@ def generate_verilog_from_json(circuit_json_data: dict) -> str:
     verilog_code += "\n    // Output connections\n"
     for output_id, output_info in outputs.items():
         source = output_info["source"] or "1'b0"
-        verilog_code += f"    assign {output_info['verilog_name']} = {source};\n"
+        verilog_code += f"    assign {output_info["verilog_name"]} = {source};\n"
 
     verilog_code += "\nendmodule\n"
     return verilog_code
 
 
 if __name__ == "__main__":
-    verilog_code = generate_verilog_from_json("circuitSample.json")
+    verilog_code_test = generate_verilog_from_json(open("circuitSample.json").read().__dict__)
 
     with open("cocotb/dut.v", "w") as f:
-        f.write(verilog_code)
+        f.write(verilog_code_test)
 
     print("Verilog code generated and written to top.v")
