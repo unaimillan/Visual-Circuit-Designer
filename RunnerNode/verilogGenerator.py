@@ -90,10 +90,10 @@ def generate_verilog_from_json(circuit_json_data: dict) -> str:
         out_wire = gate_info["out"]
 
         if gtype == "not":
-            verilog_code += f"    not {out_wire.replace("wire", "not_gate")} ({out_wire}, {in1});\n"
+            verilog_code += f"    not {out_wire.replace('wire', 'not_gate')} ({out_wire}, {in1});\n"
         else:
             in2 = gate_info["in2"] or "1'b0"
-            verilog_code += f"    {gtype} {out_wire.replace("wire", gtype + "_gate")} ({out_wire}, {in1}, {in2});\n"
+            verilog_code += f"    {gtype} {out_wire.replace('wire', gtype + '_gate')} ({out_wire}, {in1}, {in2});\n"
 
     verilog_code += "\n    // Output connections\n"
     for output_id, output_info in outputs.items():
