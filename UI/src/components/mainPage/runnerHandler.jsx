@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { updateOutputStates } from "../codeComponents/outputStateManager.js";
 import toast from "react-hot-toast";
-import {IconCloseCross} from "../../../assets/ui-icons.jsx";
+import { IconCloseCross } from "../../../assets/ui-icons.jsx";
 
 let allInputStates = {};
 let sendInputStates = null;
@@ -17,7 +17,7 @@ export const handleSimulateClick = ({
   edges,
 }) => {
   if (simulateState === "awaiting") {
-    if (debugMessages === 2) toast('Cancelled connecting', {icon: '🟡',});
+    if (debugMessages === 2) toast("Cancelled connecting", { icon: "🟡" });
     if (socketRef.current) {
       socketRef.current.disconnect();
       socketRef.current = null;
@@ -29,7 +29,7 @@ export const handleSimulateClick = ({
   }
 
   if (simulateState === "error") {
-    if (debugMessages === 2) toast('Ignored error', {icon: '⚠️',});
+    if (debugMessages === 2) toast("Ignored error", { icon: "⚠️" });
 
     if (socketRef.current) {
       socketRef.current.disconnect();
@@ -59,10 +59,14 @@ export const handleSimulateClick = ({
 
       sendInputStates = (changedInputs) => {
         if (!socketRef.current) {
-          if (debugMessages === 2) toast('Сannot send input states, socket not connected', {icon: '⚠️',});
+          if (debugMessages === 2)
+            toast("Сannot send input states, socket not connected", {
+              icon: "⚠️",
+            });
           return;
         }
-        if (debugMessages === 2) toast('Sending changed input states', {icon: '📤',});
+        if (debugMessages === 2)
+          toast("Sending changed input states", { icon: "📤" });
         console.log(
           "📤[handler]: Sending changed input states:",
           changedInputs,
@@ -71,7 +75,8 @@ export const handleSimulateClick = ({
       };
 
       socketRef.current.on("ready", () => {
-        if (debugMessages === 2) toast('Connected to the runner', {icon: '✅',});
+        if (debugMessages === 2)
+          toast("Connected to the runner", { icon: "✅" });
         setSimulateState("running");
 
         // Отправляем начальные состояния после подключения
@@ -83,7 +88,7 @@ export const handleSimulateClick = ({
 
       socketRef.current.on("status", (data) => {
         if (data.msg === "Simulation started") {
-          if (debugMessages > 0) toast('Simulation is started', {icon: '✅',});
+          if (debugMessages > 0) toast("Simulation is started", { icon: "✅" });
           setSimulateState("running");
 
           const initialStates = {};
@@ -108,15 +113,15 @@ export const handleSimulateClick = ({
         toast.error((t) => (
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
-              width: '100%',
-              maxWidth: '400px', // или ширину, подходящую под твой toast
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "12px",
+              width: "100%",
+              maxWidth: "400px", // или ширину, подходящую под твой toast
             }}
           >
-            <div style={{ flex: 1, wordBreak: 'break-word' }}>
+            <div style={{ flex: 1, wordBreak: "break-word" }}>
               Simulation error: {data.msg}
             </div>
 
@@ -124,14 +129,14 @@ export const handleSimulateClick = ({
               onClick={() => toast.dismiss(t.id)}
               className={"close-cross"}
               style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '4px',
-                fontSize: '20px', // размер крестика
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "4px",
+                fontSize: "20px", // размер крестика
                 flexShrink: 0, // чтобы кнопка не сжималась
               }}
             >
@@ -139,7 +144,6 @@ export const handleSimulateClick = ({
             </button>
           </div>
         ));
-
 
         if (socketRef.current) {
           socketRef.current.disconnect();
@@ -150,8 +154,7 @@ export const handleSimulateClick = ({
       });
 
       socketRef.current.on("disconnect", () => {
-        if (debugMessages === 2)
-          toast(`Socket disconnected`, {icon: '🔌',});
+        if (debugMessages === 2) toast(`Socket disconnected`, { icon: "🔌" });
 
         if (simulateState !== "running") {
           setSimulateState("idle");
@@ -176,13 +179,13 @@ export const handleSimulateClick = ({
       })),
     };
 
-    if (debugMessages === 2) toast('Sending circuit data', {icon: '📋',});
+    if (debugMessages === 2) toast("Sending circuit data", { icon: "📋" });
     console.log("[simulation]: Sending circuit data :", flowData);
     socketRef.current.emit("run_simulation", flowData);
   }
 
   if (simulateState === "running") {
-    toast('Stopping simulation', {icon: '🛑' ,});
+    toast("Stopping simulation", { icon: "🛑" });
     socketRef.current.emit("simulation:stop");
     setSimulateState("idle");
     socketRef.current.disconnect();
@@ -194,8 +197,8 @@ export const handleSimulateClick = ({
 
 export const updateInputState = (nodeId, value) => {
   if (!sendInputStates && debugMessages === 2) {
-    toast('Cannot update input state: simulation not running', {
-      icon: '⚠️',
+    toast("Cannot update input state: simulation not running", {
+      icon: "⚠️",
     });
     return;
   }

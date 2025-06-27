@@ -149,7 +149,7 @@
   background-color: #808080;
 }
 
-.close-cross{
+.close-cross {
   position: fixed;
   right: 0;
   color: var(--text-color);
