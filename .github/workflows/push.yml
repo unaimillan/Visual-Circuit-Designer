@@ -1,0 +1,29 @@
+name: Push workflow
+on:
+  push
+permissions:
+  contents: read
+jobs:
+  lint:
+    name: Run linters
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run formatter for UI
+        run: |
+          npm ci
+          npx prettier UI --write
+          git add UI
+          git status
+
+
+      - name: Setup git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        run: |
+          git diff-index --quiet HEAD || (git commit -m "Automated formatting" && git push)

@@ -7,7 +7,8 @@ import {
   IconNAND,
   IconNOR,
   IconXOR,
-  IconSwitchOff,
+  IconInput,
+  IconOutput,
 } from "../../../assets/circuits-icons.jsx";
 
 export default function CircuitsMenu({
@@ -21,7 +22,7 @@ export default function CircuitsMenu({
     setOpenIndexes((prevIndexes) =>
       prevIndexes.includes(index)
         ? prevIndexes.filter((i) => i !== index)
-        : [...prevIndexes, index],
+        : [...prevIndexes, index]
     );
   }, []);
 
@@ -44,9 +45,8 @@ export default function CircuitsMenu({
     {
       header: "Pins",
       gates: [
-        { id: "inputNodeSwitch", label: "Switch", icon: IconSwitchOff },
-        { id: "inputNodeButton", label: "Button", icon: IconSwitchOff },
-        { id: "outputNodeLed", label: "Led", icon: IconSwitchOff },
+        { id: "inputNode", label: "input", icon: IconInput },
+        { id: "outputNode", label: "output", icon: IconOutput },
       ],
     },
     {
