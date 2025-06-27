@@ -67,3 +67,24 @@
 .switch-wrapper.hide {
   visibility: hidden;
 }
+
+.close-cross{
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.toast-notification{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+}

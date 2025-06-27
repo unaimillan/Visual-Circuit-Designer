@@ -170,7 +170,7 @@ export const IconCloseCross = ({ SVGClassName }) => (
       d="M16 8L8 16M8.00001 8L16 16"
       stroke="currentColor"
       strokeWidth="1.5"
-      stroke-linecap="round"
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
   </svg>

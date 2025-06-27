@@ -503,15 +503,14 @@ export default function Main() {
               color: "var(--text-color)",
               fontSize: "12px",
               borderRadius: "0.5rem",
-              padding: "10px 10px 10px 10px",
+              padding: "10px 25px 10px 10px",
               border: "0.05rem solid var(--external-border-color)",
               fontFamily: "Montserrat, serif",
+
             },
-            duration: 10000,
+            duration: 5000,
             error: {
-              style: {
-                padding: "10px 30px 10px 10px",
-              },
+              duration: 10000,
             },
           }}
         />
