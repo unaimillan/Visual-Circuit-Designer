@@ -12,28 +12,26 @@ using Poco::HMACEngine;
 using Poco::PBKDF2Engine;
 using Poco::SHA1Engine;
 
-std::array< uint8_t, 64 > PasswordHasher::genSalt() {
-  std::array< uint8_t, 64 > ret;
+std::string PasswordHasher::genSalt() {
+  DigestEngine::Digest ret(32);
 
-  for (size_t i = 0; i < 64; ++i) { ret[i] = m_prng.nextChar(); }
+  for (size_t i = 0; i < ret.size(); ++i) { ret[i] = m_prng.nextChar(); }
 
-  return ret;
+  return DigestEngine::digestToHex(ret);
 }
 
 std::string PasswordHasher::encryptPassword(
-    std::string const& password, std::array< uint8_t, 64 > const& salt
+    std::string const& password, std::string const& salt
 ) {
-  PBKDF2Engine< HMACEngine< SHA1Engine > > pbkdf2(
-      std::string(salt.begin(), salt.end())
-  );
+  PBKDF2Engine< HMACEngine< SHA1Engine > > pbkdf2(salt);
   pbkdf2.update(password);
   return DigestEngine::digestToHex(pbkdf2.digest());
 }
 
 bool PasswordHasher::verifyPassword(
-    std::string const&               password,
-    std::string const&               hash,
-    std::array< uint8_t, 64 > const& salt
+    std::string const& password,
+    std::string const& hash,
+    std::string const& salt
 ) {
   return hash == encryptPassword(password, salt);
 }

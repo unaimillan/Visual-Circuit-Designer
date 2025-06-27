@@ -6,14 +6,13 @@
 
 class PasswordHasher {
 public:
-  std::array< uint8_t, 64 > genSalt();
-  std::string               encryptPassword(
-                    std::string const& password, std::array< uint8_t, 64 > const& salt
-                );
+  std::string genSalt();
+  std::string
+       encryptPassword(std::string const& password, std::string const& salt);
   bool verifyPassword(
-      std::string const&               password,
-      std::string const&               hash,
-      std::array< uint8_t, 64 > const& salt
+      std::string const& password,
+      std::string const& hash,
+      std::string const& salt
   );
 
 private:

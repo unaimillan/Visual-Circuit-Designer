@@ -2,7 +2,6 @@
 
 #include "api/AuthRequestHandlerFactory.hpp"
 #include "api/DBConnector.hpp"
-#include "api/PasswordHasher.hpp"
 
 #include <Poco/Data/PostgreSQL/Connector.h>
 #include <Poco/Data/Session.h>
@@ -37,7 +36,7 @@ int AppAuthServer::main(std::vector< std::string > const& args) {
 
   ServerSocket socket(port);
   HTTPServer   httpServer(
-      new AuthRequestHandlerFactory, socket, new HTTPServerParams
+      new AuthRequestHandlerFactory(db), socket, new HTTPServerParams
   );
 
   httpServer.start();
