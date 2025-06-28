@@ -11,6 +11,7 @@
 
 
 
+
   /*Select colors*/
   --select-1: hsl(210, 60%, 87%);
   --select-2: hsl(210, 80%, 80%);
@@ -34,11 +35,11 @@
 }
 
 [data-theme="dark"] {
-  --main-1: hsl(0, 0%, 10%);
-  --main-2: hsl(0, 0%, 14%);
-  --main-3: hsl(0, 0%, 20%);
-  --main-4: hsl(0, 0%, 25%);
-  --main-5: hsl(0, 0%, 30%);
+  --main-1: hsl(0, 0%, 2%);
+  --main-2: hsl(0, 0%, 4.5%);
+  --main-3: hsl(0, 0%, 7%);
+  --main-4: hsl(0, 0%, 9%);
+  --main-5: hsl(0, 0%, 13%);
   --main-0: hsl(0, 0%, 100%);
 
   --select-1: hsl(220, 35%, 25%);
@@ -58,6 +59,18 @@
 
   --switch-bg-color: hsl(0, 0%, 33%);
   --mask: hsla(0, 0%, 100%, 0.1);
+
+  --border-gradient: linear-gradient(180deg,
+    hsl(0, 0%, 24%) 0%,
+    hsl(0, 0%, 14%) 0.8rem,
+    hsl(0, 0%, 10%) 100%
+  );
+
+  --main-gradient: linear-gradient(180deg,
+  var(--main-3) 0%,
+  var(--main-2) 0.5rem,
+  var(--main-2) 100%
+  );
 }
 
 [data-theme="pick-me"] {

@@ -11,13 +11,18 @@
   background-color: var(--main-2);
   color: var(--main-0);
   border-radius: 0.5rem;
-  border: var(--main-5) solid 0.05rem;
   transition:
     width 1s 0.15s,
     height 1s 0.15s,
     background-color 0.15s ease-in-out,
     backdrop-filter 0.15s ease-in-out,
     opacity 0.15s ease-in-out;
+
+
+  border: transparent solid 0.05rem;
+  background-image: var(--main-gradient), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .settingsMenu.showed {
@@ -50,8 +55,12 @@
   width: 90%;
   height: 5rem;
   background-color: var(--main-3);
-  border: var(--main-5) solid 0.05rem;
   border-radius: 0.5rem;
+
+  border: transparent solid 0.05rem;
+  background-image: linear-gradient(var(--main-3),var(--main-3)), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .openProfileButton:hover {
@@ -88,10 +97,14 @@
   height: 2rem;
   margin-left: 0.33rem;
   background-color: var(--main-2);
-  border: var(--main-5) solid 0.07rem;
   transition: 0.15s ease-out;
   border-radius: 0.33rem;
   user-select: none;
+
+  border: transparent solid 0.05rem;
+  background-image: var(--main-gradient), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .openSettingsButton > img {
@@ -102,6 +115,10 @@
 .openSettingsButton:hover {
   transition: 0.15s ease-out;
   background-color: var(--main-3);
+  border: transparent solid 0.05rem;
+  background-image: linear-gradient(var(--main-3),var(--main-3)), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .openSettingsButton:hover > svg {
@@ -113,6 +130,10 @@
   transition: 0.05s ease-out;
   background-color: var(--main-3);
   box-shadow: none;
+  border: transparent solid 0.05rem;
+  background-image: linear-gradient(var(--main-3),var(--main-3)), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .openSettingsButtonIcon {

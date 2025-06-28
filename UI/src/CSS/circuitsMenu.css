@@ -12,11 +12,16 @@
   background-color: var(--main-2);
   color: var(--main-0);
   transition:
-    left 0.2s ease,
-    color 0s,
-    background-color 0s;
+          left 0.2s ease,
+          color 0s,
+          background-color 0s;
   user-select: none;
-  border: 0.05rem solid var(--main-5);
+
+  border: 0.05rem solid transparent;
+  background-image: var(--main-gradient), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
 }
 
 .circuitsMenu.open {
@@ -25,15 +30,15 @@
   left: 0;
 }
 
-.circuitsMenuInnerButton {
-  background-color: var(--main-3);
-  border: none;
-  transition: 0.15s ease-out;
-  border-radius: 0.5rem;
-  width: 3.33rem;
-  height: 3.33rem;
-  /*margin: 0.05rem;*/
-}
+/*.circuitsMenuInnerButton {*/
+/*  background-color:red;*/
+/*  border: none;*/
+/*  transition: 0.15s ease-out;*/
+/*  border-radius: 0.5rem;*/
+/*  width: 3.33rem;*/
+/*  height: 3.33rem;*/
+/*  !*margin: 0.05rem;*!*/
+/*}*/
 
 .circuitsMenuInnerButton:hover {
   transition: 0.15s ease-out;
@@ -117,10 +122,14 @@
   height: 2rem;
   z-index: 500;
   background-color: var(--main-2);
-  border: var(--main-5) solid 0.07rem;
   transition: 0.15s ease-out;
   border-radius: 0.33rem;
   user-select: none;
+
+  border: transparent solid 0.05rem;
+  background-image: var(--main-gradient), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .openCircuitsMenuButtonIcon {
@@ -135,14 +144,22 @@
 }
 
 .openCircuitsMenuButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-3);
+  transition: 0.3s ease-out;
+
+  border: transparent solid 0.05rem;
+  background-image: linear-gradient(var(--main-3), var(--main-3)), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .openCircuitsMenuButton:active {
   transition: 0.05s ease-out;
   background-color: var(--main-3);
-  box-shadow: none;
+
+  border: transparent solid 0.05rem;
+  background-image: linear-gradient(var(--main-3), var(--main-3)), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .gates-grid-wrapper {

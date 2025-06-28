@@ -14,9 +14,13 @@ button {
   gap: 5px;
   background-color: var(--main-2);
   color: var(--main-0);
-  border: 0.05rem solid var(--main-4);
   z-index: 10000;
   transition: 0.06s ease;
+
+  border: transparent solid 0.05rem;
+  background-image: linear-gradient(var(--main-2),var(--main-2)), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .SelectTrigger:hover {

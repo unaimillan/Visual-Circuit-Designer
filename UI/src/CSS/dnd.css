@@ -1,7 +1,7 @@
 /*______DragAndDrop______*/
 .dndnode {
   padding: 8px;
-  border: var(--main-4) 0.05rem solid;
+  /*border: var(--main-4) 0.05rem solid;*/
   border-radius: 0.5rem;
   cursor: move;
   display: flex;
@@ -9,6 +9,10 @@
   align-items: center;
   gap: 5px;
   user-select: none;
+  border: 0.05rem solid transparent;
+  background-image: var(--main-gradient), var(--border-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .dndnode svg {
@@ -35,6 +39,7 @@
 }
 
 .circuit-button {
+
   width: 80px;
   height: 70px;
   position: relative;
