@@ -34,11 +34,11 @@
 }
 
 [data-theme="dark"] {
-  --main-1: hsl(0, 0%, 10%);
-  --main-2: hsl(0, 0%, 14%);
-  --main-3: hsl(0, 0%, 20%);
-  --main-4: hsl(0, 0%, 25%);
-  --main-5: hsl(0, 0%, 30%);
+  --main-1: hsl(0, 0%, 5%);
+  --main-2: hsl(0, 0%, 8%);
+  --main-3: hsl(0, 0%, 12%);
+  --main-4: hsl(0, 0%, 16%);
+  --main-5: hsl(0, 0%, 20%);
   --main-0: hsl(0, 0%, 100%);
 
   --select-1: hsl(220, 35%, 25%);
