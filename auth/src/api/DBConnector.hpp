@@ -24,6 +24,7 @@ private:
 };
 
 class UsernameExistsException : public Poco::DataException {};
+
 class EmailExistsException : public Poco::DataException {};
 
 namespace Poco::Data {

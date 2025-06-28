@@ -58,12 +58,12 @@ void RegistrationHandler::handleRequest(
       response.setStatusAndReason(HTTPResponse::HTTP_CREATED);
       response.send();
     }
-  } catch(const UsernameExistsException& e) {
+  } catch (UsernameExistsException const& e) {
     std::string error = "username exists";
     response.setContentLength(error.length());
     response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
     response.send() << error;
-  } catch(const EmailExistsException& e) {
+  } catch (EmailExistsException const& e) {
     std::string error = "email exists";
     response.setContentLength(error.length());
     response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
