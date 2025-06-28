@@ -1,5 +1,5 @@
 import * as Switch from "@radix-ui/react-switch";
-import "../../CSS/switch.css";
+import "../../../CSS/switch.css";
 import React from "react";
 
 export function MinimapSwitch({ minimapState, minimapToggle }) {

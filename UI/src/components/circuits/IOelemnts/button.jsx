@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 import { useState, useRef, useEffect } from "react";
-import { useSimulateState } from "../../../pages/mainPage.jsx";
+import { useSimulateState } from "../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { Position } from "@xyflow/react";
 
@@ -48,16 +48,12 @@ function InputNodeButton({ id, isConnectable, data }) {
     <div className="circuit-button input">
       <p className={"input-text"}>Button</p>
 
-      <div
-        className={`button-wrapper ${simulateState === `idle` ? "deactivated" : ""}`}
-        onPointerDownCapture={handlePressDown}
-        onPointerUpCapture={handlePressUp}
-      >
-        <button
-          draggable={false}
-          className={`button-icon ${inputState ? "clicked" : ""}`}
-        ></button>
-      </div>
+      <SvgButton
+        pressed={inputState}
+        onPressDown={handlePressDown}
+        onPressUp={handlePressUp}
+        disabled={simulateState === "idle"}
+      />
 
       <CustomHandle
         type="source"

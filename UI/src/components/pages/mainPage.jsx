@@ -21,24 +21,33 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import CircuitsMenu from "../components/mainPage/circuitsMenu.jsx";
-import Toolbar from "../components/mainPage/toolbar.jsx";
-import NodeContextMenu from "../components/codeComponents/NodeContextMenu.jsx";
-import EdgeContextMenu from "../components/codeComponents/EdgeContextMenu.jsx";
+import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
+import Toolbar from "./mainPage/toolbar.jsx";
+import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
+import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
 
-import { initialNodes, nodeTypes } from "../components/codeComponents/nodes";
-import { initialEdges } from "../components/codeComponents/edges";
-import { MinimapSwitch } from "../components/mainPage/switch.jsx";
-import { SelectCanvasBG, SelectTheme } from "../components/mainPage/select.jsx";
+import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
+import { initialEdges } from "../codeComponents/edges.js";
+import { MinimapSwitch } from "./mainPage/switch.jsx";
+import {
+  SelectCanvasBG,
+  SelectLogLevel,
+  SelectTheme,
+} from "./mainPage/select.jsx";
 
-import { IconSettings, IconMenu } from "../../assets/ui-icons";
-import UserIcon from "../../assets/userIcon.png";
+import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import UserIcon from "../../../assets/userIcon.png";
 
 import { Link } from "react-router-dom";
 
-import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
+import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
-import { updateInputState } from "../components/mainPage/runnerHandler.jsx";
+import { updateInputState } from "./mainPage/runnerHandler.jsx";
+import { Toaster } from "react-hot-toast";
+import {
+  setCurrentLogLevel,
+  getCurrentLogLevel,
+} from "../codeComponents/logger.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -83,6 +92,15 @@ export default function Main() {
 
   const socketRef = useRef(null);
 
+  const fileInputRef = useRef(null);
+
+  const handleOpenClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  //Load saved settings from localStorage
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
 
@@ -192,6 +210,28 @@ export default function Main() {
       if (isCtrlOrCmd && e.key.toLowerCase() === "s") {
         e.preventDefault();
         saveCircuit();
+        return;
+      }
+
+      //Ctrl + Shift + R - Start/stop simulation
+      if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+        handleSimulateClick({
+          simulateState,
+          setSimulateState,
+          socketRef,
+          nodes,
+          edges,
+        });
+        return;
+      }
+
+      //Ctrl + Shift + O - Load file
+      if (isCtrlOrCmd && e.key.toLowerCase() === "o") {
+        e.preventDefault();
+
+        handleOpenClick();
+
         return;
       }
 
@@ -529,8 +569,8 @@ export default function Main() {
         >
           <Background
             offset={[10.5, 5]}
-            bgColor="var(--canvas-bg-color)"
-            color="var(--canvas-color)"
+            bgColor="var(--main-1)"
+            color="var(--main-4)"
             gap={GAP_SIZE}
             size={1.6}
             variant={variant}
@@ -539,9 +579,9 @@ export default function Main() {
           {showMinimap && (
             <MiniMap
               className="miniMap"
-              bgColor="var(--canvas-bg-color)"
-              maskColor="var(--minimap-mask-color)"
-              nodeColor="var(--minimap-node-color)"
+              bgColor="var(--main-3)"
+              maskColor="var(--mask)"
+              nodeColor="var(--mask)"
               position="top-right"
               style={{ borderRadius: "0.5rem" }}
             />
@@ -554,6 +594,25 @@ export default function Main() {
           )}
         </ReactFlow>
 
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              backgroundColor: "var(--main-2)",
+              color: "var(--main-0)",
+              fontSize: "12px",
+              borderRadius: "0.5rem",
+              padding: "10px 25px 10px 10px",
+              border: "0.05rem solid var(--main-5)",
+              fontFamily: "Montserrat, serif",
+            },
+            duration: 5000,
+            error: {
+              duration: 10000,
+            },
+          }}
+        />
+
         <button
           className="openCircuitsMenuButton"
           onClick={() => setCircuitsMenuState(!circuitsMenuState)}
@@ -565,8 +624,8 @@ export default function Main() {
         </button>
 
         <button
-          onClick={() => setOpenSettings(true)}
           className="openSettingsButton"
+          onClick={() => setOpenSettings(true)}
         >
           <IconSettings
             SVGClassName="openSettingsButtonIcon"
@@ -582,7 +641,7 @@ export default function Main() {
           }}
         />
         <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
-          <div className="settingsMenuTitle">Settings</div>
+          <p className="settingsMenuTitle">Settings</p>
           <Link
             to="/profile"
             className="openProfileButton"
@@ -592,36 +651,39 @@ export default function Main() {
             <span className="settingUserName">UserName</span>
           </Link>
           <div className="minimapSwitchBlock">
-            <div className="minimapSwitchLabel">Show mini-map</div>
+            <p className="minimapSwitchLabel">Show mini-map</p>
             <MinimapSwitch
               className="minimapSwitch"
               minimapState={showMinimap}
               minimapToggle={setShowMinimap}
             />
           </div>
-          <div className="selectVariantBlock">
-            <div className="selectCanvasBG">Canvas background</div>
+
+          <div className="selectBlock">
+            <p className="selectCanvasBG">Canvas background</p>
             <SelectCanvasBG
               currentBG={currentBG}
               setCurrentBG={setCurrentBG}
               className="selectBG"
             />
           </div>
-          <div className="selectVariantBlock">
-            <div className="minimapSwitchLabel">Theme</div>
+          <div className="selectBlock">
+            <p className="minimapSwitchLabel">Theme</p>
             <SelectTheme
               theme={theme}
               setTheme={setTheme}
               className="selectTheme"
             />
           </div>
-          <button onClick={saveCircuit}>Save Circuit</button>
-          <input
-            type="file"
-            accept=".json"
-            onChange={loadCircuit}
-            style={{ marginTop: "10px" }}
-          />
+
+          <div className="selectBlock">
+            <p className="minimapSwitchLabel">Log verbosity</p>
+            <SelectLogLevel
+              currentLogLevel={getCurrentLogLevel()}
+              setCurrentLogLevel={setCurrentLogLevel}
+              className="selectTheme"
+            />
+          </div>
         </div>
 
         <CircuitsMenu
@@ -638,6 +700,10 @@ export default function Main() {
           activeWire={activeWire}
           setActiveWire={setActiveWire}
           setPanOnDrag={setPanOnDrag}
+          saveCircuit={saveCircuit}
+          loadCircuit={loadCircuit}
+          fileInputRef={fileInputRef}
+          handleOpenClick={handleOpenClick}
           onSimulateClick={() =>
             handleSimulateClick({
               simulateState,

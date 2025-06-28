@@ -1,7 +1,7 @@
 import { Position } from "@xyflow/react";
 
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import { useSimulateState } from "../../../pages/mainPage.jsx";
+import { useSimulateState } from "../../pages/mainPage.jsx";
 
 import { useEffect, useState } from "react";
 
@@ -67,7 +67,7 @@ const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
         width="42"
         height="25"
         rx="12.5"
-        fill={checked ? "var(--select-color)" : "var(--switch-bg-color)"}
+        fill={checked ? "var(--select-1)" : "var(--switch-bg-color)"}
         onClick={() => onChange(!checked)}
         style={{ cursor: "pointer", transition: "fill 0.1s ease" }}
       />
