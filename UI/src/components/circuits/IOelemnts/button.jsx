@@ -66,7 +66,6 @@ function InputNodeButton({ id, isConnectable, data }) {
   );
 }
 
-
 const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
   return (
     <div
