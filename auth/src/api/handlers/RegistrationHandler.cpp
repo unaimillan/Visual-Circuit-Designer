@@ -58,6 +58,16 @@ void RegistrationHandler::handleRequest(
       response.setStatusAndReason(HTTPResponse::HTTP_CREATED);
       response.send();
     }
+  } catch(const UsernameExistsException& e) {
+    std::string error = "username exists";
+    response.setContentLength(error.length());
+    response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
+    response.send() << error;
+  } catch(const EmailExistsException& e) {
+    std::string error = "email exists";
+    response.setContentLength(error.length());
+    response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
+    response.send() << error;
   } catch (Poco::Data::PostgreSQL::StatementException const& e) {
     response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
     response.send();

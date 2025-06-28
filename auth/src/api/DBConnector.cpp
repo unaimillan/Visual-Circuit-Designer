@@ -8,6 +8,7 @@
 #include <Poco/Util/Application.h>
 #include <cstring>
 #include <string>
+#include <regex>
 
 using Poco::Data::Statement;
 using namespace Poco::Data::Keywords;
@@ -26,11 +27,17 @@ void DBConnector::createUser(UserCredentials user) {
 
     sql.execute();
   } catch (Poco::Data::PostgreSQL::StatementException const& e) {
-    // TODO: Handle username and email constraints
-    /*
     if(strcmp(e.sqlState(), "23505") == 0) {
+      std::regex regexp("Constraint: users_(username|email)_key");
+      std::smatch match;
+      if (std::regex_search(e.message(), match, regexp)) {
+        if (match[1] == "username") {
+          throw UsernameExistsException();
+        } else if (match[1] == "email") {
+          throw EmailExistsException();
+        }
+      }
     }
-    */
     throw;
   } catch (Poco::Exception const& e) {
     Poco::Util::Application::instance().logger().error(

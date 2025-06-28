@@ -23,6 +23,9 @@ private:
   Session& m_db;
 };
 
+class UsernameExistsException : public Poco::DataException {};
+class EmailExistsException : public Poco::DataException {};
+
 namespace Poco::Data {
   template<>
   class TypeHandler< struct User > {
