@@ -7,6 +7,7 @@
 #include <Poco/Exception.h>
 #include <Poco/JSON/Object.h>
 #include <Poco/JSON/Parser.h>
+#include <Poco/JSON/JSONException.h>
 #include <Poco/Logger.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/HTTPServerRequest.h>
@@ -38,6 +39,9 @@ void RegistrationHandler::handleRequest(
     if (!request.hasContentLength()) {
       response.setStatusAndReason(HTTPResponse::HTTP_LENGTH_REQUIRED);
       response.send();
+    } else if (request.getContentType() != "application/json") {
+      response.setStatusAndReason(HTTPResponse::HTTP_UNSUPPORTED_MEDIA_TYPE);
+      response.send();
     } else {
       Parser          parser;
       PasswordHasher  hasher;
@@ -68,14 +72,19 @@ void RegistrationHandler::handleRequest(
     response.setContentLength(error.length());
     response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
     response.send() << error;
-  } catch (Poco::Data::PostgreSQL::StatementException const& e) {
-    response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
-    response.send();
+  } catch (Poco::LogicException const& e) {
+    response.setContentLength(e.message().length());
+    response.setStatusAndReason(HTTPResponse::HTTP_BAD_REQUEST);
+    response.send() << e.message();
+  } catch (Poco::JSON::JSONException const& e) {
+    response.setContentLength(e.message().length());
+    response.setStatusAndReason(HTTPResponse::HTTP_BAD_REQUEST);
+    response.send() << e.message();
   } catch (Poco::Exception const& e) {
     response.setStatusAndReason(HTTPResponse::HTTP_INTERNAL_SERVER_ERROR);
     response.send();
     logger.error(
-        "POST /api/register: Exception %s\n: %s\n",
+        "[ERROR] POST /api/register: Exception %s:\n%s\n",
         std::string(e.className()),
         e.displayText()
     );
