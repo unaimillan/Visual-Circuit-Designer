@@ -39,7 +39,7 @@ import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
-import {LOG_LEVELS, showToast} from "../codeComponents/logger.jsx";
+import { LOG_LEVELS, showToast } from "../codeComponents/logger.jsx";
 import * as events from "node:events";
 let simulateState = "idle";
 // eslint-disable-next-line react-refresh/only-export-components
@@ -136,7 +136,6 @@ export default function Main() {
 
   const fileInputRef = useRef(null);
 
-
   const loadCircuit2 = (event) => {
     const file = event.target?.files?.[0];
     if (!file) return;
@@ -145,14 +144,13 @@ export default function Main() {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        console.log('Данные схемы:', data);
+        console.log("Данные схемы:", data);
       } catch (err) {
-        console.error('Ошибка при чтении JSON:', err);
+        console.error("Ошибка при чтении JSON:", err);
       }
     };
     reader.readAsText(file);
   };
-
 
   //Hotkeys handler
   useEffect(() => {
@@ -176,7 +174,13 @@ export default function Main() {
       //Ctrl + Shift + R - Start/stop simulation
       if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "r") {
         e.preventDefault();
-        handleSimulateClick({simulateState, setSimulateState, socketRef, nodes, edges})
+        handleSimulateClick({
+          simulateState,
+          setSimulateState,
+          socketRef,
+          nodes,
+          edges,
+        });
         return;
       }
 
@@ -187,9 +191,6 @@ export default function Main() {
 
         return;
       }
-
-
-
 
       //1...6 - Change selected tool
       const hotkeys = {

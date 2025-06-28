@@ -3,7 +3,9 @@ import {
   IconStop,
   IconLoading,
   IconStart,
-  IconError, IconDownloadFile, IconOpenFile,
+  IconError,
+  IconDownloadFile,
+  IconOpenFile,
 } from "../../../../assets/ui-icons.jsx";
 
 import {
@@ -70,7 +72,10 @@ export default function Toolbar({
             setPanOnDrag([2]);
           }}
         >
-          <IconToolbarCursor SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconToolbarCursor
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <button
@@ -117,7 +122,10 @@ export default function Toolbar({
           className={`toolbarButton ${activeButton === "eraser" ? "active" : ""}`}
           onClick={() => setActiveButton("eraser")}
         >
-          <IconToolbarEraser SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconToolbarEraser
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <button
@@ -128,17 +136,12 @@ export default function Toolbar({
         </button>
       </div>
 
-
-
-
-
       <div className="toolbar download">
-
-        <button
-          className={`toolbarButton`}
-          onClick={saveCircuit}
-        >
-          <IconDownloadFile SVGClassName="toolbarButtonIcon" draggable="false" />
+        <button className={`toolbarButton`} onClick={saveCircuit}>
+          <IconDownloadFile
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <div className="toolbar-separator"></div>
@@ -153,7 +156,6 @@ export default function Toolbar({
           <IconOpenFile SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
       </div>
-
     </div>
   );
 }
