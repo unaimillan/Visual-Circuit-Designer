@@ -21,7 +21,7 @@
 }
 
 .contextMenuButton:hover {
-  background: var(--button-hover-color);
+  background: var(--select-1);
 }
 
 .selectWireType {

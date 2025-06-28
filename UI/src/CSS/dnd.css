@@ -53,11 +53,8 @@
   transform: scale(1.23);
 }
 
-.customHandle {
-  background: var(--main-0);
-  border: 0.05rem solid var(--main-5);
-  object-fit: cover;
-  /*transform: scale(1.23);*/
+.circuit-button-icon:hover {
+  color: var(--select-1);
 }
 
 .switch-icon-wrapper {

@@ -12,6 +12,7 @@
   /*Select colors*/
   --select-1: hsl(210, 60%, 87%);
   --select-2: hsl(210, 80%, 80%);
+  --select-mask: hsla(210, 60%, 87%, 50%);
 
   /*Simulation state colors*/
   --status-success-1: hsl(135, 50%, 85%);
@@ -41,6 +42,7 @@
 
   --select-1: hsl(220, 35%, 25%);
   --select-2: hsl(220, 35%, 40%);
+  --select-mask: hsla(220, 35%, 25%, 50%);
 
   --status-success-1: hsl(150, 50%, 25%);
   --status-success-2: hsl(150, 50%, 80%);
@@ -68,6 +70,7 @@
 
   --select-1: hsl(360, 60%, 80%);
   --select-2: hsl(360, 60%, 73%);
+  --select-mask: hsla(360, 60%, 80%, 50%);
 
   --status-success-1: hsl(200, 40%, 80%);
   --status-success-2: hsl(200, 40%, 30%);
@@ -95,6 +98,7 @@
 
   --select-1: hsl(245, 30%, 25%);
   --select-2: hsl(245, 30%, 40%);
+  --select-mask: hsla(245, 30%, 25%, 50%);
 
   --status-success-1: hsl(170, 50%, 25%);
   --status-success-2: hsl(170, 50%, 80%);
@@ -122,6 +126,7 @@
 
   --select-1: hsl(185, 45%, 78%);
   --select-2: hsl(185, 35%, 70%);
+  --select-mask: hsla(185, 45%, 78%, 50%);
 
   --status-success-1: hsl(145, 35%, 84%);
   --status-success-2: hsl(145, 35%, 30%);
@@ -149,6 +154,7 @@
 
   --select-1: hsl(0, 40%, 25%);
   --select-2: hsl(0, 40%, 40%);
+  --select-mask: hsla(0, 40%, 25%, 50%);
 
   --status-success-1: hsl(120, 15%, 25%);
   --status-success-2: hsl(120, 15%, 60%);
