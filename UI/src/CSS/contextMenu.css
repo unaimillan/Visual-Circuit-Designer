@@ -2,8 +2,8 @@
   background: var(--menu-bg-color);
   border: 1px solid var(--external-border-color);
   border-radius: 0.5rem;
-  position: absolute;
-  z-index: 10;
+  position: fixed;
+  z-index: 2001;
   width: 8rem;
   color: var(--text-color);
 }
