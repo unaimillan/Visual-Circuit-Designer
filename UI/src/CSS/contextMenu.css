@@ -20,9 +20,11 @@
   background: var(--main-2);
 }
 
-.contextMenuButton :hover {
-  display: block;
-  text-align: left;
+.contextMenuButton:hover {
+  background: var(--button-hover-color);
+}
 
-  background: #856e6e;
+.selectWireType {
+  padding: 0.5rem;
+  margin: 0.5rem;
 }

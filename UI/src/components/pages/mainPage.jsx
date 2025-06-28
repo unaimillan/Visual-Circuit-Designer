@@ -21,10 +21,15 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
-import Toolbar from "./mainPage/toolbar.jsx";
+import CircuitsMenu from "../components/mainPage/circuitsMenu.jsx";
+import Toolbar from "../components/mainPage/toolbar.jsx";
+import NodeContextMenu from "../components/codeComponents/NodeContextMenu.jsx";
+import EdgeContextMenu from "../components/codeComponents/EdgeContextMenu.jsx";
 
-import ContextMenu from "../codeComponents/ContextMenu.jsx";
+import { initialNodes, nodeTypes } from "../components/codeComponents/nodes";
+import { initialEdges } from "../components/codeComponents/edges";
+import { MinimapSwitch } from "../components/mainPage/switch.jsx";
+import { SelectCanvasBG, SelectTheme } from "../components/mainPage/select.jsx";
 
 import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
 import { initialEdges } from "../codeComponents/edges.js";
@@ -49,6 +54,8 @@ import {
   setCurrentLogLevel,
   getCurrentLogLevel,
 } from "../codeComponents/logger.jsx";
+import { updateInputState } from "../components/mainPage/runnerHandler.jsx";
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -74,16 +81,14 @@ export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
-  const [activeWire, setActiveWire] = useState("stepWire");
-  const [activeButton, setActiveButton] = useState("text");
+  const [activeWire, setActiveWire] = useState("step");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [wireType, setWireType] = useState("step");
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
@@ -103,25 +108,53 @@ export default function Main() {
   };
 
   //Load saved settings from localStorage
+  const nodesRef = useRef(nodes);
+  const edgesRef = useRef(edges);
+
+  useEffect(() => {
+    const savedCircuit = localStorage.getItem("savedCircuit");
+    if (savedCircuit) {
+      try {
+        const circuitData = JSON.parse(savedCircuit);
+        setNodes(circuitData.nodes || []);
+        setEdges(circuitData.edges || []);
+      } catch (e) {
+        setNodes(initialNodes);
+        setEdges(initialEdges);
+      }
+    } else {
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, [setEdges, setNodes]);
+
+  useEffect(() => {
+    const circuitData = JSON.stringify({ nodes, edges });
+    localStorage.setItem("savedCircuit", circuitData);
+  }, [nodes, edges]);
+
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+
+  useEffect(() => {
+    edgesRef.current = edges;
+  }, [edges]);
+
   useEffect(() => {
     const saved = localStorage.getItem("userSettings");
     if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.currentBG) setCurrentBG(parsed.currentBG);
-        if (typeof parsed.showMinimap === "boolean")
-          setShowMinimap(parsed.showMinimap);
-        if (parsed.theme) setTheme(parsed.theme);
-        if (parsed.activeAction) setActiveAction(parsed.activeAction);
-        if (parsed.activeWire) setActiveWire(parsed.activeWire);
-        if (parsed.activeButton) setActiveButton(parsed.activeButton);
-        if (typeof parsed.openSettings === "boolean")
-          setOpenSettings(parsed.openSettings);
-        if (typeof parsed.circuitsMenuState === "boolean")
-          setCircuitsMenuState(parsed.circuitsMenuState);
-      } catch (e) {
-        console.error("Ошибка при загрузке настроек из localStorage", e);
-      }
+      const parsed = JSON.parse(saved);
+      if (parsed.currentBG) setCurrentBG(parsed.currentBG);
+      if (typeof parsed.showMinimap === "boolean")
+        setShowMinimap(parsed.showMinimap);
+      if (parsed.theme) setTheme(parsed.theme);
+      if (parsed.activeAction) setActiveAction(parsed.activeAction);
+      if (parsed.activeWire) setActiveWire(parsed.activeWire);
+      if (typeof parsed.openSettings === "boolean")
+        setOpenSettings(parsed.openSettings);
+      if (typeof parsed.circuitsMenuState === "boolean")
+        setCircuitsMenuState(parsed.circuitsMenuState);
     }
   }, []);
 
@@ -133,7 +166,6 @@ export default function Main() {
       theme,
       activeAction,
       activeWire,
-      activeButton,
       openSettings,
       circuitsMenuState,
     };
@@ -144,7 +176,6 @@ export default function Main() {
     theme,
     activeAction,
     activeWire,
-    activeButton,
     openSettings,
     circuitsMenuState,
   ]);
@@ -152,6 +183,27 @@ export default function Main() {
   //Hotkeys handler
   useEffect(() => {
     const handleKeyDown = (e) => {
+      //deleting by clicking delete/backspace(delete for windows and macOS, backspace for windows)
+      if (e.key === "Delete" || e.key === "Backspace") {
+        e.preventDefault();
+        const currentNodes = nodesRef.current;
+        const currentEdges = edgesRef.current;
+        const selectedNodes = currentNodes.filter((node) => node.selected);
+        const selectedEdges = currentEdges.filter((edge) => edge.selected);
+        if (selectedNodes.length === 0 && selectedEdges.length === 0) return;
+        const nodeIdsToRemove = selectedNodes.map((node) => node.id);
+        const newNodes = currentNodes.filter(
+          (node) => !nodeIdsToRemove.includes(node.id),
+        );
+        const newEdges = currentEdges.filter(
+          (edge) =>
+            !selectedEdges.some((selected) => selected.id === edge.id) &&
+            !nodeIdsToRemove.includes(edge.source) &&
+            !nodeIdsToRemove.includes(edge.target),
+        );
+        setNodes(newNodes);
+        setEdges(newEdges);
+      }
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
       //Ctrl + Shift + S - Open/close settings
@@ -200,16 +252,10 @@ export default function Main() {
           setActiveAction("hand");
           setPanOnDrag(true);
         },
-        3: () => {
-          setActiveWire("stepWire");
-          setWireType("step");
-        },
-        4: () => {
-          setActiveWire("straightWire");
-          setWireType("straight");
-        },
-        5: () => setActiveButton("eraser"),
-        6: () => setActiveButton("text"),
+        3: () => setActiveWire("step"),
+        4: () => setActiveWire("straight"),
+        5: () => setActiveAction("eraser"),
+        6: () => setActiveAction("text"),
       };
       if (hotkeys[e.key]) {
         e.preventDefault();
@@ -272,6 +318,21 @@ export default function Main() {
     setMenu({
       id: node.id,
       name: node.type,
+      type: "node",
+      top: event.clientY < pane.height - 200 && event.clientY,
+      left: event.clientX < pane.width - 200 && event.clientX,
+      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
+    });
+  }, []);
+
+  const onEdgeContextMenu = useCallback((event, edge) => {
+    event.preventDefault();
+    const pane = ref.current.getBoundingClientRect();
+    setMenu({
+      id: edge.id,
+      name: edge.type,
+      type: "edge",
       top: event.clientY < pane.height - 200 && event.clientY,
       left: event.clientX < pane.width - 200 && event.clientX,
       right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
@@ -298,8 +359,6 @@ export default function Main() {
         targetHandle: e.targetHandle,
       })),
     };
-
-    showToast(nodes);
 
     const dataStr =
       "data:text/json;charset=utf-8," +
@@ -494,9 +553,10 @@ export default function Main() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           defaultEdgeOptions={{
-            type: wireType,
+            type: activeWire,
           }}
           onNodeContextMenu={onNodeContextMenu}
+          onEdgeContextMenu={onEdgeContextMenu}
           onPaneClick={onPaneClick}
           onConnect={onConnect}
           onNodeDrag={onNodeDrag}
@@ -519,7 +579,7 @@ export default function Main() {
             bgColor="var(--main-1)"
             color="var(--main-4)"
             gap={GAP_SIZE}
-            size={0.8}
+            size={1.6}
             variant={variant}
           />
           <Controls className="controls" />
@@ -533,7 +593,12 @@ export default function Main() {
               style={{ borderRadius: "0.5rem" }}
             />
           )}
-          {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+          {menu && menu.type === "node" && (
+            <NodeContextMenu onClick={onPaneClick} {...menu} />
+          )}
+          {menu && menu.type === "edge" && (
+            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+          )}
         </ReactFlow>
 
         <Toaster
@@ -579,7 +644,6 @@ export default function Main() {
           className={`backdrop ${openSettings ? "cover" : ""}`}
           onClick={() => setOpenSettings(false)}
         />
-
         <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
           <p className="settingsMenuTitle">Settings</p>
           <Link
@@ -639,8 +703,8 @@ export default function Main() {
           setActiveAction={setActiveAction}
           activeWire={activeWire}
           setActiveWire={setActiveWire}
-          activeButton={activeButton}
-          setActiveButton={setActiveButton}
+          // activeButton={activeButton}
+          // setActiveButton={setActiveButton}
           setPanOnDrag={setPanOnDrag}
           setWireType={setWireType}
           saveCircuit={saveCircuit}
