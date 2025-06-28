@@ -1,7 +1,7 @@
 /*______DragAndDrop______*/
 .dndnode {
   padding: 8px;
-  border: var(--internal-border-color) 0.05rem solid;
+  border: var(--main-4) 0.05rem solid;
   border-radius: 0.5rem;
   cursor: move;
   display: flex;
@@ -38,9 +38,9 @@
   width: 80px;
   height: 70px;
   position: relative;
-  border: 0.05rem solid var(--external-border-color);
+  border: 0.05rem solid var(--main-5);
   border-radius: 4px;
-  background: var(--canvas-color);
+  background: var(--main-2);
   display: flex;
   box-sizing: border-box;
   align-items: center;
@@ -48,14 +48,14 @@
 }
 
 .circuit-button-icon {
-  color: var(--svg-color);
+  color: var(--main-0);
   object-fit: cover;
   transform: scale(1.23);
 }
 
 .customHandle {
-  background: var(--svg-color);
-  border: 0.05rem solid var(--external-border-color);
+  background: var(--main-0);
+  border: 0.05rem solid var(--main-5);
   object-fit: cover;
   /*transform: scale(1.23);*/
 }
@@ -78,9 +78,9 @@
   width: 60px;
   height: 80px;
   position: relative;
-  border: 0.05rem solid var(--external-border-color);
+  border: 0.05rem solid var(--main-5);
   border-radius: 4px;
-  background: var(--canvas-color);
+  background: var(--main-2);
   display: flex;
   box-sizing: border-box;
   align-items: center;
@@ -92,7 +92,7 @@
   margin-top: 0.3rem;
   top: 0;
   font-size: 0.6rem;
-  color: var(--text-color);
+  color: var(--main-0);
 }
 
 .switch-wrapper {
@@ -147,4 +147,12 @@
 
 .button-icon.clicked {
   background-color: #808080;
+}
+
+.close-cross {
+  position: fixed;
+  right: 0;
+  color: var(--main-0);
+  width: 1.7rem;
+  height: 1.7rem;
 }
