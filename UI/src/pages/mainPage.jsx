@@ -38,10 +38,13 @@ import { Link } from "react-router-dom";
 
 import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
+import { updateInputState } from "../components/mainPage/runnerHandler.jsx";
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
   setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -248,10 +251,10 @@ export default function Main() {
     });
 
     const newNode = {
-      id: `${type}-${Date.now()}`,
+      id: `${type}_${Date.now()}`,
       type,
       position,
-      data: { customId: `${type}-${Date.now()}` },
+      data: { customId: `${type}_${Date.now()}` },
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -342,10 +345,14 @@ export default function Main() {
     });
 
     const newNode = {
-      id: `${type}-${Date.now()}`,
+      id: `${type}_${Date.now()}`,
       type,
       position,
-      data: { customId: `${type}-${Date.now()}`, simState: simulateState },
+      data: {
+        customId: `${type}_${Date.now()}`,
+        simState: simulateState,
+        value: false,
+      },
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -392,7 +399,7 @@ export default function Main() {
                 if (distance < minDistance) {
                   minDistance = distance;
                   closestEdge = {
-                    id: `temp-${internalNode.id}-${srcHandle.id}-to-${node.id}-${tgtHandle.id}`,
+                    id: `temp_${internalNode.id}_${srcHandle.id}_to_${node.id}_${tgtHandle.id}`,
                     source: internalNode.id,
                     sourceHandle: srcHandle.id,
                     target: node.id,
@@ -427,7 +434,7 @@ export default function Main() {
                 if (distance < minDistance) {
                   minDistance = distance;
                   closestEdge = {
-                    id: `temp-${node.id}-${srcHandle.id}-to-${internalNode.id}-${tgtHandle.id}`,
+                    id: `temp_${node.id}_${srcHandle.id}_to_${internalNode.id}_${tgtHandle.id}`,
                     source: node.id,
                     sourceHandle: srcHandle.id,
                     target: internalNode.id,
@@ -488,7 +495,9 @@ export default function Main() {
         : BackgroundVariant.Lines;
 
   return (
-    <SimulateStateContext.Provider value={{ simulateState, setSimulateState }}>
+    <SimulateStateContext.Provider
+      value={{ simulateState, setSimulateState, updateInputState }}
+    >
       <>
         <ReactFlow
           ref={ref}

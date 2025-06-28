@@ -1,4 +1,8 @@
 import { io } from "socket.io-client";
+import { updateOutputStates } from "../codeComponents/outputStateManager.js";
+
+let allInputStates = {};
+let sendInputStates = null;
 
 export const handleSimulateClick = ({
   simulateState,
@@ -8,13 +12,12 @@ export const handleSimulateClick = ({
   edges,
 }) => {
   if (simulateState === "awaiting") {
-    console.log("🟡 User canceled connect waiting");
+    console.log("[handler]: Cancelled connecting 🟡");
 
-    // Отключаем сокет, если уже есть
     if (socketRef.current) {
       socketRef.current.disconnect();
       socketRef.current = null;
-      console.log("❌ Socket manually disconnected during awaiting");
+      console.log("[handler]: Socket manually disconnected ❌");
     }
 
     setSimulateState("idle");
@@ -22,12 +25,12 @@ export const handleSimulateClick = ({
   }
 
   if (simulateState === "error") {
-    console.log("Ignored error. Back to idle");
+    console.log("[handler]: Ignored error ⚠️");
 
     if (socketRef.current) {
       socketRef.current.disconnect();
       socketRef.current = null;
-      console.log("❌ Socket manually disconnected during awaiting");
+      console.log("[handler]: Socket manually disconnected ❌");
     }
 
     setSimulateState("idle");
@@ -35,42 +38,85 @@ export const handleSimulateClick = ({
   }
 
   if (simulateState === "idle") {
+    console.log("[Simulation] 🚀 Starting simulation (awaiting connection)");
     setSimulateState("awaiting");
 
+    const inputNodes = nodes.filter(
+      (node) =>
+        node.type === "inputNode" ||
+        node.type === "inputNodeSwitch" ||
+        node.type === "inputNodeButton",
+    );
+
+    allInputStates = {};
+    inputNodes.forEach((node) => {
+      const val = node.data.value;
+      allInputStates[node.id] = val === 1 || val === "1" ? 1 : 0;
+    });
+
+    // Initialize socket connection
     if (!socketRef.current) {
       socketRef.current = io("http://localhost:8000", {
         transports: ["websocket"],
         path: "/socket.io",
       });
 
-      // Когда сервер подтвердит соединение
+      sendInputStates = (changedInputs) => {
+        if (!socketRef.current) {
+          console.warn(
+            "[handler]: Cannot send input states, socket not connected ⚠️",
+          );
+          return;
+        }
+        console.log(
+          "📤[handler]: Sending changed input states:",
+          changedInputs,
+        );
+        socketRef.current.emit("set_inputs", { inputs: changedInputs });
+      };
+
       socketRef.current.on("ready", () => {
-        console.log("✅ Connected to runner (ready)");
+        console.log("[handler]: Connected to runner ✅");
         setSimulateState("running");
       });
 
-      socketRef.current.on("simulation_outputs", (data) => {
-        console.log("📨 Simulation data received:", data);
-      });
+      socketRef.current.on("simulation_ready", () => {
+        console.log("✅ Simulation is running");
+        setSimulateState("running");
 
-      socketRef.current.on("error", (data) => {
-        console.error("❌ Simulation error:", data);
-        socketRef.current.disconnect();
-        socketRef.current = null;
-        setSimulateState("error");
-      });
+        const initialStates = {};
+        for (const nodeId in allInputStates) {
+          initialStates[`in_${nodeId}`] = allInputStates[nodeId];
+        }
 
-      socketRef.current.on("disconnect", () => {
-        console.log("🔌 Socket disconnected");
-        if (simulateState !== "running") {
-          setSimulateState("idle");
+        if (sendInputStates) {
+          sendInputStates(initialStates);
         }
       });
 
-      // safety check (можно убрать)
-      if (!socketRef.current) {
-        console.warn("⚠️ Socket still null after init?");
-      }
+      socketRef.current.on("simulation_outputs", (data) => {
+        console.log("[runner]: Simulation data received 📨:", data);
+        updateOutputStates(data);
+      });
+
+      // Handle errors
+      socketRef.current.on("error", (data) => {
+        console.error("[runner]: Simulation error ❌:", data);
+        if (socketRef.current) {
+          socketRef.current.disconnect();
+          socketRef.current = null;
+        }
+        setSimulateState("error");
+        sendInputStates = null;
+      });
+
+      socketRef.current.on("disconnect", () => {
+        console.log("[handler]: Socket disconnected 🔌");
+        if (simulateState !== "running") {
+          setSimulateState("idle");
+        }
+        sendInputStates = null;
+      });
     }
 
     const flowData = {
@@ -89,17 +135,36 @@ export const handleSimulateClick = ({
       })),
     };
 
-    console.log(JSON.stringify(flowData, null, 2));
+    console.log("[simulation]: Sending circuit data 📋:", flowData);
     socketRef.current.emit("run_simulation", flowData);
-
-    // НЕ переключай simulateState вручную — сервер сам вызовет setSimulateState("running")
   }
 
   if (simulateState === "running") {
-    console.log("⛔️ Остановка симуляции");
+    console.log("[simulation]: Stopping simulation ⛔️");
     socketRef.current.emit("simulation:stop");
     setSimulateState("idle");
     socketRef.current.disconnect();
     socketRef.current = null;
+    sendInputStates = null;
+    allInputStates = {};
   }
+};
+
+export const updateInputState = (nodeId, value) => {
+  if (!sendInputStates) {
+    console.warn("⚠️ Cannot update input state: simulation not running");
+    return;
+  }
+
+  allInputStates[nodeId] = value;
+
+  const fullStatesToSend = {};
+  for (const [id, val] of Object.entries(allInputStates)) {
+    let valToSend;
+    if (val) valToSend = 1;
+    if (!val) valToSend = 0;
+    fullStatesToSend[`in_${id}`] = valToSend;
+  }
+
+  sendInputStates(fullStatesToSend);
 };
