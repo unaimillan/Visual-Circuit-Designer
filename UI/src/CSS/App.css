@@ -1,22 +1,22 @@
 .controls {
-  border: var(--external-border-color) solid 0.07rem;
-  background-color: var(--menu-bg-color);
+  border: var(--main-5) solid 0.07rem;
+  background-color: var(--main-2);
   border-radius: 0.2rem;
   overflow: hidden;
   box-shadow: none;
 }
 
 .controls button {
-  background-color: var(--button-color);
-  border-bottom: var(--internal-border-color) solid 0.07rem;
+  background-color: var(--main-2);
+  border-bottom: var(--main-4) solid 0.07rem;
 }
 
 .controls button:hover {
-  background-color: var(--button-hover-color);
+  background-color: var(--main-3);
 }
 
 .controls button svg {
-  color: var(--svg-color);
+  color: var(--main-0);
 }
 
 /*_______Canvas_______*/

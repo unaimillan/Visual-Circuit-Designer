@@ -8,10 +8,10 @@
   z-index: 2001;
   opacity: 0;
   /*left: 20%;*/
-  background-color: var(--menu-bg-color);
-  color: var(--text-color);
+  background-color: var(--main-2);
+  color: var(--main-0);
   border-radius: 0.5rem;
-  border: var(--external-border-color) solid 0.05rem;
+  border: var(--main-5) solid 0.05rem;
   transition:
     width 1s 0.15s,
     height 1s 0.15s,
@@ -49,29 +49,29 @@
   margin-left: 5%;
   width: 90%;
   height: 5rem;
-  background-color: var(--button-color);
-  border: var(--external-border-color) solid 0.05rem;
+  background-color: var(--main-3);
+  border: var(--main-5) solid 0.05rem;
   border-radius: 0.5rem;
 }
 
 .openProfileButton:hover {
   transition: 0.15s ease-out;
-  background-color: var(--button-hover-color);
+  background-color: var(--main-3);
 }
 
 .settingUserIcon {
-  color: var(--text-color);
+  color: var(--main-0);
   background-color: white;
   width: 3rem;
   height: 3rem;
-  border: var(--internal-border-color) solid 0.05rem;
+  border: var(--main-4) solid 0.05rem;
   border-radius: 3rem;
   margin-left: 1rem;
   margin-top: 1rem;
 }
 
 .settingUserName {
-  color: var(--text-color);
+  color: var(--main-0);
   margin-left: 0.5rem;
   font-size: 1rem;
   margin-top: 1.8rem;
@@ -87,8 +87,8 @@
   width: 2rem;
   height: 2rem;
   margin-left: 0.33rem;
-  background-color: var(--button-color);
-  border: var(--external-border-color) solid 0.07rem;
+  background-color: var(--main-2);
+  border: var(--main-5) solid 0.07rem;
   transition: 0.15s ease-out;
   border-radius: 0.33rem;
   user-select: none;
@@ -101,7 +101,7 @@
 
 .openSettingsButton:hover {
   transition: 0.15s ease-out;
-  background-color: var(--button-hover-color);
+  background-color: var(--main-3);
 }
 
 .openSettingsButton:hover > svg {
@@ -111,12 +111,12 @@
 
 .openSettingsButton:active {
   transition: 0.05s ease-out;
-  background-color: var(--button-active-color);
+  background-color: var(--main-3);
   box-shadow: none;
 }
 
 .openSettingsButtonIcon {
-  color: var(--svg-color);
+  color: var(--main-0);
   width: 1.3rem;
   height: 1.3rem;
   user-select: none;

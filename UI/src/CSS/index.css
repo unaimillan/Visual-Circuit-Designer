@@ -4,7 +4,7 @@ body {
   font-family: Montserrat, serif;
   font-size: 13px;
   font-weight: 600;
-  background-color: var(--canvas-bg-color);
+  background-color: var(--main-1);
 }
 
 #app {

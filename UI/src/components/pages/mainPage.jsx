@@ -475,8 +475,8 @@ export default function Main() {
         >
           <Background
             offset={[10.5, 5]}
-            bgColor="var(--canvas-bg-color)"
-            color="var(--canvas-color)"
+            bgColor="var(--main-1)"
+            color="var(--main-4)"
             gap={GAP_SIZE}
             size={0.8}
             variant={variant}
@@ -485,9 +485,9 @@ export default function Main() {
           {showMinimap && (
             <MiniMap
               className="miniMap"
-              bgColor="var(--canvas-bg-color)"
-              maskColor="var(--minimap-mask-color)"
-              nodeColor="var(--minimap-node-color)"
+              bgColor="var(--main-3)"
+              maskColor="var(--mask)"
+              nodeColor="var(--mask)"
               position="top-right"
               style={{ borderRadius: "0.5rem" }}
             />
@@ -499,12 +499,12 @@ export default function Main() {
           position="top-center"
           toastOptions={{
             style: {
-              backgroundColor: "var(--menu-bg-color)",
-              color: "var(--text-color)",
+              backgroundColor: "var(--main-1)",
+              color: "var(--main-0)",
               fontSize: "12px",
               borderRadius: "0.5rem",
               padding: "10px 25px 10px 10px",
-              border: "0.05rem solid var(--external-border-color)",
+              border: "0.05rem solid var(--main-5)",
               fontFamily: "Montserrat, serif",
 
             },
