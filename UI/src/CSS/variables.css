@@ -9,9 +9,6 @@
 
   /*--main-gradient: linear-gradient(0deg, var(--main-1), hsl());*/
 
-
-
-
   /*Select colors*/
   --select-1: hsl(210, 60%, 87%);
   --select-2: hsl(210, 80%, 80%);
@@ -60,16 +57,18 @@
   --switch-bg-color: hsl(0, 0%, 33%);
   --mask: hsla(0, 0%, 100%, 0.1);
 
-  --border-gradient: linear-gradient(180deg,
+  --border-gradient: linear-gradient(
+    180deg,
     hsl(0, 0%, 24%) 0%,
     hsl(0, 0%, 14%) 0.8rem,
     hsl(0, 0%, 10%) 100%
   );
 
-  --main-gradient: linear-gradient(180deg,
-  var(--main-3) 0%,
-  var(--main-2) 0.5rem,
-  var(--main-2) 100%
+  --main-gradient: linear-gradient(
+    180deg,
+    var(--main-3) 0%,
+    var(--main-2) 0.5rem,
+    var(--main-2) 100%
   );
 }
 

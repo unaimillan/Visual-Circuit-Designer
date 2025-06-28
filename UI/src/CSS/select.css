@@ -18,7 +18,8 @@ button {
   transition: 0.06s ease;
 
   border: transparent solid 0.05rem;
-  background-image: linear-gradient(var(--main-2),var(--main-2)), var(--border-gradient);
+  background-image:
+    linear-gradient(var(--main-2), var(--main-2)), var(--border-gradient);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }

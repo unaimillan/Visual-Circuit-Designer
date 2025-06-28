@@ -18,7 +18,6 @@
     backdrop-filter 0.15s ease-in-out,
     opacity 0.15s ease-in-out;
 
-
   border: transparent solid 0.05rem;
   background-image: var(--main-gradient), var(--border-gradient);
   background-origin: border-box;
@@ -58,7 +57,8 @@
   border-radius: 0.5rem;
 
   border: transparent solid 0.05rem;
-  background-image: linear-gradient(var(--main-3),var(--main-3)), var(--border-gradient);
+  background-image:
+    linear-gradient(var(--main-3), var(--main-3)), var(--border-gradient);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
@@ -116,7 +116,8 @@
   transition: 0.15s ease-out;
   background-color: var(--main-3);
   border: transparent solid 0.05rem;
-  background-image: linear-gradient(var(--main-3),var(--main-3)), var(--border-gradient);
+  background-image:
+    linear-gradient(var(--main-3), var(--main-3)), var(--border-gradient);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
@@ -131,7 +132,8 @@
   background-color: var(--main-3);
   box-shadow: none;
   border: transparent solid 0.05rem;
-  background-image: linear-gradient(var(--main-3),var(--main-3)), var(--border-gradient);
+  background-image:
+    linear-gradient(var(--main-3), var(--main-3)), var(--border-gradient);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
