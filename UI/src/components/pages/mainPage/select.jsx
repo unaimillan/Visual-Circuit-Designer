@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Select } from "radix-ui";
+import {LOG_LEVELS} from "../../codeComponents/logger.jsx";
 import classnames from "classnames";
 import {
   CheckIcon,
@@ -76,4 +77,30 @@ const SelectItem = React.forwardRef(
       </Select.Item>
     );
   },
+);
+
+
+export const SelectLogLevel = ({ currentLogLevel, setCurrentLogLevel }) => (
+  <Select.Root value={currentLogLevel} onValueChange={setCurrentLogLevel}>
+    <Select.Trigger className="SelectTrigger" aria-label="Food">
+      <Select.Value placeholder="Select theme" />
+      <Select.Icon className="SelectIcon">
+        <ChevronDownIcon />
+      </Select.Icon>
+    </Select.Trigger>
+    <Select.Portal>
+      <Select.Content className="SelectContent">
+        <Select.ScrollUpButton className="SelectScrollButton">
+          <ChevronUpIcon />
+        </Select.ScrollUpButton>
+        <Select.Viewport className="SelectViewport">
+          <Select.Group>
+            <SelectItem value={LOG_LEVELS.ERROR}>Critical</SelectItem>
+            <SelectItem value={LOG_LEVELS.IMPORTANT}>Info</SelectItem>
+            <SelectItem value={LOG_LEVELS.DEBUG}>Debug</SelectItem>
+          </Select.Group>
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Portal>
+  </Select.Root>
 );

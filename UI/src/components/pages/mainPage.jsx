@@ -21,14 +21,16 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
+
 import ContextMenu from "../codeComponents/ContextMenu.jsx";
 
 import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
 import { initialEdges } from "../codeComponents/edges.js";
 import { MinimapSwitch } from "./mainPage/switch.jsx";
-import { SelectCanvasBG, SelectTheme } from "./mainPage/select.jsx";
+import {SelectCanvasBG, SelectLogLevel, SelectTheme} from "./mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
 import UserIcon from "../../../assets/userIcon.png";
@@ -39,9 +41,7 @@ import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
-import { LOG_LEVELS, showToast } from "../codeComponents/logger.jsx";
-import * as events from "node:events";
-let simulateState = "idle";
+import {showToast, setCurrentLogLevel, getCurrentLogLevel} from "../codeComponents/logger.jsx";
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -62,6 +62,9 @@ export function useSimulateState() {
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 1;
+
+
+
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -86,6 +89,14 @@ export default function Main() {
   const [panOnDrag, setPanOnDrag] = useState([2]);
 
   const socketRef = useRef(null);
+
+  const fileInputRef = useRef(null);
+
+  const handleOpenClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   //Load saved settings from localStorage
   useEffect(() => {
@@ -134,23 +145,6 @@ export default function Main() {
     circuitsMenuState,
   ]);
 
-  const fileInputRef = useRef(null);
-
-  const loadCircuit2 = (event) => {
-    const file = event.target?.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        console.log("Данные схемы:", data);
-      } catch (err) {
-        console.error("Ошибка при чтении JSON:", err);
-      }
-    };
-    reader.readAsText(file);
-  };
 
   //Hotkeys handler
   useEffect(() => {
@@ -184,10 +178,11 @@ export default function Main() {
         return;
       }
 
+      //Ctrl + Shift + O - Load file
       if (isCtrlOrCmd && e.key.toLowerCase() === "o") {
         e.preventDefault();
 
-        fileInputRef.current?.click();
+        handleOpenClick();
 
         return;
       }
@@ -600,7 +595,8 @@ export default function Main() {
               minimapToggle={setShowMinimap}
             />
           </div>
-          <div className="backgroundVariantBlock">
+
+          <div className="selectBlock">
             <p className="selectCanvasBG">Canvas background</p>
             <SelectCanvasBG
               currentBG={currentBG}
@@ -608,7 +604,7 @@ export default function Main() {
               className="selectBG"
             />
           </div>
-          <div className="backgroundVariantBlock">
+          <div className="selectBlock">
             <p className="minimapSwitchLabel">Theme</p>
             <SelectTheme
               theme={theme}
@@ -616,13 +612,15 @@ export default function Main() {
               className="selectTheme"
             />
           </div>
-          <button onClick={saveCircuit}>Save Circuit</button>
-          <input
-            type="file"
-            accept=".json"
-            onChange={loadCircuit}
-            style={{ marginTop: "10px" }}
-          />
+
+          <div className="selectBlock">
+            <p className="minimapSwitchLabel">Log verbosity</p>
+            <SelectLogLevel
+              currentLogLevel={getCurrentLogLevel()}
+              setCurrentLogLevel={setCurrentLogLevel}
+              className="selectTheme"
+            />
+          </div>
         </div>
 
         <CircuitsMenu
@@ -643,6 +641,9 @@ export default function Main() {
           setPanOnDrag={setPanOnDrag}
           setWireType={setWireType}
           saveCircuit={saveCircuit}
+          loadCircuit={loadCircuit}
+          fileInputRef={fileInputRef}
+          handleOpenClick={handleOpenClick}
           onSimulateClick={() =>
             handleSimulateClick({
               simulateState,

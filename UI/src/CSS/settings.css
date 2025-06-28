@@ -66,8 +66,7 @@
   height: 3rem;
   border: var(--main-4) solid 0.05rem;
   border-radius: 3rem;
-  margin-left: 1rem;
-  margin-top: 1rem;
+  margin: 0.95rem 0.5rem 0.95rem 0.95rem;
 }
 
 .settingUserName {
@@ -135,8 +134,7 @@
   padding: 0.5rem 0;
 }
 
-.backgroundVariantBlock {
-  /*border: black solid 1px;*/
+.selectBlock {
   font-size: 1rem;
   margin: 1rem 5%;
   user-select: none;

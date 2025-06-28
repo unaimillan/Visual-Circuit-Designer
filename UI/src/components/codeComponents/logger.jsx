@@ -10,6 +10,14 @@ export const LOG_LEVELS = {
 // Уровень логирования по умолчанию
 let currentLogLevel = LOG_LEVELS.ERROR;
 
+export function setCurrentLogLevel (logLevel) {
+  currentLogLevel = logLevel;
+}
+
+export function getCurrentLogLevel () {
+  return currentLogLevel;
+}
+
 export const logMessage = (msg, level = LOG_LEVELS.IMPORTANT) => {
   if (level <= currentLogLevel) {
     const levelLabel = Object.keys(LOG_LEVELS).find(

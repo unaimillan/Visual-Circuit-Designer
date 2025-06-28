@@ -1,4 +1,3 @@
-import React from "react";
 import {
   IconStop,
   IconLoading,
@@ -17,7 +16,9 @@ import {
   IconToolbarText,
 } from "../../../../assets/toolbar-icons.jsx";
 
+
 export default function Toolbar({
+
   simulateState,
   activeAction,
   setActiveAction,
@@ -29,7 +30,15 @@ export default function Toolbar({
   setWireType,
   onSimulateClick,
   saveCircuit,
+  loadCircuit,
+  fileInputRef,
+  handleOpenClick,
 }) {
+
+
+
+
+
   return (
     <div>
       <div className="toolbar">
@@ -146,15 +155,17 @@ export default function Toolbar({
 
         <div className="toolbar-separator"></div>
 
-        <button
-          className={`toolbarButton ${activeAction === "cursor" ? "active" : ""}`}
-          onClick={() => {
-            setActiveAction("cursor");
-            setPanOnDrag([2]);
-          }}
-        >
+        <button className={`toolbarButton `} onClick={handleOpenClick}>
           <IconOpenFile SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
+        <input
+          className={`hidden `}
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={loadCircuit}
+          style={{ display: "none" }}
+        />
       </div>
     </div>
   );
