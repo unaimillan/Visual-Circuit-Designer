@@ -1,7 +1,6 @@
 // noinspection DuplicatedCode
 import { useState, useRef, useEffect } from "react";
 import { useSimulateState } from "../../pages/mainPage.jsx";
-import { useSimulateState } from "../../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { Position } from "@xyflow/react";
 
