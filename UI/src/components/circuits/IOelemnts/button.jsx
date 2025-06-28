@@ -1,5 +1,4 @@
 // noinspection DuplicatedCode
-
 import { useState, useRef, useEffect } from "react";
 import { useSimulateState } from "../../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
@@ -70,5 +69,17 @@ function InputNodeButton({ id, isConnectable, data }) {
     </div>
   );
 }
+
+const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
+  return (
+    <div
+      className={`svg-button-wrapper ${disabled ? "disabled" : ""} ${pressed ? "pressed" : ""}`}
+      onPointerDownCapture={onPressDown}
+      onPointerUpCapture={onPressUp}
+    >
+      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`} />
+    </div>
+  );
+};
 
 export default InputNodeButton;
