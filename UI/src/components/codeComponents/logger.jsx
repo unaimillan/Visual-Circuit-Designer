@@ -10,11 +10,11 @@ export const LOG_LEVELS = {
 // Уровень логирования по умолчанию
 let currentLogLevel = LOG_LEVELS.ERROR;
 
-export function setCurrentLogLevel (logLevel) {
+export function setCurrentLogLevel(logLevel) {
   currentLogLevel = logLevel;
 }
 
-export function getCurrentLogLevel () {
+export function getCurrentLogLevel() {
   return currentLogLevel;
 }
 

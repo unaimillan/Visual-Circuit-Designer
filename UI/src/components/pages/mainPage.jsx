@@ -21,7 +21,6 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 
@@ -30,7 +29,11 @@ import ContextMenu from "../codeComponents/ContextMenu.jsx";
 import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
 import { initialEdges } from "../codeComponents/edges.js";
 import { MinimapSwitch } from "./mainPage/switch.jsx";
-import {SelectCanvasBG, SelectLogLevel, SelectTheme} from "./mainPage/select.jsx";
+import {
+  SelectCanvasBG,
+  SelectLogLevel,
+  SelectTheme,
+} from "./mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
 import UserIcon from "../../../assets/userIcon.png";
@@ -41,7 +44,11 @@ import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
-import {showToast, setCurrentLogLevel, getCurrentLogLevel} from "../codeComponents/logger.jsx";
+import {
+  showToast,
+  setCurrentLogLevel,
+  getCurrentLogLevel,
+} from "../codeComponents/logger.jsx";
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -62,9 +69,6 @@ export function useSimulateState() {
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 1;
-
-
-
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -144,7 +148,6 @@ export default function Main() {
     openSettings,
     circuitsMenuState,
   ]);
-
 
   //Hotkeys handler
   useEffect(() => {
