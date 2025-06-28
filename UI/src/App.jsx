@@ -11,6 +11,7 @@ import "./CSS/dnd.css";
 import "./CSS/backdrop.css";
 import "./CSS/circuitsMenu.css";
 import "./CSS/contextMenu.css";
+import "./CSS/button.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

@@ -1,5 +1,4 @@
 // noinspection DuplicatedCode
-
 import { useState, useRef, useEffect } from "react";
 import { useSimulateState } from "../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
@@ -47,18 +46,14 @@ function InputNodeButton({ id, isConnectable, data }) {
 
   return (
     <div className="circuit-button input">
-      <p className={"input-text"}>Button</p>
+      <p className="input-text">Button</p>
 
-      <div
-        className={`button-wrapper ${simulateState === `idle` ? "deactivated" : ""}`}
-        onPointerDownCapture={handlePressDown}
-        onPointerUpCapture={handlePressUp}
-      >
-        <button
-          draggable={false}
-          className={`button-icon ${inputState ? "clicked" : ""}`}
-        ></button>
-      </div>
+      <SvgButton
+        pressed={inputState}
+        onPressDown={handlePressDown}
+        onPressUp={handlePressUp}
+        disabled={simulateState === "idle"}
+      />
 
       <CustomHandle
         type="source"
@@ -70,5 +65,18 @@ function InputNodeButton({ id, isConnectable, data }) {
     </div>
   );
 }
+
+
+const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
+  return (
+    <div
+      className={`svg-button-wrapper ${disabled ? "disabled" : ""} ${pressed ? "pressed" : ""}`}
+      onPointerDownCapture={onPressDown}
+      onPointerUpCapture={onPressUp}
+    >
+      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`} />
+    </div>
+  );
+};
 
 export default InputNodeButton;

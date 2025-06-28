@@ -537,7 +537,7 @@ export default function Main() {
           position="top-center"
           toastOptions={{
             style: {
-              backgroundColor: "var(--main-1)",
+              backgroundColor: "var(--main-2)",
               color: "var(--main-0)",
               fontSize: "12px",
               borderRadius: "0.5rem",

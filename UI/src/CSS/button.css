@@ -1,0 +1,35 @@
+.svg-button-wrapper {
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid #aaa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: opacity 0.3s ease, padding 0.3s ease;
+}
+
+.svg-button-wrapper.disabled {
+    pointer-events: none;
+}
+
+.svg-button-inner {
+    width: 100%;
+    height: 100%;
+    background-color: #007bff; /* синий */
+    border-radius: 50%;
+    transition: transform 0.1s ease, background-color 0.3s ease;
+    transform: scale(1) translateX(0.22px) translateY(0.22px);
+}
+
+.svg-button-wrapper.pressed{
+    transition: opacity 0.3s ease, padding 0.3s ease;
+}
+
+.svg-button-inner.pressed {
+    background-color: #888; /* серый */
+    transform: scale(0.9); /* эффект прожатия */
+}
