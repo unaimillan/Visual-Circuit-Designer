@@ -16,9 +16,7 @@ import {
   IconToolbarText,
 } from "../../../../assets/toolbar-icons.jsx";
 
-
 export default function Toolbar({
-
   simulateState,
   activeAction,
   setActiveAction,
@@ -34,11 +32,6 @@ export default function Toolbar({
   fileInputRef,
   handleOpenClick,
 }) {
-
-
-
-
-
   return (
     <div>
       <div className="toolbar">

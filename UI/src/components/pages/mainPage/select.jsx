@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Select } from "radix-ui";
-import {LOG_LEVELS} from "../../codeComponents/logger.jsx";
+import { LOG_LEVELS } from "../../codeComponents/logger.jsx";
 import classnames from "classnames";
 import {
   CheckIcon,
@@ -78,7 +78,6 @@ const SelectItem = React.forwardRef(
     );
   },
 );
-
 
 export const SelectLogLevel = ({ currentLogLevel, setCurrentLogLevel }) => (
   <Select.Root value={currentLogLevel} onValueChange={setCurrentLogLevel}>
