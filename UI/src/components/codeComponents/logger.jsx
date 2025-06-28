@@ -8,7 +8,7 @@ export const LOG_LEVELS = {
 };
 
 // Уровень логирования по умолчанию
-let currentLogLevel = LOG_LEVELS.DEBUG;
+let currentLogLevel = LOG_LEVELS.ERROR;
 
 export const logMessage = (msg, level = LOG_LEVELS.IMPORTANT) => {
   if (level <= currentLogLevel) {

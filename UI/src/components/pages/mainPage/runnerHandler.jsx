@@ -17,6 +17,8 @@ export const handleSimulateClick = ({
   nodes,
   edges,
 }) => {
+
+
   if (simulateState === "awaiting") {
     showToast("Cancelled connecting", "🟡", LOG_LEVELS.DEBUG);
 

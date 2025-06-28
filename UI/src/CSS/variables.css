@@ -32,11 +32,11 @@
 }
 
 [data-theme="dark"] {
-  --main-1: hsl(0, 0%, 5%);
-  --main-2: hsl(0, 0%, 8%);
-  --main-3: hsl(0, 0%, 12%);
-  --main-4: hsl(0, 0%, 16%);
-  --main-5: hsl(0, 0%, 20%);
+  --main-1: hsl(0, 0%, 7%);
+  --main-2: hsl(0, 0%, 10%);
+  --main-3: hsl(0, 0%, 14%);
+  --main-4: hsl(0, 0%, 18%);
+  --main-5: hsl(0, 0%, 23%);
   --main-0: hsl(0, 0%, 100%);
 
   --select-1: hsl(220, 35%, 25%);
@@ -55,7 +55,7 @@
   --status-error-2: hsl(0, 70%, 80%);
 
   --switch-bg-color: hsl(0, 0%, 33%);
-  --mask: hsla(0, 0%, 100%, 0.1);
+  --mask: hsla(0, 0%, 60%, 0.1);
 }
 
 [data-theme="pick-me"] {

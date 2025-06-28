@@ -132,3 +132,8 @@
   color: var(--status-error-2);
   transform: scale(1.1);
 }
+
+
+.toolbar.download{
+  right: 21.63rem;
+}
