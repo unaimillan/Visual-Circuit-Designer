@@ -1,17 +1,22 @@
 import { io } from "socket.io-client";
 import { updateOutputStates } from "../../codeComponents/outputStateManager.js";
-import { showToast, showToastError, logMessage, LOG_LEVELS } from "../../codeComponents/logger.jsx";
+import {
+  showToast,
+  showToastError,
+  logMessage,
+  LOG_LEVELS,
+} from "../../codeComponents/logger.jsx";
 
 let allInputStates = {};
 let sendInputStates = null;
 
 export const handleSimulateClick = ({
-                                      simulateState,
-                                      setSimulateState,
-                                      socketRef,
-                                      nodes,
-                                      edges,
-                                    }) => {
+  simulateState,
+  setSimulateState,
+  socketRef,
+  nodes,
+  edges,
+}) => {
   if (simulateState === "awaiting") {
     showToast("Cancelled connecting", "🟡", LOG_LEVELS.DEBUG);
 
@@ -57,7 +62,11 @@ export const handleSimulateClick = ({
 
       sendInputStates = (changedInputs) => {
         if (!socketRef.current) {
-          showToast("Cannot send input states, socket not connected", "⚠️", LOG_LEVELS.DEBUG);
+          showToast(
+            "Cannot send input states, socket not connected",
+            "⚠️",
+            LOG_LEVELS.DEBUG,
+          );
           return;
         }
 
@@ -160,7 +169,11 @@ export const handleSimulateClick = ({
 
 export const updateInputState = (nodeId, value) => {
   if (!sendInputStates) {
-    showToast("Cannot update input state: simulation not running", "⚠️", LOG_LEVELS.DEBUG);
+    showToast(
+      "Cannot update input state: simulation not running",
+      "⚠️",
+      LOG_LEVELS.DEBUG,
+    );
     return;
   }
 

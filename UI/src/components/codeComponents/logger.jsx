@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import {IconCloseCross} from "../../../assets/ui-icons.jsx";
+import { IconCloseCross } from "../../../assets/ui-icons.jsx";
 
 export const LOG_LEVELS = {
   ERROR: 0,
@@ -21,27 +21,30 @@ export const logMessage = (msg, level = LOG_LEVELS.IMPORTANT) => {
 
 export const showToast = (msg, icon = "ℹ️", level = LOG_LEVELS.IMPORTANT) => {
   if (level <= currentLogLevel) {
-    toast((t) => (
-      <div className={'toast-notification'}>
-        <div style={{ flex: 1, wordBreak: "break-word" }}>{msg}</div>
-        <button
-          onClick={() => toast.dismiss(t.id)}
-          className={"close-cross"}
-        >
-          <IconCloseCross/>
-        </button>
-      </div>
-    ), { duration: '500', icon: icon});
+    toast(
+      (t) => (
+        <div className={"toast-notification"}>
+          <div style={{ flex: 1, wordBreak: "break-word" }}>{msg}</div>
+          <button onClick={() => toast.dismiss(t.id)} className={"close-cross"}>
+            <IconCloseCross />
+          </button>
+        </div>
+      ),
+      { duration: "500", icon: icon },
+    );
   }
 };
 
 export const showToastError = (msg) => {
-  toast.error((t) => (
-    <div className={'toast-notification'}>
-      <div style={{ flex: 1, wordBreak: "break-word" }}>{msg}</div>
-      <button className={"close-cross"} onClick={() => toast.dismiss(t.id)}>
-        <IconCloseCross/>
-      </button>
-    </div>
-  ), { duration: '1000'});
+  toast.error(
+    (t) => (
+      <div className={"toast-notification"}>
+        <div style={{ flex: 1, wordBreak: "break-word" }}>{msg}</div>
+        <button className={"close-cross"} onClick={() => toast.dismiss(t.id)}>
+          <IconCloseCross />
+        </button>
+      </div>
+    ),
+    { duration: "1000" },
+  );
 };
