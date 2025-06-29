@@ -16,6 +16,7 @@
     "radix-ui": "^1.4.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.5.2",
     "react-infinite-canvas": "3.4.1",
     "react-router-dom": "^7.6.2",
     "reactflow": "^11.11.4",
