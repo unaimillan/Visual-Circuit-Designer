@@ -586,13 +586,15 @@ export default function Main() {
               style={{ borderRadius: "0.5rem" }}
             />
           )}
-          {menu && menu.type === "node" && (
-            <NodeContextMenu onClick={onPaneClick} {...menu} />
-          )}
-          {menu && menu.type === "edge" && (
-            <EdgeContextMenu onClick={onPaneClick} {...menu} />
-          )}
         </ReactFlow>
+
+        {menu && menu.type === "node" && (
+          <NodeContextMenu onClick={onPaneClick} {...menu} />
+        )}
+
+        {menu && menu.type === "edge" && (
+          <EdgeContextMenu onClick={onPaneClick} {...menu} />
+        )}
 
         <Toaster
           position="top-center"
@@ -634,9 +636,9 @@ export default function Main() {
         </button>
 
         <div
-          className={`backdrop ${openSettings ? "cover" : ""}`}
+          className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
           onClick={() => {
-            // setMenu(null);
+            setMenu(null);
             setOpenSettings(false);
           }}
         />
