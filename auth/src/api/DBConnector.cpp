@@ -2,17 +2,17 @@
 
 #include "UserCredentials.hpp"
 
+#include <Poco/Data/AbstractBinder.h>
+#include <Poco/Data/AbstractExtractor.h>
+#include <Poco/Data/AbstractPreparator.h>
 #include <Poco/Data/PostgreSQL/PostgreSQLException.h>
 #include <Poco/Data/Statement.h>
+#include <Poco/Data/TypeHandler.h>
 #include <Poco/Exception.h>
 #include <Poco/Util/Application.h>
 #include <cstring>
 #include <regex>
 #include <string>
-#include <Poco/Data/TypeHandler.h>
-#include <Poco/Data/AbstractBinder.h>
-#include <Poco/Data/AbstractExtractor.h>
-#include <Poco/Data/AbstractPreparator.h>
 
 using Poco::Data::Statement;
 using namespace Poco::Data::Keywords;
@@ -53,20 +53,22 @@ void DBConnector::createUser(UserCredentials user) {
   }
 }
 
-UserCredentials DBConnector::findUserWithCredentials(const std::string& login) {
-  Statement sql(m_db);
-  std::string clogin = login;
+UserCredentials DBConnector::findUserWithCredentials(std::string const& login) {
+  Statement       sql(m_db);
+  std::string     clogin = login;
   UserCredentials user;
 
   try {
-    sql << "SELECT id, username, email, name, created_at, password_hash, salt FROM users WHERE username = $1 OR email = $1", into(user), use(clogin);
+    sql << "SELECT id, username, email, name, created_at, password_hash, salt "
+           "FROM users WHERE username = $1 OR email = $1",
+        into(user), use(clogin);
 
     sql.execute();
-  } catch (const Poco::Exception& e) {
+  } catch (Poco::Exception const& e) {
     Poco::Util::Application::instance().logger().error(
-      "[ERROR] DBConnector::findUser: Exception %s:\n%s",
-      std::string(e.className()),
-      e.displayText()
+        "[ERROR] DBConnector::findUser: Exception %s:\n%s",
+        std::string(e.className()),
+        e.displayText()
     );
     throw;
   }

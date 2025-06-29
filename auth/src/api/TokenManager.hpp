@@ -1,16 +1,19 @@
 #pragma once
 
+#include "User.hpp"
+
 #include <Poco/JWT/Signer.h>
 #include <string>
-#include "User.hpp"
 
 using Poco::JWT::Signer;
 
 class TokenManager {
 public:
-    TokenManager();
+  TokenManager();
+
 public:
-    std::string generate(const User& user);
+  std::string generate(User const& user);
+
 private:
-    Signer m_signer;
+  Signer m_signer;
 };

@@ -2,9 +2,9 @@
 
 #include "DBConnector.hpp"
 #include "TokenManager.hpp"
+#include "handlers/LoginHandler.hpp"
 #include "handlers/NotFoundHandler.hpp"
 #include "handlers/RegistrationHandler.hpp"
-#include "handlers/LoginHandler.hpp"
 
 #include <Poco/Net/HTTPRequestHandler.h>
 #include <Poco/Net/HTTPServerRequest.h>
@@ -12,8 +12,11 @@
 using Poco::Net::HTTPRequestHandler;
 using Poco::Net::HTTPServerRequest;
 
-AuthRequestHandlerFactory::AuthRequestHandlerFactory(DBConnector& db, TokenManager& tokenManager)
-    : m_db(db), m_tokenManager(tokenManager) {}
+AuthRequestHandlerFactory::AuthRequestHandlerFactory(
+    DBConnector& db, TokenManager& tokenManager
+)
+    : m_db(db)
+    , m_tokenManager(tokenManager) {}
 
 HTTPRequestHandler*
 AuthRequestHandlerFactory::createRequestHandler(HTTPServerRequest const& request

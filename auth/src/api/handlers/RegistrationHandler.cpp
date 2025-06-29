@@ -44,24 +44,24 @@ void RegistrationHandler::handleRequest(
     response.send();
   } else {
     try {
-        Parser          parser;
-        PasswordHasher  hasher;
-        UserCredentials newUser;
-        Var             result     = parser.parse(request.stream());
-        Object::Ptr     JSONObject = result.extract< Object::Ptr >();
+      Parser          parser;
+      PasswordHasher  hasher;
+      UserCredentials newUser;
+      Var             result     = parser.parse(request.stream());
+      Object::Ptr     JSONObject = result.extract< Object::Ptr >();
 
-        newUser.name         = JSONObject->getValue< std::string >("name");
-        newUser.username     = JSONObject->getValue< std::string >("username");
-        newUser.email        = JSONObject->getValue< std::string >("email");
-        newUser.salt         = hasher.genSalt();
-        newUser.passwordHash = hasher.encryptPassword(
-            JSONObject->getValue< std::string >("password"), newUser.salt
-        );
+      newUser.name         = JSONObject->getValue< std::string >("name");
+      newUser.username     = JSONObject->getValue< std::string >("username");
+      newUser.email        = JSONObject->getValue< std::string >("email");
+      newUser.salt         = hasher.genSalt();
+      newUser.passwordHash = hasher.encryptPassword(
+          JSONObject->getValue< std::string >("password"), newUser.salt
+      );
 
-        m_db.createUser(newUser);
+      m_db.createUser(newUser);
 
-        response.setStatusAndReason(HTTPResponse::HTTP_CREATED);
-        response.send();
+      response.setStatusAndReason(HTTPResponse::HTTP_CREATED);
+      response.send();
     } catch (UsernameExistsException const& e) {
       std::string error = "username exists";
       response.setContentLength(error.length());

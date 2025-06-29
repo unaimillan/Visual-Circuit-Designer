@@ -13,7 +13,7 @@ public:
 
   void createUser(UserCredentials user);
 
-  UserCredentials findUserWithCredentials(const std::string& login);
+  UserCredentials findUserWithCredentials(std::string const& login);
 
 private:
   Session& m_db;

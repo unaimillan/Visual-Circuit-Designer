@@ -39,7 +39,9 @@ int AppAuthServer::main(std::vector< std::string > const& args) {
 
   ServerSocket socket(port);
   HTTPServer   httpServer(
-      new AuthRequestHandlerFactory(db, tokenManager), socket, new HTTPServerParams
+      new AuthRequestHandlerFactory(db, tokenManager),
+      socket,
+      new HTTPServerParams
   );
 
   httpServer.start();

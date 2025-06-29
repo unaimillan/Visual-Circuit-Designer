@@ -17,6 +17,6 @@ public:
   ) override;
 
 private:
-  DBConnector& m_db;
+  DBConnector&  m_db;
   TokenManager& m_tokenManager;
 };
