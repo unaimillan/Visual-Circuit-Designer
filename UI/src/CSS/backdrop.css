@@ -14,9 +14,6 @@
 }
 
 .backdrop.cover {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный черный */
@@ -26,4 +23,9 @@
     height 0s,
     background-color 0.15s ease,
     backdrop-filter 0.15s ease;
+}
+
+.backdrop.show {
+  width: 100%;
+  height: 100%;
 }

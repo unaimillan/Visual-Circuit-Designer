@@ -22,10 +22,7 @@ export default function Toolbar({
   setActiveAction,
   activeWire,
   setActiveWire,
-  activeButton,
-  setActiveButton,
   setPanOnDrag,
-  setWireType,
   onSimulateClick,
   saveCircuit,
   loadCircuit,
@@ -93,10 +90,9 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button
-          className={`toolbarButton ${activeWire === "stepWire" ? "active" : ""}`}
+          className={`toolbarButton ${activeWire === "step" ? "active" : ""}`}
           onClick={() => {
-            setActiveWire("stepWire");
-            setWireType("step");
+            setActiveWire("step");
           }}
         >
           <IconToolbarSquareWire
@@ -106,10 +102,9 @@ export default function Toolbar({
         </button>
 
         <button
-          className={`toolbarButton ${activeWire === "straightWire" ? "active" : ""}`}
+          className={`toolbarButton ${activeWire === "straight" ? "active" : ""}`}
           onClick={() => {
-            setActiveWire("straightWire");
-            setWireType("straight");
+            setActiveWire("straight");
           }}
         >
           <IconToolbarDiagWire
@@ -121,8 +116,8 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button
-          className={`toolbarButton ${activeButton === "eraser" ? "active" : ""}`}
-          onClick={() => setActiveButton("eraser")}
+          className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
+          onClick={() => setActiveAction("eraser")}
         >
           <IconToolbarEraser
             SVGClassName="toolbarButtonIcon"
@@ -131,8 +126,8 @@ export default function Toolbar({
         </button>
 
         <button
-          className={`toolbarButton ${activeButton === "text" ? "active" : ""}`}
-          onClick={() => setActiveButton("text")}
+          className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
+          onClick={() => setActiveAction("text")}
         >
           <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>

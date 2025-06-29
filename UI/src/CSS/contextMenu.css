@@ -2,8 +2,8 @@
   background: var(--main-2);
   border: 1px solid var(--main-5);
   border-radius: 0.5rem;
-  position: absolute;
-  z-index: 10;
+  position: fixed;
+  z-index: 2001;
   width: 8rem;
   color: var(--main-0);
 }
@@ -21,7 +21,7 @@
 }
 
 .contextMenuButton:hover {
-  background: var(--button-hover-color);
+  background: var(--select-1);
 }
 
 .selectWireType {
