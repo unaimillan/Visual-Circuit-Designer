@@ -51,7 +51,7 @@ async def internal_simulation_error(sid, data):
 
 
 @sio.on("run_simulation")
-async def run_simulation(sid, circuit_data):
+async def run_simulation(sid, circuit_data=None):
     if sid in user_simulations:
         await sio.emit("error", {"msg": "Simulation already running"}, room=sid)
         return
@@ -62,8 +62,11 @@ async def run_simulation(sid, circuit_data):
 
     try:
         verilog_code = generate_verilog_from_json(circuit_data)
+    except TypeError:
+        await sio.emit("error", {"msg": f"Invalid type of circuit data. Expected 'dict', got {type(circuit_data)}"}, room=sid)
+        return
     except Exception as e:
-        await sio.emit("error", {"msg": str(e)}, room=sim_id)
+        await sio.emit("error", {"msg": str(e)}, room=sid)
         return
 
     verilog_path = os.path.join(sim_path, "dut.v")
