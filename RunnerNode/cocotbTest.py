@@ -72,7 +72,7 @@ async def interactive_test(dut):
             sio.emit("simulation_outputs", {"user_sid": user_sid, "outputs": outputs})
 
         except queue.Empty:
-            await Timer(100, units="us")
+            await Timer(10, units="us")
 
     sio.disconnect()
 

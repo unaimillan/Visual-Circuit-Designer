@@ -44,16 +44,23 @@ export const handleSimulateClick = ({
   }
 
   if (simulateState === "idle") {
+    console.log("[Simulation] 🚀 Starting simulation (awaiting connection)");
     setSimulateState("awaiting");
 
-    const inputNodes = nodes.filter((node) => node.type === "inputNode");
+    const inputNodes = nodes.filter(
+      (node) =>
+        node.type === "inputNode" ||
+        node.type === "inputNodeSwitch" ||
+        node.type === "inputNodeButton",
+    );
+
     allInputStates = {};
     inputNodes.forEach((node) => {
       const val = node.data.value;
       allInputStates[node.id] = val === 1 || val === "1" ? 1 : 0;
     });
 
-    // Инициализация сокета
+    // Initialize socket connection
     if (!socketRef.current) {
       socketRef.current = io("http://localhost:8000", {
         transports: ["websocket"],
@@ -80,29 +87,19 @@ export const handleSimulateClick = ({
       socketRef.current.on("ready", () => {
         showToast("Connected to the runner", "✅", LOG_LEVELS.DEBUG);
         setSimulateState("running");
+      });
 
-        // Отправляем начальные состояния после подключения
+      socketRef.current.on("simulation_ready", () => {
+        console.log("✅ Simulation is running");
+        setSimulateState("running");
+
         const initialStates = {};
         for (const nodeId in allInputStates) {
           initialStates[`in_${nodeId}`] = allInputStates[nodeId];
         }
-      });
 
-      socketRef.current.on("status", (data) => {
-        if (data.msg === "Simulation started") {
-          showToast("Connected to Runner", "🔌", LOG_LEVELS.IMPORTANT);
-          setSimulateState("running");
-
-          const initialStates = {};
-          for (const nodeId in allInputStates) {
-            initialStates[`in_${nodeId}`] = allInputStates[nodeId];
-          }
-
-          if (sendInputStates) {
-            sendInputStates(initialStates);
-          }
-        } else {
-          logMessage(`Simulation status: ${data.msg}`, LOG_LEVELS.DEBUG);
+        if (sendInputStates) {
+          sendInputStates(initialStates);
         }
       });
 
@@ -112,6 +109,7 @@ export const handleSimulateClick = ({
         updateOutputStates(data);
       });
 
+      // Handle errors
       socketRef.current.on("error", (data) => {
         showToastError(`Simulation error: ${data.msg}`);
 
@@ -181,7 +179,10 @@ export const updateInputState = (nodeId, value) => {
 
   const fullStatesToSend = {};
   for (const [id, val] of Object.entries(allInputStates)) {
-    fullStatesToSend[`in_${id}`] = val ? 1 : 0;
+    let valToSend;
+    if (val) valToSend = 1;
+    if (!val) valToSend = 0;
+    fullStatesToSend[`in_${id}`] = valToSend;
   }
 
   sendInputStates(fullStatesToSend);
