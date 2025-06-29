@@ -35,58 +35,59 @@ void RegistrationHandler::handleRequest(
       "POST /api/register from %s", request.clientAddress().toString()
   );
 
-  try {
-    if (!request.hasContentLength()) {
-      response.setStatusAndReason(HTTPResponse::HTTP_LENGTH_REQUIRED);
-      response.send();
-    } else if (request.getContentType() != "application/json") {
-      response.setStatusAndReason(HTTPResponse::HTTP_UNSUPPORTED_MEDIA_TYPE);
-      response.send();
-    } else {
-      Parser          parser;
-      PasswordHasher  hasher;
-      UserCredentials newUser;
-      Var             result     = parser.parse(request.stream());
-      Object::Ptr     JSONObject = result.extract< Object::Ptr >();
-
-      newUser.name         = JSONObject->getValue< std::string >("name");
-      newUser.username     = JSONObject->getValue< std::string >("username");
-      newUser.email        = JSONObject->getValue< std::string >("email");
-      newUser.salt         = hasher.genSalt();
-      newUser.passwordHash = hasher.encryptPassword(
-          JSONObject->getValue< std::string >("password"), newUser.salt
-      );
-
-      m_db.createUser(newUser);
-
-      response.setStatusAndReason(HTTPResponse::HTTP_CREATED);
-      response.send();
-    }
-  } catch (UsernameExistsException const& e) {
-    std::string error = "username exists";
-    response.setContentLength(error.length());
-    response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
-    response.send() << error;
-  } catch (EmailExistsException const& e) {
-    std::string error = "email exists";
-    response.setContentLength(error.length());
-    response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
-    response.send() << error;
-  } catch (Poco::LogicException const& e) {
-    response.setContentLength(e.message().length());
-    response.setStatusAndReason(HTTPResponse::HTTP_BAD_REQUEST);
-    response.send() << e.message();
-  } catch (Poco::JSON::JSONException const& e) {
-    response.setContentLength(e.message().length());
-    response.setStatusAndReason(HTTPResponse::HTTP_BAD_REQUEST);
-    response.send() << e.message();
-  } catch (Poco::Exception const& e) {
-    response.setStatusAndReason(HTTPResponse::HTTP_INTERNAL_SERVER_ERROR);
+  if (!request.hasContentLength()) {
+    response.setStatusAndReason(HTTPResponse::HTTP_LENGTH_REQUIRED);
     response.send();
-    logger.error(
-        "[ERROR] POST /api/register: Exception %s:\n%s\n",
-        std::string(e.className()),
-        e.displayText()
-    );
+  } else if (request.getContentType() != "application/json") {
+    response.set("Accept-Post", "application/json; charset=UTF-8");
+    response.setStatusAndReason(HTTPResponse::HTTP_UNSUPPORTED_MEDIA_TYPE);
+    response.send();
+  } else {
+    try {
+        Parser          parser;
+        PasswordHasher  hasher;
+        UserCredentials newUser;
+        Var             result     = parser.parse(request.stream());
+        Object::Ptr     JSONObject = result.extract< Object::Ptr >();
+
+        newUser.name         = JSONObject->getValue< std::string >("name");
+        newUser.username     = JSONObject->getValue< std::string >("username");
+        newUser.email        = JSONObject->getValue< std::string >("email");
+        newUser.salt         = hasher.genSalt();
+        newUser.passwordHash = hasher.encryptPassword(
+            JSONObject->getValue< std::string >("password"), newUser.salt
+        );
+
+        m_db.createUser(newUser);
+
+        response.setStatusAndReason(HTTPResponse::HTTP_CREATED);
+        response.send();
+    } catch (UsernameExistsException const& e) {
+      std::string error = "username exists";
+      response.setContentLength(error.length());
+      response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
+      response.send() << error;
+    } catch (EmailExistsException const& e) {
+      std::string error = "email exists";
+      response.setContentLength(error.length());
+      response.setStatusAndReason(HTTPResponse::HTTP_CONFLICT);
+      response.send() << error;
+    } catch (Poco::LogicException const& e) {
+      response.setContentLength(e.message().length());
+      response.setStatusAndReason(HTTPResponse::HTTP_BAD_REQUEST);
+      response.send() << e.message();
+    } catch (Poco::JSON::JSONException const& e) {
+      response.setContentLength(e.message().length());
+      response.setStatusAndReason(HTTPResponse::HTTP_BAD_REQUEST);
+      response.send() << e.message();
+    } catch (Poco::Exception const& e) {
+      response.setStatusAndReason(HTTPResponse::HTTP_INTERNAL_SERVER_ERROR);
+      response.send();
+      logger.error(
+          "[ERROR] POST /api/register: Exception %s:\n%s\n",
+          std::string(e.className()),
+          e.displayText()
+      );
+    }
   }
 }

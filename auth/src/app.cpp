@@ -2,6 +2,7 @@
 
 #include "api/AuthRequestHandlerFactory.hpp"
 #include "api/DBConnector.hpp"
+#include "api/TokenManager.hpp"
 
 #include <Poco/Data/PostgreSQL/Connector.h>
 #include <Poco/Data/Session.h>
@@ -32,11 +33,13 @@ int AppAuthServer::main(std::vector< std::string > const& args) {
   );
   DBConnector db(dbSession);
 
+  TokenManager tokenManager;
+
   Poco::UInt16 port = config().getUInt16("HTTP.port");
 
   ServerSocket socket(port);
   HTTPServer   httpServer(
-      new AuthRequestHandlerFactory(db), socket, new HTTPServerParams
+      new AuthRequestHandlerFactory(db, tokenManager), socket, new HTTPServerParams
   );
 
   httpServer.start();

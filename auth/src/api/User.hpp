@@ -3,9 +3,9 @@
 
 struct User {
 public:
-  int         id;
-  std::string username;
-  std::string email;
-  std::string name;
-  std::string createdAt;
+  int         id = -1;
+  std::string username = "";
+  std::string email = "";
+  std::string name = "";
+  std::string createdAt = "";
 };
