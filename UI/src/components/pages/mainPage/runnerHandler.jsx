@@ -47,10 +47,11 @@ export const handleSimulateClick = ({
     console.log("[Simulation] 🚀 Starting simulation (awaiting connection)");
     setSimulateState("awaiting");
 
-    const inputNodes = nodes.filter(node =>
-    node.type === 'inputNode' ||
-    node.type === 'inputNodeSwitch' ||
-    node.type === 'inputNodeButton'
+    const inputNodes = nodes.filter(
+      (node) =>
+        node.type === "inputNode" ||
+        node.type === "inputNodeSwitch" ||
+        node.type === "inputNodeButton",
     );
 
     allInputStates = {};
