@@ -18,7 +18,9 @@ using Poco::JWT::Token;
 TokenManager::TokenManager() {
   PasswordHasher hasher;
   m_signer.setHMACKey(hasher.genSalt());
-  Poco::Util::Application::instance().logger().information("JWT key: %s", m_signer.getHMACKey());
+  Poco::Util::Application::instance().logger().information(
+      "JWT key: %s", m_signer.getHMACKey()
+  );
 }
 
 std::string TokenManager::generate(User const& user) const {
@@ -50,9 +52,10 @@ std::string TokenManager::generate(User const& user) const {
   return tmp.rdbuf()->str();
 }
 
-bool TokenManager::verify(const std::string& token, Type type) const {
+bool TokenManager::verify(std::string const& token, Type type) const {
   Token decoded;
-  if (m_signer.tryVerify(token, decoded) && !decoded.getIssuedAt().isElapsed(15LL * 60000000LL)) {
+  if (m_signer.tryVerify(token, decoded) &&
+      !decoded.getIssuedAt().isElapsed(15LL * 60000000LL)) {
     switch (type) {
     case ACCESS: return decoded.getSubject() == "VCD JWT Access";
     case REFRESH: return decoded.getSubject() == "VCD JWT Refresh";
@@ -63,16 +66,16 @@ bool TokenManager::verify(const std::string& token, Type type) const {
   }
 }
 
-User TokenManager::getUser(const std::string& token) const {
-  User ret;
+User TokenManager::getUser(std::string const& token) const {
+  User  ret;
   Token decoded;
 
   if (m_signer.tryVerify(token, decoded)) {
-    ret.id = decoded.payload().getValue<int>("id");
-    ret.username = decoded.payload().getValue<std::string>("username");
-    ret.email = decoded.payload().getValue<std::string>("email");
-    ret.name = decoded.payload().getValue<std::string>("name");
-    ret.createdAt = decoded.payload().getValue<std::string>("createdAt");
+    ret.id        = decoded.payload().getValue< int >("id");
+    ret.username  = decoded.payload().getValue< std::string >("username");
+    ret.email     = decoded.payload().getValue< std::string >("email");
+    ret.name      = decoded.payload().getValue< std::string >("name");
+    ret.createdAt = decoded.payload().getValue< std::string >("createdAt");
   }
 
   return ret;

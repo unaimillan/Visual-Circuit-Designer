@@ -12,20 +12,17 @@ namespace Poco::JWT {}
 
 class TokenManager {
 public:
-  enum Type {
-    ACCESS,
-    REFRESH,
-    ANY
-  };
+  enum Type { ACCESS, REFRESH, ANY };
+
 public:
   TokenManager();
 
 public:
   std::string generate(User const& user) const;
 
-  bool verify(const std::string& token, Type type = ANY) const;
+  bool verify(std::string const& token, Type type = ANY) const;
 
-  User getUser(const std::string& token) const;
+  User getUser(std::string const& token) const;
 
 private:
   Signer m_signer;
