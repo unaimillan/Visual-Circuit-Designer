@@ -19,7 +19,7 @@ function InputNodeButton({ id, data, isConnectable }) {
     return positions[newIndex];
   };
 
-  const getHandleStyle = (handle) => {
+  const getHandleStyle = () => {
     switch (rotation) {
       case 90:
         return { top: 32, left: 59 };
