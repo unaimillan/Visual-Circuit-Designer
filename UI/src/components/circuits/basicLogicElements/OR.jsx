@@ -71,7 +71,7 @@ function OrNode({ id, data, isConnectable }) {
       <CustomHandle
         type="target"
         position={getHandlePosition(Position.Left)}
-        id="input-1"
+        id="input-2"
         style={getHandleStyle("input-2")}
         isConnectable={isConnectable}
         maxConnections={1}
