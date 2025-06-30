@@ -5,7 +5,6 @@
 #include <Poco/PBKDF2Engine.h>
 #include <Poco/SHA1Engine.h>
 #include <cstddef>
-#include <cstdint>
 
 using Poco::DigestEngine;
 using Poco::HMACEngine;
