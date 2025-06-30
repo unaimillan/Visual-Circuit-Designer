@@ -27,24 +27,27 @@ export default function NodeContextMenu({
     });
   }, [id, getNode, addNodes]);
 
-  const rotateNode = useCallback((angle) => {
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        if (node.id === id) {
-          const currentRotation = node.data?.rotation || 0;
-          const newRotation = (currentRotation + angle + 360) % 360;
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              rotation: newRotation,
-            },
-          };
-        }
-        return node;
-      })
-    );
-  }, [id, setNodes]);
+  const rotateNode = useCallback(
+    (angle) => {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === id) {
+            const currentRotation = node.data?.rotation || 0;
+            const newRotation = (currentRotation + angle + 360) % 360;
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                rotation: newRotation,
+              },
+            };
+          }
+          return node;
+        }),
+      );
+    },
+    [id, setNodes],
+  );
 
   const deleteNode = useCallback(() => {
     setNodes((nodes) => nodes.filter((node) => node.id !== id));

@@ -10,7 +10,12 @@ function InputNodeSwitch({ id, data, isConnectable }) {
   const updateNodeInternals = useUpdateNodeInternals();
 
   const getHandlePosition = (basePosition) => {
-    const positions = [Position.Top, Position.Right, Position.Bottom, Position.Left];
+    const positions = [
+      Position.Top,
+      Position.Right,
+      Position.Bottom,
+      Position.Left,
+    ];
     const currentIndex = positions.indexOf(basePosition);
     const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
     return positions[newIndex];
@@ -27,7 +32,7 @@ function InputNodeSwitch({ id, data, isConnectable }) {
       default:
         return { top: 40, left: 52 };
     }
-  }
+  };
 
   useEffect(() => {
     updateNodeInternals(id);
@@ -71,7 +76,7 @@ function InputNodeSwitch({ id, data, isConnectable }) {
         type="source"
         position={getHandlePosition(Position.Right)}
         id="output-1"
-        style={getHandleStyle('output-1')}
+        style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
     </div>

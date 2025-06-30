@@ -9,7 +9,12 @@ function OutputNodeLed({ id, data, isConnectable }) {
   const updateNodeInternals = useUpdateNodeInternals();
 
   const getHandlePosition = (basePosition) => {
-    const positions = [Position.Top, Position.Right, Position.Bottom, Position.Left];
+    const positions = [
+      Position.Top,
+      Position.Right,
+      Position.Bottom,
+      Position.Left,
+    ];
     const currentIndex = positions.indexOf(basePosition);
     const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
     return positions[newIndex];
@@ -26,7 +31,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
       default:
         return { top: 40, left: -1 };
     }
-  }
+  };
 
   useEffect(() => {
     updateNodeInternals(id);
@@ -60,7 +65,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
         type="target"
         position={getHandlePosition(Position.Left)}
         id="input-1"
-        style={getHandleStyle('input-1')}
+        style={getHandleStyle("input-1")}
         isConnectable={isConnectable}
         maxConnections={1}
       />
