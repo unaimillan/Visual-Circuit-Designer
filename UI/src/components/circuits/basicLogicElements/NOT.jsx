@@ -35,8 +35,8 @@ function NotNode({ id, data, isConnectable }) {
           : { top: 34.5, left: 79 };
       default:
         return handle === "input-1"
-          ? { top: 34, left: -1 }
-          : { top: 34, left: 72 };
+          ? { top: 35, left: -1 }
+          : { top: 35, left: 72 };
     }
   };
 
