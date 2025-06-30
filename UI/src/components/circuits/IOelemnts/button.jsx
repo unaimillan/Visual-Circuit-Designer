@@ -1,14 +1,40 @@
 // noinspection DuplicatedCode
 import { useState, useRef, useEffect } from "react";
+import { Position, useUpdateNodeInternals } from "@xyflow/react";
 import { useSimulateState } from "../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import { Position } from "@xyflow/react";
 
-function InputNodeButton({ id, isConnectable, data }) {
+function InputNodeButton({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
   const cooldownRef = useRef(false);
   const delay = 500;
+  const rotation = data.rotation || 0;
+  const updateNodeInternals = useUpdateNodeInternals();
+
+  const getHandlePosition = (basePosition) => {
+    const positions = [Position.Top, Position.Right, Position.Bottom, Position.Left];
+    const currentIndex = positions.indexOf(basePosition);
+    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
+    return positions[newIndex];
+  };
+
+  const getHandleStyle = (handle) => {
+    switch (rotation) {
+      case 90:
+        return { top: 32, left: 59 };
+      case 180:
+        return { top: 38.5, left: 59 };
+      case 270:
+        return { top: 39.5, left: 59 };
+      default:
+        return { top: 40, left: 52 };
+    }
+  }
+
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [rotation, id, updateNodeInternals]);
 
   useEffect(() => {
     setInputState(data.value || false);
@@ -45,7 +71,10 @@ function InputNodeButton({ id, isConnectable, data }) {
   };
 
   return (
-    <div className="circuit-button input">
+    <div
+      className="circuit-button input"
+      style={{ transform: `rotate(${rotation}deg)` }}
+    >
       <p className={"input-text"}>Button</p>
 
       <SvgButton
@@ -57,9 +86,9 @@ function InputNodeButton({ id, isConnectable, data }) {
 
       <CustomHandle
         type="source"
-        position={Position.Right}
+        position={getHandlePosition(Position.Right)}
         id="output-1"
-        style={{ top: 40, left: 52.2, zIndex: "1000000" }}
+        style={getHandleStyle('output-1')}
         isConnectable={isConnectable}
       />
     </div>
