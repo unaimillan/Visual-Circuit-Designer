@@ -1,7 +1,7 @@
-import { Position, useUpdateNodeInternals } from "@xyflow/react";
 import { useEffect, useState } from "react";
-import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
+import { Position, useUpdateNodeInternals } from "@xyflow/react";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
 
 function OutputNodeLed({ id, data, isConnectable }) {
   const [isActive, setIsActive] = useState(false);
@@ -31,7 +31,6 @@ function OutputNodeLed({ id, data, isConnectable }) {
   useEffect(() => {
     updateNodeInternals(id);
   }, [rotation, id, updateNodeInternals]);
-
 
   useEffect(() => {
     const outputId = `out_${id}`; // Пример: "out_output1"

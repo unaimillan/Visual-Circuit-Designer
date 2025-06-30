@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 import { useState, useRef, useEffect } from "react";
 import { Position, useUpdateNodeInternals } from "@xyflow/react";
-import { useSimulateState } from "../../pages/mainPage.jsx";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import { useSimulateState } from "../../pages/mainPage.jsx";
 
 function InputNodeButton({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
