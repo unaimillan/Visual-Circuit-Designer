@@ -25,18 +25,19 @@ import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
+import { Tabs, Tab, Card, CardBody } from "@heroui/react";
 
 import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
 import { initialEdges } from "../codeComponents/edges.js";
-import { MinimapSwitch } from "./mainPage/switch.jsx";
-import {
-  SelectCanvasBG,
-  SelectLogLevel,
-  SelectTheme,
-} from "./mainPage/select.jsx";
+// import { MinimapSwitch } from "./mainPage/switch.jsx";
+// import {
+//   SelectCanvasBG,
+//   SelectLogLevel,
+//   SelectTheme,
+// } from "./mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
-import UserIcon from "../../../assets/userIcon.png";
+
 
 import { Link } from "react-router-dom";
 
@@ -48,6 +49,7 @@ import {
   setCurrentLogLevel,
   getCurrentLogLevel,
 } from "../codeComponents/logger.jsx";
+import {Settings} from "./mainPage/settings.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -581,7 +583,7 @@ export default function Main() {
               className="miniMap"
               bgColor="var(--main-3)"
               maskColor="var(--mask)"
-              nodeColor="var(--mask)"
+              nodeColor="var(--main-4)"
               position="top-right"
               style={{ borderRadius: "0.5rem" }}
             />
@@ -642,51 +644,15 @@ export default function Main() {
             setOpenSettings(false);
           }}
         />
-        <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
-          <p className="settingsMenuTitle">Settings</p>
-          <Link
-            to="/profile"
-            className="openProfileButton"
-            style={{ textDecoration: "none" }}
-          >
-            <img className="settingUserIcon" src={UserIcon} alt="User" />
-            <span className="settingUserName">UserName</span>
-          </Link>
-          <div className="minimapSwitchBlock">
-            <p className="minimapSwitchLabel">Show mini-map</p>
-            <MinimapSwitch
-              className="minimapSwitch"
-              minimapState={showMinimap}
-              minimapToggle={setShowMinimap}
-            />
-          </div>
-
-          <div className="selectBlock">
-            <p className="selectCanvasBG">Canvas background</p>
-            <SelectCanvasBG
-              currentBG={currentBG}
-              setCurrentBG={setCurrentBG}
-              className="selectBG"
-            />
-          </div>
-          <div className="selectBlock">
-            <p className="minimapSwitchLabel">Theme</p>
-            <SelectTheme
-              theme={theme}
-              setTheme={setTheme}
-              className="selectTheme"
-            />
-          </div>
-
-          <div className="selectBlock">
-            <p className="minimapSwitchLabel">Log verbosity</p>
-            <SelectLogLevel
-              currentLogLevel={getCurrentLogLevel()}
-              setCurrentLogLevel={setCurrentLogLevel}
-              className="selectTheme"
-            />
-          </div>
-        </div>
+        <Settings
+          openSettings={openSettings}
+          showMinimap={showMinimap}
+          setShowMinimap={setShowMinimap}
+          currentBG={currentBG}
+          setCurrentBG={setCurrentBG}
+          theme={theme}
+          setTheme={setTheme}
+        />
 
         <CircuitsMenu
           circuitsMenuState={circuitsMenuState}
@@ -706,6 +672,8 @@ export default function Main() {
           loadCircuit={loadCircuit}
           fileInputRef={fileInputRef}
           handleOpenClick={handleOpenClick}
+          setMenu={setMenu}
+          setOpenSettings={setOpenSettings}
           onSimulateClick={() =>
             handleSimulateClick({
               simulateState,

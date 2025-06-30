@@ -1,48 +1,172 @@
-/*______settings______*/
 .settingsMenu {
+  display: flex;
   overflow: auto;
   position: fixed;
+  z-index: 2001;
+
   width: 0;
   height: 0;
   top: 0;
+  border-radius: 0.5rem;
+
   left: -100%;
-  z-index: 2001;
   opacity: 0;
-  /*left: 20%;*/
+
   background-color: var(--main-2);
   color: var(--main-0);
-  border-radius: 0.5rem;
   border: var(--main-5) solid 0.05rem;
+
   transition:
     width 1s 0.15s,
     height 1s 0.15s,
     background-color 0.15s ease-in-out,
     backdrop-filter 0.15s ease-in-out,
     opacity 0.15s ease-in-out;
+
+    &.showed{
+      width: 60%;
+      height: 80%;
+      opacity: 1;
+
+      top: 10%;
+      left: 20%;
+
+      transition:
+        width 0s,
+        height 0s,
+        background-color 0.2s ease-in-out,
+        backdrop-filter 0.2s ease-in-out,
+        opacity 0.2s ease-in-out;
+    }
 }
 
-.settingsMenu.showed {
+
+.openSettingsButton {
+  z-index: 501;
   position: fixed;
-  opacity: 1;
-  width: 70%;
-  height: 80%;
-  top: 10%;
-  left: 15%;
-  transition:
-    width 0s,
-    height 0s,
-    background-color 0.2s ease-in-out,
-    backdrop-filter 0.2s ease-in-out,
-    opacity 0.2s ease-in-out;
+  top: 0.5rem;
+  left: 2.64rem;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.33rem;
+  background-color: var(--main-2);
+  border: var(--main-5) solid 0.07rem;
+  transition: 0.15s ease-out;
+  border-radius: 0.33rem;
+  user-select: none;
+
+  &:hover {
+    transition: 0.15s ease-out;
+    background-color: var(--main-3);
+    & > svg {
+      transform: rotate(-60deg);
+    }
+  }
+
+  & > svg {
+    transition: 0.1s ease-in-out;
+    transform: rotate(0deg);
+  }
+
+  &:active{
+    background-color: var(--main-3);
+    transition: 0.05s ease-out;
+  }
 }
 
-.settingsMenuTitle {
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.6rem;
-  margin: 1.6rem 0 1.6rem 0;
-  user-select: none;
+
+.openSettingsButtonIcon {
+  color: var(--main-0);
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: auto;
+  display: block;
 }
+
+.settingBlock {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin: 1rem 5%;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+
+  & > p{
+    margin: 0;
+  }
+}
+
+.minimapSwitchLabel {
+  font-size: 1rem;
+  justify-content: flex-start;
+}
+
+.tabs-menu{
+  width: 25%;
+  height: 100%;
+  border-right: 0.05rem solid var(--main-4);
+  background-color: var(--main-2);
+}
+
+.tab-content{
+  width: 75%;
+  height: 100%;
+  left: 25%;
+  background-color: var(--main-3);
+}
+
+.settings-tab{
+  left: 10%;
+  width: 80%;
+  font-size: 1rem;
+  height: 3rem;
+  border: 0.05rem solid var(--main-4);
+  margin: 0.5rem 10% 0.5rem 10%;
+  border-radius: 0.33rem;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  transition: 0.1s;
+
+  &.active{
+    background-color: ;
+  }
+}
+
+.settings-tab:hover{
+  border: var(--main-5) 0.05rem solid;
+  background-color: var(--main-3);
+  transition: 0.1s;
+}
+
+.settings-tab:active{
+  border: var(--main-5) 0.05rem solid;
+  background-color: var(--main-4);
+  transition: 0.06s;
+}
+
+.upper-div{
+  width: 100%;
+  padding: 0.6rem 0.6rem 0.1rem 0.6rem;
+}
+
+.close-setting-cross{
+  width: 2rem;
+  height: 2rem;
+}
+
+
+.tab-content-upper{
+  font-size: 1rem;
+  margin: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.05rem solid var(--main-4);
+
+}
+
+
 
 .openProfileButton {
   display: flex;
@@ -53,12 +177,14 @@
   background-color: var(--main-3);
   border: var(--main-5) solid 0.05rem;
   border-radius: 0.5rem;
+  transition: 0.1s ease-out;
+
+  &:hover{
+    transition: 0.1s ease-out;
+    background-color: var(--main-4);
+  }
 }
 
-.openProfileButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-3);
-}
 
 .settingUserIcon {
   color: var(--main-0);
@@ -76,76 +202,4 @@
   font-size: 1rem;
   margin-top: 1.8rem;
   text-decoration: none;
-}
-
-/*______open settings button______*/
-.openSettingsButton {
-  z-index: 501;
-  position: fixed;
-  top: 0.5rem;
-  left: 2.64rem;
-  width: 2rem;
-  height: 2rem;
-  margin-left: 0.33rem;
-  background-color: var(--main-2);
-  border: var(--main-5) solid 0.07rem;
-  transition: 0.15s ease-out;
-  border-radius: 0.33rem;
-  user-select: none;
-}
-
-.openSettingsButton > img {
-  transition: 0.1s ease-in-out;
-  transform: rotate(0deg);
-}
-
-.openSettingsButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-3);
-}
-
-.openSettingsButton:hover > svg {
-  transition: 0.15s ease-in-out;
-  transform: rotate(-60deg);
-}
-
-.openSettingsButton:active {
-  transition: 0.05s ease-out;
-  background-color: var(--main-3);
-  box-shadow: none;
-}
-
-.openSettingsButtonIcon {
-  color: var(--main-0);
-  width: 1.3rem;
-  height: 1.3rem;
-  user-select: none;
-  margin: auto;
-  display: block;
-  justify-content: center;
-  align-items: center;
-}
-
-.minimapSwitchBlock {
-  margin: 1rem 5%;
-  user-select: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-}
-
-.selectBlock {
-  font-size: 1rem;
-  margin: 1rem 5%;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-}
-
-.minimapSwitchLabel {
-  font-size: 1rem;
-  justify-content: flex-start;
 }

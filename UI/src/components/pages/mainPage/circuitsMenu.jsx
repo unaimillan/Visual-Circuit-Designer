@@ -46,7 +46,7 @@ export default function CircuitsMenu({
       header: "Pins",
       gates: [
         { id: "inputNodeSwitch", label: "Switch", icon: IconInput },
-        { id: "inputNodeButton", label: "Switch", icon: IconInput },
+        { id: "inputNodeButton", label: "Button", icon: IconInput },
         { id: "outputNodeLed", label: "output", icon: IconOutput },
       ],
     },

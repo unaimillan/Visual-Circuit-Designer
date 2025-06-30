@@ -7,8 +7,6 @@
   --main-5: hsl(0, 0%, 80%);
   --main-0: hsl(0, 0%, 0%);
 
-  /*--main-gradient: linear-gradient(0deg, var(--main-1), hsl());*/
-
   /*Select colors*/
   --select-1: hsl(210, 60%, 87%);
   --select-2: hsl(210, 80%, 80%);
@@ -29,7 +27,7 @@
 
   /*Special purpose colors*/
   --switch-bg-color: hsl(0, 0%, 52%);
-  --mask: hsla(0, 0%, 95%, 0.6);
+  --mask: hsla(0, 0%, 80%, 0.2);
 }
 
 [data-theme="dark"] {
