@@ -5,7 +5,7 @@ import {MinimapSwitch} from "./switch.jsx";
 import {SelectCanvasBG, SelectLogLevel, SelectTheme} from "./select.jsx";
 import {getCurrentLogLevel, LOG_LEVELS, setCurrentLogLevel, showToast} from "../../codeComponents/logger.jsx";
 import React, {useState} from "react";
-import {IconCloseCross} from "../../../../assets/ui-icons.jsx";
+import {IconCloseCross, IconTabPalette, IconTabPerson, IconTabBell} from "../../../../assets/ui-icons.jsx";
 
 export function Settings({
                            openSettings,
@@ -15,8 +15,7 @@ export function Settings({
                            setCurrentBG,
                            theme,
                            setTheme,
-                           setMenu,
-                           setOpenSettings
+                           closeSettings
                          }) {
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -26,38 +25,33 @@ export function Settings({
       <div className="tabs-menu">
 
         <div className={"upper-div"}>
-          <button onClick={() => {
-            setMenu(null);
-            setOpenSettings(false);
-            showToast('11', LOG_LEVELS.ERROR);
-            console.log("111")
-          }}>
-            <IconCloseCross
-              SVGClassName={"close-setting-cross"}
-            />
+          <button onClick={closeSettings}>
+            <IconCloseCross SVGClassName={"close-setting-cross"}/>
           </button>
-
         </div>
 
         <button
           className={`settings-tab s-tab0 ${currentTab === 0 ? "active" : ""}`}
           onClick={() => setCurrentTab(0)}
         >
-          Account
+          <IconTabPerson SVGClassName={"settings-tab-icon"}/>
+          <p>Account</p>
         </button>
 
         <button
           className={`settings-tab s-tab1 ${currentTab === 1 ? "active" : ""}`}
           onClick={() => setCurrentTab(1)}
         >
-          Notifications
+          <IconTabBell SVGClassName={"settings-tab-icon"}/>
+          <p>Notifications</p>
         </button>
 
         <button
           className={`settings-tab s-tab2 ${currentTab === 2 ? "active" : ""}`}
           onClick={() => setCurrentTab(2)}
         >
-          Appearance
+          <IconTabPalette SVGClassName={"settings-tab-icon"}/>
+          <p>Appearance</p>
         </button>
       </div>
 
@@ -67,7 +61,7 @@ export function Settings({
           {currentTab === 1 && "Notifications"}
           {currentTab === 2 && "Appearance"}
         </div>
-        <ShowTab
+        <TabContent
           currentTab={currentTab}
           showMinimap={showMinimap}
           setShowMinimap={setShowMinimap}
@@ -81,7 +75,9 @@ export function Settings({
   );
 }
 
-function ShowTab({
+
+
+function TabContent({
                    currentTab,
                    showMinimap,
                    setShowMinimap,

@@ -12,7 +12,7 @@ button {
   line-height: 1;
   height: 35px;
   gap: 5px;
-  background-color: var(--main-2);
+  background-color: var(--main-3);
   color: var(--main-0);
   border: 0.05rem solid var(--main-4);
   z-index: 10000;
@@ -20,7 +20,7 @@ button {
 }
 
 .SelectTrigger:hover {
-  background-color: var(--main-3);
+  background-color: var(--main-4);
   transition: 0.08s ease;
 }
 

@@ -24,12 +24,12 @@
     opacity 0.15s ease-in-out;
 
     &.showed{
-      width: 60%;
+      width: 70%;
       height: 80%;
       opacity: 1;
 
       top: 10%;
-      left: 20%;
+      left: 15%;
 
       transition:
         width 0s,
@@ -118,52 +118,71 @@
 }
 
 .settings-tab{
-  left: 10%;
+  display: flex;
+  align-items: center;
   width: 80%;
-  font-size: 1rem;
-  height: 3rem;
-  border: 0.05rem solid var(--main-4);
-  margin: 0.5rem 10% 0.5rem 10%;
-  border-radius: 0.33rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  height: 2.5rem;
+  border: 0.05rem solid var(--main-3);
+  margin: 0.5rem 10% 1rem 10%;
+  border-radius: 0.5rem;
   align-content: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: left;
+  text-align: left;
+  user-select: none;
   transition: 0.1s;
+  overflow: hidden;
+
+
+  &:hover {
+    /*border: var(--main-5) 0.05rem solid;*/
+    background-color: var(--main-3);
+    transition: 0.1s;
+  }
+
+  &:active{
+    /*border: var(--main-5) 0.05rem solid;*/
+    background-color: var(--main-3);
+    transition: 0.06s;
+  }
 
   &.active{
-    background-color: ;
+    /*border: var(--main-5) 0.05rem solid;*/
+    background-color: var(--main-3);
+    transition: 0.06s;
   }
 }
 
-.settings-tab:hover{
-  border: var(--main-5) 0.05rem solid;
-  background-color: var(--main-3);
-  transition: 0.1s;
+.settings-tab-icon{
+  flex-shrink: 0;
+  margin: 0 5%;
+  width: 1.35rem;
+  height: 1.35rem;
+  left: 0;
 }
 
-.settings-tab:active{
-  border: var(--main-5) 0.05rem solid;
-  background-color: var(--main-4);
-  transition: 0.06s;
-}
 
 .upper-div{
   width: 100%;
-  padding: 0.6rem 0.6rem 0.1rem 0.6rem;
+  padding: 15% 0.6rem 1.2rem 15%;
 }
 
 .close-setting-cross{
-  width: 2rem;
-  height: 2rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 
 .tab-content-upper{
-  font-size: 1rem;
-  margin: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 0.05rem solid var(--main-4);
+  display: flex;
+  align-items: center;
+  user-select: none;
 
+  height: 9%;
+  font-size: 1.1rem;
+  margin: 0 2rem 2rem 2rem;
+  border-bottom: 0.05rem solid var(--main-5);
 }
 
 

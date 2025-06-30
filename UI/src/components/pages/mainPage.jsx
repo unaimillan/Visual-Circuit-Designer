@@ -652,6 +652,10 @@ export default function Main() {
           setCurrentBG={setCurrentBG}
           theme={theme}
           setTheme={setTheme}
+          closeSettings={() => {
+            setMenu(null);
+            setOpenSettings(false);
+          }}
         />
 
         <CircuitsMenu
@@ -673,7 +677,6 @@ export default function Main() {
           fileInputRef={fileInputRef}
           handleOpenClick={handleOpenClick}
           setMenu={setMenu}
-          setOpenSettings={setOpenSettings}
           onSimulateClick={() =>
             handleSimulateClick({
               simulateState,
