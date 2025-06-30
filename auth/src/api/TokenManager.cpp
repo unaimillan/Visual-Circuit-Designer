@@ -7,7 +7,9 @@
 #include <Poco/JSON/Stringifier.h>
 #include <Poco/JWT/Token.h>
 #include <Poco/Timestamp.h>
+#include <Poco/Util/Application.h>
 #include <sstream>
+#include <string>
 
 using Poco::JSON::Object;
 using Poco::JSON::Stringifier;
@@ -16,9 +18,10 @@ using Poco::JWT::Token;
 TokenManager::TokenManager() {
   PasswordHasher hasher;
   m_signer.setHMACKey(hasher.genSalt());
+  Poco::Util::Application::instance().logger().information("JWT key: %s", m_signer.getHMACKey());
 }
 
-std::string TokenManager::generate(User const& user) {
+std::string TokenManager::generate(User const& user) const {
   Token             refresh, access;
   Object            payload;
   Object            ret;
@@ -31,10 +34,12 @@ std::string TokenManager::generate(User const& user) {
   payload.set("createdAt", user.createdAt);
 
   refresh.payload() = payload;
+  refresh.setType("JWT");
   refresh.setSubject("VCD JWT Refresh");
   refresh.setIssuedAt(Poco::Timestamp());
 
   access.payload() = payload;
+  access.setType("JWT");
   access.setSubject("VCD JWT Access");
   access.setIssuedAt(Poco::Timestamp());
 
@@ -43,4 +48,32 @@ std::string TokenManager::generate(User const& user) {
 
   Stringifier::stringify(ret, tmp);
   return tmp.rdbuf()->str();
+}
+
+bool TokenManager::verify(const std::string& token, Type type) const {
+  Token decoded;
+  if (m_signer.tryVerify(token, decoded) && !decoded.getIssuedAt().isElapsed(15LL * 60000000LL)) {
+    switch (type) {
+    case ACCESS: return decoded.getSubject() == "VCD JWT Access";
+    case REFRESH: return decoded.getSubject() == "VCD JWT Refresh";
+    default: return true;
+    }
+  } else {
+    return false;
+  }
+}
+
+User TokenManager::getUser(const std::string& token) const {
+  User ret;
+  Token decoded;
+
+  if (m_signer.tryVerify(token, decoded)) {
+    ret.id = decoded.payload().getValue<int>("id");
+    ret.username = decoded.payload().getValue<std::string>("username");
+    ret.email = decoded.payload().getValue<std::string>("email");
+    ret.name = decoded.payload().getValue<std::string>("name");
+    ret.createdAt = decoded.payload().getValue<std::string>("createdAt");
+  }
+
+  return ret;
 }
