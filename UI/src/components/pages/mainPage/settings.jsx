@@ -3,7 +3,7 @@ import UserIcon from "../../../../assets/userIcon.png";
 
 import {MinimapSwitch} from "./switch.jsx";
 import {SelectCanvasBG, SelectLogLevel, SelectTheme} from "./select.jsx";
-import {getCurrentLogLevel, LOG_LEVELS, setCurrentLogLevel, showToast} from "../../codeComponents/logger.jsx";
+import {getCurrentLogLevel, setCurrentLogLevel} from "../../codeComponents/logger.jsx";
 import React, {useState} from "react";
 import {IconCloseCross, IconTabPalette, IconTabPerson, IconTabBell} from "../../../../assets/ui-icons.jsx";
 

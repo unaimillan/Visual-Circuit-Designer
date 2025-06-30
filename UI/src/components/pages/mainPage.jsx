@@ -25,30 +25,18 @@ import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
-import { Tabs, Tab, Card, CardBody } from "@heroui/react";
 
 import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
 import { initialEdges } from "../codeComponents/edges.js";
-// import { MinimapSwitch } from "./mainPage/switch.jsx";
-// import {
-//   SelectCanvasBG,
-//   SelectLogLevel,
-//   SelectTheme,
-// } from "./mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
 
 
-import { Link } from "react-router-dom";
 
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
-import {
-  setCurrentLogLevel,
-  getCurrentLogLevel,
-} from "../codeComponents/logger.jsx";
 import {Settings} from "./mainPage/settings.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
