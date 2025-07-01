@@ -1,0 +1,111 @@
+.hello-page{
+    background-color: hsl(0, 0%, 6%);
+}
+
+.hello-hero-wrapper {
+    color: white;
+    position: relative;
+    padding-top: 120px;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hello-hero-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+
+.hello-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s ease;
+    z-index: 1000;
+}
+
+.hello-scrolled {
+    background-color: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: #333333 1px solid;
+}
+
+.hello-hero-title {
+    font-size: 48px;
+    margin: 0;
+}
+
+.hello-hero-subtitle {
+    font-size: 20px;
+    margin-top: 10px;
+    color: #aaa;
+}
+
+.hello-hero-image {
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    width: 1200px;
+    height: 1000px;
+    padding: 2rem;
+    /*padding: 1.5rem;*/
+    /*z-index: 0;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.hello-image-placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    background-color: #333333;
+    /*background: linear-gradient(135deg, #333, #111);*/
+    border-radius: 1.5rem;
+    border: 1px solid hsl(0, 0%, 25%);
+    /*box-shadow: 0 0px 40px rgba(81, 81, 81, 0.5);*/
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-sizing: border-box;
+}
+
+.hello-section {
+    background-color: #1a1a1a;
+    padding: 80px 40px;
+    text-align: center;
+    color: white;
+}
+
+.hello-nav{
+    position: fixed;
+    right: 10px;
+}
+
+.demo-picture{
+    position: absolute;
+    /*top:2rem;*/
+    /*right:2rem;*/
+    /*left: 2rem;*/
+
+    box-sizing: border-box;
+    align-items: center;
+    object-fit: contain; /* чтобы сохранить пропорции картинки */
+    display: block;
+}
