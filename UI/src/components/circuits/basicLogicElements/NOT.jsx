@@ -1,6 +1,9 @@
 import LogicGateBase from "../../codeComponents/LogicGateBase.jsx";
 import { IconNOT } from "../../../../assets/circuits-icons.jsx";
-import { GATE_HANDLE_CONFIGS, getNotGateHandleStyle } from "../../codeComponents/handleConfigs.js";
+import {
+  GATE_HANDLE_CONFIGS,
+  getNotGateHandleStyle,
+} from "../../codeComponents/handleConfigs.js";
 
 function NotNode({ id, data, isConnectable }) {
   return (

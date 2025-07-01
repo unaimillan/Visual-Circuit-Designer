@@ -7,7 +7,12 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
   const { setNodes } = useReactFlow();
 
   const getHandlePosition = (basePosition) => {
-    const positions = [Position.Top, Position.Right, Position.Bottom, Position.Left];
+    const positions = [
+      Position.Top,
+      Position.Right,
+      Position.Bottom,
+      Position.Left,
+    ];
     const currentIndex = positions.indexOf(basePosition);
     const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
     return positions[newIndex];
@@ -23,30 +28,41 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
   };
 
   useEffect(() => {
-    const { width, height } = getRotatedDimensions(originalWidth, originalHeight, rotation);
+    const { width, height } = getRotatedDimensions(
+      originalWidth,
+      originalHeight,
+      rotation,
+    );
 
     setNodes((nodes) =>
       nodes.map((node) =>
         node.id === id
           ? {
-            ...node,
-            style: {
-              ...node.style,
-              width: `${width - 1}px`,
-              height: `${height - 1}px`,
-            },
-          }
-          : node
-      )
+              ...node,
+              style: {
+                ...node.style,
+                width: `${width - 1}px`,
+                height: `${height - 1}px`,
+              },
+            }
+          : node,
+      ),
     );
 
     updateNodeInternals(id);
-  }, [rotation, id, updateNodeInternals, setNodes, originalWidth, originalHeight]);
+  }, [
+    rotation,
+    id,
+    updateNodeInternals,
+    setNodes,
+    originalWidth,
+    originalHeight,
+  ]);
 
   const { width: rotatedWidth, height: rotatedHeight } = getRotatedDimensions(
     originalWidth,
     originalHeight,
-    rotation
+    rotation,
   );
 
   return {
@@ -58,10 +74,10 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
         style={{
           width: rotatedWidth,
           height: rotatedHeight,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative'
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
         }}
       >
         <div
@@ -70,13 +86,13 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
             transform: `rotate(${rotation}deg)`,
             width: originalWidth,
             height: originalHeight,
-            position: 'absolute',
-            ...style
+            position: "absolute",
+            ...style,
           }}
         >
           {children}
         </div>
       </div>
-    )
+    ),
   };
 };

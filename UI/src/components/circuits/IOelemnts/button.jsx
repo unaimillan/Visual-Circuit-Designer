@@ -10,7 +10,12 @@ function InputNodeButton({ id, data, isConnectable }) {
   const cooldownRef = useRef(false);
   const delay = 500;
   const rotation = data.rotation || 0;
-  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 60, 80);
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
+    id,
+    rotation,
+    60,
+    80,
+  );
 
   const getHandleStyle = () => {
     switch (rotation) {
@@ -82,7 +87,7 @@ const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
       onPointerDownCapture={onPressDown}
       onPointerUpCapture={onPressUp}
     >
-      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`}/>
+      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`} />
     </div>
   );
 };

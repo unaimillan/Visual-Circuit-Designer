@@ -8,7 +8,12 @@ function InputNodeSwitch({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
   const rotation = data.rotation || 0;
-  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 60, 80);
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
+    id,
+    rotation,
+    60,
+    80,
+  );
 
   const getHandleStyle = () => {
     switch (rotation) {
@@ -39,7 +44,9 @@ function InputNodeSwitch({ id, data, isConnectable }) {
     <RotatedNodeWrapper className="circuit-button">
       <p className={"input-text"}>Switch</p>
 
-      <div className={`switch-wrapper ${simulateState === "idle" ? "deactivated" : ""}`}>
+      <div
+        className={`switch-wrapper ${simulateState === "idle" ? "deactivated" : ""}`}
+      >
         <SvgSwitch
           checked={inputState}
           onChange={handleChange}

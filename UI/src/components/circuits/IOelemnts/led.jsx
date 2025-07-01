@@ -7,7 +7,12 @@ import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 function OutputNodeLed({ id, data, isConnectable }) {
   const [isActive, setIsActive] = useState(false);
   const rotation = data.rotation || 0;
-  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 60, 80);
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
+    id,
+    rotation,
+    60,
+    80,
+  );
 
   const getHandleStyle = () => {
     switch (rotation) {
@@ -35,7 +40,10 @@ function OutputNodeLed({ id, data, isConnectable }) {
       <p className={"input-text"}>LED</p>
 
       <div className={`led-wrapper`}>
-        <Led isActive={isActive} SVGclassName={`led-icon ${isActive ? "active" : ""}`} />
+        <Led
+          isActive={isActive}
+          SVGclassName={`led-icon ${isActive ? "active" : ""}`}
+        />
       </div>
 
       <CustomHandle

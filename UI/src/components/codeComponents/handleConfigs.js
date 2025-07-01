@@ -5,37 +5,37 @@ export const GATE_HANDLE_CONFIGS = {
   AND: [
     { id: "input-1", type: "target", position: Position.Left },
     { id: "input-2", type: "target", position: Position.Left },
-    { id: "output-1", type: "source", position: Position.Right }
+    { id: "output-1", type: "source", position: Position.Right },
   ],
 
   NAND: [
     { id: "input-1", type: "target", position: Position.Left },
     { id: "input-2", type: "target", position: Position.Left },
-    { id: "output-1", type: "source", position: Position.Right }
+    { id: "output-1", type: "source", position: Position.Right },
   ],
 
   NOR: [
     { id: "input-1", type: "target", position: Position.Left },
     { id: "input-2", type: "target", position: Position.Left },
-    { id: "output-1", type: "source", position: Position.Right }
+    { id: "output-1", type: "source", position: Position.Right },
   ],
 
   NOT: [
     { id: "input-1", type: "target", position: Position.Left },
-    { id: "output-1", type: "source", position: Position.Right }
+    { id: "output-1", type: "source", position: Position.Right },
   ],
 
   OR: [
     { id: "input-1", type: "target", position: Position.Left },
     { id: "input-2", type: "target", position: Position.Left },
-    { id: "output-1", type: "source", position: Position.Right }
+    { id: "output-1", type: "source", position: Position.Right },
   ],
 
   XOR: [
     { id: "input-1", type: "target", position: Position.Left },
     { id: "input-2", type: "target", position: Position.Left },
-    { id: "output-1", type: "source", position: Position.Right }
-  ]
+    { id: "output-1", type: "source", position: Position.Right },
+  ],
 };
 
 // Style overrides for NOT gate (single input)

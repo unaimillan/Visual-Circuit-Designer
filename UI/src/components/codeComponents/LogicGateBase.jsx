@@ -3,15 +3,20 @@ import { useRotatedNode } from "../hooks/useRotatedNode.jsx";
 import React from "react";
 
 function LogicGateBase({
-                         id,
-                         data,
-                         isConnectable,
-                         IconComponent,
-                         handleConfigs,
-                         getHandleStyleOverrides
-                       }) {
+  id,
+  data,
+  isConnectable,
+  IconComponent,
+  handleConfigs,
+  getHandleStyleOverrides,
+}) {
   const rotation = data.rotation || 0;
-  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 80, 70);
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
+    id,
+    rotation,
+    80,
+    70,
+  );
 
   const getHandleStyle = (handle) => {
     if (getHandleStyleOverrides) {
