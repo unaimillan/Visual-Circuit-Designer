@@ -131,9 +131,15 @@ export const SelectLogLevel = ({ currentLogLevel, setCurrentLogLevel }) => (
   </Select.Root>
 );
 
-export const SelectNotificationsPosition = ({ toastPosition, setToastPosition }) => (
+export const SelectNotificationsPosition = ({
+  toastPosition,
+  setToastPosition,
+}) => (
   <Select.Root value={toastPosition} onValueChange={setToastPosition}>
-    <Select.Trigger className="SelectTrigger" aria-label="Notification Position">
+    <Select.Trigger
+      className="SelectTrigger"
+      aria-label="Notification Position"
+    >
       <Select.Value placeholder="Select notifications position" />
       <Select.Icon className="SelectIcon">
         <ChevronDownIcon />

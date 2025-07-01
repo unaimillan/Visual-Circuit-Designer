@@ -1,36 +1,44 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import UserIcon from "../../../../assets/userIcon.png";
 
-import {MinimapSwitch} from "./switch.jsx";
-import {useNotificationsLevel} from "../mainPage.jsx"
-import {SelectCanvasBG, SelectLogLevel, SelectNotificationsPosition, SelectTheme} from "./select.jsx";
-import React, {useState} from "react";
-import {IconCloseCross, IconTabPalette, IconTabPerson, IconTabBell} from "../../../../assets/ui-icons.jsx";
+import { MinimapSwitch } from "./switch.jsx";
+import { useNotificationsLevel } from "../mainPage.jsx";
+import {
+  SelectCanvasBG,
+  SelectLogLevel,
+  SelectNotificationsPosition,
+  SelectTheme,
+} from "./select.jsx";
+import React, { useState } from "react";
+import {
+  IconCloseCross,
+  IconTabPalette,
+  IconTabPerson,
+  IconTabBell,
+} from "../../../../assets/ui-icons.jsx";
 
 export function Settings({
-                           openSettings,
-                           showMinimap,
-                           setShowMinimap,
-                           currentBG,
-                           setCurrentBG,
-                           theme,
-                           setTheme,
-                           closeSettings,
-                           setToastPosition,
-                           toastPosition,
-                           currentLogLevel,
-                           setLogLevel,
-                         }) {
+  openSettings,
+  showMinimap,
+  setShowMinimap,
+  currentBG,
+  setCurrentBG,
+  theme,
+  setTheme,
+  closeSettings,
+  setToastPosition,
+  toastPosition,
+  currentLogLevel,
+  setLogLevel,
+}) {
   const [currentTab, setCurrentTab] = useState(0);
-
 
   return (
     <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
       <div className="tabs-menu">
-
         <div className={"upper-div"}>
           <button onClick={closeSettings}>
-            <IconCloseCross SVGClassName={"close-setting-cross"}/>
+            <IconCloseCross SVGClassName={"close-setting-cross"} />
           </button>
         </div>
 
@@ -38,7 +46,7 @@ export function Settings({
           className={`settings-tab s-tab0 ${currentTab === 0 ? "active" : ""}`}
           onClick={() => setCurrentTab(0)}
         >
-          <IconTabPerson SVGClassName={"settings-tab-icon"}/>
+          <IconTabPerson SVGClassName={"settings-tab-icon"} />
           <p>Account</p>
         </button>
 
@@ -46,7 +54,7 @@ export function Settings({
           className={`settings-tab s-tab1 ${currentTab === 1 ? "active" : ""}`}
           onClick={() => setCurrentTab(1)}
         >
-          <IconTabBell SVGClassName={"settings-tab-icon"}/>
+          <IconTabBell SVGClassName={"settings-tab-icon"} />
           <p>Notifications</p>
         </button>
 
@@ -54,7 +62,7 @@ export function Settings({
           className={`settings-tab s-tab2 ${currentTab === 2 ? "active" : ""}`}
           onClick={() => setCurrentTab(2)}
         >
-          <IconTabPalette SVGClassName={"settings-tab-icon"}/>
+          <IconTabPalette SVGClassName={"settings-tab-icon"} />
           <p>Appearance</p>
         </button>
       </div>
@@ -77,31 +85,23 @@ export function Settings({
           setToastPosition={setToastPosition}
           currentLogLevel={currentLogLevel}
           setLogLevel={setLogLevel}
-
-
         />
       </div>
     </div>
   );
 }
 
-
-
 function TabContent({
-                   currentTab,
-                   showMinimap,
-                   setShowMinimap,
-                   currentBG,
-                   setCurrentBG,
-                   theme,
-                   setTheme,
-                   toastPosition,
-                   setToastPosition,
-
-                 }) {
-
-
-
+  currentTab,
+  showMinimap,
+  setShowMinimap,
+  currentBG,
+  setCurrentBG,
+  theme,
+  setTheme,
+  toastPosition,
+  setToastPosition,
+}) {
   const { logLevel, setLogLevel } = useNotificationsLevel();
 
   if (currentTab === 0) {
@@ -109,9 +109,9 @@ function TabContent({
       <Link
         to="/profile"
         className="openProfileButton"
-        style={{textDecoration: "none"}}
+        style={{ textDecoration: "none" }}
       >
-        <img className="settingUserIcon" src={UserIcon} alt="User"/>
+        <img className="settingUserIcon" src={UserIcon} alt="User" />
         <span className="settingUserName">UserName</span>
       </Link>
     );
@@ -124,7 +124,8 @@ function TabContent({
           <div className="setting-text">
             <p className="setting-title">Notification details level</p>
             <p className="setting-description">
-              Allows control over the amount of notifications during simulation. The higher the level, the more detailed the toast messages.
+              Allows control over the amount of notifications during simulation.
+              The higher the level, the more detailed the toast messages.
             </p>
           </div>
 
@@ -162,7 +163,8 @@ function TabContent({
           <div className="setting-text">
             <p className="setting-title">Show mini-map</p>
             <p className="setting-description">
-              Displays a small overview map of the canvas to help navigate large flows. Especially useful when working with complex node graphs.
+              Displays a small overview map of the canvas to help navigate large
+              flows. Especially useful when working with complex node graphs.
             </p>
           </div>
 

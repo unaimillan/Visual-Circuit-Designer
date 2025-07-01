@@ -24,24 +24,23 @@
     backdrop-filter 0.6s ease-in-out,
     opacity 0.15s ease-in-out;
 
-    &.showed{
-      width: 70%;
-      height: 80%;
-      opacity: 1;
+  &.showed {
+    width: 70%;
+    height: 80%;
+    opacity: 1;
 
-      top: 10%;
-      left: 15%;
+    top: 10%;
+    left: 15%;
 
-      transition:
-        background-color var(--ttime),
-        border var(--ttime),
-        width 0s,
-        height 0s,
-        backdrop-filter 0.2s ease-in-out,
-        opacity 0.2s ease-in-out;
-    }
+    transition:
+      background-color var(--ttime),
+      border var(--ttime),
+      width 0s,
+      height 0s,
+      backdrop-filter 0.2s ease-in-out,
+      opacity 0.2s ease-in-out;
+  }
 }
-
 
 .openSettingsButton {
   z-index: 501;
@@ -56,8 +55,8 @@
   border-radius: 0.33rem;
   user-select: none;
   transition:
-          background-color var(--ttime),
-          border var(--ttime);
+    background-color var(--ttime),
+    border var(--ttime);
 
   &:hover {
     transition: 0.15s ease-out;
@@ -72,7 +71,7 @@
     transform: rotate(0deg);
   }
 
-  &:active{
+  &:active {
     background-color: var(--main-3);
     transition: 0.05s ease-out;
   }
@@ -86,8 +85,6 @@
   display: block;
 }
 
-
-
 .settingBlock {
   display: flex;
   justify-content: space-between;
@@ -96,8 +93,8 @@
   padding: 0.75rem 0;
   user-select: none;
   transition:
-          background-color var(--ttime),
-          border var(--ttime);
+    background-color var(--ttime),
+    border var(--ttime);
 }
 
 .setting-text {
@@ -124,21 +121,20 @@
   flex-shrink: 0;
 }
 
-
-.tabs-menu{
+.tabs-menu {
   width: 25%;
   height: 100%;
   border-right: 0.05rem solid var(--main-4);
   background-color: var(--menu-darker);
   transition:
-          background-color var(--ttime),
-          border var(--ttime);
+    background-color var(--ttime),
+    border var(--ttime);
 }
 
-.settings-tab{
+.settings-tab {
   transition:
-          background-color var(--ttime),
-          border var(--ttime);
+    background-color var(--ttime),
+    border var(--ttime);
 
   display: flex;
   align-items: center;
@@ -156,24 +152,23 @@
   /*transition: 0.1s;*/
   overflow: hidden;
 
-
   &:hover {
     background-color: var(--main-4);
     transition: 0.1s;
   }
 
-  &:active{
+  &:active {
     background-color: var(--main-4);
     transition: 0.06s;
   }
 
-  &.active{
+  &.active {
     background-color: var(--main-4);
     transition: 0.06s;
   }
 }
 
-.settings-tab-icon{
+.settings-tab-icon {
   flex-shrink: 0;
   margin: 0 5%;
   width: 1.35rem;
@@ -181,28 +176,27 @@
   left: 0;
 }
 
-.upper-div{
+.upper-div {
   width: 100%;
   padding: 15% 0.6rem 1.2rem 15%;
 }
 
-.close-setting-cross{
+.close-setting-cross {
   width: 1rem;
   height: 1rem;
 }
 
-
-.tab-content{
+.tab-content {
   transition:
-          background-color var(--ttime),
-          border var(--ttime);
+    background-color var(--ttime),
+    border var(--ttime);
   width: 75%;
   height: 100%;
   left: 25%;
   background-color: var(--menu-lighter);
 }
 
-.tab-content-upper{
+.tab-content-upper {
   display: flex;
   align-items: center;
   user-select: none;
@@ -212,8 +206,6 @@
   margin: 0 2rem 2rem 2rem;
   border-bottom: 0.05rem solid var(--main-5);
 }
-
-
 
 .openProfileButton {
   display: flex;
@@ -226,7 +218,7 @@
   border-radius: 0.5rem;
   transition: 0.1s ease-out;
 
-  &:hover{
+  &:hover {
     transition: 0.1s ease-out;
     background-color: var(--main-4);
   }

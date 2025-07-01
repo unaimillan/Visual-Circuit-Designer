@@ -13,11 +13,10 @@ import "./CSS/circuitsMenu.css";
 import "./CSS/contextMenu.css";
 import "./CSS/button.css";
 
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./components/pages/mainPage/switch.jsx";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
