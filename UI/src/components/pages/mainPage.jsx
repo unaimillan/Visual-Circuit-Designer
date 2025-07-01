@@ -21,6 +21,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+//Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
@@ -28,26 +29,15 @@ import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
 
 import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
 import { initialEdges } from "../codeComponents/edges.js";
-import { MinimapSwitch } from "./mainPage/switch.jsx";
-import {
-  SelectCanvasBG,
-  SelectLogLevel,
-  SelectTheme,
-} from "./mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
-import UserIcon from "../../../assets/userIcon.png";
-
-import { Link } from "react-router-dom";
 
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
-import {
-  setCurrentLogLevel,
-  getCurrentLogLevel,
-} from "../codeComponents/logger.jsx";
+import { Settings } from "./mainPage/settings.jsx";
+import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -56,15 +46,27 @@ export const SimulateStateContext = createContext({
   updateInputState: () => {},
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
+export const NotificationsLevelContext = createContext({
+  logLevel: "idle",
+  setLogLevel: () => {},
+});
+
 export function useSimulateState() {
-  const ctx = useContext(SimulateStateContext);
-  if (!ctx) {
+  const context = useContext(SimulateStateContext);
+  if (!context)
     throw new Error(
       "useSimulateState must be used within SimulateStateProvider",
     );
-  }
-  return ctx;
+  return context;
+}
+
+export function useNotificationsLevel() {
+  const context = useContext(NotificationsLevelContext);
+  if (!context)
+    throw new Error(
+      "useNotificationsLevel must be used within NotificationsLevelProvider",
+    );
+  return context;
 }
 
 const GAP_SIZE = 10;
@@ -79,6 +81,8 @@ export default function Main() {
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
+  const [toastPosition, setToastPosition] = useState("top-center");
+  const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -535,188 +539,173 @@ export default function Main() {
         : BackgroundVariant.Lines;
 
   return (
-    <SimulateStateContext.Provider
-      value={{ simulateState, setSimulateState, updateInputState }}
-    >
-      <>
-        <ReactFlow
-          ref={ref}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          defaultEdgeOptions={{
-            type: activeWire,
-          }}
-          onNodeContextMenu={onNodeContextMenu}
-          onEdgeContextMenu={onEdgeContextMenu}
-          onPaneClick={onPaneClick}
-          onConnect={onConnect}
-          onNodeDrag={onNodeDrag}
-          onNodeDragStop={onNodeDragStop}
-          onDrop={onDrop}
-          onDragOver={(e) => e.preventDefault()}
-          onInit={setReactFlowInstance}
-          nodeTypes={nodeTypes}
-          panOnDrag={panOnDrag}
-          selectionOnDrag
-          panOnScroll
-          snapToGrid
-          snapGrid={[GAP_SIZE, GAP_SIZE]}
-          selectionMode={SelectionMode.Partial}
-          minZoom={0.2}
-          maxZoom={10}
-        >
-          <Background
-            offset={[10.5, 5]}
-            bgColor="var(--main-1)"
-            color="var(--main-4)"
-            gap={GAP_SIZE}
-            size={1.6}
-            variant={variant}
-          />
-          <Controls className="controls" />
-          {showMinimap && (
-            <MiniMap
-              className="miniMap"
-              bgColor="var(--main-3)"
-              maskColor="var(--mask)"
-              nodeColor="var(--mask)"
-              position="top-right"
-              style={{ borderRadius: "0.5rem" }}
-            />
-          )}
-        </ReactFlow>
-
-        {menu && menu.type === "node" && (
-          <NodeContextMenu onClick={onPaneClick} {...menu} />
-        )}
-
-        {menu && menu.type === "edge" && (
-          <EdgeContextMenu onClick={onPaneClick} {...menu} />
-        )}
-
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            style: {
-              backgroundColor: "var(--main-2)",
-              color: "var(--main-0)",
-              fontSize: "12px",
-              borderRadius: "0.5rem",
-              padding: "10px 25px 10px 10px",
-              border: "0.05rem solid var(--main-5)",
-              fontFamily: "Montserrat, serif",
-            },
-            duration: 5000,
-            error: {
-              duration: 10000,
-            },
-          }}
-        />
-
-        <button
-          className="openCircuitsMenuButton"
-          onClick={() => setCircuitsMenuState(!circuitsMenuState)}
-        >
-          <IconMenu
-            SVGClassName="openCircuitsMenuButtonIcon"
-            draggable="false"
-          />
-        </button>
-
-        <button
-          className="openSettingsButton"
-          onClick={() => setOpenSettings(true)}
-        >
-          <IconSettings
-            SVGClassName="openSettingsButtonIcon"
-            draggable="false"
-          />
-        </button>
-
-        <div
-          className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
-          onClick={() => {
-            setMenu(null);
-            setOpenSettings(false);
-          }}
-        />
-        <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
-          <p className="settingsMenuTitle">Settings</p>
-          <Link
-            to="/profile"
-            className="openProfileButton"
-            style={{ textDecoration: "none" }}
+    <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
+      <SimulateStateContext.Provider
+        value={{ simulateState, setSimulateState, updateInputState }}
+      >
+        <>
+          <ReactFlow
+            style={{ backgroundColor: "var(--main-2)" }}
+            ref={ref}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            defaultEdgeOptions={{
+              type: activeWire,
+            }}
+            onNodeContextMenu={onNodeContextMenu}
+            onEdgeContextMenu={onEdgeContextMenu}
+            onPaneClick={onPaneClick}
+            onConnect={onConnect}
+            onNodeDrag={onNodeDrag}
+            onNodeDragStop={onNodeDragStop}
+            onDrop={onDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onInit={setReactFlowInstance}
+            nodeTypes={nodeTypes}
+            panOnDrag={panOnDrag}
+            selectionOnDrag
+            panOnScroll
+            snapToGrid
+            snapGrid={[GAP_SIZE, GAP_SIZE]}
+            selectionMode={SelectionMode.Partial}
+            minZoom={0.2}
+            maxZoom={10}
           >
-            <img className="settingUserIcon" src={UserIcon} alt="User" />
-            <span className="settingUserName">UserName</span>
-          </Link>
-          <div className="minimapSwitchBlock">
-            <p className="minimapSwitchLabel">Show mini-map</p>
-            <MinimapSwitch
-              className="minimapSwitch"
-              minimapState={showMinimap}
-              minimapToggle={setShowMinimap}
+            <Background
+              offset={[10.5, 5]}
+              bgColor="var(--main-1)"
+              color="var(--main-4)"
+              gap={GAP_SIZE}
+              size={1.6}
+              variant={variant}
+              style={{ transition: "var(--ttime)" }}
             />
-          </div>
-
-          <div className="selectBlock">
-            <p className="selectCanvasBG">Canvas background</p>
-            <SelectCanvasBG
-              currentBG={currentBG}
-              setCurrentBG={setCurrentBG}
-              className="selectBG"
+            <Controls
+              className="controls"
+              style={{ transition: "var(--ttime)" }}
             />
-          </div>
-          <div className="selectBlock">
-            <p className="minimapSwitchLabel">Theme</p>
-            <SelectTheme
-              theme={theme}
-              setTheme={setTheme}
-              className="selectTheme"
+            {showMinimap && (
+              <MiniMap
+                className="miniMap"
+                bgColor="var(--main-3)"
+                maskColor="var(--mask)"
+                nodeColor="var(--main-4)"
+                position="top-right"
+                style={{
+                  borderRadius: "0.5rem",
+                  overflow: "hidden",
+                  transition:
+                    "background-color var(--ttime),border var(--ttime)",
+                }}
+              />
+            )}
+          </ReactFlow>
+
+          {menu && menu.type === "node" && (
+            <NodeContextMenu onClick={onPaneClick} {...menu} />
+          )}
+
+          {menu && menu.type === "edge" && (
+            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+          )}
+
+          <Toaster
+            position={toastPosition}
+            toastOptions={{
+              style: {
+                backgroundColor: "var(--main-2)",
+                color: "var(--main-0)",
+                fontSize: "12px",
+                borderRadius: "0.5rem",
+                padding: "10px 25px 10px 10px",
+                border: "0.05rem solid var(--main-5)",
+                fontFamily: "Montserrat, serif",
+              },
+              duration: 2000,
+              error: {
+                duration: 10000,
+              },
+            }}
+          />
+
+          <button
+            className="openCircuitsMenuButton"
+            onClick={() => setCircuitsMenuState(!circuitsMenuState)}
+          >
+            <IconMenu
+              SVGClassName="openCircuitsMenuButtonIcon"
+              draggable="false"
             />
-          </div>
+          </button>
 
-          <div className="selectBlock">
-            <p className="minimapSwitchLabel">Log verbosity</p>
-            <SelectLogLevel
-              currentLogLevel={getCurrentLogLevel()}
-              setCurrentLogLevel={setCurrentLogLevel}
-              className="selectTheme"
+          <button
+            className="openSettingsButton"
+            onClick={() => setOpenSettings(true)}
+          >
+            <IconSettings
+              SVGClassName="openSettingsButtonIcon"
+              draggable="false"
             />
-          </div>
-        </div>
+          </button>
 
-        <CircuitsMenu
-          circuitsMenuState={circuitsMenuState}
-          onDragStart={onDragStart}
-          spawnCircuit={spawnCircuit}
-        />
+          <div
+            className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
+            onClick={() => {
+              setMenu(null);
+              setOpenSettings(false);
+            }}
+          />
+          <Settings
+            openSettings={openSettings}
+            showMinimap={showMinimap}
+            setShowMinimap={setShowMinimap}
+            currentBG={currentBG}
+            setCurrentBG={setCurrentBG}
+            theme={theme}
+            setTheme={setTheme}
+            toastPosition={toastPosition}
+            setToastPosition={setToastPosition}
+            currentLogLevel={logLevel}
+            setLogLevel={setLogLevel}
+            closeSettings={() => {
+              setMenu(null);
+              setOpenSettings(false);
+            }}
+          />
 
-        <Toolbar
-          simulateState={simulateState}
-          setSimulateState={setSimulateState}
-          activeAction={activeAction}
-          setActiveAction={setActiveAction}
-          activeWire={activeWire}
-          setActiveWire={setActiveWire}
-          setPanOnDrag={setPanOnDrag}
-          saveCircuit={saveCircuit}
-          loadCircuit={loadCircuit}
-          fileInputRef={fileInputRef}
-          handleOpenClick={handleOpenClick}
-          onSimulateClick={() =>
-            handleSimulateClick({
-              simulateState,
-              setSimulateState,
-              socketRef,
-              nodes,
-              edges,
-            })
-          }
-        />
-      </>
-    </SimulateStateContext.Provider>
+          <CircuitsMenu
+            circuitsMenuState={circuitsMenuState}
+            onDragStart={onDragStart}
+            spawnCircuit={spawnCircuit}
+          />
+
+          <Toolbar
+            simulateState={simulateState}
+            setSimulateState={setSimulateState}
+            activeAction={activeAction}
+            setActiveAction={setActiveAction}
+            activeWire={activeWire}
+            setActiveWire={setActiveWire}
+            setPanOnDrag={setPanOnDrag}
+            saveCircuit={saveCircuit}
+            loadCircuit={loadCircuit}
+            fileInputRef={fileInputRef}
+            handleOpenClick={handleOpenClick}
+            setMenu={setMenu}
+            onSimulateClick={() =>
+              handleSimulateClick({
+                simulateState,
+                setSimulateState,
+                socketRef,
+                nodes,
+                edges,
+              })
+            }
+          />
+        </>
+      </SimulateStateContext.Provider>
+    </NotificationsLevelContext.Provider>
   );
 }

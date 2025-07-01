@@ -1,20 +1,18 @@
 :root {
-  /*Primary main colors*/
+  /*Universal TransitionTIME variable (same for all themes, allows to )*/
+  --ttime: 0.3s;
+
   --main-1: hsl(0, 0%, 93%);
-  --main-2: hsl(0, 0%, 93%);
-  --main-3: hsl(0, 0%, 93%);
+  --main-2: hsl(0, 0%, 90%);
+  --main-3: hsl(0, 0%, 88%);
   --main-4: hsl(0, 0%, 83%);
   --main-5: hsl(0, 0%, 80%);
   --main-0: hsl(0, 0%, 0%);
 
-  /*--main-gradient: linear-gradient(0deg, var(--main-1), hsl());*/
-
-  /*Select colors*/
   --select-1: hsl(210, 60%, 87%);
   --select-2: hsl(210, 80%, 80%);
   --select-mask: hsla(210, 60%, 87%, 50%);
 
-  /*Simulation state colors*/
   --status-success-1: hsl(135, 50%, 85%);
   --status-success-2: hsl(135, 50%, 35%);
 
@@ -27,18 +25,24 @@
   --status-error-1: hsl(0, 60%, 80%);
   --status-error-2: hsl(0, 60%, 20%);
 
-  /*Special purpose colors*/
+  --menu-lighter: var(--main-1);
+  --menu-darker: var(--main-2);
+
   --switch-bg-color: hsl(0, 0%, 52%);
-  --mask: hsla(0, 0%, 95%, 0.6);
+  --mask: hsla(0, 0%, 80%, 0.2);
+  --secondary-text: hsl(0, 0%, 60%);
 }
 
 [data-theme="dark"] {
   --main-1: hsl(0, 0%, 8%);
   --main-2: hsl(0, 0%, 11%);
-  --main-3: hsl(0, 0%, 15%);
+  --main-3: hsl(0, 0%, 16%);
   --main-4: hsl(0, 0%, 21%);
   --main-5: hsl(0, 0%, 25%);
   --main-0: hsl(0, 0%, 100%);
+
+  --menu-lighter: hsl(0, 0%, 13%);
+  --menu-darker: var(--main-2);
 
   --select-1: hsl(220, 35%, 25%);
   --select-2: hsl(220, 35%, 40%);
@@ -58,6 +62,7 @@
 
   --switch-bg-color: hsl(0, 0%, 33%);
   --mask: hsla(0, 0%, 60%, 0.1);
+  --secondary-text: hsl(0, 0%, 35%);
 }
 
 [data-theme="pick-me"] {
@@ -67,6 +72,9 @@
   --main-4: hsl(345, 50%, 85%);
   --main-5: hsl(345, 45%, 83%);
   --main-0: hsl(345, 100%, 7%);
+
+  --menu-lighter: var(--main-2);
+  --menu-darker: var(--main-3);
 
   --select-1: hsl(360, 60%, 80%);
   --select-2: hsl(360, 60%, 73%);
@@ -86,6 +94,8 @@
 
   --switch-bg-color: hsl(345, 20%, 70%);
   --mask: hsla(340, 20%, 70%, 0.2);
+
+  --secondary-text: hsl(345, 20%, 65%);
 }
 
 [data-theme="tokyo-night"] {
@@ -95,6 +105,9 @@
   --main-4: hsl(230, 25%, 23%);
   --main-5: hsl(230, 25%, 28%);
   --main-0: hsl(230, 25%, 95%);
+
+  --menu-lighter: var(--main-3);
+  --menu-darker: var(--main-2);
 
   --select-1: hsl(245, 30%, 25%);
   --select-2: hsl(245, 30%, 40%);
@@ -114,6 +127,7 @@
 
   --switch-bg-color: hsl(220, 89%, 71%);
   --mask: hsl(220, 89%, 71%, 0.1);
+  --secondary-text: hsl(230, 25%, 35%);
 }
 
 [data-theme="green-nature"] {
@@ -123,6 +137,9 @@
   --main-4: hsl(130, 25%, 77%);
   --main-5: hsl(130, 25%, 73%);
   --main-0: hsl(132, 25%, 3%);
+
+  --menu-lighter: var(--main-2);
+  --menu-darker: var(--main-3);
 
   --select-1: hsl(185, 45%, 78%);
   --select-2: hsl(185, 35%, 70%);
@@ -142,6 +159,7 @@
 
   --switch-bg-color: hsl(111, 10%, 56%);
   --mask: hsla(144, 100%, 90%, 0.1);
+  --secondary-text: hsl(132, 20%, 65%);
 }
 
 [data-theme="solar-red"] {
@@ -151,6 +169,9 @@
   --main-4: hsl(0, 0%, 20%);
   --main-5: hsl(0, 0%, 25%);
   --main-0: hsl(0, 0%, 90%);
+
+  --menu-lighter: var(--main-3);
+  --menu-darker: var(--main-2);
 
   --select-1: hsl(0, 40%, 25%);
   --select-2: hsl(0, 40%, 40%);
@@ -170,4 +191,5 @@
 
   --switch-bg-color: hsl(0, 10%, 15%);
   --mask: hsla(0, 100%, 65%, 0.2);
+  --secondary-text: hsl(0, 0%, 35%);
 }

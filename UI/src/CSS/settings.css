@@ -1,47 +1,210 @@
-/*______settings______*/
 .settingsMenu {
+  display: flex;
   overflow: auto;
   position: fixed;
+  z-index: 2001;
+
   width: 0;
   height: 0;
   top: 0;
-  left: -100%;
-  z-index: 2001;
-  opacity: 0;
-  /*left: 20%;*/
-  background-color: var(--main-2);
-  color: var(--main-0);
   border-radius: 0.5rem;
+
+  left: -100%;
+  opacity: 0;
+
+  background-color: var(--menu-lighter);
+  color: var(--main-0);
   border: var(--main-5) solid 0.05rem;
+
   transition:
+    background-color var(--ttime),
+    border var(--ttime),
     width 1s 0.15s,
     height 1s 0.15s,
-    background-color 0.15s ease-in-out,
-    backdrop-filter 0.15s ease-in-out,
+    backdrop-filter 0.6s ease-in-out,
     opacity 0.15s ease-in-out;
+
+  &.showed {
+    width: 70%;
+    height: 80%;
+    opacity: 1;
+
+    top: 10%;
+    left: 15%;
+
+    transition:
+      background-color var(--ttime),
+      border var(--ttime),
+      width 0s,
+      height 0s,
+      backdrop-filter 0.2s ease-in-out,
+      opacity 0.2s ease-in-out;
+  }
 }
 
-.settingsMenu.showed {
+.openSettingsButton {
+  z-index: 501;
   position: fixed;
-  opacity: 1;
-  width: 70%;
-  height: 80%;
-  top: 10%;
-  left: 15%;
+  top: 0.5rem;
+  left: 2.64rem;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.33rem;
+  background-color: var(--menu-lighter);
+  border: var(--main-5) solid 0.07rem;
+  border-radius: 0.33rem;
+  user-select: none;
   transition:
-    width 0s,
-    height 0s,
-    background-color 0.2s ease-in-out,
-    backdrop-filter 0.2s ease-in-out,
-    opacity 0.2s ease-in-out;
+    background-color var(--ttime),
+    border var(--ttime);
+
+  &:hover {
+    transition: 0.15s ease-out;
+    background-color: var(--main-3);
+    & > svg {
+      transform: rotate(-60deg);
+    }
+  }
+
+  & > svg {
+    transition: 0.1s ease-in-out;
+    transform: rotate(0deg);
+  }
+
+  &:active {
+    background-color: var(--main-3);
+    transition: 0.05s ease-out;
+  }
 }
 
-.settingsMenuTitle {
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.6rem;
-  margin: 1.6rem 0 1.6rem 0;
+.openSettingsButtonIcon {
+  color: var(--main-0);
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: auto;
+  display: block;
+}
+
+.settingBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 1rem 5%;
+  padding: 0.75rem 0;
   user-select: none;
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
+}
+
+.setting-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 3rem;
+}
+
+.setting-title {
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.setting-description {
+  font-size: 0.8rem;
+  margin: 0.3rem 0 0 0;
+  color: var(--secondary-text);
+  line-height: 1.2rem;
+}
+
+.interactive-wrapper {
+  flex-shrink: 0;
+}
+
+.tabs-menu {
+  width: 25%;
+  height: 100%;
+  border-right: 0.05rem solid var(--main-4);
+  background-color: var(--menu-darker);
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
+}
+
+.settings-tab {
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
+
+  display: flex;
+  align-items: center;
+  width: 80%;
+  font-size: 0.9rem;
+  font-weight: 400;
+  height: 2.5rem;
+  border: 0.05rem solid var(--main-4);
+  margin: 0.5rem 10% 1rem 10%;
+  border-radius: 0.5rem;
+  align-content: center;
+  justify-content: left;
+  text-align: left;
+  user-select: none;
+  /*transition: 0.1s;*/
+  overflow: hidden;
+
+  &:hover {
+    background-color: var(--main-4);
+    transition: 0.1s;
+  }
+
+  &:active {
+    background-color: var(--main-4);
+    transition: 0.06s;
+  }
+
+  &.active {
+    background-color: var(--main-4);
+    transition: 0.06s;
+  }
+}
+
+.settings-tab-icon {
+  flex-shrink: 0;
+  margin: 0 5%;
+  width: 1.35rem;
+  height: 1.35rem;
+  left: 0;
+}
+
+.upper-div {
+  width: 100%;
+  padding: 15% 0.6rem 1.2rem 15%;
+}
+
+.close-setting-cross {
+  width: 1rem;
+  height: 1rem;
+}
+
+.tab-content {
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
+  width: 75%;
+  height: 100%;
+  left: 25%;
+  background-color: var(--menu-lighter);
+}
+
+.tab-content-upper {
+  display: flex;
+  align-items: center;
+  user-select: none;
+
+  height: 11.8%;
+  font-size: 1.1rem;
+  margin: 0 2rem 2rem 2rem;
+  border-bottom: 0.05rem solid var(--main-5);
 }
 
 .openProfileButton {
@@ -53,11 +216,12 @@
   background-color: var(--main-3);
   border: var(--main-5) solid 0.05rem;
   border-radius: 0.5rem;
-}
+  transition: 0.1s ease-out;
 
-.openProfileButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-3);
+  &:hover {
+    transition: 0.1s ease-out;
+    background-color: var(--main-4);
+  }
 }
 
 .settingUserIcon {
@@ -68,6 +232,7 @@
   border: var(--main-4) solid 0.05rem;
   border-radius: 3rem;
   margin: 0.95rem 0.5rem 0.95rem 0.95rem;
+  transition: background-color 0.55s ease-in-out;
 }
 
 .settingUserName {
@@ -76,76 +241,4 @@
   font-size: 1rem;
   margin-top: 1.8rem;
   text-decoration: none;
-}
-
-/*______open settings button______*/
-.openSettingsButton {
-  z-index: 501;
-  position: fixed;
-  top: 0.5rem;
-  left: 2.64rem;
-  width: 2rem;
-  height: 2rem;
-  margin-left: 0.33rem;
-  background-color: var(--main-2);
-  border: var(--main-5) solid 0.07rem;
-  transition: 0.15s ease-out;
-  border-radius: 0.33rem;
-  user-select: none;
-}
-
-.openSettingsButton > img {
-  transition: 0.1s ease-in-out;
-  transform: rotate(0deg);
-}
-
-.openSettingsButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-3);
-}
-
-.openSettingsButton:hover > svg {
-  transition: 0.15s ease-in-out;
-  transform: rotate(-60deg);
-}
-
-.openSettingsButton:active {
-  transition: 0.05s ease-out;
-  background-color: var(--main-3);
-  box-shadow: none;
-}
-
-.openSettingsButtonIcon {
-  color: var(--main-0);
-  width: 1.3rem;
-  height: 1.3rem;
-  user-select: none;
-  margin: auto;
-  display: block;
-  justify-content: center;
-  align-items: center;
-}
-
-.minimapSwitchBlock {
-  margin: 1rem 5%;
-  user-select: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-}
-
-.selectBlock {
-  font-size: 1rem;
-  margin: 1rem 5%;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-}
-
-.minimapSwitchLabel {
-  font-size: 1rem;
-  justify-content: flex-start;
 }

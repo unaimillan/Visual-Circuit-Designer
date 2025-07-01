@@ -34,7 +34,7 @@ export const showToast = (msg, icon = "ℹ️", level = LOG_LEVELS.IMPORTANT) =>
         <div className={"toast-notification"}>
           <div style={{ flex: 1, wordBreak: "break-word" }}>{msg}</div>
           <button onClick={() => toast.dismiss(t.id)} className={"close-cross"}>
-            <IconCloseCross />
+            <IconCloseCross SVGClassName={"close-cross-icon"} />
           </button>
         </div>
       ),

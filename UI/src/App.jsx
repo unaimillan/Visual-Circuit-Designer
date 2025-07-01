@@ -16,8 +16,20 @@ import "./CSS/button.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./components/pages/mainPage/switch.jsx";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    document.documentElement.style.setProperty("--ttime", "0s");
+
+    // Через небольшой таймаут или requestAnimationFrame возвращаем нормальное значение
+    const timeout = setTimeout(() => {
+      document.documentElement.style.setProperty("--ttime", "0.3s");
+    }, 50); // Можно регулировать время
+
+    return () => clearTimeout(timeout); // Очистка таймаута при размонтировании
+  }, []);
+
   return (
     <Router>
       <div style={{ height: "100%" }}>

@@ -40,7 +40,7 @@
   position: relative;
   border: 0.05rem solid var(--main-5);
   border-radius: 4px;
-  background: var(--main-2);
+  background: var(--menu-lighter);
   display: flex;
   box-sizing: border-box;
   align-items: center;
