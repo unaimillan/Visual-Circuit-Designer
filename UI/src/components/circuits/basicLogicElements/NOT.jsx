@@ -1,72 +1,20 @@
-import { useEffect } from "react";
-import { Position, useUpdateNodeInternals } from "@xyflow/react";
-import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import LogicGateBase from "../../codeComponents/LogicGateBase.jsx";
 import { IconNOT } from "../../../../assets/circuits-icons.jsx";
+import {
+  GATE_HANDLE_CONFIGS,
+  getNotGateHandleStyle,
+} from "../../codeComponents/handleConfigs.js";
 
 function NotNode({ id, data, isConnectable }) {
-  const rotation = data.rotation || 0;
-  const updateNodeInternals = useUpdateNodeInternals();
-
-  const getHandlePosition = (basePosition) => {
-    const positions = [
-      Position.Top,
-      Position.Right,
-      Position.Bottom,
-      Position.Left,
-    ];
-    const currentIndex = positions.indexOf(basePosition);
-    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
-    return positions[newIndex];
-  };
-
-  const getHandleStyle = (handle) => {
-    switch (rotation) {
-      case 90:
-        return handle === "input-1"
-          ? { top: 34, left: -1 }
-          : { top: 26.5, left: 79 };
-      case 180:
-        return handle === "input-1"
-          ? { top: 34, left: -8 }
-          : { top: 34, left: 79 };
-      case 270:
-        return handle === "input-1"
-          ? { top: 27.5, left: -1 }
-          : { top: 34.5, left: 79 };
-      default:
-        return handle === "input-1"
-          ? { top: 35, left: -1 }
-          : { top: 35, left: 72 };
-    }
-  };
-
-  useEffect(() => {
-    updateNodeInternals(id);
-  }, [rotation, id, updateNodeInternals]);
-
   return (
-    <div
-      className="circuit-button"
-      style={{ transform: `rotate(${rotation}deg)` }}
-    >
-      <IconNOT SVGClassName={"circuit-button-icon"} />
-      {/* Handles */}
-      <CustomHandle
-        type="target"
-        position={getHandlePosition(Position.Left)}
-        id="input-1"
-        style={getHandleStyle("input-1")}
-        isConnectable={isConnectable}
-        maxConnections={1}
-      />
-      <CustomHandle
-        type="source"
-        position={getHandlePosition(Position.Right)}
-        id="output-1"
-        style={getHandleStyle("output-1")}
-        isConnectable={isConnectable}
-      />
-    </div>
+    <LogicGateBase
+      id={id}
+      data={data}
+      isConnectable={isConnectable}
+      IconComponent={IconNOT}
+      handleConfigs={GATE_HANDLE_CONFIGS.NOT}
+      getHandleStyleOverrides={getNotGateHandleStyle}
+    />
   );
 }
 
