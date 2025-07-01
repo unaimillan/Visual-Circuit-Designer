@@ -70,7 +70,10 @@ export function WebGLShaderCanvas() {
     };
 
     const vertexShader = compileShader(vertexShaderSource, gl.VERTEX_SHADER);
-    const fragmentShader = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
+    const fragmentShader = compileShader(
+      fragmentShaderSource,
+      gl.FRAGMENT_SHADER,
+    );
 
     const program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -78,12 +81,7 @@ export function WebGLShaderCanvas() {
     gl.linkProgram(program);
     gl.useProgram(program);
 
-    const vertices = new Float32Array([
-      1, 1, 0,
-      -1, 1, 0,
-      1, -1, 0,
-      -1, -1, 0,
-    ]);
+    const vertices = new Float32Array([1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0]);
 
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);

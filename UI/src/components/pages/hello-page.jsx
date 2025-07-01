@@ -12,12 +12,14 @@ function App() {
 
   // Ограничим эффект до 300px скролла
   const clampedScroll = Math.min(scrollY, 300);
-  const scale = 1 - clampedScroll / 1000;       // от 1 до 0.7
-  const translateY = -clampedScroll / 4;        // немного вверх
+  const scale = 1 - clampedScroll / 1000; // от 1 до 0.7
+  const translateY = -clampedScroll / 4; // немного вверх
 
   return (
     <div>
-      <header className={`hello-header ${scrollY > 50 ? "hello-scrolled" : ""}`}>
+      <header
+        className={`hello-header ${scrollY > 50 ? "hello-scrolled" : ""}`}
+      >
         <div className="hello-logo">LOGICLAB</div>
         <nav className="hello-nav">
           <a href="#">Demo</a>
@@ -33,13 +35,19 @@ function App() {
             transform: `scale(${scale}) translateY(${translateY}px)`,
           }}
         >
-          <h1 className="hello-hero-title">Design logic circuits in your browser</h1>
-          <p className="hello-hero-subtitle">Simulate, sync, and share — instantly.</p>
+          <h1 className="hello-hero-title">
+            Design logic circuits in your browser
+          </h1>
+          <p className="hello-hero-subtitle">
+            Simulate, sync, and share — instantly.
+          </p>
         </div>
 
         <div className="hello-hero-image">
           {/* Замените на <canvas> или <img src="..." /> */}
-          <div className="hello-image-placeholder">[ Your visual or canvas here ]</div>
+          <div className="hello-image-placeholder">
+            [ Your visual or canvas here ]
+          </div>
         </div>
       </div>
 
