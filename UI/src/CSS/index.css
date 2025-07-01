@@ -4,18 +4,14 @@ body {
   font-family: Montserrat, serif;
   font-size: 13px;
   font-weight: 500;
-  background-color: var(--main-1);
-  transition: background-color var(--ttime), border var(--ttime);
 }
 
 #app {
   width: 100vw;
-  height: 99.5vh;
+  height: 100vh;
   position: absolute;
   top: 0;
   right: 0;
-  transition: background-color var(--ttime), border var(--ttime);
 }
-
 
 

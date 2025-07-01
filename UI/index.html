@@ -1,38 +1,21 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="assets/website-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <title>Visual Circuit Designer</title>
+      <meta charset="UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+      <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"
+      />
+
+      <title>Visual Circuit Designer</title>
   </head>
+
   <body>
     <div id="app"></div>
-
-
     <script type="module" src="src/main.jsx"></script>
-    <script>
-      // Этот код можно поставить прямо в index.html в <head> внутри <script>
-      (function () {
-        const savedTheme = localStorage.getItem("theme") || "light";
-
-        document.documentElement.setAttribute("data-theme", savedTheme);
-        // Устанавливаем ttime в 0s, чтобы на старте не было плавных переходов
-        document.documentElement.style.setProperty("--ttime", "0s");
-
-        // А после отрисовки, возвращаем transition
-        requestAnimationFrame(() => {
-          // Или setTimeout(() => {...}, 0);
-          document.documentElement.style.setProperty("--ttime", "0.3s");
-        });
-      })();
-
-    </script>
   </body>
 </html>

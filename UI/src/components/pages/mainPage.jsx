@@ -362,6 +362,8 @@ export default function Main() {
     downloadAnchorNode.remove();
   };
 
+
+
   const loadCircuit = (event) => {
     const fileReader = new FileReader();
     fileReader.readAsText(event.target.files[0]);

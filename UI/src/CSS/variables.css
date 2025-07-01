@@ -1,6 +1,6 @@
 :root {
   /*Universal TransitionTIME variable (same for all themes, allows to )*/
-  --ttime: 0.2s;
+  --ttime: 0.3s;
 
   --main-1: hsl(0, 0%, 93%);
   --main-2: hsl(0, 0%, 90%);
