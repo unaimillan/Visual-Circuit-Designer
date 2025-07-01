@@ -1,24 +1,13 @@
 import { useEffect, useState } from "react";
-import { Position, useUpdateNodeInternals } from "@xyflow/react";
+import { Position } from "@xyflow/react";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
+import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 
 function OutputNodeLed({ id, data, isConnectable }) {
   const [isActive, setIsActive] = useState(false);
   const rotation = data.rotation || 0;
-  const updateNodeInternals = useUpdateNodeInternals();
-
-  const getHandlePosition = (basePosition) => {
-    const positions = [
-      Position.Top,
-      Position.Right,
-      Position.Bottom,
-      Position.Left,
-    ];
-    const currentIndex = positions.indexOf(basePosition);
-    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
-    return positions[newIndex];
-  };
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 60, 80);
 
   const getHandleStyle = () => {
     switch (rotation) {
@@ -34,31 +23,19 @@ function OutputNodeLed({ id, data, isConnectable }) {
   };
 
   useEffect(() => {
-    updateNodeInternals(id);
-  }, [rotation, id, updateNodeInternals]);
-
-  useEffect(() => {
-    const outputId = `out_${id}`; // Пример: "out_output1"
+    const outputId = `out_${id}`;
     const unsubscribe = subscribeToOutput(outputId, (newVal) => {
       setIsActive(newVal === 1);
     });
-
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [id]);
 
   return (
-    <div
-      className="circuit-button input"
-      style={{ transform: `rotate(${rotation}deg)` }}
-    >
+    <RotatedNodeWrapper className="circuit-button">
       <p className={"input-text"}>LED</p>
+
       <div className={`led-wrapper`}>
-        <Led
-          isActive={isActive}
-          SVGclassName={`led-icon ${isActive ? "active" : ""}`}
-        />
+        <Led isActive={isActive} SVGclassName={`led-icon ${isActive ? "active" : ""}`} />
       </div>
 
       <CustomHandle
@@ -69,7 +46,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
         isConnectable={isConnectable}
         maxConnections={1}
       />
-    </div>
+    </RotatedNodeWrapper>
   );
 }
 
@@ -87,7 +64,6 @@ const Led = ({ isActive, SVGclassName }) => {
           />
         </filter>
       </defs>
-
       <rect
         x="2"
         y="2"

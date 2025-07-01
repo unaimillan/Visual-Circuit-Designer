@@ -1,25 +1,14 @@
 import { useEffect, useState } from "react";
-import { Position, useUpdateNodeInternals } from "@xyflow/react";
+import { Position } from "@xyflow/react";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { useSimulateState } from "../../pages/mainPage.jsx";
+import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 
 function InputNodeSwitch({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
   const rotation = data.rotation || 0;
-  const updateNodeInternals = useUpdateNodeInternals();
-
-  const getHandlePosition = (basePosition) => {
-    const positions = [
-      Position.Top,
-      Position.Right,
-      Position.Bottom,
-      Position.Left,
-    ];
-    const currentIndex = positions.indexOf(basePosition);
-    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
-    return positions[newIndex];
-  };
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 60, 80);
 
   const getHandleStyle = () => {
     switch (rotation) {
@@ -35,35 +24,22 @@ function InputNodeSwitch({ id, data, isConnectable }) {
   };
 
   useEffect(() => {
-    updateNodeInternals(id);
-  }, [rotation, id, updateNodeInternals]);
-
-  useEffect(() => {
     setInputState(data.value || false);
   }, [data.value]);
 
   const handleChange = (newValue) => {
     setInputState(newValue);
-
-    // Отправляем изменение на сервер
     if (simulateState === "running" && updateInputState) {
       updateInputState(id, newValue);
     }
-
-    // Обновляем данные узла (опционально)
     data.value = newValue;
   };
 
   return (
-    <div
-      className="circuit-button input"
-      style={{ transform: `rotate(${rotation}deg)` }}
-    >
+    <RotatedNodeWrapper className="circuit-button">
       <p className={"input-text"}>Switch</p>
 
-      <div
-        className={`switch-wrapper ${simulateState === "idle" ? "deactivated" : ""}`}
-      >
+      <div className={`switch-wrapper ${simulateState === "idle" ? "deactivated" : ""}`}>
         <SvgSwitch
           checked={inputState}
           onChange={handleChange}
@@ -71,7 +47,6 @@ function InputNodeSwitch({ id, data, isConnectable }) {
         />
       </div>
 
-      {/* Handles */}
       <CustomHandle
         type="source"
         position={getHandlePosition(Position.Right)}
@@ -79,11 +54,10 @@ function InputNodeSwitch({ id, data, isConnectable }) {
         style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
-    </div>
+    </RotatedNodeWrapper>
   );
 }
 
-// Вместо @radix-ui/react-switch
 const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
   return (
     <svg
@@ -103,7 +77,6 @@ const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
         onClick={() => onChange(!checked)}
         style={{ cursor: "pointer", transition: "fill 0.1s ease" }}
       />
-
       <circle
         cx="12.5"
         cy="12.5"

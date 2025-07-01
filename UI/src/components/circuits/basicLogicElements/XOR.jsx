@@ -1,23 +1,11 @@
-import { useEffect } from "react";
-import { Position, useUpdateNodeInternals } from "@xyflow/react";
+import { Position } from "@xyflow/react";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import { IconXOR } from "../../../../assets/circuits-icons.jsx";
+import { IconNOR, IconXOR } from "../../../../assets/circuits-icons.jsx";
+import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 
 function XorNode({ id, data, isConnectable }) {
   const rotation = data.rotation || 0;
-  const updateNodeInternals = useUpdateNodeInternals();
-
-  const getHandlePosition = (basePosition) => {
-    const positions = [
-      Position.Top,
-      Position.Right,
-      Position.Bottom,
-      Position.Left,
-    ];
-    const currentIndex = positions.indexOf(basePosition);
-    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
-    return positions[newIndex];
-  };
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 80, 70);
 
   const getHandleStyle = (handle) => {
     switch (rotation) {
@@ -48,16 +36,9 @@ function XorNode({ id, data, isConnectable }) {
     }
   };
 
-  useEffect(() => {
-    updateNodeInternals(id);
-  }, [rotation, id, updateNodeInternals]);
-
   return (
-    <div
-      className="circuit-button"
-      style={{ transform: `rotate(${rotation}deg)` }}
-    >
-      <IconXOR SVGClassName={"circuit-button-icon"} />
+    <RotatedNodeWrapper className="circuit-button">
+      <IconNOR SVGClassName={"circuit-button-icon"} />
 
       {/* Handles */}
       <CustomHandle
@@ -83,7 +64,7 @@ function XorNode({ id, data, isConnectable }) {
         style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
-    </div>
+    </RotatedNodeWrapper>
   );
 }
 

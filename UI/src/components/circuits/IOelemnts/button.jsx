@@ -1,8 +1,8 @@
-// noinspection DuplicatedCode
 import { useState, useRef, useEffect } from "react";
-import { Position, useUpdateNodeInternals } from "@xyflow/react";
+import { Position } from "@xyflow/react";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { useSimulateState } from "../../pages/mainPage.jsx";
+import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 
 function InputNodeButton({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
@@ -10,19 +10,7 @@ function InputNodeButton({ id, data, isConnectable }) {
   const cooldownRef = useRef(false);
   const delay = 500;
   const rotation = data.rotation || 0;
-  const updateNodeInternals = useUpdateNodeInternals();
-
-  const getHandlePosition = (basePosition) => {
-    const positions = [
-      Position.Top,
-      Position.Right,
-      Position.Bottom,
-      Position.Left,
-    ];
-    const currentIndex = positions.indexOf(basePosition);
-    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
-    return positions[newIndex];
-  };
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(id, rotation, 60, 80);
 
   const getHandleStyle = () => {
     switch (rotation) {
@@ -38,36 +26,26 @@ function InputNodeButton({ id, data, isConnectable }) {
   };
 
   useEffect(() => {
-    updateNodeInternals(id);
-  }, [rotation, id, updateNodeInternals]);
-
-  useEffect(() => {
     setInputState(data.value || false);
   }, [data.value]);
 
   const handleChange = (newValue) => {
     setInputState(newValue);
-
     if (simulateState === "running" && updateInputState)
       updateInputState(id, newValue);
-
     data.value = newValue;
   };
 
   const handlePressDown = (e) => {
     e.stopPropagation();
-
     if (cooldownRef.current || inputState) return;
-
     handleChange(true);
   };
 
   const handlePressUp = (e) => {
     e.stopPropagation();
     e.preventDefault();
-
     if (!inputState) return;
-
     cooldownRef.current = true;
     setTimeout(() => {
       handleChange(false);
@@ -76,10 +54,7 @@ function InputNodeButton({ id, data, isConnectable }) {
   };
 
   return (
-    <div
-      className="circuit-button input"
-      style={{ transform: `rotate(${rotation}deg)` }}
-    >
+    <RotatedNodeWrapper className="circuit-button">
       <p className={"input-text"}>Button</p>
 
       <SvgButton
@@ -96,7 +71,7 @@ function InputNodeButton({ id, data, isConnectable }) {
         style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
-    </div>
+    </RotatedNodeWrapper>
   );
 }
 
@@ -107,7 +82,7 @@ const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
       onPointerDownCapture={onPressDown}
       onPointerUpCapture={onPressUp}
     >
-      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`} />
+      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`}/>
     </div>
   );
 };
