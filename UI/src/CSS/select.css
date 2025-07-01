@@ -12,11 +12,12 @@ button {
   line-height: 1;
   height: 35px;
   gap: 5px;
-  background-color: var(--main-3);
+  background-color: var(--menu-lighter);
   color: var(--main-0);
   border: 0.05rem solid var(--main-4);
   z-index: 10000;
-  transition: 0.06s ease;
+  transition: 0.06s ease, background-color var(--ttime), border var(--ttime);
+
 }
 
 .SelectTrigger:hover {
@@ -36,7 +37,7 @@ button {
 
 .SelectContent {
   overflow: hidden;
-  background-color: var(--main-3);
+  background-color: var(--menu-lighter);
   border: 0.05rem solid var(--main-4);
   color: var(--main-0);
   transition: 0.08s ease;

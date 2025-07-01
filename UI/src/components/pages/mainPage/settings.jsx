@@ -2,8 +2,8 @@ import {Link} from "react-router-dom";
 import UserIcon from "../../../../assets/userIcon.png";
 
 import {MinimapSwitch} from "./switch.jsx";
-import {SelectCanvasBG, SelectLogLevel, SelectTheme} from "./select.jsx";
-import {getCurrentLogLevel, setCurrentLogLevel} from "../../codeComponents/logger.jsx";
+import {useNotificationsLevel} from "../mainPage.jsx"
+import {SelectCanvasBG, SelectLogLevel, SelectNotificationsPosition, SelectTheme} from "./select.jsx";
 import React, {useState} from "react";
 import {IconCloseCross, IconTabPalette, IconTabPerson, IconTabBell} from "../../../../assets/ui-icons.jsx";
 
@@ -15,7 +15,11 @@ export function Settings({
                            setCurrentBG,
                            theme,
                            setTheme,
-                           closeSettings
+                           closeSettings,
+                           setToastPosition,
+                           toastPosition,
+                           currentLogLevel,
+                           setLogLevel,
                          }) {
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -69,6 +73,12 @@ export function Settings({
           setCurrentBG={setCurrentBG}
           theme={theme}
           setTheme={setTheme}
+          toastPosition={toastPosition}
+          setToastPosition={setToastPosition}
+          currentLogLevel={currentLogLevel}
+          setLogLevel={setLogLevel}
+
+
         />
       </div>
     </div>
@@ -84,8 +94,15 @@ function TabContent({
                    currentBG,
                    setCurrentBG,
                    theme,
-                   setTheme
+                   setTheme,
+                   toastPosition,
+                   setToastPosition,
+
                  }) {
+
+
+
+  const { logLevel, setLogLevel } = useNotificationsLevel();
 
   if (currentTab === 0) {
     return (
@@ -102,13 +119,38 @@ function TabContent({
 
   if (currentTab === 1) {
     return (
-      <div className="settingBlock">
-        <p>Log verbosity</p>
-        <SelectLogLevel
-          currentLogLevel={getCurrentLogLevel()}
-          setCurrentLogLevel={setCurrentLogLevel}
-          className="selectTheme"
-        />
+      <div>
+        <div className="settingBlock">
+          <div className="setting-text">
+            <p className="setting-title">Notification details level</p>
+            <p className="setting-description">
+              Allows control over the amount of notifications during simulation. The higher the level, the more detailed the toast messages.
+            </p>
+          </div>
+
+          <div className={"interactive-wrapper"}>
+            <SelectLogLevel
+              currentLogLevel={logLevel}
+              setCurrentLogLevel={setLogLevel}
+            />
+          </div>
+        </div>
+
+        <div className="settingBlock">
+          <div className="setting-text">
+            <p className="setting-title">Notifications position</p>
+            <p className="setting-description">
+              Sets the position of notifications to top center or top bottom.
+            </p>
+          </div>
+
+          <div className={"interactive-wrapper"}>
+            <SelectNotificationsPosition
+              toastPosition={toastPosition}
+              setToastPosition={setToastPosition}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -117,30 +159,54 @@ function TabContent({
     return (
       <div>
         <div className="settingBlock">
-          <p>Show mini-map</p>
-          <MinimapSwitch
-            className="minimapSwitch"
-            minimapState={showMinimap}
-            minimapToggle={setShowMinimap}
-          />
+          <div className="setting-text">
+            <p className="setting-title">Show mini-map</p>
+            <p className="setting-description">
+              Displays a small overview map of the canvas to help navigate large flows. Especially useful when working with complex node graphs.
+            </p>
+          </div>
+
+          <div className={"interactive-wrapper"}>
+            <MinimapSwitch
+              className="minimapSwitch"
+              minimapState={showMinimap}
+              minimapToggle={setShowMinimap}
+            />
+          </div>
         </div>
 
         <div className="settingBlock">
-          <p>Canvas background</p>
-          <SelectCanvasBG
-            currentBG={currentBG}
-            setCurrentBG={setCurrentBG}
-            className="selectBG"
-          />
+          <div className="setting-text">
+            <p className="setting-title">Canvas background</p>
+            <p className="setting-description">
+              Sets the background appearance of the working board.
+            </p>
+          </div>
+
+          <div className={"interactive-wrapper"}>
+            <SelectCanvasBG
+              currentBG={currentBG}
+              setCurrentBG={setCurrentBG}
+              className="selectBG"
+            />
+          </div>
         </div>
 
         <div className="settingBlock">
-          <p>Theme</p>
-          <SelectTheme
-            theme={theme}
-            setTheme={setTheme}
-            className="selectTheme"
-          />
+          <div className="setting-text">
+            <p className="setting-title">Theme</p>
+            <p className="setting-description">
+              Changes theme for the entire website.
+            </p>
+          </div>
+
+          <div className={"interactive-wrapper"}>
+            <SelectTheme
+              theme={theme}
+              setTheme={setTheme}
+              className="selectTheme"
+            />
+          </div>
         </div>
       </div>
     );

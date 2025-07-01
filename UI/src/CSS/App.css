@@ -4,11 +4,13 @@
   border-radius: 0.2rem;
   overflow: hidden;
   box-shadow: none;
+  transition: background-color var(--ttime), border var(--ttime);
 }
 
 .controls button {
   background-color: var(--main-2);
   border-bottom: var(--main-4) solid 0.07rem;
+  transition: background-color var(--ttime), border var(--ttime);
 }
 
 .controls button:hover {
@@ -44,6 +46,7 @@
   position: relative;
   width: 100px;
   height: 50px;
+  transition: background-color var(--ttime), border var(--ttime);
 }
 
 /* SVG‑иконка занимает весь контейнер */
@@ -70,14 +73,19 @@
 
 .close-cross {
   background: transparent;
-  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4px;
   font-size: 20px;
+  width: 0.5rem;
   flex-shrink: 0;
+}
+
+.close-cross-icon{
+  width: 0.7rem;
+  height: 0.7rem;
 }
 
 .toast-notification {

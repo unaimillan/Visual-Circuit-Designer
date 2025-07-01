@@ -21,6 +21,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+//Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
@@ -31,13 +32,12 @@ import { initialEdges } from "../codeComponents/edges.js";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
 
-
-
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
 import {Settings} from "./mainPage/settings.jsx";
+import {LOG_LEVELS} from "../codeComponents/logger.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -46,15 +46,21 @@ export const SimulateStateContext = createContext({
   updateInputState: () => {},
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
+export const NotificationsLevelContext = createContext({
+  logLevel: "idle",
+  setLogLevel: () => {},
+});
+
 export function useSimulateState() {
-  const ctx = useContext(SimulateStateContext);
-  if (!ctx) {
-    throw new Error(
-      "useSimulateState must be used within SimulateStateProvider",
-    );
-  }
-  return ctx;
+  const context = useContext(SimulateStateContext);
+  if (!context) throw new Error("useSimulateState must be used within SimulateStateProvider",);
+  return context;
+}
+
+export function useNotificationsLevel() {
+  const context = useContext(NotificationsLevelContext);
+  if (!context) throw new Error("useNotificationsLevel must be used within NotificationsLevelProvider",);
+  return context;
 }
 
 const GAP_SIZE = 10;
@@ -69,6 +75,8 @@ export default function Main() {
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
+  const [toastPosition, setToastPosition] = useState("top-center");
+  const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -525,11 +533,15 @@ export default function Main() {
         : BackgroundVariant.Lines;
 
   return (
+    <NotificationsLevelContext.Provider
+      value={{ logLevel, setLogLevel }}
+    >
     <SimulateStateContext.Provider
       value={{ simulateState, setSimulateState, updateInputState }}
     >
       <>
         <ReactFlow
+          style={{ backgroundColor: 'var(--main-2)' }}
           ref={ref}
           nodes={nodes}
           edges={edges}
@@ -564,8 +576,9 @@ export default function Main() {
             gap={GAP_SIZE}
             size={1.6}
             variant={variant}
+            style={{transition: "var(--ttime)"}}
           />
-          <Controls className="controls" />
+          <Controls className="controls" style={{transition: "var(--ttime)"}}/>
           {showMinimap && (
             <MiniMap
               className="miniMap"
@@ -573,7 +586,8 @@ export default function Main() {
               maskColor="var(--mask)"
               nodeColor="var(--main-4)"
               position="top-right"
-              style={{ borderRadius: "0.5rem" }}
+              style={{ borderRadius: "0.5rem", overflow: "hidden", transition:
+                  "background-color var(--ttime),border var(--ttime)"}}
             />
           )}
         </ReactFlow>
@@ -587,7 +601,7 @@ export default function Main() {
         )}
 
         <Toaster
-          position="top-center"
+          position={toastPosition}
           toastOptions={{
             style: {
               backgroundColor: "var(--main-2)",
@@ -598,7 +612,7 @@ export default function Main() {
               border: "0.05rem solid var(--main-5)",
               fontFamily: "Montserrat, serif",
             },
-            duration: 5000,
+            duration: 2000,
             error: {
               duration: 10000,
             },
@@ -640,6 +654,10 @@ export default function Main() {
           setCurrentBG={setCurrentBG}
           theme={theme}
           setTheme={setTheme}
+          toastPosition={toastPosition}
+          setToastPosition={setToastPosition}
+          currentLogLevel={logLevel}
+          setLogLevel={setLogLevel}
           closeSettings={() => {
             setMenu(null);
             setOpenSettings(false);
@@ -677,5 +695,6 @@ export default function Main() {
         />
       </>
     </SimulateStateContext.Provider>
+    </NotificationsLevelContext.Provider>
   );
 }

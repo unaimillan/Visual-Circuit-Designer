@@ -14,6 +14,25 @@
   </head>
   <body>
     <div id="app"></div>
+
+
     <script type="module" src="src/main.jsx"></script>
+    <script>
+      // Этот код можно поставить прямо в index.html в <head> внутри <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "light";
+
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        // Устанавливаем ttime в 0s, чтобы на старте не было плавных переходов
+        document.documentElement.style.setProperty("--ttime", "0s");
+
+        // А после отрисовки, возвращаем transition
+        requestAnimationFrame(() => {
+          // Или setTimeout(() => {...}, 0);
+          document.documentElement.style.setProperty("--ttime", "0.3s");
+        });
+      })();
+
+    </script>
   </body>
 </html>

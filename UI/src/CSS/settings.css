@@ -12,15 +12,16 @@
   left: -100%;
   opacity: 0;
 
-  background-color: var(--main-2);
+  background-color: var(--menu-lighter);
   color: var(--main-0);
   border: var(--main-5) solid 0.05rem;
 
   transition:
+    background-color var(--ttime),
+    border var(--ttime),
     width 1s 0.15s,
     height 1s 0.15s,
-    background-color 0.15s ease-in-out,
-    backdrop-filter 0.15s ease-in-out,
+    backdrop-filter 0.6s ease-in-out,
     opacity 0.15s ease-in-out;
 
     &.showed{
@@ -32,9 +33,10 @@
       left: 15%;
 
       transition:
+        background-color var(--ttime),
+        border var(--ttime),
         width 0s,
         height 0s,
-        background-color 0.2s ease-in-out,
         backdrop-filter 0.2s ease-in-out,
         opacity 0.2s ease-in-out;
     }
@@ -49,11 +51,13 @@
   width: 2rem;
   height: 2rem;
   margin-left: 0.33rem;
-  background-color: var(--main-2);
+  background-color: var(--menu-lighter);
   border: var(--main-5) solid 0.07rem;
-  transition: 0.15s ease-out;
   border-radius: 0.33rem;
   user-select: none;
+  transition:
+          background-color var(--ttime),
+          border var(--ttime);
 
   &:hover {
     transition: 0.15s ease-out;
@@ -74,7 +78,6 @@
   }
 }
 
-
 .openSettingsButtonIcon {
   color: var(--main-0);
   width: 1.3rem;
@@ -83,73 +86,89 @@
   display: block;
 }
 
+
+
 .settingBlock {
-  font-size: 0.9rem;
-  font-weight: 400;
-  margin: 1rem 5%;
-  user-select: none;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0;
-
-  & > p{
-    margin: 0;
-  }
+  align-items: flex-start;
+  margin: 1rem 5%;
+  padding: 0.75rem 0;
+  user-select: none;
+  transition:
+          background-color var(--ttime),
+          border var(--ttime);
 }
 
-.minimapSwitchLabel {
-  font-size: 1rem;
-  justify-content: flex-start;
+.setting-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 3rem;
 }
+
+.setting-title {
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.setting-description {
+  font-size: 0.8rem;
+  margin: 0.3rem 0 0 0;
+  color: var(--secondary-text);
+  line-height: 1.2rem;
+}
+
+.interactive-wrapper {
+  flex-shrink: 0;
+}
+
 
 .tabs-menu{
   width: 25%;
   height: 100%;
   border-right: 0.05rem solid var(--main-4);
-  background-color: var(--main-2);
-}
-
-.tab-content{
-  width: 75%;
-  height: 100%;
-  left: 25%;
-  background-color: var(--main-3);
+  background-color: var(--menu-darker);
+  transition:
+          background-color var(--ttime),
+          border var(--ttime);
 }
 
 .settings-tab{
+  transition:
+          background-color var(--ttime),
+          border var(--ttime);
+
   display: flex;
   align-items: center;
   width: 80%;
   font-size: 0.9rem;
   font-weight: 400;
   height: 2.5rem;
-  border: 0.05rem solid var(--main-3);
+  border: 0.05rem solid var(--main-4);
   margin: 0.5rem 10% 1rem 10%;
   border-radius: 0.5rem;
   align-content: center;
   justify-content: left;
   text-align: left;
   user-select: none;
-  transition: 0.1s;
+  /*transition: 0.1s;*/
   overflow: hidden;
 
 
   &:hover {
-    /*border: var(--main-5) 0.05rem solid;*/
-    background-color: var(--main-3);
+    background-color: var(--main-4);
     transition: 0.1s;
   }
 
   &:active{
-    /*border: var(--main-5) 0.05rem solid;*/
-    background-color: var(--main-3);
+    background-color: var(--main-4);
     transition: 0.06s;
   }
 
   &.active{
-    /*border: var(--main-5) 0.05rem solid;*/
-    background-color: var(--main-3);
+    background-color: var(--main-4);
     transition: 0.06s;
   }
 }
@@ -162,7 +181,6 @@
   left: 0;
 }
 
-
 .upper-div{
   width: 100%;
   padding: 15% 0.6rem 1.2rem 15%;
@@ -174,12 +192,22 @@
 }
 
 
+.tab-content{
+  transition:
+          background-color var(--ttime),
+          border var(--ttime);
+  width: 75%;
+  height: 100%;
+  left: 25%;
+  background-color: var(--menu-lighter);
+}
+
 .tab-content-upper{
   display: flex;
   align-items: center;
   user-select: none;
 
-  height: 9%;
+  height: 11.8%;
   font-size: 1.1rem;
   margin: 0 2rem 2rem 2rem;
   border-bottom: 0.05rem solid var(--main-5);
@@ -204,7 +232,6 @@
   }
 }
 
-
 .settingUserIcon {
   color: var(--main-0);
   background-color: white;
@@ -213,6 +240,7 @@
   border: var(--main-4) solid 0.05rem;
   border-radius: 3rem;
   margin: 0.95rem 0.5rem 0.95rem 0.95rem;
+  transition: background-color 0.55s ease-in-out;
 }
 
 .settingUserName {
