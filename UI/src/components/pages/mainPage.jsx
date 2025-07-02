@@ -274,9 +274,12 @@ export default function Main() {
   }, [theme]);
 
   // Я не знаю, что это
-  // const validateConnection = useCallback((connection) => {
-  //   return connection.source !== connection.target;
-  // }, []);
+  const isValidConnection = useCallback(({ source, target, targetHandle }) => {
+    if (source === target) {
+      return false;
+    }
+    return !edgesRef.current.some((e) => e.target === target && e.targetHandle === targetHandle);
+  }, []);
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
@@ -431,6 +434,11 @@ export default function Main() {
 
             if (nodeHandles.target) {
               nodeHandles.target.forEach((tgtHandle) => {
+                const alreadyUsed = edgesRef.current.some(
+                  (e) => e.target === node.id && e.targetHandle === tgtHandle.id
+                );
+                if (alreadyUsed) return;
+
                 const tgtHandlePos = {
                   x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
                   y: nodePos.y + tgtHandle.y + tgtHandle.height / 2,
@@ -466,6 +474,11 @@ export default function Main() {
 
             if (nodeHandles.source) {
               nodeHandles.source.forEach((srcHandle) => {
+                const alreadyUsed = edgesRef.current.some(
+                  (e) => e.target === internalNode.id && e.targetHandle === tgtHandle.id
+                );
+                if (alreadyUsed) return;
+
                 const srcHandlePos = {
                   x: nodePos.x + srcHandle.x + srcHandle.width / 2,
                   y: nodePos.y + srcHandle.y + srcHandle.height / 2,
@@ -497,18 +510,6 @@ export default function Main() {
     [store, getInternalNode],
   );
 
-  const onNodeDrag = useCallback(
-    (_, node) => {
-      const closeEdge = getClosestEdge(node);
-      setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== "temp");
-        if (closeEdge !== null) nextEdges.push(closeEdge);
-        return nextEdges;
-      });
-    },
-    [getClosestEdge, setEdges],
-  );
-
   const onNodeDragStop = useCallback(
     (_, node) => {
       setEdges((es) => {
@@ -517,6 +518,7 @@ export default function Main() {
         if (closeEdge) {
           return addEdge(
             {
+              type: "straight",
               source: closeEdge.source,
               sourceHandle: closeEdge.sourceHandle,
               target: closeEdge.target,
@@ -558,11 +560,11 @@ export default function Main() {
             onEdgeContextMenu={onEdgeContextMenu}
             onPaneClick={onPaneClick}
             onConnect={onConnect}
-            onNodeDrag={onNodeDrag}
             onNodeDragStop={onNodeDragStop}
             onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
             onInit={setReactFlowInstance}
+            isValidConnection={isValidConnection}
             nodeTypes={nodeTypes}
             panOnDrag={panOnDrag}
             selectionOnDrag
