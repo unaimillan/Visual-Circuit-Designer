@@ -32,7 +32,7 @@ void LoginHandler::handleRequest(
 ) {
   Logger& logger = Poco::Util::Application::instance().logger();
   logger.information(
-      "POST /api/login from %s", request.clientAddress().toString()
+      "POST /api/auth/login from %s", request.clientAddress().toString()
   );
 
   if (request.getContentType() != "application/json") {
@@ -85,7 +85,7 @@ void LoginHandler::handleRequest(
       response.setStatusAndReason(HTTPResponse::HTTP_INTERNAL_SERVER_ERROR);
       response.send();
       logger.error(
-          "[ERROR] POST /api/login: Exception %s:\n%s",
+          "[ERROR] POST /api/auth/login: Exception %s:\n%s",
           std::string(e.className()),
           e.displayText()
       );

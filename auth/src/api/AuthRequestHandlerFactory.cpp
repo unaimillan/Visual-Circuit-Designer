@@ -5,6 +5,7 @@
 #include "handlers/LoginHandler.hpp"
 #include "handlers/NotFoundHandler.hpp"
 #include "handlers/RegistrationHandler.hpp"
+#include "handlers/VerificationHandler.hpp"
 
 #include <Poco/Net/HTTPRequestHandler.h>
 #include <Poco/Net/HTTPServerRequest.h>
@@ -22,10 +23,12 @@ HTTPRequestHandler*
 AuthRequestHandlerFactory::createRequestHandler(HTTPServerRequest const& request
 ) {
   if (request.getMethod() == "POST") {
-    if (request.getURI() == "/api/register") {
+    if (request.getURI() == "/api/auth/register") {
       return new RegistrationHandler(m_db);
-    } else if (request.getURI() == "/api/login") {
+    } else if (request.getURI() == "/api/auth/login") {
       return new LoginHandler(m_db, m_tokenManager);
+    } else if (request.getURI() == "/api/auth/verify") {
+      return new VerificationHandler(m_db, m_tokenManager);
     }
   }
   return new NotFoundHandler;

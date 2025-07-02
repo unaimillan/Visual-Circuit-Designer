@@ -32,7 +32,7 @@ void RegistrationHandler::handleRequest(
 ) {
   Logger& logger = Application::instance().logger();
   logger.information(
-      "POST /api/register from %s", request.clientAddress().toString()
+      "POST /api/auth/register from %s", request.clientAddress().toString()
   );
 
   if (!request.hasContentLength()) {
@@ -84,7 +84,7 @@ void RegistrationHandler::handleRequest(
       response.setStatusAndReason(HTTPResponse::HTTP_INTERNAL_SERVER_ERROR);
       response.send();
       logger.error(
-          "[ERROR] POST /api/register: Exception %s:\n%s\n",
+          "[ERROR] POST /api/auth/register: Exception %s:\n%s\n",
           std::string(e.className()),
           e.displayText()
       );

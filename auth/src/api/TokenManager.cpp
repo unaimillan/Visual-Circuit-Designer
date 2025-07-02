@@ -54,16 +54,7 @@ std::string TokenManager::generate(User const& user) const {
 
 bool TokenManager::verify(std::string const& token, Type type) const {
   Token decoded;
-  if (m_signer.tryVerify(token, decoded) &&
-      !decoded.getIssuedAt().isElapsed(15LL * 60000000LL)) {
-    switch (type) {
-    case ACCESS: return decoded.getSubject() == "VCD JWT Access";
-    case REFRESH: return decoded.getSubject() == "VCD JWT Refresh";
-    default: return true;
-    }
-  } else {
-    return false;
-  }
+  return _verify(token, decoded, type);
 }
 
 User TokenManager::getUser(std::string const& token) const {
@@ -79,4 +70,20 @@ User TokenManager::getUser(std::string const& token) const {
   }
 
   return ret;
+}
+
+bool TokenManager::_verify(std::string const& token, Poco::JWT::Token& out, Type type) const {
+  if (m_signer.tryVerify(token, out)) {
+    Type realType = out.getSubject() == "VCD JWT Access" ? ACCESS : REFRESH;
+    if (type != ANY && realType != type) {
+      return false;
+    }
+    switch (realType) {
+    case ACCESS: return !out.getIssuedAt().isElapsed(15LL * 60000000LL);
+    case REFRESH: return !out.getIssuedAt().isElapsed(30LL * 24LL * 60LL * 60000000LL);
+    default: return false;
+    }
+  } else {
+    return false;
+  }
 }

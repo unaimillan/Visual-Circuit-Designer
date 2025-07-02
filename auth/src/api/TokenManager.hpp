@@ -24,6 +24,11 @@ public:
 
   User getUser(std::string const& token) const;
 
+  std::string refresh(std::string const& token);
+
+private:
+  bool _verify(std::string const& token, Poco::JWT::Token& out, Type type = ANY) const;
+
 private:
   Signer m_signer;
 };
