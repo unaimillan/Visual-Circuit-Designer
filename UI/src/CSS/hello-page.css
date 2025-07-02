@@ -3,6 +3,7 @@
 }
 
 .hello-logo-name{
+    margin-left: 40px;
     color: white;
     font-size: 24px;
 }
@@ -13,18 +14,25 @@
 }
 
 .header-button{
-    width: 80px;
+    width: 120px;
     height: 40px;
-    background-color: oklch(0.396 0.2 272.663);
-    border: 1px hsl(253, 20%, 40%) solid ;
     color: #ffffff;
-    border-radius: 10px;
+    font-size: 0.95rem;
     text-align: center;
+    margin-right: 10px;
+    border-radius: 10px;
+    border: 1px hsla(0, 0%, 20%, 0) solid ;
+    transition: 0.3s;
+
+    &:hover{
+        border: 1px hsla(0, 0%, 50%, 50%) solid ;
+
+    }
 }
 .hello-hero-wrapper {
     color: white;
     position: relative;
-    padding-top: 200px;
+    padding-top: 300px;
     height: 100vh;
     overflow: hidden;
     display: flex;
@@ -38,6 +46,17 @@
     text-align: center;
     transition: transform 0.1s ease-out;
     will-change: transform;
+
+    & > h1 {
+        font-size: 48px;
+        margin: 0;
+    }
+
+    & > p {
+        font-size: 20px;
+        margin-top: 10px;
+        color: #aaa;
+    }
 }
 
 
@@ -45,31 +64,21 @@
     position: fixed;
     top: 0;
     width: 100%;
-    height: 60px;
-    padding: 0 40px;
+    height: 70px;
     display: flex;
     align-items: center;
     background-color: transparent;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s ease;
     z-index: 1000;
+    border-bottom: rgba(50, 50, 50, 0) 1px solid;
 
     &.scrolled{
         background-color: rgba(20, 20, 20, 0.3);
-        /*backdrop-filter: blur(10px);*/
-        border-bottom: #333333 1px solid;
+        backdrop-filter: blur(10px);
+        border-bottom: rgba(50, 50, 50, 0.5) 1px solid;
     }
 }
 
-.hello-hero-title {
-    font-size: 48px;
-    margin: 0;
-}
-
-.hello-hero-subtitle {
-    font-size: 20px;
-    margin-top: 10px;
-    color: #aaa;
-}
 
 .hello-hero-image {
     z-index: 10;
@@ -92,10 +101,8 @@
     height: 100%;
 
     background-color: #333333;
-    /*background: linear-gradient(135deg, #333, #111);*/
     border-radius: 1.5rem;
     border: 1px solid hsl(0, 0%, 25%);
-    /*box-shadow: 0 0px 40px rgba(81, 81, 81, 0.5);*/
     color: #555;
     display: flex;
     align-items: center;
@@ -118,10 +125,6 @@
 
 .demo-picture{
     position: absolute;
-    /*top:2rem;*/
-    /*right:2rem;*/
-    /*left: 2rem;*/
-
     box-sizing: border-box;
     align-items: center;
     object-fit: contain; /* чтобы сохранить пропорции картинки */

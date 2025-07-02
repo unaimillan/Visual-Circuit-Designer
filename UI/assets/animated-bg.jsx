@@ -16,7 +16,7 @@ export function VantaFogBackground() {
         minHeight: 200.0,
         minWidth: 200.0,
         baseColor: 0x0,
-        highlightColor: 0x8600ff,
+        highlightColor: 0x6B00CC,
         midtoneColor: 0x0,
         lowlightColor: 0x0,
         blurFactor: 0.9,

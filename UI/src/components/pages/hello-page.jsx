@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../CSS/hello-page.css";
 import {VantaFogBackground} from "../../../assets/animated-bg.jsx";
+import { Link } from 'react-router-dom';
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
@@ -15,14 +16,24 @@ function App() {
   const scale = 1 - clampedScroll / 1000;       // от 1 до 0.7
   const translateY = -clampedScroll / 4;        // немного вверх
 
+  const progress = clampedScroll / 300;
+  const easeOut = 1 - Math.pow(1 - progress, 2);
+  const easeOutScale = 1 - easeOut * 0.3;
+  const easeOutTranslate = -easeOut * 75;
+
+
   return (
     <div>
-      <VantaFogBackground />
+      <VantaFogBackground/>
+
       <header className={`hello-header ${scrollY > 50 ? "scrolled" : ""}`}>
         <div className="hello-logo-name">VCD</div>
+
         <div className={"header-left-buttons"}>
-          <button className={"header-button sing-up-button"}>Sign Up</button>
-          <button className={"header-button sing-up-button"}>Sign Up</button>
+          <button className={"header-button"}>Sign Up</button>
+          <Link to="/">
+            <button className={"header-button"}>Get Started</button>
+          </Link>
         </div>
       </header>
 
@@ -30,11 +41,11 @@ function App() {
         <div
           className="hello-hero-text"
           style={{
-            transform: `scale(${scale}) translateY(${translateY}px)`,
+            transform: `scale(${easeOutScale}) translateY(${easeOutTranslate}px)`,
           }}
         >
-          <h1 className="hello-hero-title">Design logic circuits in your browser</h1>
-          <p className="hello-hero-subtitle">Simulate, sync, and share — instantly.</p>
+          <h1 className="hello-hero-title">Design logic circuits in your browser.</h1>
+          <p className="hello-hero-subtitle">Create, simulate and sync — instantly.</p>
         </div>
 
         <div className="hello-hero-image">
