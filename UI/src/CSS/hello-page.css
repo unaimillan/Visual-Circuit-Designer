@@ -2,10 +2,29 @@
     background-color: hsl(0, 0%, 6%);
 }
 
+.hello-logo-name{
+    color: white;
+    font-size: 24px;
+}
+
+.header-left-buttons{
+    position: fixed;
+    right: 0;
+}
+
+.header-button{
+    width: 80px;
+    height: 40px;
+    background-color: oklch(0.396 0.2 272.663);
+    border: 1px hsl(253, 20%, 40%) solid ;
+    color: #ffffff;
+    border-radius: 10px;
+    text-align: center;
+}
 .hello-hero-wrapper {
     color: white;
     position: relative;
-    padding-top: 120px;
+    padding-top: 200px;
     height: 100vh;
     overflow: hidden;
     display: flex;
@@ -30,16 +49,15 @@
     padding: 0 40px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background-color: transparent;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s ease;
     z-index: 1000;
-}
 
-.hello-scrolled {
-    background-color: rgba(20, 20, 20, 0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: #333333 1px solid;
+    &.scrolled{
+        background-color: rgba(20, 20, 20, 0.3);
+        /*backdrop-filter: blur(10px);*/
+        border-bottom: #333333 1px solid;
+    }
 }
 
 .hello-hero-title {

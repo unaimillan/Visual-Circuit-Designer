@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../CSS/hello-page.css";
+import {VantaFogBackground} from "../../../assets/animated-bg.jsx";
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
@@ -10,20 +11,19 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Ограничим эффект до 300px скролла
   const clampedScroll = Math.min(scrollY, 300);
   const scale = 1 - clampedScroll / 1000;       // от 1 до 0.7
   const translateY = -clampedScroll / 4;        // немного вверх
 
   return (
     <div>
-      <header className={`hello-header ${scrollY > 50 ? "hello-scrolled" : ""}`}>
-        <div className="hello-logo">LOGICLAB</div>
-        <nav className="hello-nav">
-          <a href="#">Demo</a>
-          <a href="#">Sign Up</a>
-          <a href="#">Docs</a>
-        </nav>
+      <VantaFogBackground />
+      <header className={`hello-header ${scrollY > 50 ? "scrolled" : ""}`}>
+        <div className="hello-logo-name">VCD</div>
+        <div className={"header-left-buttons"}>
+          <button className={"header-button sing-up-button"}>Sign Up</button>
+          <button className={"header-button sing-up-button"}>Sign Up</button>
+        </div>
       </header>
 
       <div className="hello-hero-wrapper">
