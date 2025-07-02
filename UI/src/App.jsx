@@ -1,5 +1,6 @@
 import Main from "./pages/mainPage.jsx";
 import Profile from "./pages/profile.jsx";
+import Auth from "./pages/auth.jsx";
 
 import "@xyflow/react/dist/style.css";
 
@@ -11,6 +12,7 @@ import "./CSS/dnd.css";
 import "./CSS/backdrop.css";
 import "./CSS/circuitsMenu.css";
 import "./CSS/contextMenu.css";
+import "./CSS/auth.css"
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -23,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Main />} />
+          <Route path="/auth" element={<Auth />} />
         </Routes>
       </div>
     </Router>

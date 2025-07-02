@@ -555,7 +555,14 @@ export default function Main() {
             SVGClassName="openSettingsButtonIcon"
             draggable="false"
           />
-        </button>
+      </button>
+        <Link
+            to="/auth"
+            className="login-button"
+            style={{ textDecoration: "none" }}
+        >
+          <span className="login-button-text">Log in</span>
+        </Link>
 
         <div
           className={`backdrop ${openSettings ? "cover" : ""}`}

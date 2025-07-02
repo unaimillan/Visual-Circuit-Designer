@@ -1,6 +1,5 @@
 import React from "react";
 import "../CSS/profile.css";
-import UserIcon from "../../assets/userIcon.png";
 import { IconUser } from "../../assets/ui-icons.jsx";
 
 const Profile = () => {
