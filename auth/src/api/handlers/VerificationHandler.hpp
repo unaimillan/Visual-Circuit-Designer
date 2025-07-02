@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Poco/Net/HTTPRequestHandler.h>
 #include "../DBConnector.hpp"
 #include "../TokenManager.hpp"
+
+#include <Poco/Net/HTTPRequestHandler.h>
 
 using Poco::Net::HTTPRequestHandler;
 using Poco::Net::HTTPServerRequest;
@@ -13,9 +14,10 @@ public:
   VerificationHandler(DBConnector& db, TokenManager& tokenManager);
 
 public:
-  void handleRequest(HTTPServerRequest &request, HTTPServerResponse &response) override;
+  void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response)
+      override;
 
 private:
-  DBConnector& m_db;
+  DBConnector&  m_db;
   TokenManager& m_tokenManager;
 };

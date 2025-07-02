@@ -72,7 +72,9 @@ User TokenManager::getUser(std::string const& token) const {
   return ret;
 }
 
-bool TokenManager::_verify(std::string const& token, Poco::JWT::Token& out, Type type) const {
+bool TokenManager::_verify(
+    std::string const& token, Poco::JWT::Token& out, Type type
+) const {
   if (m_signer.tryVerify(token, out)) {
     Type realType = out.getSubject() == "VCD JWT Access" ? ACCESS : REFRESH;
     if (type != ANY && realType != type) {
@@ -80,7 +82,8 @@ bool TokenManager::_verify(std::string const& token, Poco::JWT::Token& out, Type
     }
     switch (realType) {
     case ACCESS: return !out.getIssuedAt().isElapsed(15LL * 60000000LL);
-    case REFRESH: return !out.getIssuedAt().isElapsed(30LL * 24LL * 60LL * 60000000LL);
+    case REFRESH:
+      return !out.getIssuedAt().isElapsed(30LL * 24LL * 60LL * 60000000LL);
     default: return false;
     }
   } else {
