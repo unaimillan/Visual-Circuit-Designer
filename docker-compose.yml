@@ -1,19 +1,7 @@
-version: "3.8"
 services:
-  backend:
-    build:
-      context: ./RunnerNode
-    ports:
-      - "8000:8000"
+  webserver:
+    build: ./UI
     volumes:
-      - ./RunnerNode:/app
-    restart: always
-
-  frontend:
-    build:
-      context: ./UI
-    command: ["npm", "run", "preview"]
-    ports:
-      - "5173:4173"
-    volumes:
-      - ./UI:/app
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  runner:
+    build: ./RunnerNode

@@ -1,201 +1,195 @@
 :root {
-  --canvas-bg-color: #ffffff;
-  --canvas-color: #efefef;
-  --menu-bg-color: #ffffff;
-  --switch-bg-color: #818181;
+  /*Universal TransitionTIME variable (same for all themes, allows to )*/
+  --ttime: 0.3s;
 
-  --external-border-color: #cacaca;
-  --internal-border-color: #dadada;
+  --main-1: hsl(0, 0%, 93%);
+  --main-2: hsl(0, 0%, 90%);
+  --main-3: hsl(0, 0%, 88%);
+  --main-4: hsl(0, 0%, 83%);
+  --main-5: hsl(0, 0%, 80%);
+  --main-0: hsl(0, 0%, 0%);
 
-  --text-color: #000000;
-  --svg-color: #000000;
+  --select-1: hsl(210, 60%, 87%);
+  --select-2: hsl(210, 80%, 80%);
+  --select-mask: hsla(210, 60%, 87%, 50%);
 
-  --button-color: #ffffff;
-  --button-hover-color: #e6e6e6;
-  --button-active-color: #ffffff;
+  --status-success-1: hsl(135, 50%, 85%);
+  --status-success-2: hsl(135, 50%, 35%);
 
-  --select-color: #dbedff;
+  --status-warning-1: hsl(45, 50%, 85%);
+  --status-warning-2: hsl(45, 50%, 50%);
 
-  --simulate-start-button-bg-color: #d6f1df; /* либо #C4E8D1 */
-  --simulate-start-button-text-color: #218358;
+  --status-running-1: hsl(0, 50%, 85%);
+  --status-running-2: hsl(0, 50%, 30%);
 
-  --simulate-loading-button-bg-color: #fff5db;
-  --simulate-loading-button-text-color: #cea82c;
+  --status-error-1: hsl(0, 60%, 80%);
+  --status-error-2: hsl(0, 60%, 20%);
 
-  --simulate-stop-button-bg-color: #ffdbdc;
-  --simulate-stop-button-text-color: #ce2c31;
+  --menu-lighter: var(--main-1);
+  --menu-darker: var(--main-2);
 
-  --simulate-error-button-bg-color: #ffbdbd;
-  --simulate-error-button-text-color: #831616;
-
-  --minimap-mask-color: rgba(240, 240, 240, 0.6);
-  --minimap-node-color: #e2e2e2;
-
-  transition: all 0s;
+  --switch-bg-color: hsl(0, 0%, 52%);
+  --mask: hsla(0, 0%, 80%, 0.2);
+  --secondary-text: hsl(0, 0%, 60%);
 }
 
 [data-theme="dark"] {
-  --canvas-bg-color: #151515;
-  --canvas-color: #232323;
-  --menu-bg-color: #1e1e1e;
-  --switch-bg-color: #555555;
+  --main-1: hsl(0, 0%, 8%);
+  --main-2: hsl(0, 0%, 11%);
+  --main-3: hsl(0, 0%, 16%);
+  --main-4: hsl(0, 0%, 21%);
+  --main-5: hsl(0, 0%, 25%);
+  --main-0: hsl(0, 0%, 100%);
 
-  --external-border-color: #2f2f2f;
-  --internal-border-color: #3a3a3a;
+  --menu-lighter: hsl(0, 0%, 13%);
+  --menu-darker: var(--main-2);
 
-  --text-color: #e0e0e0;
-  --svg-color: #ffffff;
+  --select-1: hsl(220, 35%, 25%);
+  --select-2: hsl(220, 35%, 40%);
+  --select-mask: hsla(220, 35%, 25%, 50%);
 
-  --button-color: #1e1e1e;
-  --button-hover-color: #2a2a2a;
-  --button-active-color: #333333;
+  --status-success-1: hsl(150, 50%, 25%);
+  --status-success-2: hsl(150, 50%, 80%);
 
-  --select-color: #7a94c6;
+  --status-warning-1: hsl(45, 50%, 40%);
+  --status-warning-2: hsl(45, 50%, 80%);
 
-  --simulate-start-button-bg-color: #325e45; /* тёмно-зелёный, не слишком яркий */
-  --simulate-start-button-text-color: #b4eac8; /* мятно-светлый, читабельный */
+  --status-running-1: hsl(0, 50%, 50%);
+  --status-running-2: hsl(0, 50%, 85%);
 
-  --simulate-stop-button-bg-color: #5a2c2d; /* глухой красный */
-  --simulate-stop-button-text-color: #ffb4b6; /* бледно-красный для текста */
+  --status-error-1: hsl(0, 70%, 30%);
+  --status-error-2: hsl(0, 70%, 80%);
 
-  --minimap-mask-color: rgba(240, 240, 240, 0.1);
-  --minimap-node-color: #323232;
+  --switch-bg-color: hsl(0, 0%, 33%);
+  --mask: hsla(0, 0%, 60%, 0.1);
+  --secondary-text: hsl(0, 0%, 35%);
 }
 
 [data-theme="pick-me"] {
-  --canvas-bg-color: #fff4f7;
-  --canvas-color: #ffe6ec;
-  --menu-bg-color: #fff0f5;
-  --switch-bg-color: #c6a5af;
+  --main-1: hsl(345, 100%, 95%);
+  --main-2: hsl(345, 90%, 93.5%);
+  --main-3: hsl(345, 60%, 90%);
+  --main-4: hsl(345, 50%, 85%);
+  --main-5: hsl(345, 45%, 83%);
+  --main-0: hsl(345, 100%, 7%);
 
-  --external-border-color: #f3c6d4;
-  --internal-border-color: #f7d5e2;
+  --menu-lighter: var(--main-2);
+  --menu-darker: var(--main-3);
 
-  --text-color: #4a2b31; /* тёмный розовато-коричневый для контраста */
-  --svg-color: #681824;
+  --select-1: hsl(360, 60%, 80%);
+  --select-2: hsl(360, 60%, 73%);
+  --select-mask: hsla(360, 60%, 80%, 50%);
 
-  --button-color: #ffe4ed;
-  --button-hover-color: #ffd6e4;
-  --button-active-color: #ffc8db;
+  --status-success-1: hsl(200, 40%, 80%);
+  --status-success-2: hsl(200, 40%, 30%);
 
-  --select-color: #fbd1df;
+  --status-warning-1: hsl(30, 60%, 90%);
+  --status-warning-2: hsl(30, 60%, 50%);
 
-  --simulate-start-button-bg-color: #f1dce4; /* слегка розовый с зелёным подтоном */
-  --simulate-start-button-text-color: #7c3d51; /* глубокий тёмно-розовый/сливовый */
+  --status-running-1: hsl(345, 60%, 90%);
+  --status-running-2: hsl(345, 60%, 30%);
 
-  --simulate-stop-button-bg-color: #ffc8d0; /* чуть ярче, но сочетается */
-  --simulate-stop-button-text-color: #a1222d; /* ближе к цвету иконок */
+  --status-error-1: hsl(345, 60%, 80%);
+  --status-error-2: hsl(345, 60%, 20%);
 
-  --minimap-mask-color: rgba(255, 240, 245, 0.6);
-  --minimap-node-color: #fbdde6;
+  --switch-bg-color: hsl(345, 20%, 70%);
+  --mask: hsla(340, 20%, 70%, 0.2);
 
-  transition: all 0s;
+  --secondary-text: hsl(345, 20%, 65%);
 }
 
 [data-theme="tokyo-night"] {
-  --canvas-bg-color: #1a1b26; /* основа */
-  --canvas-color: #24283b; /* внутренний фон */
-  --menu-bg-color: #1f2335;
-  --switch-bg-color: #7aa2f7;
+  --main-1: hsl(230, 25%, 12%);
+  --main-2: hsl(230, 25%, 15%);
+  --main-3: hsl(230, 25%, 19%);
+  --main-4: hsl(230, 25%, 23%);
+  --main-5: hsl(230, 25%, 28%);
+  --main-0: hsl(230, 25%, 95%);
 
-  --external-border-color: #414868;
-  --internal-border-color: #3b4261;
+  --menu-lighter: var(--main-3);
+  --menu-darker: var(--main-2);
 
-  --text-color: #c0caf5;
-  --svg-color: #c0caf5;
+  --select-1: hsl(245, 30%, 25%);
+  --select-2: hsl(245, 30%, 40%);
+  --select-mask: hsla(245, 30%, 25%, 50%);
 
-  --button-color: #1f2335;
-  --button-hover-color: #2a2f4a;
-  --button-active-color: #3b4261;
+  --status-success-1: hsl(170, 50%, 25%);
+  --status-success-2: hsl(170, 50%, 80%);
 
-  --select-color: #33467c;
+  --status-warning-1: hsl(40, 60%, 25%);
+  --status-warning-2: hsl(40, 50%, 70%);
 
-  --simulate-start-button-bg-color: #2d4f46; /* зелёный с холодным подтоном */
-  --simulate-start-button-text-color: #9ece6a; /* основной зелёный Tokyo Night */
+  --status-running-1: hsl(350, 50%, 25%);
+  --status-running-2: hsl(350, 50%, 70%);
 
-  --simulate-stop-button-bg-color: #553648; /* тёмно-красновато-сливовый */
-  --simulate-stop-button-text-color: #f7768e; /* акцентный розовый TN */
+  --status-error-1: hsl(350, 50%, 30%);
+  --status-error-2: hsl(350, 50%, 80%);
 
-  --minimap-mask-color: rgba(30, 32, 48, 0.6);
-  --minimap-node-color: #3b4261;
-
-  transition: all 0s;
+  --switch-bg-color: hsl(220, 89%, 71%);
+  --mask: hsl(220, 89%, 71%, 0.1);
+  --secondary-text: hsl(230, 25%, 35%);
 }
 
 [data-theme="green-nature"] {
-  --canvas-bg-color: #f4fdf7;
-  --canvas-color: #e6f5ea;
-  --menu-bg-color: #eafaf1;
-  --switch-bg-color: #6bbf59;
+  --main-1: hsl(130, 25%, 90%);
+  --main-2: hsl(130, 25%, 88%);
+  --main-3: hsl(130, 25%, 84%);
+  --main-4: hsl(130, 25%, 77%);
+  --main-5: hsl(130, 25%, 73%);
+  --main-0: hsl(132, 25%, 3%);
 
-  --external-border-color: #c2e3c6;
-  --internal-border-color: #d5f0db;
+  --menu-lighter: var(--main-2);
+  --menu-darker: var(--main-3);
 
-  --text-color: #2f4d38;
-  --svg-color: #3d6147;
+  --select-1: hsl(185, 45%, 78%);
+  --select-2: hsl(185, 35%, 70%);
+  --select-mask: hsla(185, 45%, 78%, 50%);
 
-  --button-color: #dff5e5;
-  --button-hover-color: #d0ecd9;
-  --button-active-color: #bee0c9;
+  --status-success-1: hsl(145, 35%, 84%);
+  --status-success-2: hsl(145, 35%, 30%);
 
-  --select-color: #b6e9c5;
+  --status-warning-1: hsl(70, 35%, 80%);
+  --status-warning-2: hsl(70, 35%, 40%);
 
-  --simulate-start-button-bg-color: #c4e8d1; /* слегка ярче, чем фон */
-  --simulate-start-button-text-color: #2f6d4a; /* гармонирует с остальными зелёными */
+  --status-running-1: hsl(10, 35%, 90%);
+  --status-running-2: hsl(10, 35%, 50%);
 
-  --simulate-stop-button-bg-color: #f8cccc; /* менее кислотный */
-  --simulate-stop-button-text-color: #ba3a3a; /* органично смотрится в природе */
+  --status-error-1: hsl(15, 50%, 80%);
+  --status-error-2: hsl(15, 50%, 30%);
 
-  --minimap-mask-color: rgba(200, 255, 225, 0.5);
-  --minimap-node-color: #c9e7d6;
+  --switch-bg-color: hsl(111, 10%, 56%);
+  --mask: hsla(144, 100%, 90%, 0.1);
+  --secondary-text: hsl(132, 20%, 65%);
 }
 
 [data-theme="solar-red"] {
-  --canvas-bg-color: #1c1c1c;
-  --canvas-color: #2a2a2a;
-  --menu-bg-color: #232323;
-  --switch-bg-color: #2e2525;
+  --main-1: hsl(0, 0%, 8%);
+  --main-2: hsl(0, 0%, 12%);
+  --main-3: hsl(0, 0%, 16%);
+  --main-4: hsl(0, 0%, 20%);
+  --main-5: hsl(0, 0%, 25%);
+  --main-0: hsl(0, 0%, 90%);
 
-  --external-border-color: #3a3a3a;
-  --internal-border-color: #4b4b4b;
+  --menu-lighter: var(--main-3);
+  --menu-darker: var(--main-2);
 
-  --text-color: #f0f0f0;
-  --svg-color: #f95959;
+  --select-1: hsl(0, 40%, 25%);
+  --select-2: hsl(0, 40%, 40%);
+  --select-mask: hsla(0, 40%, 25%, 50%);
 
-  --button-color: #2a2a2a;
-  --button-hover-color: #393939;
-  --button-active-color: #4a4a4a;
+  --status-success-1: hsl(120, 15%, 25%);
+  --status-success-2: hsl(120, 15%, 60%);
 
-  --select-color: rgba(249, 89, 89, 0.25);
+  --status-warning-1: hsl(46, 40%, 25%);
+  --status-warning-2: hsl(46, 40%, 60%);
 
-  --simulate-start-button-bg-color: #395039; /* землисто-коричневый с зелёным намёком */
-  --simulate-start-button-text-color: #76a182; /* мягкий зелёный, хороший контраст */
+  --status-running-1: hsl(0, 30%, 25%);
+  --status-running-2: hsl(0, 30%, 60%);
 
-  --simulate-stop-button-bg-color: #5c2d2d; /* глубокий красный/коричневый */
-  --simulate-stop-button-text-color: #f95959; /* главный акцент темы */
+  --status-error-1: hsl(0, 50%, 25%);
+  --status-error-2: hsl(0, 50%, 60%);
 
-  --minimap-mask-color: rgba(255, 80, 80, 0.2);
-  --minimap-node-color: #3a3a3a;
+  --switch-bg-color: hsl(0, 10%, 15%);
+  --mask: hsla(0, 100%, 65%, 0.2);
+  --secondary-text: hsl(0, 0%, 35%);
 }
-
-/*Theme template*/
-
-/*[data-theme='theme-name'] {*/
-/*    --canvas-color: #;                  !* Фон канваса *!*/
-/*    --menu-bg-color: #;                 !* Фон меню *!*/
-
-/*    --external-border-color: #;         !* Внешняя граница *!*/
-/*    --internal-border-color: #;         !* Внутренняя граница *!*/
-
-/*    --text-color: #;                    !* Основной текст *!*/
-/*    --svg-color: #;                     !* Цвет SVG *!*/
-
-/*    --button-color: #;                  !* Фон обычной кнопки *!*/
-/*    --button-hover-color: #;            !* Фон при наведении *!*/
-/*    --button-active-color: #;           !* Фон при нажатии *!*/
-
-/*    --select-color: #;                  !* Цвет выделения *!*/
-
-/*    --simulate-button-bg-color: #;      !* Фон кнопки симуляции *!*/
-/*    --simulate-button-text-color: #;    !* Текст на кнопке симуляции *!*/
-/*}*/

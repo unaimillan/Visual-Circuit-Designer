@@ -1,13 +1,32 @@
-import { Position } from "@xyflow/react";
-
-import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import { useSimulateState } from "../../../pages/mainPage.jsx";
-
 import { useEffect, useState } from "react";
+import { Position } from "@xyflow/react";
+import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import { useSimulateState } from "../../pages/mainPage.jsx";
+import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 
-function InputNodeSwitch({ id, isConnectable, data }) {
+function InputNodeSwitch({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
+  const rotation = data.rotation || 0;
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
+    id,
+    rotation,
+    60,
+    80,
+  );
+
+  const getHandleStyle = () => {
+    switch (rotation) {
+      case 90:
+        return { top: 32, left: 59 };
+      case 180:
+        return { top: 38.5, left: 59 };
+      case 270:
+        return { top: 39.5, left: 59 };
+      default:
+        return { top: 40, left: 52 };
+    }
+  };
 
   useEffect(() => {
     setInputState(data.value || false);
@@ -15,18 +34,14 @@ function InputNodeSwitch({ id, isConnectable, data }) {
 
   const handleChange = (newValue) => {
     setInputState(newValue);
-
-    // Отправляем изменение на сервер
     if (simulateState === "running" && updateInputState) {
       updateInputState(id, newValue);
     }
-
-    // Обновляем данные узла (опционально)
     data.value = newValue;
   };
 
   return (
-    <div className="circuit-button input">
+    <RotatedNodeWrapper className="circuit-button">
       <p className={"input-text"}>Switch</p>
 
       <div
@@ -39,19 +54,17 @@ function InputNodeSwitch({ id, isConnectable, data }) {
         />
       </div>
 
-      {/* Handles */}
       <CustomHandle
         type="source"
-        position={Position.Right}
+        position={getHandlePosition(Position.Right)}
         id="output-1"
-        style={{ top: 40, left: 52.2 }}
+        style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
-    </div>
+    </RotatedNodeWrapper>
   );
 }
 
-// Вместо @radix-ui/react-switch
 const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
   return (
     <svg
@@ -67,11 +80,10 @@ const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
         width="42"
         height="25"
         rx="12.5"
-        fill={checked ? "var(--select-color)" : "var(--switch-bg-color)"}
+        fill={checked ? "var(--select-1)" : "var(--switch-bg-color)"}
         onClick={() => onChange(!checked)}
         style={{ cursor: "pointer", transition: "fill 0.1s ease" }}
       />
-
       <circle
         cx="12.5"
         cy="12.5"

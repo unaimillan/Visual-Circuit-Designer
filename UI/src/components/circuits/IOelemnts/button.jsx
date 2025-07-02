@@ -1,15 +1,34 @@
-// noinspection DuplicatedCode
-
 import { useState, useRef, useEffect } from "react";
-import { useSimulateState } from "../../../pages/mainPage.jsx";
-import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { Position } from "@xyflow/react";
+import CustomHandle from "../../codeComponents/CustomHandle.jsx";
+import { useSimulateState } from "../../pages/mainPage.jsx";
+import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
 
-function InputNodeButton({ id, isConnectable, data }) {
+function InputNodeButton({ id, data, isConnectable }) {
   const { simulateState, updateInputState } = useSimulateState();
   const [inputState, setInputState] = useState(false);
   const cooldownRef = useRef(false);
   const delay = 500;
+  const rotation = data.rotation || 0;
+  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
+    id,
+    rotation,
+    60,
+    80,
+  );
+
+  const getHandleStyle = () => {
+    switch (rotation) {
+      case 90:
+        return { top: 32, left: 59 };
+      case 180:
+        return { top: 38.5, left: 59 };
+      case 270:
+        return { top: 39.5, left: 59 };
+      default:
+        return { top: 40, left: 52 };
+    }
+  };
 
   useEffect(() => {
     setInputState(data.value || false);
@@ -17,27 +36,21 @@ function InputNodeButton({ id, isConnectable, data }) {
 
   const handleChange = (newValue) => {
     setInputState(newValue);
-
     if (simulateState === "running" && updateInputState)
       updateInputState(id, newValue);
-
     data.value = newValue;
   };
 
   const handlePressDown = (e) => {
     e.stopPropagation();
-
     if (cooldownRef.current || inputState) return;
-
     handleChange(true);
   };
 
   const handlePressUp = (e) => {
     e.stopPropagation();
     e.preventDefault();
-
     if (!inputState) return;
-
     cooldownRef.current = true;
     setTimeout(() => {
       handleChange(false);
@@ -46,29 +59,37 @@ function InputNodeButton({ id, isConnectable, data }) {
   };
 
   return (
-    <div className="circuit-button input">
+    <RotatedNodeWrapper className="circuit-button">
       <p className={"input-text"}>Button</p>
 
-      <div
-        className={`button-wrapper ${simulateState === `idle` ? "deactivated" : ""}`}
-        onPointerDownCapture={handlePressDown}
-        onPointerUpCapture={handlePressUp}
-      >
-        <button
-          draggable={false}
-          className={`button-icon ${inputState ? "clicked" : ""}`}
-        ></button>
-      </div>
+      <SvgButton
+        pressed={inputState}
+        onPressDown={handlePressDown}
+        onPressUp={handlePressUp}
+        disabled={simulateState === "idle"}
+      />
 
       <CustomHandle
         type="source"
-        position={Position.Right}
+        position={getHandlePosition(Position.Right)}
         id="output-1"
-        style={{ top: 40, left: 52.2, zIndex: "1000000" }}
+        style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
-    </div>
+    </RotatedNodeWrapper>
   );
 }
+
+const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
+  return (
+    <div
+      className={`svg-button-wrapper ${disabled ? "disabled" : ""} ${pressed ? "pressed" : ""}`}
+      onPointerDownCapture={onPressDown}
+      onPointerUpCapture={onPressUp}
+    >
+      <div className={`svg-button-inner ${pressed ? "pressed" : ""}`} />
+    </div>
+  );
+};
 
 export default InputNodeButton;
