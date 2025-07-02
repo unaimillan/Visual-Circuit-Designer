@@ -16,12 +16,12 @@ export function VantaFogBackground() {
         minHeight: 200.0,
         minWidth: 200.0,
         baseColor: 0x0,
-        highlightColor: 0x4a6395,
-        midtoneColor: 0x293856,
-        lowlightColor: 0x0,
+        highlightColor: 0x456FB6,
+        midtoneColor: 0x233E6D,
+        lowlightColor: 0x0C182E,
         blurFactor: 1.0,
         speed: 1.0,
-        zoom: 0.3,
+        zoom: 0.3
       });
     }
 
