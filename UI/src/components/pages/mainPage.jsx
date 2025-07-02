@@ -278,7 +278,9 @@ export default function Main() {
     if (source === target) {
       return false;
     }
-    return !edgesRef.current.some((e) => e.target === target && e.targetHandle === targetHandle);
+    return !edgesRef.current.some(
+      (e) => e.target === target && e.targetHandle === targetHandle,
+    );
   }, []);
 
   const onDragStart = (event, nodeType) => {
@@ -435,7 +437,8 @@ export default function Main() {
             if (nodeHandles.target) {
               nodeHandles.target.forEach((tgtHandle) => {
                 const alreadyUsed = edgesRef.current.some(
-                  (e) => e.target === node.id && e.targetHandle === tgtHandle.id
+                  (e) =>
+                    e.target === node.id && e.targetHandle === tgtHandle.id,
                 );
                 if (alreadyUsed) return;
 
@@ -475,7 +478,9 @@ export default function Main() {
             if (nodeHandles.source) {
               nodeHandles.source.forEach((srcHandle) => {
                 const alreadyUsed = edgesRef.current.some(
-                  (e) => e.target === internalNode.id && e.targetHandle === tgtHandle.id
+                  (e) =>
+                    e.target === internalNode.id &&
+                    e.targetHandle === tgtHandle.id,
                 );
                 if (alreadyUsed) return;
 
