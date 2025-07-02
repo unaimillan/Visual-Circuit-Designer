@@ -2,6 +2,25 @@
     background-color: hsl(0, 0%, 6%);
 }
 
+.hello-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s ease;
+    z-index: 1000;
+    border-bottom: rgba(50, 50, 50, 0) 1px solid;
+
+    &.scrolled{
+        background-color: rgba(10, 10, 10, 0.2);
+        backdrop-filter: blur(10px);
+        border-bottom: rgba(50, 50, 50, 0.3) 1px solid;
+    }
+}
+
 .hello-logo-name{
     margin-left: 40px;
     color: white;
@@ -20,95 +39,82 @@
     font-size: 0.95rem;
     text-align: center;
     margin-right: 10px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px hsla(0, 0%, 20%, 0) solid ;
-    transition: 0.3s;
+    transition: 0.15s ;
 
     &:hover{
-        border: 1px hsla(0, 0%, 50%, 50%) solid ;
+        border: 1px hsla(0, 0%, 30%, 30%) solid;
+        color: #989898
 
     }
 }
-.hello-hero-wrapper {
-    color: white;
-    position: relative;
-    padding-top: 300px;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 .hello-hero-text {
-    position: relative;
+
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
     z-index: 1;
     text-align: center;
     transition: transform 0.1s ease-out;
     will-change: transform;
 
     & > h1 {
-        font-size: 48px;
-        margin: 0;
+        font-size: clamp(24px, 6vw, 48px);
+        margin: 0 0 10px 0;
+        line-height: 1.1;
+        word-wrap: break-word;
+        position: relative;
     }
 
     & > p {
         font-size: 20px;
-        margin-top: 10px;
-        color: #aaa;
+        margin-top: 15px;
+        color: hsl(220, 35%, 40%);
     }
 }
 
+.hello-hero-wrapper {
+    color: white;
 
-.hello-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 70px;
+    padding: 300px 0;
+    /*height: 500px;*/
+    overflow: hidden;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    background-color: transparent;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s ease;
-    z-index: 1000;
-    border-bottom: rgba(50, 50, 50, 0) 1px solid;
-
-    &.scrolled{
-        background-color: rgba(20, 20, 20, 0.3);
-        backdrop-filter: blur(10px);
-        border-bottom: rgba(50, 50, 50, 0.5) 1px solid;
-    }
-}
-
-
-.hello-hero-image {
-    z-index: 10;
-    position: absolute;
-    top: 50%;
-    width: 1200px;
-    height: 1000px;
-    padding: 2rem;
-    /*padding: 1.5rem;*/
-    /*z-index: 0;*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
+    margin-bottom: 100rem;
 }
 
 .hello-image-placeholder {
-    position: relative;
-    width: 100%;
-    height: 100%;
 
-    background-color: #333333;
+    background-color: rgba(20, 20, 20, 0.3);
+    backdrop-filter: blur(10px);
+    border: rgba(50, 50, 50, 0.5) 1px solid;
+
     border-radius: 1.5rem;
-    border: 1px solid hsl(0, 0%, 25%);
-    color: #555;
-    display: flex;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 60%;
+    height: auto;
+
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    box-sizing: border-box;
+
+    z-index: 10;
+    position: absolute;
+    top: 70%;
+}
+
+.demo-picture {
+    height: auto;
+    margin: 15px;
+    border-radius: 10px;
+    object-fit: cover;
+    width: auto;
+    max-width: calc(100% - 30px);
+    max-height: calc(100% - 30px);
 }
 
 .hello-section {
@@ -116,17 +122,8 @@
     padding: 80px 40px;
     text-align: center;
     color: white;
-}
 
-.hello-nav{
-    position: fixed;
-    right: 10px;
-}
-
-.demo-picture{
-    position: absolute;
-    box-sizing: border-box;
-    align-items: center;
-    object-fit: contain; /* чтобы сохранить пропорции картинки */
-    display: block;
+    background-color: rgba(10, 10, 10, 0.5);
+    backdrop-filter: blur(10px);
+    border-top: rgba(50, 50, 50, 0.3) 1px solid;
 }
