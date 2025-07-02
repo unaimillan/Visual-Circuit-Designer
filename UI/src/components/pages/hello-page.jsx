@@ -13,9 +13,6 @@ function App() {
   }, []);
 
   const clampedScroll = Math.min(scrollY, 300);
-  const scale = 1 - clampedScroll / 1000;       // от 1 до 0.7
-  const translateY = -clampedScroll / 4;        // немного вверх
-
   const progress = clampedScroll / 300;
   const easeOut = 1 - Math.pow(1 - progress, 2);
   const easeOutScale = 1 - easeOut * 0.3;
