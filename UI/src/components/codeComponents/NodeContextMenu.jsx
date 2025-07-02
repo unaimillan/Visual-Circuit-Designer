@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useReactFlow } from "@xyflow/react";
 
-export default function ContextMenu({
+export default function NodeContextMenu({
   id,
   name,
   top,
@@ -27,6 +27,28 @@ export default function ContextMenu({
     });
   }, [id, getNode, addNodes]);
 
+  const rotateNode = useCallback(
+    (angle) => {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === id) {
+            const currentRotation = node.data?.rotation || 0;
+            const newRotation = (currentRotation + angle + 360) % 360;
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                rotation: newRotation,
+              },
+            };
+          }
+          return node;
+        }),
+      );
+    },
+    [id, setNodes],
+  );
+
   const deleteNode = useCallback(() => {
     setNodes((nodes) => nodes.filter((node) => node.id !== id));
     setEdges((edges) => edges.filter((edge) => edge.source !== id));
@@ -38,11 +60,11 @@ export default function ContextMenu({
       className="context-menu"
       {...props}
     >
-      <p style={{ margin: "0.5em", textAlign: "center" }}>
-        <p style={{ fontSize: "0.95rem", margin: "0.7rem 0 0.7rem 0" }}>
-          Node: {name ? name.slice(0, -4) : ""}
-        </p>
-      </p>
+      <div style={{ margin: "0.5em", textAlign: "center" }}>
+        <div style={{ fontSize: "0.95rem", margin: "0.7rem 0 0.7rem 0" }}>
+          Logic gate type: {name ? name.slice(0, -4) : ""}
+        </div>
+      </div>
       <button
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}
@@ -50,6 +72,22 @@ export default function ContextMenu({
       >
         Duplicate
       </button>
+      <div style={{ display: "flex" }}>
+        <button
+          style={{ width: "24%" }}
+          className={"contextMenuButton"}
+          onClick={() => rotateNode(-90)}
+        >
+          -90
+        </button>
+        <button
+          style={{ width: "24%" }}
+          className={"contextMenuButton"}
+          onClick={() => rotateNode(90)}
+        >
+          +90
+        </button>
+      </div>
       <button
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}

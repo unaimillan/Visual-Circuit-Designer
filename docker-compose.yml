@@ -1,0 +1,7 @@
+services:
+  webserver:
+    build: ./UI
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  runner:
+    build: ./RunnerNode

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { IconArrow } from "../../../assets/ui-icons.jsx";
+import { IconArrow } from "../../../../assets/ui-icons.jsx";
 import {
   IconAND,
   IconOR,
@@ -9,7 +9,7 @@ import {
   IconXOR,
   IconInput,
   IconOutput,
-} from "../../../assets/circuits-icons.jsx";
+} from "../../../../assets/circuits-icons.jsx";
 
 export default function CircuitsMenu({
   circuitsMenuState,
@@ -45,8 +45,9 @@ export default function CircuitsMenu({
     {
       header: "Pins",
       gates: [
-        { id: "inputNode", label: "input", icon: IconInput },
-        { id: "outputNode", label: "output", icon: IconOutput },
+        { id: "inputNodeSwitch", label: "Switch", icon: IconInput },
+        { id: "inputNodeButton", label: "Button", icon: IconInput },
+        { id: "outputNodeLed", label: "LED", icon: IconOutput },
       ],
     },
     {
