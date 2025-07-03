@@ -108,6 +108,293 @@ export default function Main() {
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
 
+  const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
+  const [cutMode, setCutMode] = useState(false);
+  const [dragState, setDragState] = useState({ isDragging: false, dragOffset: { x: 0, y: 0 } });
+  const [selectionBox, setSelectionBox] = useState(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const svgRef = useRef(null);
+  const idCounter = useRef(100);
+
+  const generateId = () => {
+    idCounter.current += 1;
+    return idCounter.current.toString();
+  };
+
+  const getSelectedElements = () => {
+    const selectedNodes = nodes.filter(node => node.selected);
+    const selectedEdges = edges.filter(edge => edge.selected);
+
+    // Include edges that connect selected nodes
+    const selectedNodeIds = new Set(selectedNodes.map(n => n.id));
+    const connectedEdges = edges.filter(edge =>
+      selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)
+    );
+
+    const allSelectedEdges = [...new Set([...selectedEdges, ...connectedEdges])];
+    return { nodes: selectedNodes, edges: allSelectedEdges };
+  };
+
+  const copyElements = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    setClipboard(selected);
+    setCutMode(false);
+    console.log('Copied:', selected.nodes.length, 'nodes and', selected.edges.length, 'edges');
+  }, [nodes, edges]);
+
+  const cutElements = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    setClipboard(selected);
+    setCutMode(true);
+
+    const selectedNodeIds = new Set(selected.nodes.map(n => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map(e => e.id));
+
+    setNodes(nodes => nodes.filter(node => !selectedNodeIds.has(node.id)));
+    setEdges(edges => edges.filter(edge => !selectedEdgeIds.has(edge.id)));
+
+    console.log('Cut:', selected.nodes.length, 'nodes and', selected.edges.length, 'edges');
+  }, [nodes, edges]);
+
+  const pasteElements = useCallback(() => {
+    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
+
+    const pasteOffset = 50;
+    const nodeIdMap = new Map();
+
+    const newNodes = clipboard.nodes.map(node => {
+      const newId = generateId();
+      nodeIdMap.set(node.id, newId);
+
+      return {
+        ...node,
+        id: newId,
+        x: node.x + pasteOffset,
+        y: node.y + pasteOffset,
+        selected: false,
+      };
+    });
+
+    const newEdges = clipboard.edges.map(edge => ({
+      ...edge,
+      id: generateId(),
+      source: nodeIdMap.get(edge.source) || edge.source,
+      target: nodeIdMap.get(edge.target) || edge.target,
+      selected: false,
+    }));
+
+    setNodes(nodes => [...nodes, ...newNodes]);
+    setEdges(edges => [...edges, ...newEdges]);
+
+    if (cutMode) {
+      setClipboard({ nodes: [], edges: [] });
+      setCutMode(false);
+    }
+
+    console.log('Pasted:', newNodes.length, 'nodes and', newEdges.length, 'edges');
+  }, [clipboard, cutMode]);
+
+  const deleteSelected = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    const selectedNodeIds = new Set(selected.nodes.map(n => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map(e => e.id));
+
+    setNodes(nodes => nodes.filter(node => !selectedNodeIds.has(node.id)));
+    setEdges(edges => edges.filter(edge => !selectedEdgeIds.has(edge.id)));
+
+    console.log('Deleted:', selected.nodes.length, 'nodes and', selected.edges.length, 'edges');
+  }, [nodes, edges]);
+
+  const selectAll = useCallback(() => {
+    setNodes(nodes => nodes.map(node => ({ ...node, selected: true })));
+    setEdges(edges => edges.map(edge => ({ ...edge, selected: true })));
+  }, []);
+
+  const deselectAll = useCallback(() => {
+    setNodes(nodes => nodes.map(node => ({ ...node, selected: false })));
+    setEdges(edges => edges.map(edge => ({ ...edge, selected: false })));
+  }, []);
+
+  const handleMouseDown = (e, nodeId) => {
+    if (e.ctrlKey || e.metaKey) {
+      // Toggle selection
+      setNodes(nodes => nodes.map(node =>
+        node.id === nodeId ? { ...node, selected: !node.selected } : node
+      ));
+    } else {
+      // Select only this node
+      setNodes(nodes => nodes.map(node =>
+        node.id === nodeId ? { ...node, selected: true } : { ...node, selected: false }
+      ));
+      setEdges(edges => edges.map(edge => ({ ...edge, selected: false })));
+    }
+
+    const rect = svgRef.current.getBoundingClientRect();
+    const node = nodes.find(n => n.id === nodeId);
+    setDragState({
+      isDragging: true,
+      dragOffset: {
+        x: e.clientX - rect.left - node.x,
+        y: e.clientY - rect.top - node.y
+      }
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (dragState.isDragging) {
+      const rect = svgRef.current.getBoundingClientRect();
+      const newX = e.clientX - rect.left - dragState.dragOffset.x;
+      const newY = e.clientY - rect.top - dragState.dragOffset.y;
+
+      setNodes(nodes => nodes.map(node =>
+        node.selected ? { ...node, x: node.x + (newX - nodes.find(n => n.selected).x), y: node.y + (newY - nodes.find(n => n.selected).y) } : node
+      ));
+    }
+
+    if (isSelecting && selectionBox) {
+      const rect = svgRef.current.getBoundingClientRect();
+      const currentX = e.clientX - rect.left;
+      const currentY = e.clientY - rect.top;
+
+      setSelectionBox({
+        ...selectionBox,
+        width: currentX - selectionBox.x,
+        height: currentY - selectionBox.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setDragState({ isDragging: false, dragOffset: { x: 0, y: 0 } });
+
+    if (isSelecting && selectionBox) {
+      const minX = Math.min(selectionBox.x, selectionBox.x + selectionBox.width);
+      const maxX = Math.max(selectionBox.x, selectionBox.x + selectionBox.width);
+      const minY = Math.min(selectionBox.y, selectionBox.y + selectionBox.height);
+      const maxY = Math.max(selectionBox.y, selectionBox.y + selectionBox.height);
+
+      setNodes(nodes => nodes.map(node => ({
+        ...node,
+        selected: node.x >= minX && node.x + node.width <= maxX &&
+          node.y >= minY && node.y + node.height <= maxY
+      })));
+
+      setSelectionBox(null);
+      setIsSelecting(false);
+    }
+  };
+
+  const handleCanvasMouseDown = (e) => {
+    if (e.target === svgRef.current) {
+      const rect = svgRef.current.getBoundingClientRect();
+      setSelectionBox({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        width: 0,
+        height: 0
+      });
+      setIsSelecting(true);
+      deselectAll();
+    }
+  };
+
+  const handleEdgeClick = (e, edgeId) => {
+    e.stopPropagation();
+    if (e.ctrlKey || e.metaKey) {
+      setEdges(edges => edges.map(edge =>
+        edge.id === edgeId ? { ...edge, selected: !edge.selected } : edge
+      ));
+    } else {
+      setEdges(edges => edges.map(edge =>
+        edge.id === edgeId ? { ...edge, selected: true } : { ...edge, selected: false }
+      ));
+      setNodes(nodes => nodes.map(node => ({ ...node, selected: false })));
+    }
+  };
+
+  const getNodeCenter = (node) => ({
+    x: node.x + node.width / 2,
+    y: node.y + node.height / 2
+  });
+
+  const renderEdge = (edge) => {
+    const sourceNode = nodes.find(n => n.id === edge.source);
+    const targetNode = nodes.find(n => n.id === edge.target);
+
+    if (!sourceNode || !targetNode) return null;
+
+    const source = getNodeCenter(sourceNode);
+    const target = getNodeCenter(targetNode);
+
+    return (
+      <g key={edge.id}>
+        <line
+          x1={source.x}
+          y1={source.y}
+          x2={target.x}
+          y2={target.y}
+          stroke={edge.selected ? '#3b82f6' : '#6b7280'}
+          strokeWidth={edge.selected ? 3 : 2}
+          markerEnd="url(#arrowhead)"
+          className="cursor-pointer"
+          onClick={(e) => handleEdgeClick(e, edge.id)}
+        />
+        {edge.selected && (
+          <line
+            x1={source.x}
+            y1={source.y}
+            x2={target.x}
+            y2={target.y}
+            stroke="#3b82f6"
+            strokeWidth={6}
+            opacity={0.3}
+          />
+        )}
+      </g>
+    );
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case 'c':
+            event.preventDefault();
+            copyElements();
+            break;
+          case 'x':
+            event.preventDefault();
+            cutElements();
+            break;
+          case 'v':
+            event.preventDefault();
+            pasteElements();
+            break;
+          case 'a':
+            event.preventDefault();
+            selectAll();
+            break;
+          case 'd':
+            event.preventDefault();
+            deselectAll();
+            break;
+        }
+      } else if (event.key === 'Delete' || event.key === 'Backspace') {
+        event.preventDefault();
+        deleteSelected();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [copyElements, cutElements, pasteElements, selectAll, deselectAll, deleteSelected]);
+
   useEffect(() => {
     const savedCircuit = localStorage.getItem("savedCircuit");
     if (savedCircuit) {

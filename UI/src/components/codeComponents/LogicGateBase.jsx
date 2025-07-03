@@ -15,7 +15,7 @@ function LogicGateBase({
     id,
     rotation,
     80,
-    70,
+    60,
   );
 
   const getHandleStyle = (handle) => {
@@ -27,28 +27,28 @@ function LogicGateBase({
     switch (rotation) {
       case 90:
         return handle === "input-1"
-          ? { top: 24, left: -1 }
+          ? { top: 19, left: -1 }
           : handle === "input-2"
-            ? { top: 44, left: -1 }
-            : { top: 26.5, left: 79 };
+            ? { top: 39, left: -1 }
+            : { top: 21.5, left: 79 };
       case 180:
         return handle === "input-1"
-          ? { top: 24, left: -8 }
+          ? { top: 19, left: -8 }
           : handle === "input-2"
-            ? { top: 44, left: -8 }
-            : { top: 34, left: 79 };
+            ? { top: 39, left: -8 }
+            : { top: 29, left: 79 };
       case 270:
         return handle === "input-1"
-          ? { top: 17, left: -1 }
+          ? { top: 12, left: -1 }
           : handle === "input-2"
-            ? { top: 37, left: -1 }
-            : { top: 34.5, left: 79 };
+            ? { top: 32, left: -1 }
+            : { top: 29.5, left: 79 };
       default:
         return handle === "input-1"
-          ? { top: 25, left: -1 }
+          ? { top: 20, left: -1 }
           : handle === "input-2"
-            ? { top: 45, left: -1 }
-            : { top: 35, left: 72 };
+            ? { top: 40, left: -1 }
+            : { top: 30, left: 72 };
     }
   };
 
