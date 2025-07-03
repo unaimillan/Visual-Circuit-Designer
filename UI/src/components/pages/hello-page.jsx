@@ -22,24 +22,17 @@ function App() {
   const easeOutScale = 1 - easeOut * 0.3;
   const easeOutTranslate = -easeOut * 75;
 
-  const [showBlock1, setShowBlock1] = useState(false);
-  const [showBlock2, setShowBlock2] = useState(false);
-  const [showBlock3, setShowBlock3] = useState(false);
-  const [showBlock4, setShowBlock4] = useState(false);
+  const getBlockProgress = (start, end, scrollY) => {
+    if (scrollY < start) return 1;
+    if (scrollY > end) return 0;
+    const progress = (scrollY - start) / (end - start);
+    return 1 - progress;
+  };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY;
-
-      if (y >= 500 && !showBlock1) setShowBlock1(true);
-      if (y >= 700 && !showBlock3) setShowBlock3(true);
-      if (y >= 900 && !showBlock2) setShowBlock2(true);
-      if (y >= 1100 && !showBlock4) setShowBlock4(true);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [showBlock1, showBlock2, showBlock3, showBlock4]);
+  const block1Progress = getBlockProgress(500, 700, scrollY);
+  const block3Progress = getBlockProgress(700, 900, scrollY);
+  const block2Progress = getBlockProgress(900, 1100, scrollY);
+  const block4Progress = getBlockProgress(1100, 1300, scrollY);
 
   return (
     <div className={"whole-page"}>
@@ -59,7 +52,11 @@ function App() {
             fontFamily: "monospace",
             zIndex: 10000
           }}>
-            ScrollY: {scrollY}
+            ScrollY: {scrollY} |
+            SP1: {block1Progress} |
+            SP2: {block2Progress} |
+            SP3: {block3Progress} |
+            SP4: {block4Progress} |
           </div>
 
           <div className={"header-left-buttons"}>
@@ -86,17 +83,17 @@ function App() {
             <div className={"sticky-container"}>
 
               <div className="side-text left">
-                <div className={`sticky-upper-block appear-animate-left ${showBlock1 ? "visible" : ""}`}>
+                <div className={"sticky-upper-block"} style={{transform: `translateX(${-block1Progress*30}vw)`}}>
                   <div className={"appear-block-title sticky-color-1"}>
-                    <IconThunder SVGClassName={"sticky-icon"}/>
+                    <IconThunder SVGClassName={"sticky-icon sticky-color-1"}/>
                     Instant Access
                   </div>
                   <p className={"appear-block-description sticky-color-1"}>No installation or setup required. Just open the website and start designing your circuits instantly — from any device.</p>
                 </div>
 
-                <div className={`sticky-upper-block appear-animate-left ${showBlock2 ? "visible" : ""}`}>
+                <div className={"sticky-lower-block"} style={{transform: `translateX(${-block2Progress*30}vw)`}}>
                   <div className={"appear-block-title sticky-color-2"}>
-                    <IconBulb SVGClassName={"sticky-icon"}/>
+                    <IconBulb SVGClassName={"sticky-icon sticky-color-2"}/>
                     Simple & Intuitive
                   </div>
                   <p className={"appear-block-description sticky-color-2"}>An easy-to-use interface makes circuit design accessible even to beginners. Everything is clear and intuitive.</p>
@@ -108,20 +105,17 @@ function App() {
               </div>
 
               <div className="side-text right">
-                <div className={`sticky-upper-block appear-animate-right ${showBlock3 ? "visible" : ""}`}>
+                <div className={"sticky-upper-block"} style={{transform: `translateX(${block3Progress*30}vw)`}}>
                   <div className={"appear-block-title sticky-color-3"}>
-                    <IconSettings SVGClassName={"sticky-icon "}/>
+                    <IconSettings SVGClassName={"sticky-icon sticky-color-3"}/>
                     Real-Time Simulation</div>
                   <p className={"appear-block-description sticky-color-3"}>Simulate your circuits instantly, test ideas quickly, and catch mistakes early — no extra tools needed.</p>
                 </div>
 
                 <div className={"sticky-lower-block"}>
-                  <div className={`sticky-upper-block appear-animate-right ${showBlock4 ? "visible" : ""}`}>
-                    <div className={"appear-block-title sticky-color-4"}>
-                      <IconStar SVGClassName={"sticky-icon"}/>
-                      Modern & Fast UI
-                    </div>
-
+                  <div className={"appear-block-title sticky-color-4"} style={{transform: `translateX(${block4Progress*30}vw)`}}>
+                    <IconStar SVGClassName={"sticky-icon sticky-color-4"}/>
+                     Modern & Fast UI
                     <p className={"appear-block-description sticky-color-4"}>A sleek, responsive interface built for speed and clarity — making your experience smooth and enjoyable every day.</p>
                   </div>
                   </div>
