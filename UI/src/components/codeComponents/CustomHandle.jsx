@@ -15,8 +15,7 @@ const CustomHandle = (props) => {
       className={"customHandle"}
       {...props}
       isConnectable={
-        connections < props.connections ||
-        props.connections === undefined
+        connections < props.connections || props.connections === undefined
       }
     />
   );

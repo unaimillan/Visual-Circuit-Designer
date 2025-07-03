@@ -65,7 +65,7 @@ function LogicGateBase({
           position={getHandlePosition(position)}
           isConnectable={isConnectable}
           style={getHandleStyle(handleId)}
-          connections={handleId.slice(0, 2) === 'in' ? 1 : undefined}
+          connections={handleId.slice(0, 2) === "in" ? 1 : undefined}
         />
       ))}
     </RotatedNodeWrapper>
