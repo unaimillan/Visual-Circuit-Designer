@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
 import { useReactFlow } from "@xyflow/react";
+import copyElements from "../pages/mainPage.jsx";
+import pasteElements from "../pages/mainPage.jsx";
 
 export default function NodeContextMenu({
   id,
@@ -65,6 +67,19 @@ export default function NodeContextMenu({
           Logic gate type: {name ? name.slice(0, -4) : ""}
         </div>
       </div>
+      <button
+        onClick={copyElements}
+        className={"contextMenuButton"}
+      >
+        Copy (Ctrl+C)
+      </button>
+      <button
+        onClick={pasteElements}
+        className={"contextMenuButton"}
+        // disabled={clipboard.nodes.length === 0 && clipboard.edges.length === 0}
+      >
+        Paste (Ctrl+V)
+      </button>
       <button
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}
