@@ -42,16 +42,13 @@ import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {
-  },
-  updateInputState: () => {
-  },
+  setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {
-  },
+  setLogLevel: () => {},
 });
 
 export function useSimulateState() {
@@ -113,11 +110,14 @@ export default function Main() {
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
   const [cutMode, setCutMode] = useState(false);
-  const [dragState, setDragState] = useState({ isDragging: false, dragOffset: { x: 0, y: 0 } });
+  const [dragState, setDragState] = useState({
+    isDragging: false,
+    dragOffset: { x: 0, y: 0 },
+  });
   const [selectionBox, setSelectionBox] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const idCounter = useRef(
-    parseInt(localStorage.getItem("idCounter") || "100", 10)
+    parseInt(localStorage.getItem("idCounter") || "100", 10),
   );
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -128,16 +128,19 @@ export default function Main() {
   };
 
   const getSelectedElements = () => {
-    const selectedNodes = nodes.filter(node => node.selected);
-    const selectedEdges = edges.filter(edge => edge.selected);
+    const selectedNodes = nodes.filter((node) => node.selected);
+    const selectedEdges = edges.filter((edge) => edge.selected);
 
     // Include edges that connect selected nodes
-    const selectedNodeIds = new Set(selectedNodes.map(n => n.id));
-    const connectedEdges = edges.filter(edge =>
-      selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)
+    const selectedNodeIds = new Set(selectedNodes.map((n) => n.id));
+    const connectedEdges = edges.filter(
+      (edge) =>
+        selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target),
     );
 
-    const allSelectedEdges = [...new Set([...selectedEdges, ...connectedEdges])];
+    const allSelectedEdges = [
+      ...new Set([...selectedEdges, ...connectedEdges]),
+    ];
     return { nodes: selectedNodes, edges: allSelectedEdges };
   };
 
@@ -147,7 +150,13 @@ export default function Main() {
 
     setClipboard(selected);
     setCutMode(false);
-    console.log('Copied:', selected.nodes.length, 'nodes and', selected.edges.length, 'edges');
+    console.log(
+      "Copied:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
   }, [nodes, edges]);
 
   const cutElements = useCallback(() => {
@@ -157,114 +166,135 @@ export default function Main() {
     setClipboard(selected);
     setCutMode(true);
 
-    const selectedNodeIds = new Set(selected.nodes.map(n => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map(e => e.id));
+    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
 
-    setNodes(nodes => nodes.filter(node => !selectedNodeIds.has(node.id)));
-    setEdges(edges => edges.filter(edge => !selectedEdgeIds.has(edge.id)));
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
+    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
 
-    console.log('Cut:', selected.nodes.length, 'nodes and', selected.edges.length, 'edges');
+    console.log(
+      "Cut:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
   }, [nodes, edges]);
 
-  const pasteElements = useCallback((event) => {
-    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
+  const pasteElements = useCallback(
+    (event) => {
+      if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
-    // Convert mouse position to flow coordinates
-    const flowPosition = reactFlowInstance.screenToFlowPosition({
-      x: mousePosition.x,
-      y: mousePosition.y
-    });
-
-    const nodeIdMap = new Map();
-    const newNodes = [];
-    const newEdges = [];
-
-    // Calculate offset from first node's original position
-    const firstNode = clipboard.nodes[0];
-    const offsetX = flowPosition.x - firstNode.position.x;
-    const offsetY = flowPosition.y - firstNode.position.y;
-
-    // Create new nodes with updated positions
-    clipboard.nodes.forEach(node => {
-      const newId = generateId();
-      nodeIdMap.set(node.id, newId);
-
-      newNodes.push({
-        ...node,
-        id: newId,
-        position: {
-          x: node.position.x + offsetX,
-          y: node.position.y + offsetY
-        },
-        selected: false,
+      // Convert mouse position to flow coordinates
+      const flowPosition = reactFlowInstance.screenToFlowPosition({
+        x: mousePosition.x,
+        y: mousePosition.y,
       });
-    });
 
-    // Create new edges with updated IDs
-    clipboard.edges.forEach(edge => {
-      newEdges.push({
-        ...edge,
-        id: generateId(),
-        source: nodeIdMap.get(edge.source) || edge.source,
-        target: nodeIdMap.get(edge.target) || edge.target,
-        selected: false,
+      const nodeIdMap = new Map();
+      const newNodes = [];
+      const newEdges = [];
+
+      // Calculate offset from first node's original position
+      const firstNode = clipboard.nodes[0];
+      const offsetX = flowPosition.x - firstNode.position.x;
+      const offsetY = flowPosition.y - firstNode.position.y;
+
+      // Create new nodes with updated positions
+      clipboard.nodes.forEach((node) => {
+        const newId = generateId();
+        nodeIdMap.set(node.id, newId);
+
+        newNodes.push({
+          ...node,
+          id: newId,
+          position: {
+            x: node.position.x + offsetX,
+            y: node.position.y + offsetY,
+          },
+          selected: false,
+        });
       });
-    });
 
-    setNodes(nodes => [...nodes, ...newNodes]);
-    setEdges(edges => [...edges, ...newEdges]);
+      // Create new edges with updated IDs
+      clipboard.edges.forEach((edge) => {
+        newEdges.push({
+          ...edge,
+          id: generateId(),
+          source: nodeIdMap.get(edge.source) || edge.source,
+          target: nodeIdMap.get(edge.target) || edge.target,
+          selected: false,
+        });
+      });
 
-    if (cutMode) {
-      setClipboard({ nodes: [], edges: [] });
-      setCutMode(false);
-    }
-  }, [clipboard, cutMode, mousePosition, reactFlowInstance]);
+      setNodes((nodes) => [...nodes, ...newNodes]);
+      setEdges((edges) => [...edges, ...newEdges]);
+
+      if (cutMode) {
+        setClipboard({ nodes: [], edges: [] });
+        setCutMode(false);
+      }
+    },
+    [clipboard, cutMode, mousePosition, reactFlowInstance],
+  );
 
   const deleteSelected = useCallback(() => {
     const selected = getSelectedElements();
     if (selected.nodes.length === 0 && selected.edges.length === 0) return;
 
-    const selectedNodeIds = new Set(selected.nodes.map(n => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map(e => e.id));
+    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
 
-    setNodes(nodes => nodes.filter(node => !selectedNodeIds.has(node.id)));
-    setEdges(edges => edges.filter(edge => !selectedEdgeIds.has(edge.id)));
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
+    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
 
-    console.log('Deleted:', selected.nodes.length, 'nodes and', selected.edges.length, 'edges');
+    console.log(
+      "Deleted:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
   }, [nodes, edges]);
 
   const selectAll = useCallback(() => {
-    setNodes(nodes => nodes.map(node => ({ ...node, selected: true })));
-    setEdges(edges => edges.map(edge => ({ ...edge, selected: true })));
+    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: true })));
+    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: true })));
   }, []);
 
   const deselectAll = useCallback(() => {
-    setNodes(nodes => nodes.map(node => ({ ...node, selected: false })));
-    setEdges(edges => edges.map(edge => ({ ...edge, selected: false })));
+    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
+    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: false })));
   }, []);
 
   const handleMouseDown = (e, nodeId) => {
     if (e.ctrlKey || e.metaKey) {
       // Toggle selection
-      setNodes(nodes => nodes.map(node =>
-        node.id === nodeId ? { ...node, selected: !node.selected } : node
-      ));
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === nodeId ? { ...node, selected: !node.selected } : node,
+        ),
+      );
     } else {
       // Select only this node
-      setNodes(nodes => nodes.map(node =>
-        node.id === nodeId ? { ...node, selected: true } : { ...node, selected: false }
-      ));
-      setEdges(edges => edges.map(edge => ({ ...edge, selected: false })));
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === nodeId
+            ? { ...node, selected: true }
+            : { ...node, selected: false },
+        ),
+      );
+      setEdges((edges) => edges.map((edge) => ({ ...edge, selected: false })));
     }
 
     const rect = ref.current.getBoundingClientRect();
-    const node = nodes.find(n => n.id === nodeId);
+    const node = nodes.find((n) => n.id === nodeId);
     setDragState({
       isDragging: true,
       dragOffset: {
         x: e.clientX - rect.left - node.x,
-        y: e.clientY - rect.top - node.y
-      }
+        y: e.clientY - rect.top - node.y,
+      },
     });
   };
 
@@ -272,20 +302,24 @@ export default function Main() {
     const rect = ref.current.getBoundingClientRect();
     setMousePosition({
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
     });
 
     if (dragState.isDragging) {
       const newX = e.clientX - rect.left - dragState.dragOffset.x;
       const newY = e.clientY - rect.top - dragState.dragOffset.y;
 
-      setNodes(nodes => nodes.map(node =>
-        node.selected ? {
-          ...node,
-          x: node.x + (newX - nodes.find(n => n.selected).x),
-          y: node.y + (newY - nodes.find(n => n.selected).y)
-        } : node
-      ));
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.selected
+            ? {
+                ...node,
+                x: node.x + (newX - nodes.find((n) => n.selected).x),
+                y: node.y + (newY - nodes.find((n) => n.selected).y),
+              }
+            : node,
+        ),
+      );
     }
 
     if (isSelecting && selectionBox) {
@@ -295,7 +329,7 @@ export default function Main() {
       setSelectionBox({
         ...selectionBox,
         width: currentX - selectionBox.x,
-        height: currentY - selectionBox.y
+        height: currentY - selectionBox.y,
       });
     }
   };
@@ -304,16 +338,33 @@ export default function Main() {
     setDragState({ isDragging: false, dragOffset: { x: 0, y: 0 } });
 
     if (isSelecting && selectionBox) {
-      const minX = Math.min(selectionBox.x, selectionBox.x + selectionBox.width);
-      const maxX = Math.max(selectionBox.x, selectionBox.x + selectionBox.width);
-      const minY = Math.min(selectionBox.y, selectionBox.y + selectionBox.height);
-      const maxY = Math.max(selectionBox.y, selectionBox.y + selectionBox.height);
+      const minX = Math.min(
+        selectionBox.x,
+        selectionBox.x + selectionBox.width,
+      );
+      const maxX = Math.max(
+        selectionBox.x,
+        selectionBox.x + selectionBox.width,
+      );
+      const minY = Math.min(
+        selectionBox.y,
+        selectionBox.y + selectionBox.height,
+      );
+      const maxY = Math.max(
+        selectionBox.y,
+        selectionBox.y + selectionBox.height,
+      );
 
-      setNodes(nodes => nodes.map(node => ({
-        ...node,
-        selected: node.x >= minX && node.x + node.width <= maxX &&
-          node.y >= minY && node.y + node.height <= maxY
-      })));
+      setNodes((nodes) =>
+        nodes.map((node) => ({
+          ...node,
+          selected:
+            node.x >= minX &&
+            node.x + node.width <= maxX &&
+            node.y >= minY &&
+            node.y + node.height <= maxY,
+        })),
+      );
 
       setSelectionBox(null);
       setIsSelecting(false);
@@ -327,7 +378,7 @@ export default function Main() {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
         width: 0,
-        height: 0
+        height: 0,
       });
       setIsSelecting(true);
       deselectAll();
@@ -337,25 +388,31 @@ export default function Main() {
   const handleEdgeClick = (e, edgeId) => {
     e.stopPropagation();
     if (e.ctrlKey || e.metaKey) {
-      setEdges(edges => edges.map(edge =>
-        edge.id === edgeId ? { ...edge, selected: !edge.selected } : edge
-      ));
+      setEdges((edges) =>
+        edges.map((edge) =>
+          edge.id === edgeId ? { ...edge, selected: !edge.selected } : edge,
+        ),
+      );
     } else {
-      setEdges(edges => edges.map(edge =>
-        edge.id === edgeId ? { ...edge, selected: true } : { ...edge, selected: false }
-      ));
-      setNodes(nodes => nodes.map(node => ({ ...node, selected: false })));
+      setEdges((edges) =>
+        edges.map((edge) =>
+          edge.id === edgeId
+            ? { ...edge, selected: true }
+            : { ...edge, selected: false },
+        ),
+      );
+      setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
     }
   };
 
   const getNodeCenter = (node) => ({
     x: node.x + node.width / 2,
-    y: node.y + node.height / 2
+    y: node.y + node.height / 2,
   });
 
   const renderEdge = (edge) => {
-    const sourceNode = nodes.find(n => n.id === edge.source);
-    const targetNode = nodes.find(n => n.id === edge.target);
+    const sourceNode = nodes.find((n) => n.id === edge.source);
+    const targetNode = nodes.find((n) => n.id === edge.target);
 
     if (!sourceNode || !targetNode) return null;
 
@@ -369,7 +426,7 @@ export default function Main() {
           y1={source.y}
           x2={target.x}
           y2={target.y}
-          stroke={edge.selected ? '#3b82f6' : '#6b7280'}
+          stroke={edge.selected ? "#3b82f6" : "#6b7280"}
           strokeWidth={edge.selected ? 3 : 2}
           markerEnd="url(#arrowhead)"
           className="cursor-pointer"
@@ -394,36 +451,43 @@ export default function Main() {
     const handleKeyDown = (event) => {
       if (event.ctrlKey || event.metaKey) {
         switch (event.key) {
-          case 'c':
+          case "c":
             event.preventDefault();
             copyElements();
             break;
-          case 'x':
+          case "x":
             event.preventDefault();
             cutElements();
             break;
-          case 'v':
+          case "v":
             pasteElements(event);
             event.preventDefault();
             break;
-          case 'a':
+          case "a":
             event.preventDefault();
             selectAll();
             break;
-          case 'd':
+          case "d":
             event.preventDefault();
             deselectAll();
             break;
         }
-      } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      } else if (event.key === "Delete" || event.key === "Backspace") {
         event.preventDefault();
         deleteSelected();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [copyElements, cutElements, pasteElements, selectAll, deselectAll, deleteSelected]);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [
+    copyElements,
+    cutElements,
+    pasteElements,
+    selectAll,
+    deselectAll,
+    deleteSelected,
+  ]);
 
   useEffect(() => {
     const savedCircuit = localStorage.getItem("savedCircuit");
@@ -433,8 +497,12 @@ export default function Main() {
 
         let maxId = 0;
         const allIds = [
-          ...(circuitData.nodes || []).map(n => parseInt(n.id, 10)).filter(Number.isInteger),
-          ...(circuitData.edges || []).map(e => parseInt(e.id, 10)).filter(Number.isInteger)
+          ...(circuitData.nodes || [])
+            .map((n) => parseInt(n.id, 10))
+            .filter(Number.isInteger),
+          ...(circuitData.edges || [])
+            .map((e) => parseInt(e.id, 10))
+            .filter(Number.isInteger),
         ];
 
         if (allIds.length > 0) {
@@ -954,7 +1022,7 @@ export default function Main() {
             )}
           </ReactFlow>
 
-          <div style={{ position: 'absolute', top: 10, left: 100, zIndex: 10 }}>
+          <div style={{ position: "absolute", top: 10, left: 100, zIndex: 10 }}>
             Mouse: {mousePosition.x.toFixed(1)}, {mousePosition.y.toFixed(1)}
           </div>
 

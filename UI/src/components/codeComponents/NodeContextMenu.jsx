@@ -67,10 +67,7 @@ export default function NodeContextMenu({
           Logic gate type: {name ? name.slice(0, -4) : ""}
         </div>
       </div>
-      <button
-        onClick={copyElements}
-        className={"contextMenuButton"}
-      >
+      <button onClick={copyElements} className={"contextMenuButton"}>
         Copy (Ctrl+C)
       </button>
       <button
