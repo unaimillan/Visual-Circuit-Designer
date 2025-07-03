@@ -1,3 +1,14 @@
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hello-page {
   background-color: hsl(0, 0%, 6%);
 }
@@ -59,6 +70,7 @@
 .hello-hero-text {
   width: 100%;
   height: fit-content;
+  padding-bottom: 80px;
   overflow: hidden;
   z-index: 1;
   text-align: center;
@@ -66,16 +78,22 @@
 
   & > h1 {
     font-size: clamp(24px, 6vw, 48px);
-    margin: 0 0 10px 0;
+    margin: 0 0 20px 0;
     line-height: 1.1;
     word-wrap: break-word;
     position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0,0,0,1) forwards;
+    animation-delay: 0.05s;
   }
 
   & > p {
     font-size: 20px;
     margin-top: 15px;
-    color: hsl(220, 35%, 40%);
+    color: hsl(220, 40%, 60%);
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0,0,0,1) forwards;
+    animation-delay: 0.1s;
   }
 }
 
@@ -89,17 +107,37 @@
   align-items: center;
 }
 
-.sticky-container {
-  flex-direction: row;
-  color: white;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  gap: 4vw;
-  flex-wrap: wrap;
-  padding: 0 40px;
-  align-items: stretch;
-  height: 60vh;
+
+.backdrop-whole-page{
+  background-color: transparent;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  transition: 0.3s;
+
+  &.active {
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: 0.3s;
+  }
+
+}
+.sticky-wrapper{
+  height: 1400px;
+  position: relative;
+  border-bottom: white 1px solid;
+}
+.sticky-container{
+    flex-direction: row;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    gap: 4vw;
+    flex-wrap: wrap;
+    padding: 0 40px;
+    align-items: stretch;
+    height: 60vh;
+
 }
 
 .hello-image-placeholder {
@@ -118,6 +156,9 @@
   max-height: 60vh;
   align-self: flex-start;
   margin: auto 0;
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0,0,0,1) forwards;
+  animation-delay: 0.2s;
 }
 
 .demo-picture {
@@ -153,40 +194,18 @@
 
 .sticky-icon {
   width: 1.5rem;
+  margin-right: 10px;
 }
 
 .appear-block-title {
-  font-size: 1.8rem;
-
-  &.sticky-color-1 {
-    color: hsl(25, 60%, 50%);
-  }
-  &.sticky-color-2 {
-    color: hsl(150, 60%, 50%);
-  }
-  &.sticky-color-3 {
-    color: hsl(355, 60%, 50%);
-  }
-  &.sticky-color-4 {
-    color: hsl(240, 60%, 50%);
-  }
+  font-size: 1.6rem;
+  color: hsl(235, 40%, 100%);
 }
 
 .appear-block-description {
   font-size: 1rem;
-
-  &.sticky-color-1 {
-    color: hsl(25, 40%, 65%);
-  }
-  &.sticky-color-2 {
-    color: hsl(150, 55%, 78%);
-  }
-  &.sticky-color-3 {
-    color: hsl(355, 80%, 75%);
-  }
-  &.sticky-color-4 {
-    color: hsl(240, 90%, 88%);
-  }
+  font-weight: 400;
+  color: hsl(220, 40%, 70%);
 }
 
 .appear-animate-left {
@@ -217,9 +236,8 @@
   }
 }
 
-.hello-section {
-  position: relative;
-  /*margin-top: 40px;*/
+.hello-footer {
+  bottom: 0;
   background-color: rgba(10, 10, 10, 0.5);
   backdrop-filter: blur(10px);
   padding: 80px 40px;

@@ -16,9 +16,9 @@ export function VantaFogBackground() {
         minHeight: 200.0,
         minWidth: 200.0,
         baseColor: 0x0,
-        highlightColor: 0x456fb6,
-        midtoneColor: 0x233e6d,
-        lowlightColor: 0x0c182e,
+        highlightColor: 0x577dbd,
+        midtoneColor: 0x29426d,
+        lowlightColor: 0x182741,
         blurFactor: 1.0,
         speed: 1.0,
         zoom: 0.3,
@@ -39,7 +39,7 @@ export function VantaFogBackground() {
         left: 0,
         width: "100vw",
         height: "100vh",
-        zIndex: -1,
+        zIndex: -10,
       }}
     />
   );

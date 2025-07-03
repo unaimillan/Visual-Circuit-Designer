@@ -86,6 +86,26 @@ export default function Main() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  //
+  // // - // загрузка “с нуля”
+  // //   - const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  // // - const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  // // + // 1) Подхватываем savedCircuit или initial сразу один раз
+  // const { nodes: initNodes, edges: initEdges } = useMemo(() => {
+  //   const saved = JSON.parse(localStorage.getItem("savedCircuit") || "null");
+  //   return {
+  //     nodes: saved?.nodes || initialNodes,
+  //     edges: saved?.edges || initialEdges,
+  //   };
+  //   }, []);
+  // // + // 2) Инициализируем flow стейты ровно один раз
+  // const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
+  // const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+
+
+
+
+
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);

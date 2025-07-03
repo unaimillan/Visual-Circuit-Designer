@@ -33,15 +33,17 @@ function App() {
     return 1 - progress;
   };
 
-  const block1Progress = getBlockProgress(500, 700, scrollY);
-  const block3Progress = getBlockProgress(700, 900, scrollY);
-  const block2Progress = getBlockProgress(900, 1100, scrollY);
-  const block4Progress = getBlockProgress(1100, 1300, scrollY);
+  const block1Progress = getBlockProgress(500, 650, scrollY);
+  const block3Progress = getBlockProgress(650, 800, scrollY);
+  const block2Progress = getBlockProgress(800, 950, scrollY);
+  const block4Progress = getBlockProgress(950, 1100, scrollY);
+
+
 
   return (
     <div className={"whole-page"}>
       <VantaFogBackground />
-      <div>
+      <div className={`backdrop-whole-page ${scrollY > 350 ? 'active' : ''}`} ></div>
         <header className={`hello-header ${scrollY > 50 ? "scrolled" : ""}`}>
           <div className="hello-logo-name">VCD</div>
           <div className={"header-left-buttons"}>
@@ -60,7 +62,7 @@ function App() {
               transform: `scale(${easeOutScale}) translateY(${easeOutTranslate}px)`,
             }}
           >
-            <h1 className="hello-hero-title">
+            <h1 className="hello-hero-title"  style={{ transform: `translateX(0)`, opacity: '1'}}>
               Design logic circuits in your browser.
             </h1>
             <p className="hello-hero-subtitle">
@@ -69,7 +71,7 @@ function App() {
           </div>
         </div>
 
-        <div style={{ height: "1600px", position: "relative" }}>
+        <div className={"sticky-wrapper"}>
           <StickyBox offsetTop={window.innerHeight * 0.2}>
             <div className={"sticky-container"}>
               <div className="side-text left">
@@ -77,11 +79,11 @@ function App() {
                   className={"sticky-upper-block"}
                   style={{ transform: `translateX(${-block1Progress * 30}vw)` }}
                 >
-                  <div className={"appear-block-title sticky-color-1"}>
+                  <div className={"appear-block-title"}>
                     <IconThunder SVGClassName={"sticky-icon"} />
                     Instant Access
                   </div>
-                  <p className={"appear-block-description sticky-color-1"}>
+                  <p className={"appear-block-description"}>
                     No installation or setup required. Just open the website and
                     start designing your circuits instantly — from any device.
                   </p>
@@ -91,11 +93,11 @@ function App() {
                   className={"sticky-lower-block"}
                   style={{ transform: `translateX(${-block2Progress * 30}vw)` }}
                 >
-                  <div className={"appear-block-title sticky-color-2"}>
+                  <div className={"appear-block-title"}>
                     <IconBulb SVGClassName={"sticky-icon"} />
                     Simple & Intuitive
                   </div>
-                  <p className={"appear-block-description sticky-color-2"}>
+                  <p className={"appear-block-description"}>
                     An easy-to-use interface makes circuit design accessible
                     even to beginners. Everything is clear and intuitive.
                   </p>
@@ -115,11 +117,11 @@ function App() {
                   className={"sticky-upper-block"}
                   style={{ transform: `translateX(${block3Progress * 30}vw)` }}
                 >
-                  <div className={"appear-block-title sticky-color-3"}>
+                  <div className={"appear-block-title"}>
                     <IconSettings SVGClassName={"sticky-icon"} />
                     Real-Time Simulation
                   </div>
-                  <p className={"appear-block-description sticky-color-3"}>
+                  <p className={"appear-block-description"}>
                     Simulate your circuits instantly, test ideas quickly, and
                     catch mistakes early — no extra tools needed.
                   </p>
@@ -127,16 +129,16 @@ function App() {
 
                 <div className={"sticky-lower-block"}>
                   <div
-                    className={"appear-block-title sticky-color-4"}
+                    className={"appear-block-title"}
                     style={{
                       transform: `translateX(${block4Progress * 30}vw)`,
                     }}
                   >
                     <IconStar SVGClassName={"sticky-icon"} />
                     Modern & Fast UI
-                    <p className={"appear-block-description sticky-color-4"}>
+                    <p className={"appear-block-description"}>
                       A sleek, responsive interface built for speed and clarity
-                      — making your experience smooth and enjoyable every day.
+                      — making your experience smooth and enjoyable.
                     </p>
                   </div>
                 </div>
@@ -145,12 +147,17 @@ function App() {
           </StickyBox>
         </div>
 
-        <section className="hello-section">
+      <div style={{width: '100vw', height: '100vh', border: '1px solid #ffffff'}}>
+
+
+      </div>
+
+
+        <footer className="hello-footer">
           <h2>What's inside</h2>
           <p>Other block</p>
           <p>With love from Team39 💙</p>
-        </section>
-      </div>
+        </footer>
     </div>
   );
 }
