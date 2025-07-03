@@ -8,11 +8,12 @@ import {
 } from "../../../../assets/ui-icons.jsx";
 
 import {
+  IconToolbarBezierWire,
   IconToolbarCursor,
   IconToolbarEraser,
   IconToolbarHand,
-  IconToolbarSquareWire,
-  IconToolbarDiagWire,
+  IconToolbarStepWire,
+  IconToolbarStraightWire,
   IconToolbarText,
 } from "../../../../assets/toolbar-icons.jsx";
 
@@ -90,12 +91,24 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button
+          className={`toolbarButton ${activeWire === "default" ? "active" : ""}`}
+          onClick={() => {
+            setActiveWire("default");
+          }}
+        >
+          <IconToolbarBezierWire
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
+        </button>
+
+        <button
           className={`toolbarButton ${activeWire === "step" ? "active" : ""}`}
           onClick={() => {
             setActiveWire("step");
           }}
         >
-          <IconToolbarSquareWire
+          <IconToolbarStepWire
             SVGClassName="toolbarButtonIcon"
             draggable="false"
           />
@@ -107,7 +120,7 @@ export default function Toolbar({
             setActiveWire("straight");
           }}
         >
-          <IconToolbarDiagWire
+          <IconToolbarStraightWire
             SVGClassName="toolbarButtonIcon"
             draggable="false"
           />
