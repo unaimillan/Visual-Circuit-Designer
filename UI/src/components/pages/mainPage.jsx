@@ -452,22 +452,27 @@ export default function Main() {
       if (event.ctrlKey || event.metaKey) {
         switch (event.key) {
           case "c":
+          case "с":
             event.preventDefault();
             copyElements();
             break;
           case "x":
+          case "ч":
             event.preventDefault();
             cutElements();
             break;
           case "v":
+          case "м":
             pasteElements(event);
             event.preventDefault();
             break;
           case "a":
+          case "ф":
             event.preventDefault();
             selectAll();
             break;
           case "d":
+          case "в":
             event.preventDefault();
             deselectAll();
             break;
