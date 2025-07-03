@@ -4,9 +4,9 @@
 #include "TokenManager.hpp"
 #include "handlers/LoginHandler.hpp"
 #include "handlers/NotFoundHandler.hpp"
+#include "handlers/RefreshHandler.hpp"
 #include "handlers/RegistrationHandler.hpp"
 #include "handlers/VerificationHandler.hpp"
-#include "handlers/RefreshHandler.hpp"
 
 #include <Poco/Net/HTTPRequestHandler.h>
 #include <Poco/Net/HTTPServerRequest.h>

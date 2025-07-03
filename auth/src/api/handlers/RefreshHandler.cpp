@@ -1,4 +1,5 @@
 #include "RefreshHandler.hpp"
+
 #include <Poco/Logger.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/HTTPServerRequest.h>
@@ -6,14 +7,17 @@
 #include <Poco/Util/Application.h>
 #include <regex>
 
+using Poco::Logger;
+using Poco::Net::HTTPResponse;
 using Poco::Net::HTTPServerRequest;
 using Poco::Net::HTTPServerResponse;
-using Poco::Net::HTTPResponse;
-using Poco::Logger;
 
-RefreshHandler::RefreshHandler(TokenManager& tokenManager): m_tokenManager(tokenManager) {}
+RefreshHandler::RefreshHandler(TokenManager& tokenManager)
+    : m_tokenManager(tokenManager) {}
 
-void RefreshHandler::handleRequest(HTTPServerRequest& request, HTTPServerResponse& response) {
+void RefreshHandler::handleRequest(
+    HTTPServerRequest& request, HTTPServerResponse& response
+) {
   Logger& logger = Poco::Util::Application::instance().logger();
   logger.information(
       "POST /api/auth/refresh from %s", request.clientAddress().toString()

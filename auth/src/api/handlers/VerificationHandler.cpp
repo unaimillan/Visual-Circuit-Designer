@@ -15,9 +15,7 @@ using Poco::Net::HTTPResponse;
 using Poco::Net::HTTPServerRequest;
 using Poco::Net::HTTPServerResponse;
 
-VerificationHandler::VerificationHandler(
-    TokenManager& tokenManager
-)
+VerificationHandler::VerificationHandler(TokenManager& tokenManager)
     : m_tokenManager(tokenManager) {}
 
 void VerificationHandler::handleRequest(
