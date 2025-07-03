@@ -73,9 +73,12 @@ function App() {
           <StickyBox offsetTop={window.innerHeight * 0.2}>
             <div className={"sticky-container"}>
               <div className="side-text left">
-                <div className={"sticky-upper-block"} style={{transform: `translateX(${-block1Progress*30}vw)`}}>
+                <div
+                  className={"sticky-upper-block"}
+                  style={{ transform: `translateX(${-block1Progress * 30}vw)` }}
+                >
                   <div className={"appear-block-title sticky-color-1"}>
-                    <IconThunder SVGClassName={"sticky-icon"}/>
+                    <IconThunder SVGClassName={"sticky-icon"} />
                     Instant Access
                   </div>
                   <p className={"appear-block-description sticky-color-1"}>
@@ -84,9 +87,12 @@ function App() {
                   </p>
                 </div>
 
-                <div className={"sticky-lower-block"} style={{transform: `translateX(${-block2Progress*30}vw)`}}>
+                <div
+                  className={"sticky-lower-block"}
+                  style={{ transform: `translateX(${-block2Progress * 30}vw)` }}
+                >
                   <div className={"appear-block-title sticky-color-2"}>
-                    <IconBulb SVGClassName={"sticky-icon"}/>
+                    <IconBulb SVGClassName={"sticky-icon"} />
                     Simple & Intuitive
                   </div>
                   <p className={"appear-block-description sticky-color-2"}>
@@ -105,18 +111,33 @@ function App() {
               </div>
 
               <div className="side-text right">
-                <div className={"sticky-upper-block"} style={{transform: `translateX(${block3Progress*30}vw)`}}>
+                <div
+                  className={"sticky-upper-block"}
+                  style={{ transform: `translateX(${block3Progress * 30}vw)` }}
+                >
                   <div className={"appear-block-title sticky-color-3"}>
-                    <IconSettings SVGClassName={"sticky-icon"}/>
-                    Real-Time Simulation</div>
-                  <p className={"appear-block-description sticky-color-3"}>Simulate your circuits instantly, test ideas quickly, and catch mistakes early — no extra tools needed.</p>
+                    <IconSettings SVGClassName={"sticky-icon"} />
+                    Real-Time Simulation
+                  </div>
+                  <p className={"appear-block-description sticky-color-3"}>
+                    Simulate your circuits instantly, test ideas quickly, and
+                    catch mistakes early — no extra tools needed.
+                  </p>
                 </div>
 
                 <div className={"sticky-lower-block"}>
-                  <div className={"appear-block-title sticky-color-4"} style={{transform: `translateX(${block4Progress*30}vw)`}}>
-                    <IconStar SVGClassName={"sticky-icon"}/>
-                     Modern & Fast UI
-                    <p className={"appear-block-description sticky-color-4"}>A sleek, responsive interface built for speed and clarity — making your experience smooth and enjoyable every day.</p>
+                  <div
+                    className={"appear-block-title sticky-color-4"}
+                    style={{
+                      transform: `translateX(${block4Progress * 30}vw)`,
+                    }}
+                  >
+                    <IconStar SVGClassName={"sticky-icon"} />
+                    Modern & Fast UI
+                    <p className={"appear-block-description sticky-color-4"}>
+                      A sleek, responsive interface built for speed and clarity
+                      — making your experience smooth and enjoyable every day.
+                    </p>
                   </div>
                 </div>
               </div>
