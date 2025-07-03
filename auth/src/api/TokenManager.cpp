@@ -72,6 +72,10 @@ User TokenManager::getUser(std::string const& token) const {
   return ret;
 }
 
+std::string TokenManager::refresh(std::string const& token) {
+  return generate(getUser(token));
+}
+
 bool TokenManager::_verify(
     std::string const& token, Poco::JWT::Token& out, Type type
 ) const {
