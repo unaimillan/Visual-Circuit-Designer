@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
 
 export function VantaFogBackground() {
   const ref = useRef(null);
@@ -16,12 +16,12 @@ export function VantaFogBackground() {
         minHeight: 200.0,
         minWidth: 200.0,
         baseColor: 0x0,
-        highlightColor: 0x456FB6,
-        midtoneColor: 0x233E6D,
-        lowlightColor: 0x0C182E,
+        highlightColor: 0x456fb6,
+        midtoneColor: 0x233e6d,
+        lowlightColor: 0x0c182e,
         blurFactor: 1.0,
         speed: 1.0,
-        zoom: 0.3
+        zoom: 0.3,
       });
     }
 
@@ -30,15 +30,17 @@ export function VantaFogBackground() {
     };
   }, []);
 
-  return <div ref={ref}
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                zIndex: -1,
-              }}
-  />;
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: -1,
+      }}
+    />
+  );
 }
-
