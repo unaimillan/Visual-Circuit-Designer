@@ -1,4 +1,4 @@
-export const IconMenu = ({ SVGClassName }) => (
+export const IconMenu = ({SVGClassName}) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -15,7 +15,7 @@ export const IconMenu = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconSettings = ({ SVGClassName }) => (
+export const IconSettings = ({SVGClassName}) => (
   <svg
     width="24"
     height="24"
@@ -39,7 +39,7 @@ export const IconSettings = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconArrow = ({ SVGClassName }) => (
+export const IconArrow = ({SVGClassName}) => (
   <svg
     width="15"
     height="15"
@@ -57,7 +57,7 @@ export const IconArrow = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconStart = ({ SVGClassName }) => (
+export const IconStart = ({SVGClassName}) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -73,7 +73,7 @@ export const IconStart = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconStop = ({ SVGClassName }) => (
+export const IconStop = ({SVGClassName}) => (
   <svg
     className={SVGClassName}
     viewBox="0 0 24 24"
@@ -87,7 +87,7 @@ export const IconStop = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconLoading = ({ SVGClassName }) => (
+export const IconLoading = ({SVGClassName}) => (
   <svg
     width="24"
     height="24"
@@ -117,19 +117,19 @@ export const IconLoading = ({ SVGClassName }) => (
     `}
     </style>
     <g className="spinner_V8m1">
-      <circle cx="12" cy="12" r="9.5" fill="none" strokeWidth="3" />
+      <circle cx="12" cy="12" r="9.5" fill="none" strokeWidth="3"/>
     </g>
   </svg>
 );
 
-export const IconError = ({ SVGClassName }) => (
+export const IconError = ({SVGClassName}) => (
   <svg
     className={SVGClassName}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="12" cy="17" r="1" fill="currentColor" />
+    <circle cx="12" cy="17" r="1" fill="currentColor"/>
     <path
       d="M12 10L12 14"
       stroke="currentColor"
@@ -147,7 +147,7 @@ export const IconError = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconUser = ({ SVGClassName }) => (
+export const IconUser = ({SVGClassName}) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -164,7 +164,7 @@ export const IconUser = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconCloseCross = ({ SVGClassName }) => (
+export const IconCloseCross = ({SVGClassName}) => (
   <svg viewBox="7 7 10 10" fill="none" className={SVGClassName}>
     <path
       d="M16 8L8 16M8.00001 8L16 16"
@@ -176,13 +176,13 @@ export const IconCloseCross = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconDownloadFile = ({ SVGClassName }) => (
+export const IconDownloadFile = ({SVGClassName}) => (
   <svg
     viewBox="0 0 24 24"
     className={SVGClassName}
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title />
+    <title/>
     <g id="Complete">
       <g id="download">
         <g>
@@ -223,7 +223,7 @@ export const IconDownloadFile = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconOpenFile = ({ SVGClassName }) => (
+export const IconOpenFile = ({SVGClassName}) => (
   <svg
     className={SVGClassName}
     viewBox="0 0 24 24"
@@ -240,7 +240,7 @@ export const IconOpenFile = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconTabPalette = ({ SVGClassName }) => (
+export const IconTabPalette = ({SVGClassName}) => (
   <svg
     className={SVGClassName}
     viewBox="0 0 24 24"
@@ -257,7 +257,7 @@ export const IconTabPalette = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconTabBell = ({ SVGClassName }) => (
+export const IconTabBell = ({SVGClassName}) => (
   <svg
     className={SVGClassName}
     viewBox="0 0 24 24"
@@ -274,7 +274,7 @@ export const IconTabBell = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconTabPerson = ({ SVGClassName }) => (
+export const IconTabPerson = ({SVGClassName}) => (
   <svg
     className={SVGClassName}
     fill="currentColor"
@@ -284,8 +284,33 @@ export const IconTabPerson = ({ SVGClassName }) => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <g>
-      <path d="M30,49c0,18.7,15.3,34,34,34s34-15.3,34-34S82.7,15,64,15S30,30.3,30,49z M90,49c0,14.3-11.7,26-26,26S38,63.3,38,49   s11.7-26,26-26S90,34.7,90,49z" />
-      <path d="M24.4,119.4C35,108.8,49,103,64,103s29,5.8,39.6,16.4l5.7-5.7C97.2,101.7,81.1,95,64,95s-33.2,6.7-45.3,18.7L24.4,119.4z" />
+      <path
+        d="M30,49c0,18.7,15.3,34,34,34s34-15.3,34-34S82.7,15,64,15S30,30.3,30,49z M90,49c0,14.3-11.7,26-26,26S38,63.3,38,49   s11.7-26,26-26S90,34.7,90,49z"/>
+      <path
+        d="M24.4,119.4C35,108.8,49,103,64,103s29,5.8,39.6,16.4l5.7-5.7C97.2,101.7,81.1,95,64,95s-33.2,6.7-45.3,18.7L24.4,119.4z"/>
     </g>
+  </svg>
+);
+
+export const IconThunder = ({SVGClassName}) => (
+  <svg fill="#ffffff" viewBox="2 2 21 21" xmlns="http://www.w3.org/2000/svg" className={SVGClassName}>
+    <path
+      d="M17.76,10.63,9,21l2.14-8H7.05a1,1,0,0,1-1-1.36l3.23-8a1.05,1.05,0,0,1,1-.64h4.34a1,1,0,0,1,1,1.36L13.7,9H17A1,1,0,0,1,17.76,10.63Z"
+      fill="none" stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2'/>
+  </svg>
+);
+
+export const IconBulb = ({SVGClassName}) => (
+  <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" className={SVGClassName}>
+    <g fill="currentColor">
+      <path d="M8 0a.75.75 0 01.75.75v1a.75.75 0 01-1.5 0v-1A.75.75 0 018 0zM13.28 2.22a.75.75 0 010 1.06l-.707.707a.75.75 0 11-1.06-1.06l.707-.707a.75.75 0 011.06 0zM2.72 3.28a.75.75 0 011.06-1.06l.707.707a.75.75 0 01-1.06 1.06L2.72 3.28zM15.5 7.5a.75.75 0 01-.75.75h-1a.75.75 0 010-1.5h1a.75.75 0 01.75.75zM2.25 8.25a.75.75 0 000-1.5h-1a.75.75 0 000 1.5h1zM6.25 15.25A.75.75 0 017 14.5h2A.75.75 0 019 16H7a.75.75 0 01-.75-.75z"/>
+      <path fillRule="evenodd" d="M8 3.5A4.5 4.5 0 003.5 8c0 1.53.926 2.465 1.718 3.264l.2.203c.05.05.081.124.081.208.001 1.008.818 1.825 1.826 1.825H8.69c1 0 1.811-.81 1.811-1.81 0-.083.033-.159.088-.213l.067-.066C11.492 10.592 12.5 9.605 12.5 8A4.5 4.5 0 008 3.5zM5 8a3 3 0 016 0c0 .928-.54 1.502-1.462 2.406-.347.34-.538.803-.538 1.283a.31.31 0 01-.31.311H7.324A.326.326 0 017 11.674c0-.461-.175-.914-.507-1.255l-.115-.117C5.49 9.397 5 8.894 5 8z" clipRule="evenodd"/>
+    </g>
+  </svg>
+);
+
+export const IconStar = ({SVGClassName}) => (
+  <svg viewBox="2 2 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={SVGClassName}>
+    <path d="M11.2691 4.41115C11.5006 3.89177 11.6164 3.63208 11.7776 3.55211C11.9176 3.48263 12.082 3.48263 12.222 3.55211C12.3832 3.63208 12.499 3.89177 12.7305 4.41115L14.5745 8.54808C14.643 8.70162 14.6772 8.77839 14.7302 8.83718C14.777 8.8892 14.8343 8.93081 14.8982 8.95929C14.9705 8.99149 15.0541 9.00031 15.2213 9.01795L19.7256 9.49336C20.2911 9.55304 20.5738 9.58288 20.6997 9.71147C20.809 9.82316 20.8598 9.97956 20.837 10.1342C20.8108 10.3122 20.5996 10.5025 20.1772 10.8832L16.8125 13.9154C16.6877 14.0279 16.6252 14.0842 16.5857 14.1527C16.5507 14.2134 16.5288 14.2807 16.5215 14.3503C16.5132 14.429 16.5306 14.5112 16.5655 14.6757L17.5053 19.1064C17.6233 19.6627 17.6823 19.9408 17.5989 20.1002C17.5264 20.2388 17.3934 20.3354 17.2393 20.3615C17.0619 20.3915 16.8156 20.2495 16.323 19.9654L12.3995 17.7024C12.2539 17.6184 12.1811 17.5765 12.1037 17.56C12.0352 17.5455 11.9644 17.5455 11.8959 17.56C11.8185 17.5765 11.7457 17.6184 11.6001 17.7024L7.67662 19.9654C7.18404 20.2495 6.93775 20.3915 6.76034 20.3615C6.60623 20.3354 6.47319 20.2388 6.40075 20.1002C6.31736 19.9408 6.37635 19.6627 6.49434 19.1064L7.4341 14.6757C7.46898 14.5112 7.48642 14.429 7.47814 14.3503C7.47081 14.2807 7.44894 14.2134 7.41394 14.1527C7.37439 14.0842 7.31195 14.0279 7.18708 13.9154L3.82246 10.8832C3.40005 10.5025 3.18884 10.3122 3.16258 10.1342C3.13978 9.97956 3.19059 9.82316 3.29993 9.71147C3.42581 9.58288 3.70856 9.55304 4.27406 9.49336L8.77835 9.01795C8.94553 9.00031 9.02911 8.99149 9.10139 8.95929C9.16534 8.93081 9.2226 8.8892 9.26946 8.83718C9.32241 8.77839 9.35663 8.70162 9.42508 8.54808L11.2691 4.41115Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
