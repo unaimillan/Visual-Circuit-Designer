@@ -83,7 +83,7 @@
     word-wrap: break-word;
     position: relative;
     opacity: 0;
-    animation: fadeUp 0.8s cubic-bezier(0,0,0,1) forwards;
+    animation: fadeUp 0.8s cubic-bezier(0, 0, 0, 1) forwards;
     animation-delay: 0.05s;
   }
 
@@ -92,7 +92,7 @@
     margin-top: 15px;
     color: hsl(220, 40%, 60%);
     opacity: 0;
-    animation: fadeUp 0.8s cubic-bezier(0,0,0,1) forwards;
+    animation: fadeUp 0.8s cubic-bezier(0, 0, 0, 1) forwards;
     animation-delay: 0.1s;
   }
 }
@@ -107,8 +107,7 @@
   align-items: center;
 }
 
-
-.backdrop-whole-page{
+.backdrop-whole-page {
   background-color: transparent;
   position: fixed;
   width: 100vw;
@@ -119,25 +118,23 @@
     background-color: rgba(0, 0, 0, 0.7);
     transition: 0.3s;
   }
-
 }
-.sticky-wrapper{
+.sticky-wrapper {
   height: 1400px;
   position: relative;
   border-bottom: white 1px solid;
 }
-.sticky-container{
-    flex-direction: row;
-    color: white;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    gap: 4vw;
-    flex-wrap: wrap;
-    padding: 0 40px;
-    align-items: stretch;
-    height: 60vh;
-
+.sticky-container {
+  flex-direction: row;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  gap: 4vw;
+  flex-wrap: wrap;
+  padding: 0 40px;
+  align-items: stretch;
+  height: 60vh;
 }
 
 .hello-image-placeholder {
@@ -157,7 +154,7 @@
   align-self: flex-start;
   margin: auto 0;
   opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0,0,0,1) forwards;
+  animation: fadeUp 0.8s cubic-bezier(0, 0, 0, 1) forwards;
   animation-delay: 0.2s;
 }
 

@@ -102,10 +102,6 @@ export default function Main() {
   // const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
   // const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
 
-
-
-
-
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
