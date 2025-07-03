@@ -76,7 +76,7 @@ export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
-  const [activeWire, setActiveWire] = useState("step");
+  const [activeWire, setActiveWire] = useState("default");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
@@ -249,10 +249,11 @@ export default function Main() {
           setActiveAction("hand");
           setPanOnDrag(true);
         },
-        3: () => setActiveWire("step"),
-        4: () => setActiveWire("straight"),
-        5: () => setActiveAction("eraser"),
-        6: () => setActiveAction("text"),
+        3: () => setActiveWire("default"),
+        4: () => setActiveWire("step"),
+        5: () => setActiveWire("straight"),
+        6: () => setActiveAction("eraser"),
+        7: () => setActiveAction("text"),
       };
       if (hotkeys[e.key]) {
         e.preventDefault();
