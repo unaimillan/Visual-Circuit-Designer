@@ -136,36 +136,34 @@ export default function Main() {
 
   useEffect(() => {
     const selectedNodeIds = new Set(
-      nodes.filter(node => node.selected).map(node => node.id)
+      nodes.filter((node) => node.selected).map((node) => node.id),
     );
 
-    setEdges(edges =>
-      edges.map(edge => {
+    setEdges((edges) =>
+      edges.map((edge) => {
         const isBetweenSelected =
-          selectedNodeIds.has(edge.source) &&
-          selectedNodeIds.has(edge.target);
+          selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target);
 
         // Only auto-select if both nodes are selected
         // Preserve manual selections if edge is not between selected nodes
-        return isBetweenSelected
-          ? { ...edge, selected: true }
-          : edge;
-      })
+        return isBetweenSelected ? { ...edge, selected: true } : edge;
+      }),
     );
   }, [nodes]); // Runs when node selection changes
 
-// Update getSelectedElements
+  // Update getSelectedElements
   const getSelectedElements = useCallback(() => {
-    const selectedNodes = nodes.filter(node => node.selected);
-    const selectedNodeIds = new Set(selectedNodes.map(node => node.id));
+    const selectedNodes = nodes.filter((node) => node.selected);
+    const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
 
     // Only include edges that are BOTH:
     // 1. Explicitly selected AND
     // 2. Connect two selected nodes
-    const selectedEdges = edges.filter(edge =>
-      edge.selected &&
-      selectedNodeIds.has(edge.source) &&
-      selectedNodeIds.has(edge.target)
+    const selectedEdges = edges.filter(
+      (edge) =>
+        edge.selected &&
+        selectedNodeIds.has(edge.source) &&
+        selectedNodeIds.has(edge.target),
     );
 
     return { nodes: selectedNodes, edges: selectedEdges };
@@ -177,7 +175,13 @@ export default function Main() {
 
     setClipboard(selected);
     setCutMode(false);
-    console.log("Copied:", selected.nodes.length, "nodes and", selected.edges.length, "edges");
+    console.log(
+      "Copied:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
   }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
