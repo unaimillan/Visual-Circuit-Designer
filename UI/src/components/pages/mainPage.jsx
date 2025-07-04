@@ -146,18 +146,35 @@ export default function Main() {
 
   const copyElements = useCallback(() => {
     const selected = getSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+    if (selected.nodes.length === 0) return;
 
-    setClipboard(selected);
+    const selectedNodeIds = new Set(selected.nodes.map(node => node.id));
+
+    const incomingEdges = edges.filter(edge => {
+      const sourceNodeId = edge.source;
+      const targetNodeId = edge.target;
+
+      return (
+        selectedNodeIds.has(targetNodeId) ||
+        !selectedNodeIds.has(sourceNodeId)
+      );
+    });
+
+    const clipboardData = {
+      nodes: selected.nodes,
+      edges: incomingEdges,
+    };
+
+    setClipboard(clipboardData);
     setCutMode(false);
     console.log(
       "Copied:",
-      selected.nodes.length,
+      clipboardData.nodes.length,
       "nodes and",
-      selected.edges.length,
-      "edges",
+      clipboardData.edges.length,
+      "incoming edges"
     );
-  }, [nodes, edges]);
+  }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
     const selected = getSelectedElements();
@@ -182,7 +199,7 @@ export default function Main() {
   }, [nodes, edges]);
 
   const pasteElements = useCallback(
-    (event) => {
+    () => {
       if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
       // Convert mouse position to flow coordinates
@@ -463,7 +480,7 @@ export default function Main() {
             break;
           case "v":
           case "м":
-            pasteElements(event);
+            pasteElements();
             event.preventDefault();
             break;
           case "a":
