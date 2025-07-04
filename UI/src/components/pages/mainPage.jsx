@@ -117,7 +117,7 @@ export default function Main() {
     const handleMouseMove = (event) => {
       mousePositionRef.current = {
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       };
     };
 
@@ -155,15 +155,14 @@ export default function Main() {
     const selected = getSelectedElements();
     if (selected.nodes.length === 0) return;
 
-    const selectedNodeIds = new Set(selected.nodes.map(node => node.id));
+    const selectedNodeIds = new Set(selected.nodes.map((node) => node.id));
 
-    const incomingEdges = edges.filter(edge => {
+    const incomingEdges = edges.filter((edge) => {
       const sourceNodeId = edge.source;
       const targetNodeId = edge.target;
 
       return (
-        selectedNodeIds.has(targetNodeId) ||
-        !selectedNodeIds.has(sourceNodeId)
+        selectedNodeIds.has(targetNodeId) || !selectedNodeIds.has(sourceNodeId)
       );
     });
 
@@ -179,7 +178,7 @@ export default function Main() {
       clipboardData.nodes.length,
       "nodes and",
       clipboardData.edges.length,
-      "incoming edges"
+      "incoming edges",
     );
   }, [nodes, edges, getSelectedElements]);
 
@@ -212,23 +211,27 @@ export default function Main() {
     }
 
     // Deselect all existing nodes and edges
-    setNodes(prevNodes => prevNodes.map(node => ({ ...node, selected: false })));
-    setEdges(prevEdges => prevEdges.map(edge => ({ ...edge, selected: false })));
+    setNodes((prevNodes) =>
+      prevNodes.map((node) => ({ ...node, selected: false })),
+    );
+    setEdges((prevEdges) =>
+      prevEdges.map((edge) => ({ ...edge, selected: false })),
+    );
 
     if (clipboard.nodes.length === 0) return;
 
     const flowPosition = reactFlowInstance.screenToFlowPosition({
       x: mousePositionRef.current.x,
-      y: mousePositionRef.current.y
+      y: mousePositionRef.current.y,
     });
 
     const offset = {
       x: flowPosition.x - clipboard.nodes[0].position.x,
-      y: flowPosition.y - clipboard.nodes[0].position.y
+      y: flowPosition.y - clipboard.nodes[0].position.y,
     };
 
     const nodeIdMap = {};
-    const newNodes = clipboard.nodes.map(node => {
+    const newNodes = clipboard.nodes.map((node) => {
       const newId = generateId();
       nodeIdMap[node.id] = newId;
 
@@ -237,25 +240,25 @@ export default function Main() {
         id: newId,
         position: {
           x: node.position.x + offset.x,
-          y: node.position.y + offset.y
+          y: node.position.y + offset.y,
         },
         selected: true,
         data: {
           ...node.data,
-          customId: newId
-        }
+          customId: newId,
+        },
       };
     });
 
-    const newEdges = clipboard.edges.map(edge => ({
+    const newEdges = clipboard.edges.map((edge) => ({
       ...edge,
       id: generateId(),
       source: nodeIdMap[edge.source] || edge.source,
-      target: nodeIdMap[edge.target] || edge.target
+      target: nodeIdMap[edge.target] || edge.target,
     }));
 
-    setNodes(nds => nds.concat(newNodes));
-    setEdges(eds => eds.concat(newEdges));
+    setNodes((nds) => nds.concat(newNodes));
+    setEdges((eds) => eds.concat(newEdges));
 
     if (cutMode) {
       setClipboard({ nodes: [], edges: [] });
