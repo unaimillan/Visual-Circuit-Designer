@@ -45,20 +45,6 @@ function App() {
       <div className={`backdrop-whole-page ${scrollY > 350 ? 'active' : ''}`}></div>
       <header className={`hello-header ${scrollY > 50 ? "scrolled" : ""}`}>
         <div className="hello-logo-name">VCD</div>
-
-        <div style={{
-          position: "fixed",
-          top: "10px",
-          color: "#fff",
-          background: "rgba(0,0,0,0.6)",
-          padding: "6px 12px",
-          borderRadius: "8px",
-          fontFamily: "monospace",
-          zIndex: 10000
-        }}>
-          ScrollY: {scrollY}
-        </div>
-
         <div className={"header-left-buttons"}>
           <button className={"header-button"}>Sign Up</button>
 
