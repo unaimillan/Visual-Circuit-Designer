@@ -29,20 +29,41 @@
   z-index: 5;
 }
 
-.react-flow__edge-path {
+/*.react-flow__edge-path {*/
+/*  stroke-width: 2;*/
+/*  stroke: var(--main-0);*/
+/*}*/
+
+/* Hovered edge */
+/*.react-flow__edge.selectable:hover .react-flow__edge-path {*/
+/*  stroke: var(--main-4);*/
+/*}*/
+
+/*!* Selected edge *!*/
+/*.react-flow__edge.selectable.selected .react-flow__edge-path {*/
+/*  !*stroke-width: 3;*!*/
+/*  stroke: var(--main-4);*/
+/*}*/
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--main-4) !important;
   stroke-width: 2;
+}
+
+.react-flow__edge:not(.selected-between-nodes) .react-flow__edge-path {
   stroke: var(--main-0);
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected-between-nodes .react-flow__edge-path {
+  stroke: var(--main-4);
+  stroke-width: 3;
 }
 
 /* Hovered edge */
 .react-flow__edge.selectable:hover .react-flow__edge-path {
   stroke: var(--main-4);
-}
-
-/* Selected edge */
-.react-flow__edge.selectable.selected .react-flow__edge-path {
-  /*stroke-width: 3;*/
-  stroke: var(--main-4);
+  stroke-width: 2;
 }
 
 .react-flow__handle {

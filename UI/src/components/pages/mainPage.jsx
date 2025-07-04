@@ -134,52 +134,50 @@ export default function Main() {
     return idCounter.current.toString();
   };
 
-  const getSelectedElements = () => {
-    const selectedNodes = nodes.filter((node) => node.selected);
-    const selectedEdges = edges.filter((edge) => edge.selected);
-
-    // Include edges that connect selected nodes
-    const selectedNodeIds = new Set(selectedNodes.map((n) => n.id));
-    const connectedEdges = edges.filter(
-      (edge) =>
-        selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target),
+  useEffect(() => {
+    const selectedNodeIds = new Set(
+      nodes.filter(node => node.selected).map(node => node.id)
     );
 
-    const allSelectedEdges = [
-      ...new Set([...selectedEdges, ...connectedEdges]),
-    ];
-    return { nodes: selectedNodes, edges: allSelectedEdges };
-  };
+    setEdges(edges =>
+      edges.map(edge => {
+        const isBetweenSelected =
+          selectedNodeIds.has(edge.source) &&
+          selectedNodeIds.has(edge.target);
+
+        // Only auto-select if both nodes are selected
+        // Preserve manual selections if edge is not between selected nodes
+        return isBetweenSelected
+          ? { ...edge, selected: true }
+          : edge;
+      })
+    );
+  }, [nodes]); // Runs when node selection changes
+
+// Update getSelectedElements
+  const getSelectedElements = useCallback(() => {
+    const selectedNodes = nodes.filter(node => node.selected);
+    const selectedNodeIds = new Set(selectedNodes.map(node => node.id));
+
+    // Only include edges that are BOTH:
+    // 1. Explicitly selected AND
+    // 2. Connect two selected nodes
+    const selectedEdges = edges.filter(edge =>
+      edge.selected &&
+      selectedNodeIds.has(edge.source) &&
+      selectedNodeIds.has(edge.target)
+    );
+
+    return { nodes: selectedNodes, edges: selectedEdges };
+  }, [nodes, edges]);
 
   const copyElements = useCallback(() => {
     const selected = getSelectedElements();
     if (selected.nodes.length === 0) return;
 
-    const selectedNodeIds = new Set(selected.nodes.map((node) => node.id));
-
-    const incomingEdges = edges.filter((edge) => {
-      const sourceNodeId = edge.source;
-      const targetNodeId = edge.target;
-
-      return (
-        selectedNodeIds.has(targetNodeId) || !selectedNodeIds.has(sourceNodeId)
-      );
-    });
-
-    const clipboardData = {
-      nodes: selected.nodes,
-      edges: incomingEdges,
-    };
-
-    setClipboard(clipboardData);
+    setClipboard(selected);
     setCutMode(false);
-    console.log(
-      "Copied:",
-      clipboardData.nodes.length,
-      "nodes and",
-      clipboardData.edges.length,
-      "incoming edges",
-    );
+    console.log("Copied:", selected.nodes.length, "nodes and", selected.edges.length, "edges");
   }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
@@ -325,9 +323,6 @@ export default function Main() {
             deselectAll();
             break;
         }
-      } else if (event.key === "Delete" || event.key === "Backspace") {
-        event.preventDefault();
-        deleteSelected();
       }
     };
 
@@ -821,10 +816,7 @@ export default function Main() {
             maxZoom={10}
             deleteKeyCode={["Delete", "Backspace"]}
             onDelete={deleteSelected}
-            // onMouseMove={handleMouseMove}
-            // onMouseDown={handleCanvasMouseDown}
-            // onMouseUp={handleMouseUp}
-            // onMouseLeave={handleMouseUp}
+            // onlyRenderVisibleElements={true}
           >
             <Background
               offset={[10.5, 5]}
