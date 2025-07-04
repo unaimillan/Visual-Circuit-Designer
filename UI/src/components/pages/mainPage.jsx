@@ -148,15 +148,14 @@ export default function Main() {
     const selected = getSelectedElements();
     if (selected.nodes.length === 0) return;
 
-    const selectedNodeIds = new Set(selected.nodes.map(node => node.id));
+    const selectedNodeIds = new Set(selected.nodes.map((node) => node.id));
 
-    const incomingEdges = edges.filter(edge => {
+    const incomingEdges = edges.filter((edge) => {
       const sourceNodeId = edge.source;
       const targetNodeId = edge.target;
 
       return (
-        selectedNodeIds.has(targetNodeId) ||
-        !selectedNodeIds.has(sourceNodeId)
+        selectedNodeIds.has(targetNodeId) || !selectedNodeIds.has(sourceNodeId)
       );
     });
 
@@ -172,7 +171,7 @@ export default function Main() {
       clipboardData.nodes.length,
       "nodes and",
       clipboardData.edges.length,
-      "incoming edges"
+      "incoming edges",
     );
   }, [nodes, edges, getSelectedElements]);
 
@@ -198,62 +197,59 @@ export default function Main() {
     );
   }, [nodes, edges]);
 
-  const pasteElements = useCallback(
-    () => {
-      if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
+  const pasteElements = useCallback(() => {
+    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
-      // Convert mouse position to flow coordinates
-      const flowPosition = reactFlowInstance.screenToFlowPosition({
-        x: mousePosition.x,
-        y: mousePosition.y,
+    // Convert mouse position to flow coordinates
+    const flowPosition = reactFlowInstance.screenToFlowPosition({
+      x: mousePosition.x,
+      y: mousePosition.y,
+    });
+
+    const nodeIdMap = new Map();
+    const newNodes = [];
+    const newEdges = [];
+
+    // Calculate offset from first node's original position
+    const firstNode = clipboard.nodes[0];
+    const offsetX = flowPosition.x - firstNode.position.x;
+    const offsetY = flowPosition.y - firstNode.position.y;
+
+    // Create new nodes with updated positions
+    clipboard.nodes.forEach((node) => {
+      const newId = generateId();
+      nodeIdMap.set(node.id, newId);
+
+      newNodes.push({
+        ...node,
+        id: newId,
+        position: {
+          x: node.position.x + offsetX,
+          y: node.position.y + offsetY,
+        },
+        selected: false,
       });
+    });
 
-      const nodeIdMap = new Map();
-      const newNodes = [];
-      const newEdges = [];
-
-      // Calculate offset from first node's original position
-      const firstNode = clipboard.nodes[0];
-      const offsetX = flowPosition.x - firstNode.position.x;
-      const offsetY = flowPosition.y - firstNode.position.y;
-
-      // Create new nodes with updated positions
-      clipboard.nodes.forEach((node) => {
-        const newId = generateId();
-        nodeIdMap.set(node.id, newId);
-
-        newNodes.push({
-          ...node,
-          id: newId,
-          position: {
-            x: node.position.x + offsetX,
-            y: node.position.y + offsetY,
-          },
-          selected: false,
-        });
+    // Create new edges with updated IDs
+    clipboard.edges.forEach((edge) => {
+      newEdges.push({
+        ...edge,
+        id: generateId(),
+        source: nodeIdMap.get(edge.source) || edge.source,
+        target: nodeIdMap.get(edge.target) || edge.target,
+        selected: false,
       });
+    });
 
-      // Create new edges with updated IDs
-      clipboard.edges.forEach((edge) => {
-        newEdges.push({
-          ...edge,
-          id: generateId(),
-          source: nodeIdMap.get(edge.source) || edge.source,
-          target: nodeIdMap.get(edge.target) || edge.target,
-          selected: false,
-        });
-      });
+    setNodes((nodes) => [...nodes, ...newNodes]);
+    setEdges((edges) => [...edges, ...newEdges]);
 
-      setNodes((nodes) => [...nodes, ...newNodes]);
-      setEdges((edges) => [...edges, ...newEdges]);
-
-      if (cutMode) {
-        setClipboard({ nodes: [], edges: [] });
-        setCutMode(false);
-      }
-    },
-    [clipboard, cutMode, mousePosition, reactFlowInstance],
-  );
+    if (cutMode) {
+      setClipboard({ nodes: [], edges: [] });
+      setCutMode(false);
+    }
+  }, [clipboard, cutMode, mousePosition, reactFlowInstance]);
 
   const deleteSelected = useCallback(() => {
     const selected = getSelectedElements();
