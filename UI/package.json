@@ -22,6 +22,7 @@
     "react-infinite-canvas": "3.4.1",
     "react-router-dom": "^7.6.2",
     "react-sticky-box": "^2.0.5",
+    "react-text-animate": "^2.1.1",
     "reactflow": "^11.11.4",
     "requestidlecallback-polyfill": "^1.0.2",
     "socket.io": "^4.8.1",
