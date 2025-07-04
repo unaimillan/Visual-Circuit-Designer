@@ -86,25 +86,6 @@ export default function Main() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  //
-  // // - // загрузка “с нуля”
-  // //   - const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  // // - const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  // // + // 1) Подхватываем savedCircuit или initial сразу один раз
-  // const { nodes: initNodes, edges: initEdges } = useMemo(() => {
-  //   const saved = JSON.parse(localStorage.getItem("savedCircuit") || "null");
-  //   return {
-  //     nodes: saved?.nodes || initialNodes,
-  //     edges: saved?.edges || initialEdges,
-  //   };
-  //   }, []);
-  // // + // 2) Инициализируем flow стейты ровно один раз
-  // const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
-  // const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
-
-
-
-
 
   const [menu, setMenu] = useState(null);
 
@@ -172,6 +153,8 @@ export default function Main() {
         setOpenSettings(parsed.openSettings);
       if (typeof parsed.circuitsMenuState === "boolean")
         setCircuitsMenuState(parsed.circuitsMenuState);
+      if (parsed.logLevel) setLogLevel(parsed.logLevel);
+      if (parsed.toastPosition) setToastPosition(parsed.toastPosition);
     }
   }, []);
 
@@ -185,6 +168,8 @@ export default function Main() {
       activeWire,
       openSettings,
       circuitsMenuState,
+      logLevel,
+      toastPosition
     };
     localStorage.setItem("userSettings", JSON.stringify(settings));
   }, [
@@ -195,6 +180,8 @@ export default function Main() {
     activeWire,
     openSettings,
     circuitsMenuState,
+    logLevel,
+    toastPosition
   ]);
 
   //Hotkeys handler

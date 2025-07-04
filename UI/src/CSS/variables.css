@@ -2,6 +2,8 @@
   /*Universal TransitionTIME variable (same for all themes, allows to )*/
   --ttime: 0.3s;
 
+  --hello-animation-time: 1s;
+
   --main-1: hsl(0, 0%, 93%);
   --main-2: hsl(0, 0%, 90%);
   --main-3: hsl(0, 0%, 88%);
