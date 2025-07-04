@@ -1,5 +1,6 @@
 import Main from "./components/pages/mainPage.jsx";
 import Profile from "./components/pages/profile.jsx";
+import HelloPage from "./components/pages/hello-page.jsx";
 
 import "@xyflow/react/dist/style.css";
 
@@ -36,6 +37,7 @@ function App() {
         <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Main />} />
+          <Route path="/main" element={<HelloPage />} />
         </Routes>
       </div>
     </Router>
