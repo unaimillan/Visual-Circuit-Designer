@@ -169,7 +169,7 @@ export default function Main() {
       openSettings,
       circuitsMenuState,
       logLevel,
-      toastPosition
+      toastPosition,
     };
     localStorage.setItem("userSettings", JSON.stringify(settings));
   }, [
@@ -181,7 +181,7 @@ export default function Main() {
     openSettings,
     circuitsMenuState,
     logLevel,
-    toastPosition
+    toastPosition,
   ]);
 
   //Hotkeys handler

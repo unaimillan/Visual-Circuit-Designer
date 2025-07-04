@@ -47,13 +47,15 @@
   display: flex;
   align-items: center;
   background-color: transparent;
-  transition: background-color 0.3s ease,
-  box-shadow 0.3s ease,
-  border-bottom 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-bottom 0.3s ease;
   z-index: 1000;
   border-bottom: rgba(50, 50, 50, 0) 1px solid;
 
-  animation: fadeDown var(--hello-animation-time) cubic-bezier(0, 0, 0, 1) forwards;
+  animation: fadeDown var(--hello-animation-time) cubic-bezier(0, 0, 0, 1)
+    forwards;
 
   &.scrolled {
     background-color: rgba(0, 0, 0, 0.2);
@@ -110,7 +112,8 @@
     word-wrap: break-word;
     position: relative;
     opacity: 0;
-    animation: fadeUp var(--hello-animation-time) cubic-bezier(0, 0, 0, 1) forwards;
+    animation: fadeUp var(--hello-animation-time) cubic-bezier(0, 0, 0, 1)
+      forwards;
     animation-delay: 0.05s;
   }
 
@@ -119,7 +122,8 @@
     margin-top: 15px;
     color: hsl(220, 40%, 60%);
     opacity: 0;
-    animation: fadeUp var(--hello-animation-time) cubic-bezier(0, 0, 0, 1) forwards;
+    animation: fadeUp var(--hello-animation-time) cubic-bezier(0, 0, 0, 1)
+      forwards;
     animation-delay: 0.1s;
   }
 }
@@ -134,7 +138,6 @@
   align-items: center;
 }
 
-
 .backdrop-whole-page {
   background-color: black;
   position: fixed;
@@ -144,12 +147,10 @@
   animation: backdropDisappear var(--hello-animation-time) linear forwards;
   animation-delay: 0.08s;
 
-
   &.active {
     background-color: rgba(0, 0, 0, 0.6);
     transition: 0.3s;
   }
-
 }
 
 .sticky-wrapper {
@@ -168,7 +169,6 @@
   padding: 0 40px;
   align-items: stretch;
   height: 60vh;
-
 }
 
 .hello-image-placeholder {
@@ -188,7 +188,8 @@
   align-self: flex-start;
   margin: auto 0;
   opacity: 0;
-  animation: fadeUp var(--hello-animation-time) cubic-bezier(0, 0, 0, 1) forwards;
+  animation: fadeUp var(--hello-animation-time) cubic-bezier(0, 0, 0, 1)
+    forwards;
   animation-delay: 0.2s;
 }
 
@@ -242,8 +243,9 @@
 .appear-animate-left {
   opacity: 0;
   transform: translateX(-30vh);
-  transition: opacity 0.6s ease-out,
-  transform 0.6s ease-out;
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
   will-change: transform, opacity;
 
   &.visible {
@@ -255,8 +257,9 @@
 .appear-animate-right {
   opacity: 0;
   transform: translateX(30vh);
-  transition: opacity 0.6s ease-out,
-  transform 0.6s ease-out;
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
   will-change: transform, opacity;
 
   &.visible {
@@ -276,13 +279,15 @@
 
   & > p {
     opacity: 0;
-    animation: cubic-bezier(0, 0, 0, 1) fadeUp var(--hello-animation-time) forwards;
+    animation: cubic-bezier(0, 0, 0, 1) fadeUp var(--hello-animation-time)
+      forwards;
   }
 }
 
 .try-it-button {
   opacity: 0;
-  animation: cubic-bezier(0, 0, 0, 1) fadeUp var(--hello-animation-time) forwards;
+  animation: cubic-bezier(0, 0, 0, 1) fadeUp var(--hello-animation-time)
+    forwards;
   animation-delay: 0.05s;
   margin: 20px 10px 0 0;
   z-index: 100;
@@ -301,7 +306,6 @@
     color: #989898;
   }
 }
-
 
 .hello-footer {
   /*opacity: 0;*/
