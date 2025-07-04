@@ -4,6 +4,9 @@ import "../../CSS/hello-page.css";
 import { VantaFogBackground } from "../../../assets/animated-bg.jsx";
 import { Link } from "react-router-dom";
 import { TextEffectTwo } from "react-text-animate";
+import vantaFogMin from "../../../assets/vanta.fog.min.js";
+
+import DemoPicture from "../../../assets/demo-screenshot.png";
 
 import {
   IconBulb,
@@ -119,7 +122,7 @@ function App() {
             <div className="hello-image-placeholder">
               <img
                 className="demo-picture"
-                src="../../../assets/demo-screenshot.png"
+                src={DemoPicture}
                 alt="app screenshot"
               />
             </div>
