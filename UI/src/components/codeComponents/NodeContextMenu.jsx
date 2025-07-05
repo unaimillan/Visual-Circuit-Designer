@@ -35,14 +35,16 @@ export default function NodeContextMenu({
         nodes.map((node) => {
           if (node.id === id) {
             const currentRotation = node.data?.rotation || 0;
-            const newRotation = (currentRotation + angle + 360) % 360;
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                rotation: newRotation,
-              },
-            };
+            if (name !== "inputNodeSwitch" && name !== "inputNodeButton" && name !== "outputNodeLed") {
+              const newRotation = (currentRotation + angle + 360) % 360;
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  rotation: newRotation,
+                },
+              };
+            }
           }
           return node;
         }),

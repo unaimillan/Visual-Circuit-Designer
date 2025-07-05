@@ -52,7 +52,6 @@ function OutputNodeLed({ id, data, isConnectable }) {
         id="input-1"
         style={getHandleStyle("input-1")}
         isConnectable={isConnectable}
-        maxConnections={1}
       />
     </RotatedNodeWrapper>
   );

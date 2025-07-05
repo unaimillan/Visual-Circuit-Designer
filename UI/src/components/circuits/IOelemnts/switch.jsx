@@ -41,7 +41,7 @@ function InputNodeSwitch({ id, data, isConnectable }) {
   };
 
   return (
-    <RotatedNodeWrapper className="circuit-button">
+    <div className="circuit-button input">
       <p className={"input-text"}>Switch</p>
 
       <div
@@ -61,7 +61,7 @@ function InputNodeSwitch({ id, data, isConnectable }) {
         style={getHandleStyle("output-1")}
         isConnectable={isConnectable}
       />
-    </RotatedNodeWrapper>
+    </div>
   );
 }
 
