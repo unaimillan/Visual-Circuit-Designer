@@ -1,7 +1,7 @@
 /*______DragAndDrop______*/
 .dndnode {
   padding: 8px;
-  border: var(--internal-border-color) 0.05rem solid;
+  border: var(--main-4) 0.05rem solid;
   border-radius: 0.5rem;
   cursor: move;
   display: flex;
@@ -11,15 +11,14 @@
   user-select: none;
 }
 
+.dndnode:hover {
+  background-color: var(--main-4);
+}
+
 .dndnode svg {
   width: 50px;
   height: auto;
   user-select: none;
-}
-
-/* Ensure handles are visible over images */
-.react-flow__handle {
-  z-index: 10;
 }
 
 .react-flow__edge.temp path {
@@ -35,12 +34,6 @@
 }
 
 .circuit-button {
-  width: 80px;
-  height: 70px;
-  position: relative;
-  border: 0.05rem solid var(--external-border-color);
-  border-radius: 4px;
-  background: var(--canvas-color);
   display: flex;
   box-sizing: border-box;
   align-items: center;
@@ -48,18 +41,11 @@
 }
 
 .circuit-button-icon {
-  color: var(--svg-color);
+  margin: -2% -14% 0 -14%;
+  color: var(--main-0);
   object-fit: cover;
-  transform: scale(1.23);
+  /*scale: 2;*/
 }
-
-.customHandle {
-  background: var(--svg-color);
-  border: 0.05rem solid var(--external-border-color);
-  object-fit: cover;
-  /*transform: scale(1.23);*/
-}
-
 
 .switch-icon-wrapper {
   width: 40px;
@@ -70,8 +56,90 @@
   justify-content: center;
 }
 
-
 .switchNodeButton {
   width: 70%;
   height: 70%;
+}
+
+.circuit-button.input {
+  width: 60px;
+  height: 80px;
+  position: relative;
+  border: 0.05rem solid var(--main-5);
+  border-radius: 4px;
+  background: var(--main-2);
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-text {
+  position: absolute;
+  margin-top: 0.3rem;
+  top: 0;
+  font-size: 0.6rem;
+  color: var(--main-0);
+}
+
+.switch-wrapper {
+  align-content: center;
+  justify-content: center;
+  position: absolute;
+  left: 20px;
+  transition: 0.15s ease;
+}
+
+.switch-wrapper.deactivated {
+  transition: 0.15s ease;
+  pointer-events: none;
+}
+
+.led-icon {
+  position: absolute;
+  top: 27px;
+  left: 16px;
+
+  transform: rotate(45deg);
+}
+
+.button-wrapper {
+  align-content: center;
+  justify-content: center;
+  position: absolute;
+  left: 10px;
+  transition: 0.15s ease;
+  pointer-events: all;
+}
+
+.button-wrapper.deactivated {
+  transition: 0.15s ease;
+  pointer-events: none;
+}
+
+.button-icon {
+  background-color: #007bff;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  position: fixed;
+  top: 20px;
+  left: 10px;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  border-radius: 999rem;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.button-icon.clicked {
+  background-color: #808080;
+}
+
+.close-cross {
+  position: fixed;
+  right: 0;
+  color: var(--main-0);
+  width: 1.7rem;
+  height: 1.7rem;
 }

@@ -1,15 +1,14 @@
-@import url('./xy-theme.css');
+@import url("./xy-theme.css");
 
 body {
   font-family: Montserrat, serif;
   font-size: 13px;
-  font-weight: 600;
-  background-color: var(--canvas-bg-color);
+  font-weight: 500;
 }
 
 #app {
   width: 100vw;
-  height: 99.5vh;
+  height: 100vh;
   position: absolute;
   top: 0;
   right: 0;

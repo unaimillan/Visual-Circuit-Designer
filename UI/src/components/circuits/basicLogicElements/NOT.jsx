@@ -1,29 +1,20 @@
-import { Position } from '@xyflow/react'
+import LogicGateBase from "../../codeComponents/LogicGateBase.jsx";
+import { IconNOT } from "../../../../assets/circuits-icons.jsx";
+import {
+  GATE_HANDLE_CONFIGS,
+  getNotGateHandleStyle,
+} from "../../codeComponents/handleConfigs.js";
 
-import CustomHandle from '../../codeComponents/CustomHandle.jsx';
-import { IconNOT } from '../../../../assets/circuits-icons.jsx';
-
-function NotNode({ isConnectable }) {
+function NotNode({ id, data, isConnectable }) {
   return (
-    <div className='circuit-button'>
-      <IconNOT SVGClassName={'circuit-button-icon'}/>
-      {/* Handles */}
-      <CustomHandle
-        type="target"
-        position={Position.Left}
-        id="input-1"
-        style={{ top: 34, left: -1 }}
-        isConnectable={isConnectable}
-        maxConnections={1}
-      />
-      <CustomHandle
-        type="source"
-        position={Position.Right}
-        id="output-1"
-        style={{ top: 34, left: 72 }}
-        isConnectable={isConnectable}
-      />
-    </div>
+    <LogicGateBase
+      id={id}
+      data={data}
+      isConnectable={isConnectable}
+      IconComponent={IconNOT}
+      handleConfigs={GATE_HANDLE_CONFIGS.NOT}
+      getHandleStyleOverrides={getNotGateHandleStyle}
+    />
   );
 }
 

@@ -1,22 +1,28 @@
 .controls {
-  border: var(--external-border-color) solid 0.07rem;
-  background-color: var(--menu-bg-color);
+  border: var(--main-5) solid 0.07rem;
+  background-color: var(--main-2);
   border-radius: 0.2rem;
   overflow: hidden;
   box-shadow: none;
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
 }
 
 .controls button {
-  background-color: var(--button-color);
-  border-bottom: var(--internal-border-color) solid 0.07rem;
+  background-color: var(--main-2);
+  border-bottom: var(--main-4) solid 0.07rem;
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
 }
 
 .controls button:hover {
-  background-color: var(--button-hover-color);
+  background-color: var(--main-3);
 }
 
 .controls button svg {
-  color: var(--svg-color);
+  color: var(--main-0);
 }
 
 /*_______Canvas_______*/
@@ -40,15 +46,14 @@
   }
 }
 
-
-
-.circuit-button.input{
+.circuit-button.input {
   position: relative;
   width: 100px;
   height: 50px;
+  transition:
+    background-color var(--ttime),
+    border var(--ttime);
 }
-
-
 
 /* SVG‑иконка занимает весь контейнер */
 .input-icon-wrapper {
@@ -72,3 +77,28 @@
   visibility: hidden;
 }
 
+.close-cross {
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  font-size: 20px;
+  width: 0.5rem;
+  flex-shrink: 0;
+}
+
+.close-cross-icon {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.toast-notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+}
