@@ -4,14 +4,14 @@ import copyElements from "../pages/mainPage.jsx";
 import pasteElements from "../pages/mainPage.jsx";
 
 export default function NodeContextMenu({
-  id,
-  name,
-  top,
-  left,
-  right,
-  bottom,
-  ...props
-}) {
+                                          id,
+                                          name,
+                                          top,
+                                          left,
+                                          right,
+                                          bottom,
+                                          ...props
+                                        }) {
   const { getNode, setNodes, addNodes, setEdges } = useReactFlow();
   const duplicateNode = useCallback(() => {
     const node = getNode(id);
@@ -35,16 +35,14 @@ export default function NodeContextMenu({
         nodes.map((node) => {
           if (node.id === id) {
             const currentRotation = node.data?.rotation || 0;
-            if (name !== "inputNodeSwitch" && name !== "inputNodeButton" && name !== "outputNodeLed") {
-              const newRotation = (currentRotation + angle + 360) % 360;
-              return {
-                ...node,
-                data: {
-                  ...node.data,
-                  rotation: newRotation,
-                },
-              };
-            }
+            const newRotation = (currentRotation + angle + 360) % 360;
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                rotation: newRotation,
+              },
+            };
           }
           return node;
         }),
