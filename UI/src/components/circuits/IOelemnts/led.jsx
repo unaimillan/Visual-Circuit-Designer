@@ -9,7 +9,12 @@ function OutputNodeLed({ id, data, isConnectable }) {
   const updateNodeInternals = useUpdateNodeInternals();
 
   const getHandlePosition = (basePosition) => {
-    const positions = [Position.Top, Position.Right, Position.Bottom, Position.Left];
+    const positions = [
+      Position.Top,
+      Position.Right,
+      Position.Bottom,
+      Position.Left,
+    ];
     const currentIndex = positions.indexOf(basePosition);
     const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
     return positions[newIndex];
@@ -26,12 +31,11 @@ function OutputNodeLed({ id, data, isConnectable }) {
       default:
         return { top: 40, left: -1 };
     }
-  }
+  };
 
   useEffect(() => {
     updateNodeInternals(id);
   }, [rotation, id, updateNodeInternals]);
-
 
   useEffect(() => {
     const outputId = `out_${id}`; // Пример: "out_output1"
@@ -45,10 +49,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
   }, [id]);
 
   return (
-    <div
-      className="circuit-button"
-      style={{width: "60px", height: "80px"}}
-    >
+    <div className="circuit-button" style={{ width: "60px", height: "80px" }}>
       <p className={"input-text"}>LED</p>
       <div className={`led-wrapper`}>
         <Led

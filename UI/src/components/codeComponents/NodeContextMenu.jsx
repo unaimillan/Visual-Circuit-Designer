@@ -4,14 +4,14 @@ import copyElements from "../pages/mainPage.jsx";
 import pasteElements from "../pages/mainPage.jsx";
 
 export default function NodeContextMenu({
-                                          id,
-                                          name,
-                                          top,
-                                          left,
-                                          right,
-                                          bottom,
-                                          ...props
-                                        }) {
+  id,
+  name,
+  top,
+  left,
+  right,
+  bottom,
+  ...props
+}) {
   const { getNode, setNodes, addNodes, setEdges } = useReactFlow();
   const duplicateNode = useCallback(() => {
     const node = getNode(id);
