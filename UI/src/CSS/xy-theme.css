@@ -1,3 +1,26 @@
+.react-flow {
+  --xy-background-color: #f7f9fb;
+  /* Custom Variables */
+  --xy-theme-selected: #f57dbd;
+  --xy-theme-hover: #c5c5c5;
+  --xy-theme-edge-hover: black;
+  --xy-theme-color-focus: #e8e8e8;
+
+  /* Built-in Variables see https://reactflow.dev/learn/customization/theming */
+  --xy-node-border-default: 1px solid #ededed;
+
+  --xy-node-boxshadow-default:
+    0px 3.54px 4.55px 0px #00000005, 0px 3.54px 4.55px 0px #0000000d,
+    0px 0.51px 1.01px 0px #0000001a;
+
+  --xy-node-border-radius-default: 8px;
+
+  --xy-handle-background-color-default: #ffffff;
+  --xy-handle-border-color-default: #aaaaaa;
+
+  --xy-edge-label-color-default: #505050;
+}
+
 .react-flow__edges {
   z-index: 10;
 }
@@ -6,20 +29,41 @@
   z-index: 5;
 }
 
-.react-flow__edge-path {
+/*.react-flow__edge-path {*/
+/*  stroke-width: 2;*/
+/*  stroke: var(--main-0);*/
+/*}*/
+
+/* Hovered edge */
+/*.react-flow__edge.selectable:hover .react-flow__edge-path {*/
+/*  stroke: var(--main-4);*/
+/*}*/
+
+/*!* Selected edge *!*/
+/*.react-flow__edge.selectable.selected .react-flow__edge-path {*/
+/*  !*stroke-width: 3;*!*/
+/*  stroke: var(--main-4);*/
+/*}*/
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--main-4) !important;
   stroke-width: 2;
+}
+
+.react-flow__edge:not(.selected-between-nodes) .react-flow__edge-path {
   stroke: var(--main-0);
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected-between-nodes .react-flow__edge-path {
+  stroke: var(--main-4);
+  stroke-width: 3;
 }
 
 /* Hovered edge */
-.react-flow__edge:hover .react-flow__edge-path {
-  stroke: var(--select-1);
-}
-
-/* Selected edge */
-.react-flow__edge.selectable.selected .react-flow__edge-path {
-  stroke-width: 3;
-  stroke: var(--select-1);
+.react-flow__edge.selectable:hover .react-flow__edge-path {
+  stroke: var(--main-4);
+  stroke-width: 2;
 }
 
 .react-flow__handle {
@@ -27,8 +71,24 @@
   border: 0.05rem solid var(--main-5);
   object-fit: cover;
   transition: filter 0.2s;
+  z-index: 15;
 }
 
 .react-flow__handle:hover {
-  background: var(--select-1);
+  background: var(--main-4);
+}
+
+.react-flow__node {
+  border: 0.05rem solid var(--main-5);
+  border-radius: 4px;
+  background: var(--menu-lighter);
+}
+
+.react-flow__node:hover {
+  background-color: var(--main-4);
+}
+
+.react-flow__node.selectable.selected {
+  background-color: var(--main-4);
+  border-color: var(--main-0);
 }
