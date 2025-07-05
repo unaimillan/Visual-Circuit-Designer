@@ -86,6 +86,7 @@ export default function Main() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
@@ -411,6 +412,8 @@ export default function Main() {
         setOpenSettings(parsed.openSettings);
       if (typeof parsed.circuitsMenuState === "boolean")
         setCircuitsMenuState(parsed.circuitsMenuState);
+      if (parsed.logLevel) setLogLevel(parsed.logLevel);
+      if (parsed.toastPosition) setToastPosition(parsed.toastPosition);
     }
   }, []);
 
@@ -424,6 +427,8 @@ export default function Main() {
       activeWire,
       openSettings,
       circuitsMenuState,
+      logLevel,
+      toastPosition,
     };
     localStorage.setItem("userSettings", JSON.stringify(settings));
   }, [
@@ -434,6 +439,8 @@ export default function Main() {
     activeWire,
     openSettings,
     circuitsMenuState,
+    logLevel,
+    toastPosition,
   ]);
 
   //Hotkeys handler
