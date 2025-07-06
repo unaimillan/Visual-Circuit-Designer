@@ -72,18 +72,22 @@ The **Auth microservice** is responsible for **authentication**, **authorization
 - **User Registration Flow**\
     **Endpoint:** `/api/auth/register`\
     **Purpose:** Create a new user account.
+
     ![auth-register](./docs/architecture/dynamic-view/auth-register.png)
 - **User Login Flow**\
     **Endpoint:** `/api/auth/login`\
     **Purpose:** Authenticate user and issue access & refresh tokens.
+
     ![auth-login](./docs/architecture/dynamic-view/auth-login.png)
 - **Token Verification Flow**\
     **Endpoint:** `/api/auth/verify`\
     **Purpose:** Validate and access token (used by other services).
+
     ![auth-verify](./docs/architecture/dynamic-view/auth-verify.png)
 - **Token Refresh Flow**\
     **Endpoint:** `/api/auth/refresh`\
     **Purpose:** Renew expired access tokens using a refresh token.
+
     ![auth-refresh](./docs/architecture/dynamic-view/auth-refresh.png)
 
 ### Deployment view
