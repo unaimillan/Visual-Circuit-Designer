@@ -1,5 +1,6 @@
 import multiprocessing
 import os
+import shutil
 import uuid
 from verilogGenerator import generate_verilog_from_json
 from fastapi import FastAPI
@@ -12,11 +13,27 @@ app = FastAPI()
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
 user_simulations = {}
+simulation_paths = {}
+simulation_processes = {}
 
 @sio.on("connect")
 async def connect(sid, environ):
     print(f"Client connected: {sid}")
     await sio.emit("ready", room=sid)
+
+async def cleanup(sim_sid):
+    try:
+        process = simulation_processes.pop(sim_sid, None)
+        if process and process.is_alive():
+            process.terminate()
+            process.join()
+
+        sim_path = simulation_paths.pop(sim_sid, None)
+        if sim_path and os.path.exists(sim_path):
+            shutil.rmtree(sim_path)
+    except Exception as e:
+        if "already terminated" not in str(e):
+            print(f"Error cleaning up: {e}")
 
 
 @sio.on("disconnect")
@@ -25,11 +42,12 @@ async def disconnect(sid):
     if sid in user_simulations:
         sim_sid = user_simulations.pop(sid)
         await sio.emit("stop_simulation", room=sim_sid)
+        await cleanup(sim_sid)
 
     for user_id, sim_id in list(user_simulations.items()):
         if sim_id == sid:
             user_simulations.pop(user_id)
-
+            await cleanup(sim_id)
 
 @sio.on("register_simulation")
 async def register_simulation(sid, data):
@@ -54,6 +72,7 @@ async def run_simulation(sid, circuit_data=None):
     sim_id = str(uuid.uuid4())
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
+    simulation_paths[sid] = sim_path
 
     try:
         verilog_code = generate_verilog_from_json(circuit_data)
@@ -73,6 +92,7 @@ async def run_simulation(sid, circuit_data=None):
         args=(sim_path, sid)
     )
     p.start()
+    simulation_processes[sid] = p
 
 
 @sio.on("set_inputs")
