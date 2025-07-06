@@ -21,6 +21,8 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+import { nanoid } from "nanoid";
+
 //Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
@@ -112,6 +114,7 @@ export default function Main() {
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
   const [cutMode, setCutMode] = useState(false);
   const mousePositionRef = useRef({ x: 0, y: 0 });
+  const newId = () => nanoid();
 
   // Update the ref in a window mousemove listener
   useEffect(() => {
@@ -213,7 +216,6 @@ export default function Main() {
       return;
     }
 
-    // Deselect all existing nodes and edges
     setNodes((prevNodes) =>
       prevNodes.map((node) => ({ ...node, selected: false })),
     );
@@ -235,12 +237,12 @@ export default function Main() {
 
     const nodeIdMap = {};
     const newNodes = clipboard.nodes.map((node) => {
-      const newId = generateId();
-      nodeIdMap[node.id] = newId;
+      const id = newId();
+      nodeIdMap[node.id] = id;
 
       return {
         ...node,
-        id: newId,
+        id: id,
         position: {
           x: node.position.x + offset.x,
           y: node.position.y + offset.y,
