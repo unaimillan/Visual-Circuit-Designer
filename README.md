@@ -2,6 +2,25 @@
 Visual-Circuit-Designer is web-based platform that could provide students and learners good experience in designing circuits similar to the Block Diagrams (like on Computer Architecture), but without the need to install Quartus Prime or huge Virtual box image. 
 ## Usage
 
+Follow these steps to launch and explore the MVP v2:
+
+1. **Open the Application**  
+  - Navigate to: https://www.visual-circuit-designer.ru
+
+2. **Access**  
+  - The service is **completely free** and **open**.  
+  - **No registration** or user account is required.
+
+3. **Core Functionality**  
+  - **Create & Edit** logical circuits using basic components.  
+  - **Configure** various global settings via the **Settings** menu.
+
+4. **Exploration & Testing**  
+- Once the page loads, you’ll land directly in the workspace.  
+- Use the **Menu** to drag-and-drop components onto the canvas.
+- Switch between tools and pick different wire styles (bezier, step and straight) directly from the toolbar to control how connections are drawn.
+- Open the **Settings** panel to fine-tune circuit and application options.
+
 ## Architecture
 
 ## Development
