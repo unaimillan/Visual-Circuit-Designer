@@ -175,5 +175,9 @@ Rules:
 ### Secrets managment
 We have no password or API keys for now, so we have no secrets
 ## Quality assurance
+### Quality attribute scenarios
+
+### Automated tests
+
 
 ## Build and deployment
