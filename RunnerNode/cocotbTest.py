@@ -1,5 +1,6 @@
 import os
 import queue
+import shutil
 import threading
 import time
 
@@ -77,6 +78,15 @@ async def interactive_test(dut):
     sio.disconnect()
 
 
+def cleanup_sessions(sim_path=None):
+    try:
+        if sim_path and os.path.exists(sim_path):
+            shutil.rmtree(sim_path)
+    except Exception as e:
+        if "already terminated" not in str(e):
+            print(f"Error cleaning up: {e}")
+
+
 def run_cocotb_test(sim_path, user_sid):
     os.environ["user_sid"] = user_sid
     runner = get_runner("icarus")
@@ -99,6 +109,9 @@ def run_cocotb_test(sim_path, user_sid):
             handle_simulation_error(user_sid, f"SystemExit with code {se.code}")
     except BaseException as be:
         handle_simulation_error(user_sid, f"Critical error: {str(be)}")
+    finally:
+        cleanup_sessions(sim_path)
+
 
 
 def handle_simulation_error(user_sid, error_msg):

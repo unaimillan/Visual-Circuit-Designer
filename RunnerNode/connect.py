@@ -21,20 +21,6 @@ async def connect(sid, environ):
     print(f"Client connected: {sid}")
     await sio.emit("ready", room=sid)
 
-async def cleanup(sim_sid):
-    try:
-        process = simulation_processes.pop(sim_sid, None)
-        if process and process.is_alive():
-            process.terminate()
-            process.join()
-
-        sim_path = simulation_paths.pop(sim_sid, None)
-        if sim_path and os.path.exists(sim_path):
-            shutil.rmtree(sim_path)
-    except Exception as e:
-        if "already terminated" not in str(e):
-            print(f"Error cleaning up: {e}")
-
 
 @sio.on("disconnect")
 async def disconnect(sid):
