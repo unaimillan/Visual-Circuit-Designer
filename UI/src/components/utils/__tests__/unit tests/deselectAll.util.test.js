@@ -1,4 +1,4 @@
-import { deselectAll } from "../flowHelpers";
+import { deselectAll } from "../../flowHelpers";
 
 describe("deselectAll", () => {
   it("removes the selection of nodes and edges", () => {
