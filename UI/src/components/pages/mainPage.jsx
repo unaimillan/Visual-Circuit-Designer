@@ -41,7 +41,7 @@ import { Toaster } from "react-hot-toast";
 import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
-import { getSelectedElements, isValidConnection } from "../utils/flowHelpers";
+import { getSelectedElements, isValidConnection, selectAll } from "../utils/flowHelpers";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -118,7 +118,6 @@ export default function Main() {
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const newId = () => nanoid();
 
-  // Update the ref in a window mousemove listener
   useEffect(() => {
     const handleMouseMove = (event) => {
       mousePositionRef.current = {
@@ -141,15 +140,28 @@ export default function Main() {
         const isBetweenSelected =
           selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target);
 
-        // Only auto-select if both nodes are selected
-        // Preserve manual selections if edge is not between selected nodes
         return isBetweenSelected ? { ...edge, selected: true } : edge;
       }),
     );
   }, [nodes]);
 
+  const handleGetSelectedElements = useCallback(() => {
+    return getSelectedElements(nodes, edges);
+  })
+
+  const validateConnection = useCallback(
+    (connection) => isValidConnection(connection, edgesRef.current),
+    [edgesRef],
+  );
+
+  const handleSelectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = selectAll(nodes, edges);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, setNodes, setEdges]);
+
   const copyElements = useCallback(() => {
-    const selected = getSelectedElements();
+    const selected = handleGetSelectedElements();
     if (selected.nodes.length === 0) return;
 
     setClipboard(selected);
@@ -161,10 +173,10 @@ export default function Main() {
       selected.edges.length,
       "edges",
     );
-  }, [nodes, edges, getSelectedElements]);
+  }, [nodes, edges, handleGetSelectedElements]);
 
   const cutElements = useCallback(() => {
-    const selected = getSelectedElements();
+    const selected = handleGetSelectedElements();
     if (selected.nodes.length === 0 && selected.edges.length === 0) return;
 
     setClipboard(selected);
@@ -183,7 +195,7 @@ export default function Main() {
       selected.edges.length,
       "edges",
     );
-  }, [nodes, edges]);
+  }, [nodes, edges, handleGetSelectedElements]);
 
   const pasteElements = useCallback(() => {
     if (!reactFlowInstance) {
@@ -247,7 +259,7 @@ export default function Main() {
   }, [clipboard, cutMode, reactFlowInstance]);
 
   const deleteSelected = useCallback(() => {
-    const selected = getSelectedElements();
+    const selected = handleGetSelectedElements();
     if (selected.nodes.length === 0 && selected.edges.length === 0) return;
 
     const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
@@ -263,12 +275,7 @@ export default function Main() {
       selected.edges.length,
       "edges",
     );
-  }, [nodes, edges]);
-
-  const selectAll = useCallback(() => {
-    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: true })));
-    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: true })));
-  }, []);
+  }, [nodes, edges, handleGetSelectedElements]);
 
   const deselectAll = useCallback(() => {
     setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
@@ -297,7 +304,7 @@ export default function Main() {
           case "a":
           case "ф":
             event.preventDefault();
-            selectAll();
+            handleSelectAll();
             break;
           case "d":
           case "в":
@@ -314,7 +321,7 @@ export default function Main() {
     copyElements,
     cutElements,
     pasteElements,
-    selectAll,
+    handleSelectAll,
     deselectAll,
     deleteSelected,
   ]);
@@ -756,7 +763,7 @@ export default function Main() {
             onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
             onInit={setReactFlowInstance}
-            isValidConnection={isValidConnection}
+            isValidConnection={validateConnection}
             nodeTypes={nodeTypes}
             panOnDrag={panOnDrag}
             selectionOnDrag
