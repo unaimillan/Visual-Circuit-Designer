@@ -132,6 +132,7 @@ Rules:
 <ol style="list-style-type: decimal;">
 <li> Create an issue and immediately set acceptance criteria for it</li>
 </ol>  
+
 - For labeling issues:
   
   Currently we have 7 labels. Tasks can be labeled based on these rules:
