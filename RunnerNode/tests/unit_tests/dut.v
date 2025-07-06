@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module GeneratedCircuit (
+module TestCircuit (
     input in_inputNodeSwitch_1751828388369,
     input in_inputNodeSwitch_1751828395135,
     output out_outputNodeLed_1751828428449,

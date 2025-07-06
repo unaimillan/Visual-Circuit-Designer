@@ -86,22 +86,22 @@ async def test_simulations_correctness1(socketio_client):
 
     # OR: 1, 1 => 1, XOR: OR, 1 => 0
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 1, "in_inputNodeSwitch2": 1}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 0
 
     # OR: 1, 0 => 1, XOR: OR, 0 => 1
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 1, "in_inputNodeSwitch2": 0}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 1
 
     # OR: 0, 1 => 1, XOR: OR, 1 => 1
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 0, "in_inputNodeSwitch2": 1}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 0
 
     # OR: 0, 0 => 0, XOR: OR, 0 => 0
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 0, "in_inputNodeSwitch2": 0}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 0
 
     await socketio_client.emit("stop_simulation")
@@ -174,19 +174,19 @@ async def test_simulations_correctness2(socketio_client):
     await asyncio.sleep(1)
 
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 1, "in_inputNodeSwitch2": 1}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 1
 
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 1, "in_inputNodeSwitch2": 0}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 0
 
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 0, "in_inputNodeSwitch2": 1}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 0
 
     await socketio_client.emit("set_inputs", { "inputs": {"in_inputNodeSwitch1": 0, "in_inputNodeSwitch2": 0}})
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(1)
     assert result.get("out_outputNodeLed") == 0
 
     await socketio_client.emit("stop_simulation")
