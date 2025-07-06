@@ -177,7 +177,7 @@ We have no password or API keys for now, so we have no secrets
 ## Quality assurance
 ### Quality attribute scenarios
 Link to the “docs/quality-assurance/quality-attribute-scenarios.md” file:
-
+https://github.com/IUMusicalFish19/Visual-Circuit-Designer/blob/readme/docs/quality-assurance/quality-attribute-scenarios.md
 
 ### Automated tests
 
