@@ -176,6 +176,8 @@ Rules:
 We have no password or API keys for now, so we have no secrets
 ## Quality assurance
 ### Quality attribute scenarios
+Link to the “docs/quality-assurance/quality-attribute-scenarios.md” file:
+
 
 ### Automated tests
 
