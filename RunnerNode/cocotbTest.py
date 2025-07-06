@@ -63,7 +63,11 @@ async def interactive_test(dut):
             await Timer(1, units="ns")
 
             outputs = {
-                name: int(getattr(dut, name).value)
+                name: (
+                    int(getattr(dut, name).value)
+                    if getattr(dut, name).value in (0, 1)
+                    else str(getattr(dut, name).value)
+                )
                 for name in dir(dut)
                 if name.startswith("out_")
             }

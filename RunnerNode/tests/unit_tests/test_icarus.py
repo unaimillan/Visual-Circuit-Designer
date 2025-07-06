@@ -19,3 +19,5 @@ async def test_generator_absence_data():
     )
 
     await asyncio.sleep(1)
+
+

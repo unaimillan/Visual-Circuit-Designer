@@ -28,12 +28,11 @@ async def disconnect(sid):
     if sid in user_simulations:
         sim_sid = user_simulations.pop(sid)
         await sio.emit("stop_simulation", room=sim_sid)
-        await cleanup(sim_sid)
 
     for user_id, sim_id in list(user_simulations.items()):
         if sim_id == sid:
             user_simulations.pop(user_id)
-            await cleanup(sim_id)
+
 
 @sio.on("register_simulation")
 async def register_simulation(sid, data):
