@@ -157,7 +157,7 @@ Rules:
 <ol style="list-style-type: decimal;"> 
    <li><b>Creating: </b> For all issues should be created separate branch.</li>
   <li><b>Naming: </b> Name of branch should briefly explain the purpose of creating this branch.</li>
-  <li><b>Merging: </b> To merge branch with "main" branch teammate must create pull request.</li>
+  <li><b>Merging: </b> To merge branch with "dev" branch teammate must create pull request.</li>
 </ol>
   
 - For commit messages format:
