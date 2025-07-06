@@ -1,4 +1,4 @@
-import Auth from "./pages/auth.jsx";
+import Auth from "./components/pages/auth.jsx";
 import Main from "./components/pages/mainPage.jsx";
 import Profile from "./components/pages/profile.jsx";
 
