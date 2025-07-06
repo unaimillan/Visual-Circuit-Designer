@@ -21,6 +21,8 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+import { nanoid } from "nanoid";
+
 //Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
@@ -109,6 +111,230 @@ export default function Main() {
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
 
+  const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
+  const [cutMode, setCutMode] = useState(false);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
+  const newId = () => nanoid();
+
+  // Update the ref in a window mousemove listener
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      mousePositionRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const selectedNodeIds = new Set(
+      nodes.filter((node) => node.selected).map((node) => node.id),
+    );
+
+    setEdges((edges) =>
+      edges.map((edge) => {
+        const isBetweenSelected =
+          selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target);
+
+        // Only auto-select if both nodes are selected
+        // Preserve manual selections if edge is not between selected nodes
+        return isBetweenSelected ? { ...edge, selected: true } : edge;
+      }),
+    );
+  }, [nodes]); // Runs when node selection changes
+
+  // Update getSelectedElements
+  const getSelectedElements = useCallback(() => {
+    const selectedNodes = nodes.filter((node) => node.selected);
+    const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
+
+    // Only include edges that are BOTH:
+    // 1. Explicitly selected AND
+    // 2. Connect two selected nodes
+    const selectedEdges = edges.filter(
+      (edge) =>
+        edge.selected &&
+        selectedNodeIds.has(edge.source) &&
+        selectedNodeIds.has(edge.target),
+    );
+
+    return { nodes: selectedNodes, edges: selectedEdges };
+  }, [nodes, edges]);
+
+  const copyElements = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0) return;
+
+    setClipboard(selected);
+    setCutMode(false);
+    console.log(
+      "Copied:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
+  }, [nodes, edges, getSelectedElements]);
+
+  const cutElements = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    setClipboard(selected);
+    setCutMode(true);
+
+    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
+
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
+    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+
+    console.log(
+      "Cut:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
+  }, [nodes, edges]);
+
+  const pasteElements = useCallback(() => {
+    if (!reactFlowInstance) {
+      console.error("React Flow instance not available");
+      return;
+    }
+
+    setNodes((prevNodes) =>
+      prevNodes.map((node) => ({ ...node, selected: false })),
+    );
+    setEdges((prevEdges) =>
+      prevEdges.map((edge) => ({ ...edge, selected: false })),
+    );
+
+    if (clipboard.nodes.length === 0) return;
+
+    const flowPosition = reactFlowInstance.screenToFlowPosition({
+      x: mousePositionRef.current.x,
+      y: mousePositionRef.current.y,
+    });
+
+    const offset = {
+      x: flowPosition.x - clipboard.nodes[0].position.x,
+      y: flowPosition.y - clipboard.nodes[0].position.y,
+    };
+
+    const nodeIdMap = {};
+    const newNodes = clipboard.nodes.map((node) => {
+      const id = newId();
+      nodeIdMap[node.id] = id;
+
+      return {
+        ...node,
+        id: id,
+        position: {
+          x: node.position.x + offset.x,
+          y: node.position.y + offset.y,
+        },
+        selected: true,
+        data: {
+          ...node.data,
+          customId: newId,
+        },
+      };
+    });
+
+    const newEdges = clipboard.edges.map((edge) => ({
+      ...edge,
+      id: newId(),
+      source: nodeIdMap[edge.source] || edge.source,
+      target: nodeIdMap[edge.target] || edge.target,
+    }));
+
+    setNodes((nds) => nds.concat(newNodes));
+    setEdges((eds) => eds.concat(newEdges));
+
+    if (cutMode) {
+      setClipboard({ nodes: [], edges: [] });
+      setCutMode(false);
+    }
+  }, [clipboard, cutMode, reactFlowInstance]);
+
+  const deleteSelected = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
+
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
+    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+
+    console.log(
+      "Deleted:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
+  }, [nodes, edges]);
+
+  const selectAll = useCallback(() => {
+    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: true })));
+    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: true })));
+  }, []);
+
+  const deselectAll = useCallback(() => {
+    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
+    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: false })));
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case "c":
+          case "с":
+            event.preventDefault();
+            copyElements();
+            break;
+          case "x":
+          case "ч":
+            event.preventDefault();
+            cutElements();
+            break;
+          case "v":
+          case "м":
+            pasteElements();
+            event.preventDefault();
+            break;
+          case "a":
+          case "ф":
+            event.preventDefault();
+            selectAll();
+            break;
+          case "d":
+          case "в":
+            event.preventDefault();
+            deselectAll();
+            break;
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [
+    copyElements,
+    cutElements,
+    pasteElements,
+    selectAll,
+    deselectAll,
+    deleteSelected,
+  ]);
+
   useEffect(() => {
     const savedCircuit = localStorage.getItem("savedCircuit");
     if (savedCircuit) {
@@ -124,7 +350,7 @@ export default function Main() {
       setNodes(initialNodes);
       setEdges(initialEdges);
     }
-  }, [setEdges, setNodes]);
+  }, []);
 
   useEffect(() => {
     const circuitData = JSON.stringify({ nodes, edges });
@@ -187,27 +413,6 @@ export default function Main() {
   //Hotkeys handler
   useEffect(() => {
     const handleKeyDown = (e) => {
-      //deleting by clicking delete/backspace(delete for windows and macOS, backspace for windows)
-      if (e.key === "Delete" || e.key === "Backspace") {
-        e.preventDefault();
-        const currentNodes = nodesRef.current;
-        const currentEdges = edgesRef.current;
-        const selectedNodes = currentNodes.filter((node) => node.selected);
-        const selectedEdges = currentEdges.filter((edge) => edge.selected);
-        if (selectedNodes.length === 0 && selectedEdges.length === 0) return;
-        const nodeIdsToRemove = selectedNodes.map((node) => node.id);
-        const newNodes = currentNodes.filter(
-          (node) => !nodeIdsToRemove.includes(node.id),
-        );
-        const newEdges = currentEdges.filter(
-          (edge) =>
-            !selectedEdges.some((selected) => selected.id === edge.id) &&
-            !nodeIdsToRemove.includes(edge.source) &&
-            !nodeIdsToRemove.includes(edge.target),
-        );
-        setNodes(newNodes);
-        setEdges(newEdges);
-      }
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
       //Ctrl + Shift + S - Open/close settings
@@ -587,6 +792,9 @@ export default function Main() {
             selectionMode={SelectionMode.Partial}
             minZoom={0.2}
             maxZoom={10}
+            deleteKeyCode={["Delete", "Backspace"]}
+            onDelete={deleteSelected}
+            // onlyRenderVisibleElements={true}
           >
             <Background
               offset={[10.5, 5]}

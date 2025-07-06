@@ -4,7 +4,6 @@ import "../../CSS/hello-page.css";
 import { VantaFogBackground } from "../../../assets/animated-bg.jsx";
 import { Link } from "react-router-dom";
 import { TextEffectTwo } from "react-text-animate";
-import vantaFogMin from "../../../assets/vanta.fog.min.js";
 
 import DemoPicture from "../../../assets/demo-screenshot.png";
 
