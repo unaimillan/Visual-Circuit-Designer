@@ -1,0 +1,29 @@
+@startuml
+[APIGateway] -down-( "/api/runner"
+[APIGateway] -down-( "/api/profile"
+[APIGateway] -down-( "/api/auth"
+[APIGateway] -down-( "/api/library"
+[APIGateway] -down-( "File System"
+
+[Runner Node] -up- "/api/runner"
+[Profile microservice] -up- "/api/profile"
+[Auth microservice] -up- "/api/auth"
+[Library microservice] -up- "/api/library"
+[Static frontend] -up- "File System"
+
+[Auth microservice] -down-( "users"
+[Auth microservice] -down-( "token blacklist"
+[Auth microservice] -down- "token verification"
+[Profile microservice] -down-( "users"
+[Profile microservice] -down-( "projects"
+[Profile microservice] -down-( "token verification"
+[Library microservice] -down-( "library"
+[Library microservice] -down-( "token verification"
+[Runner Node] -down-( "projects"
+
+[PostgreSQL] -up- "users"
+[PostgreSQL] -up- "projects"
+[PostgreSQL] -up- "library"
+
+[Redis] -up- "token blacklist"
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+actor User as act
+participant "Login page" as pg
+participant "APIGateway" as gate
+participant "Auth microservice" as auth
+participant "PostgreSQL" as db
+
+== Request traversal ==
+act --> pg : 1) User enters login credentials
+pg --> gate : 2) Passes credentials
+gate --> auth : 3) Routes to the microservice
+
+== Request handling ==
+auth --> auth : 4) Check request format/headers
+alt Correct format
+    auth --> db : 5) Get user by username/email
+    alt User found
+        db --> auth : 6) User entry
+        auth --> auth : 7) Check password
+        alt Correct password
+            auth --> auth : 8) Generate auth tokens
+            auth --> gate : 9) Return HTTP 200 and auth tokens
+            gate --> pg: 10) Return HTTP 200 and auth tokens
+            pg --> act: 11) Success
+        else Incorrect password
+            auth --> gate : 8) Return HTTP 401
+            gate --> pg : 9) Return HTTP 401
+            pg --> act : 10) Incorrect login/password
+        end
+    else User not found
+        db --> auth : 6) Empty entry
+        auth --> gate : 7) Return HTTP 401
+        gate --> pg : 8) Return HTTP 401
+        pg --> act : 9) Incorrect login/password
+    end
+else Invalid format
+    auth --> gate : 5) Return HTTP 400/411/415/500
+    gate --> pg : 6) Return HTTP 400/411/415/500
+    pg --> act : 7) Error
+end
+
+@enduml
