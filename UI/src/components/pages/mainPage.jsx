@@ -41,6 +41,8 @@ import { Toaster } from "react-hot-toast";
 import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
+import { getSelectedElements, isValidConnection } from '../utils/flowHelpers';
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -144,25 +146,7 @@ export default function Main() {
         return isBetweenSelected ? { ...edge, selected: true } : edge;
       }),
     );
-  }, [nodes]); // Runs when node selection changes
-
-  // Update getSelectedElements
-  const getSelectedElements = useCallback(() => {
-    const selectedNodes = nodes.filter((node) => node.selected);
-    const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
-
-    // Only include edges that are BOTH:
-    // 1. Explicitly selected AND
-    // 2. Connect two selected nodes
-    const selectedEdges = edges.filter(
-      (edge) =>
-        edge.selected &&
-        selectedNodeIds.has(edge.source) &&
-        selectedNodeIds.has(edge.target),
-    );
-
-    return { nodes: selectedNodes, edges: selectedEdges };
-  }, [nodes, edges]);
+  }, [nodes]);
 
   const copyElements = useCallback(() => {
     const selected = getSelectedElements();
@@ -485,16 +469,6 @@ export default function Main() {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
-
-  // Я не знаю, что это
-  const isValidConnection = useCallback(({ source, target, targetHandle }) => {
-    if (source === target) {
-      return false;
-    }
-    return !edgesRef.current.some(
-      (e) => e.target === target && e.targetHandle === targetHandle,
-    );
-  }, []);
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
