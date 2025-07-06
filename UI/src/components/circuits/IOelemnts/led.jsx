@@ -1,44 +1,56 @@
+import { Position, useUpdateNodeInternals } from "@xyflow/react";
 import { useEffect, useState } from "react";
-import { Position } from "@xyflow/react";
-import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
-import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
+import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 
 function OutputNodeLed({ id, data, isConnectable }) {
   const [isActive, setIsActive] = useState(false);
   const rotation = data.rotation || 0;
-  const { getHandlePosition, RotatedNodeWrapper } = useRotatedNode(
-    id,
-    rotation,
-    60,
-    80,
-  );
+  const updateNodeInternals = useUpdateNodeInternals();
+
+  const getHandlePosition = (basePosition) => {
+    const positions = [
+      Position.Top,
+      Position.Right,
+      Position.Bottom,
+      Position.Left,
+    ];
+    const currentIndex = positions.indexOf(basePosition);
+    const newIndex = (currentIndex + Math.floor(rotation / 90)) % 4;
+    return positions[newIndex];
+  };
 
   const getHandleStyle = () => {
     switch (rotation) {
       case 90:
-        return { top: 39.5, left: -1 };
+        return { top: 0, left: 28 };
       case 180:
-        return { top: 38.5, left: -8 };
+        return { top: 40, left: 52 };
       case 270:
-        return { top: 32, left: -1 };
+        return { top: 72.5, left: 28 };
       default:
         return { top: 40, left: -1 };
     }
   };
 
   useEffect(() => {
-    const outputId = `out_${id}`;
+    updateNodeInternals(id);
+  }, [rotation, id, updateNodeInternals]);
+
+  useEffect(() => {
+    const outputId = `out_${id}`; // Пример: "out_output1"
     const unsubscribe = subscribeToOutput(outputId, (newVal) => {
       setIsActive(newVal === 1);
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribe();
+    };
   }, [id]);
 
   return (
-    <RotatedNodeWrapper className="circuit-button">
+    <div className="circuit-button" style={{ width: "60px", height: "80px" }}>
       <p className={"input-text"}>LED</p>
-
       <div className={`led-wrapper`}>
         <Led
           isActive={isActive}
@@ -50,11 +62,10 @@ function OutputNodeLed({ id, data, isConnectable }) {
         type="target"
         position={getHandlePosition(Position.Left)}
         id="input-1"
-        style={getHandleStyle("input-1")}
+        style={getHandleStyle()}
         isConnectable={isConnectable}
-        maxConnections={1}
       />
-    </RotatedNodeWrapper>
+    </div>
   );
 }
 
@@ -72,6 +83,7 @@ const Led = ({ isActive, SVGclassName }) => {
           />
         </filter>
       </defs>
+
       <rect
         x="2"
         y="2"

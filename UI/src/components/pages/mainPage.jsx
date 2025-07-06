@@ -21,6 +21,8 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
+import { nanoid } from "nanoid";
+
 //Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
@@ -112,6 +114,7 @@ export default function Main() {
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
   const [cutMode, setCutMode] = useState(false);
   const mousePositionRef = useRef({ x: 0, y: 0 });
+  const newId = () => nanoid();
 
   // Update the ref in a window mousemove listener
   useEffect(() => {
@@ -125,15 +128,6 @@ export default function Main() {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-  const idCounter = useRef(
-    parseInt(localStorage.getItem("idCounter") || "100", 10),
-  );
-
-  const generateId = () => {
-    idCounter.current += 1;
-    localStorage.setItem("idCounter", idCounter.current.toString());
-    return idCounter.current.toString();
-  };
 
   useEffect(() => {
     const selectedNodeIds = new Set(
@@ -213,7 +207,6 @@ export default function Main() {
       return;
     }
 
-    // Deselect all existing nodes and edges
     setNodes((prevNodes) =>
       prevNodes.map((node) => ({ ...node, selected: false })),
     );
@@ -235,12 +228,12 @@ export default function Main() {
 
     const nodeIdMap = {};
     const newNodes = clipboard.nodes.map((node) => {
-      const newId = generateId();
-      nodeIdMap[node.id] = newId;
+      const id = newId();
+      nodeIdMap[node.id] = id;
 
       return {
         ...node,
-        id: newId,
+        id: id,
         position: {
           x: node.position.x + offset.x,
           y: node.position.y + offset.y,
@@ -255,7 +248,7 @@ export default function Main() {
 
     const newEdges = clipboard.edges.map((edge) => ({
       ...edge,
-      id: generateId(),
+      id: newId(),
       source: nodeIdMap[edge.source] || edge.source,
       target: nodeIdMap[edge.target] || edge.target,
     }));
@@ -347,26 +340,6 @@ export default function Main() {
     if (savedCircuit) {
       try {
         const circuitData = JSON.parse(savedCircuit);
-
-        let maxId = 0;
-        const allIds = [
-          ...(circuitData.nodes || [])
-            .map((n) => parseInt(n.id, 10))
-            .filter(Number.isInteger),
-          ...(circuitData.edges || [])
-            .map((e) => parseInt(e.id, 10))
-            .filter(Number.isInteger),
-        ];
-
-        if (allIds.length > 0) {
-          maxId = Math.max(...allIds);
-        }
-
-        if (maxId > idCounter.current) {
-          idCounter.current = maxId + 1;
-          localStorage.setItem("idCounter", idCounter.current.toString());
-        }
-
         setNodes(circuitData.nodes || []);
         setEdges(circuitData.edges || []);
       } catch (e) {
@@ -377,12 +350,6 @@ export default function Main() {
       setNodes(initialNodes);
       setEdges(initialEdges);
     }
-  }, [setEdges, setNodes]);
-
-  useEffect(() => {
-    return () => {
-      localStorage.setItem("idCounter", idCounter.current.toString());
-    };
   }, []);
 
   useEffect(() => {
