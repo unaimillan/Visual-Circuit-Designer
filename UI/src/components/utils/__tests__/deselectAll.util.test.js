@@ -1,14 +1,14 @@
 import { deselectAll } from "../flowHelpers";
 
-describe('deselectAll', () => {
-  it('removes the selection of nodes and edges', () => {
+describe("deselectAll", () => {
+  it("removes the selection of nodes and edges", () => {
     const nodes = [
-      { id: '1', selected: true },
-      { id: '2', selected: true },
+      { id: "1", selected: true },
+      { id: "2", selected: true },
     ];
     const edges = [
-      { id: 'e1', selected: true },
-      { id: 'e2', selected: true },
+      { id: "e1", selected: true },
+      { id: "e2", selected: true },
     ];
 
     const { nodes: newNodes, edges: newEdges } = deselectAll(nodes, edges);

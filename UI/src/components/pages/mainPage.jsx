@@ -41,7 +41,12 @@ import { Toaster } from "react-hot-toast";
 import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
-import { getSelectedElements, isValidConnection, selectAll, deselectAll } from "../utils/flowHelpers";
+import {
+  getSelectedElements,
+  isValidConnection,
+  selectAll,
+  deselectAll,
+} from "../utils/flowHelpers";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -147,7 +152,7 @@ export default function Main() {
 
   const handleGetSelectedElements = useCallback(() => {
     return getSelectedElements(nodes, edges);
-  })
+  });
 
   const validateConnection = useCallback(
     (connection) => isValidConnection(connection, edgesRef.current),
