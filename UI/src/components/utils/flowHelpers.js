@@ -19,7 +19,4 @@ function isValidConnection({ source, target, targetHandle }, edges) {
   );
 }
 
-export {
-  getSelectedElements,
-  isValidConnection,
-};
+export { getSelectedElements, isValidConnection };

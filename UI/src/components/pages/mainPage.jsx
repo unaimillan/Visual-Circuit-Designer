@@ -41,7 +41,7 @@ import { Toaster } from "react-hot-toast";
 import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
-import { getSelectedElements, isValidConnection } from '../utils/flowHelpers';
+import { getSelectedElements, isValidConnection } from "../utils/flowHelpers";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
