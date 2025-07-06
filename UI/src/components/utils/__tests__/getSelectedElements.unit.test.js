@@ -1,4 +1,4 @@
-const { getSelectedElements } = require("../flowHelpers");
+import { getSelectedElements } from "../flowHelpers";
 
 describe("getSelectedElements", () => {
   it("returns only selected nodes and edges between them", () => {

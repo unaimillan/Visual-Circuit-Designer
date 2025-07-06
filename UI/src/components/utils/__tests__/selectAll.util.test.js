@@ -1,4 +1,4 @@
-const { selectAll } = require("../flowHelpers");
+import { selectAll } from "../flowHelpers";
 
 describe('selectAll', () => {
   it('selects logic gates and wires', () => {

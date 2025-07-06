@@ -41,7 +41,7 @@ import { Toaster } from "react-hot-toast";
 import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
-import { getSelectedElements, isValidConnection, selectAll } from "../utils/flowHelpers";
+import { getSelectedElements, isValidConnection, selectAll, deselectAll } from "../utils/flowHelpers";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -156,6 +156,12 @@ export default function Main() {
 
   const handleSelectAll = useCallback(() => {
     const { nodes: newNodes, edges: newEdges } = selectAll(nodes, edges);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, setNodes, setEdges]);
+
+  const handleDeselectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = deselectAll(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
@@ -277,11 +283,6 @@ export default function Main() {
     );
   }, [nodes, edges, handleGetSelectedElements]);
 
-  const deselectAll = useCallback(() => {
-    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
-    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: false })));
-  }, []);
-
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.ctrlKey || event.metaKey) {
@@ -309,7 +310,7 @@ export default function Main() {
           case "d":
           case "в":
             event.preventDefault();
-            deselectAll();
+            handleDeselectAll();
             break;
         }
       }
@@ -322,7 +323,7 @@ export default function Main() {
     cutElements,
     pasteElements,
     handleSelectAll,
-    deselectAll,
+    handleDeselectAll,
     deleteSelected,
   ]);
 

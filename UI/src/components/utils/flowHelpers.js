@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 export function getSelectedElements(nodes, edges) {
   const selectedNodes = nodes.filter((node) => node.selected);
   const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
@@ -22,5 +24,11 @@ export function isValidConnection({ source, target, targetHandle }, edges) {
 export function selectAll(nodes, edges) {
   const newNodes = nodes.map((node) => ({ ...node, selected: true }));
   const newEdges = edges.map((edge) => ({ ...edge, selected: true }));
+  return { nodes: newNodes, edges: newEdges };
+}
+
+export function deselectAll(nodes, edges) {
+  const newNodes = nodes.map((node) => ({ ...node, selected: false }));
+  const newEdges = edges.map((edge) => ({ ...edge, selected: false }));
   return { nodes: newNodes, edges: newEdges };
 }

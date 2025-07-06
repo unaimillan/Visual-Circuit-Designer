@@ -1,4 +1,4 @@
-const { isValidConnection } = require("../flowHelpers");
+import { isValidConnection } from "../flowHelpers";
 
 describe("isValidConnection", () => {
   it("returns false when source equals to target", () => {
