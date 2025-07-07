@@ -1,3 +1,11 @@
+---
+name: Issue for technical task
+about: Template creating the technical task
+title: ''
+labels: ''
+assignees: ''
+---
+
 **Title**
 
 <!-- Provide a clear and descriptive title for the technical task. -->
