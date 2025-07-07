@@ -749,9 +749,7 @@ export default function Main() {
       <SimulateStateContext.Provider
         value={{ simulateState, setSimulateState, updateInputState }}
       >
-        <div className={'main-tabs-wrapper'}>
-
-        </div>
+        <div className={"main-tabs-wrapper"}></div>
         <>
           <ReactFlow
             style={{ backgroundColor: "var(--main-2)" }}

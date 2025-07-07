@@ -45,7 +45,7 @@
 .openSettingsButton {
   z-index: 501;
   position: fixed;
-  top:  calc(0.5rem + 5vh);
+  top: calc(0.5rem + 5vh);
   left: 2.64rem;
   width: 2rem;
   height: 2rem;
