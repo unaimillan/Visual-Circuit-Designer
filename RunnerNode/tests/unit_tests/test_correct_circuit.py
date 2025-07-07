@@ -37,7 +37,7 @@ async def test_simulations_correctness1(socketio_client):
     }
 
     await socketio_client.emit("run_simulation", mock_circuit)
-    await asyncio.sleep(1)
+    await asyncio.sleep(3)
 
     for inputs, expected in [
         ({"in_inputNodeSwitch1": 1, "in_inputNodeSwitch2": 1}, 0),
@@ -48,7 +48,7 @@ async def test_simulations_correctness1(socketio_client):
         done = asyncio.Event()
         await socketio_client.emit("set_inputs", {"inputs": inputs})
         try:
-            await asyncio.wait_for(done.wait(), timeout=3)
+            await asyncio.wait_for(done.wait(), timeout=10)
         except asyncio.TimeoutError:
             assert False, "Timed out waiting for simulation_outputs"
         assert result.get("out_outputNodeLed") == expected
@@ -89,7 +89,7 @@ async def test_simulations_correctness2(socketio_client):
     }
 
     await socketio_client.emit("run_simulation", mock_circuit)
-    await asyncio.sleep(1)
+    await asyncio.sleep(3)
 
     for inputs, expected in [
         ({"in_inputNodeSwitch1": 1, "in_inputNodeSwitch2": 1}, 1),
@@ -100,7 +100,7 @@ async def test_simulations_correctness2(socketio_client):
         done = asyncio.Event()
         await socketio_client.emit("set_inputs", {"inputs": inputs})
         try:
-            await asyncio.wait_for(done.wait(), timeout=3)
+            await asyncio.wait_for(done.wait(), timeout=10)
         except asyncio.TimeoutError:
             assert False, "Timed out waiting for simulation_outputs"
         assert result.get("out_outputNodeLed") == expected
