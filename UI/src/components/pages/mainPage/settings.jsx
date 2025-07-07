@@ -215,7 +215,8 @@ function TabContent({
           <div className="setting-text">
             <p className="setting-title">Kostya switch</p>
             <p className="setting-description">
-              Если что, switch есть, он просто закомментирован. Надо ему указать boolVar и toggleBoolVar
+              Если что, switch есть, он просто закомментирован. Надо ему указать
+              boolVar и toggleBoolVar
             </p>
           </div>
 
@@ -226,8 +227,6 @@ function TabContent({
             {/*/>*/}
           </div>
         </div>
-
-
       </div>
     );
   }

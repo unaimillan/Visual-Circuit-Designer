@@ -17,7 +17,6 @@ export function MinimapSwitch({ minimapState, minimapToggle }) {
   );
 }
 
-
 export function KostyaSwitch({ boolVar, toggleBootVar }) {
   return (
     <div style={{ display: "flex", alignItems: "", gap: "5rem" }}>
@@ -32,4 +31,3 @@ export function KostyaSwitch({ boolVar, toggleBootVar }) {
     </div>
   );
 }
-
