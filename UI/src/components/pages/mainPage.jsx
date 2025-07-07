@@ -55,7 +55,6 @@ import {
 } from "../utils/flowHelpers";
 import TabsContainer from "./mainPage/tabs.jsx";
 import {loadUserSettings} from "./mainPage/local-save.jsx";
-import {applyEdgeChanges, applyNodeChanges} from "reactflow";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
