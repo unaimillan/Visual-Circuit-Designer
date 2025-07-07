@@ -11,7 +11,7 @@ async def test_generator_absence_data(socketio_client):
     def on_error(data):
         received_errors.append(data)
 
-    mock_circuit = None
+    mock_circuit = {"test_mode": True, }
 
     await socketio_client.emit("run_simulation", mock_circuit)
     await asyncio.sleep(1)
@@ -28,7 +28,7 @@ async def test_generator_invalid_data(socketio_client):
     def on_error(data):
         received_errors.append(data)
 
-    mock_circuit = "bruh"
+    mock_circuit = {"test_mode": True, "bruh": None}
 
     await socketio_client.emit("run_simulation", mock_circuit)
     await asyncio.sleep(1)
