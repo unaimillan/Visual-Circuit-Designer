@@ -10,13 +10,12 @@ import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 // 6) сделать редактирование text-area по двойному клику
 // 7) добавить возможность перемещения табов (пиздец)
 
-
 export default function TabsContainer({
-                                        tabs,
-                                        activeTabId,
-                                        onTabsChange,
-                                        onActiveTabIdChange,
-                                      }) {
+  tabs,
+  activeTabId,
+  onTabsChange,
+  onActiveTabIdChange,
+}) {
   const addTab = () => {
     const newTab = {
       id: Date.now(),
@@ -29,7 +28,7 @@ export default function TabsContainer({
   };
 
   const removeTab = (id) => {
-    const updatedTabs = tabs.filter(tab => tab.id !== id);
+    const updatedTabs = tabs.filter((tab) => tab.id !== id);
     onTabsChange(updatedTabs);
 
     if (id === activeTabId && updatedTabs.length > 0) {
@@ -38,15 +37,15 @@ export default function TabsContainer({
   };
 
   const updateTabTitle = (id, newTitle) => {
-    const updatedTabs = tabs.map(tab =>
-      tab.id === id ? { ...tab, title: newTitle } : tab
+    const updatedTabs = tabs.map((tab) =>
+      tab.id === id ? { ...tab, title: newTitle } : tab,
     );
     onTabsChange(updatedTabs);
   };
 
   return (
     <div className="main-tabs-wrapper">
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <div
           key={tab.id}
           className={`tab ${tab.id === activeTabId ? "active" : ""}`}
@@ -55,15 +54,15 @@ export default function TabsContainer({
           <textarea
             className="name-text-area"
             value={tab.title}
-            onClick={e => e.stopPropagation()}
-            onChange={e => updateTabTitle(tab.id, e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => updateTabTitle(tab.id, e.target.value)}
             placeholder="Tab name"
           />
 
           {tabs.length > 1 && (
             <button
               className="close-btn"
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 removeTab(tab.id);
               }}
@@ -74,7 +73,9 @@ export default function TabsContainer({
         </div>
       ))}
 
-      <button className="add-btn" onClick={addTab}>＋</button>
+      <button className="add-btn" onClick={addTab}>
+        ＋
+      </button>
     </div>
   );
 }

@@ -21,7 +21,6 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 import Settings from "./mainPage/settings.jsx";
@@ -46,7 +45,7 @@ import {
   deselectAll,
 } from "../utils/flowHelpers";
 import TabsContainer from "./mainPage/tabs.jsx";
-import {loadUserSettings} from "./mainPage/local-save.jsx";
+import { loadUserSettings } from "./mainPage/local-save.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -79,7 +78,7 @@ export function useNotificationsLevel() {
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 1;
-const STORAGE_KEY = 'myCircuits';
+const STORAGE_KEY = "myCircuits";
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -97,17 +96,12 @@ export default function Main() {
   const [nodes, setNodes, onNodesChangeFromHook] = useNodesState([]);
   const [edges, setEdges, onEdgesChangeFromHook] = useEdgesState([]);
 
-
-
-
   const [tabs, setTabs] = useState([]);
   const [activeTabId, setActiveTabId] = useState(null);
-
 
   // Если где-то нужен доступ через рефы — поддерживаем их
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
-
 
   const [menu, setMenu] = useState(null);
 
@@ -127,13 +121,13 @@ export default function Main() {
     }
   };
 
-
   // 1) Загрузка списка вкладок и сохранённого activeTabId из localStorage
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
+        const { tabs: savedTabs, activeTabId: savedActive } =
+          JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
           setTabs(savedTabs);
           setActiveTabId(savedActive);
@@ -142,13 +136,18 @@ export default function Main() {
       } catch {}
     }
     // Если в хранилище ничего нет — создаём одну начальную вкладку
-    const initial = [{ id: Date.now(), title: 'New Tab', nodes: [], edges: [] }];
+    const initial = [
+      { id: Date.now(), title: "New Tab", nodes: [], edges: [] },
+    ];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
 
   // 2) Получение текущей активной вкладки по её id
-  const activeTab = tabs.find(t => t.id === activeTabId) || { nodes: [], edges: [] };
+  const activeTab = tabs.find((t) => t.id === activeTabId) || {
+    nodes: [],
+    edges: [],
+  };
 
   // 3) При смене вкладки: проставляем её nodes/edges в локальный стейт ReactFlow
   useEffect(() => {
@@ -168,34 +167,23 @@ export default function Main() {
   // 5) Синхронизация изменений из ReactFlow обратно в массив tabs:
   //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
   useEffect(() => {
-    setTabs(prev =>
-      prev.map(tab =>
-        tab.id === activeTabId
-          ? { ...tab, nodes }
-          : tab
-      )
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, nodes } : tab)),
     );
   }, [nodes, activeTabId]);
 
   //    5b) при любом обновлении edges сохраняем их в текущей вкладке
   useEffect(() => {
-    setTabs(prev =>
-      prev.map(tab =>
-        tab.id === activeTabId
-          ? { ...tab, edges }
-          : tab
-      )
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, edges } : tab)),
     );
   }, [edges, activeTabId]);
 
   useEffect(() => {
-    if (activeTabId == null) return;        // если ещё не инициализировались — пропускаем
-    const toStore = { tabs, activeTabId };  // вся структура
+    if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
+    const toStore = { tabs, activeTabId }; // вся структура
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
   }, [tabs, activeTabId]);
-
-
-
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
   const [cutMode, setCutMode] = useState(false);
@@ -406,7 +394,6 @@ export default function Main() {
     logLevel,
     toastPosition,
   ]);
-
 
   //Sets current theme to the whole document
   useEffect(() => {
@@ -675,31 +662,55 @@ export default function Main() {
         : BackgroundVariant.Lines;
 
   //Hotkeys handler
-  useHotkeys({
-    saveCircuit, nodes, edges,
-    openSettings, setOpenSettings,
-    copyElements, cutElements, pasteElements,
-    handleSelectAll, handleDeselectAll,
-    handleSimulateClick, simulateState, setSimulateState,
-    setActiveAction, setPanOnDrag, setActiveWire,
-    socketRef, handleOpenClick,
-  }, [
-    saveCircuit, nodes, edges,
-    openSettings, setOpenSettings,
-    copyElements, cutElements, pasteElements,
-    handleSelectAll, handleDeselectAll,
-    handleSimulateClick, simulateState, setSimulateState,
-    setActiveAction, setPanOnDrag, setActiveWire,
-    socketRef, handleOpenClick,
-  ]);
+  useHotkeys(
+    {
+      saveCircuit,
+      nodes,
+      edges,
+      openSettings,
+      setOpenSettings,
+      copyElements,
+      cutElements,
+      pasteElements,
+      handleSelectAll,
+      handleDeselectAll,
+      handleSimulateClick,
+      simulateState,
+      setSimulateState,
+      setActiveAction,
+      setPanOnDrag,
+      setActiveWire,
+      socketRef,
+      handleOpenClick,
+    },
+    [
+      saveCircuit,
+      nodes,
+      edges,
+      openSettings,
+      setOpenSettings,
+      copyElements,
+      cutElements,
+      pasteElements,
+      handleSelectAll,
+      handleDeselectAll,
+      handleSimulateClick,
+      simulateState,
+      setSimulateState,
+      setActiveAction,
+      setPanOnDrag,
+      setActiveWire,
+      socketRef,
+      handleOpenClick,
+    ],
+  );
 
   return (
     <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
       <SimulateStateContext.Provider
         value={{ simulateState, setSimulateState, updateInputState }}
       >
-        <div className={'main-tabs-wrapper'}>
-
+        <div className={"main-tabs-wrapper"}>
           <TabsContainer
             tabs={tabs}
             activeTabId={activeTabId}
@@ -864,8 +875,11 @@ export default function Main() {
             setMenu={setMenu}
             onSimulateClick={() =>
               handleSimulateClick({
-                simulateState, setSimulateState,
-                socketRef, nodes, edges,
+                simulateState,
+                setSimulateState,
+                socketRef,
+                nodes,
+                edges,
               })
             }
           />

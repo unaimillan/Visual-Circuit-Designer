@@ -1,15 +1,16 @@
 // file: loadUserSettings.js
 export function loadUserSettings({
-                                   setCurrentBG,
-                                   setShowMinimap,
-                                   setTheme,
-                                   setActiveAction,
-                                   setActiveWire,
-                                   setOpenSettings,
-                                   setCircuitsMenuState,
-                                   setLogLevel,
-                                   setToastPosition,
-                                 }) {const saved = localStorage.getItem("userSettings");
+  setCurrentBG,
+  setShowMinimap,
+  setTheme,
+  setActiveAction,
+  setActiveWire,
+  setOpenSettings,
+  setCircuitsMenuState,
+  setLogLevel,
+  setToastPosition,
+}) {
+  const saved = localStorage.getItem("userSettings");
   if (saved) {
     const parsed = JSON.parse(saved);
     if (parsed.currentBG) setCurrentBG(parsed.currentBG);

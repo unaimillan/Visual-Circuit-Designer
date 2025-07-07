@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-
 export function useHotkeys(deps, dependencies) {
   useEffect(() => {
     const handleKeyDown = (e) => hotkeyHandler(e, deps);
@@ -10,26 +9,29 @@ export function useHotkeys(deps, dependencies) {
   }, dependencies);
 }
 
-function hotkeyHandler(e, {
-  openSettings,
-  setOpenSettings,
-  copyElements,
-  cutElements,
-  pasteElements,
-  handleSelectAll,
-  handleDeselectAll,
-  saveCircuit,
-  handleSimulateClick,
-  simulateState,
-  setSimulateState,
-  socketRef,
-  nodes,
-  edges,
-  handleOpenClick,
-  setActiveAction,
-  setPanOnDrag,
-  setActiveWire,
-}) {
+function hotkeyHandler(
+  e,
+  {
+    openSettings,
+    setOpenSettings,
+    copyElements,
+    cutElements,
+    pasteElements,
+    handleSelectAll,
+    handleDeselectAll,
+    saveCircuit,
+    handleSimulateClick,
+    simulateState,
+    setSimulateState,
+    socketRef,
+    nodes,
+    edges,
+    handleOpenClick,
+    setActiveAction,
+    setPanOnDrag,
+    setActiveWire,
+  },
+) {
   const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
   if (isCtrlOrCmd) {
