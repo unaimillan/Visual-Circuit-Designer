@@ -48,7 +48,6 @@ import {
   deselectAll,
 } from "../utils/flowHelpers";
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
   setSimulateState: () => {},
@@ -458,11 +457,12 @@ export default function Main() {
           setActiveAction("hand");
           setPanOnDrag(true);
         },
-        3: () => setActiveWire("default"),
-        4: () => setActiveWire("step"),
-        5: () => setActiveWire("straight"),
-        6: () => setActiveAction("eraser"),
-        7: () => setActiveAction("text"),
+        3: () => setActiveAction("eraser"),
+        4: () => setActiveAction("text"),
+        5: () => setActiveWire("default"),
+        6: () => setActiveWire("step"),
+        7: () => setActiveWire("straight"),
+
       };
       if (hotkeys[e.key]) {
         e.preventDefault();
