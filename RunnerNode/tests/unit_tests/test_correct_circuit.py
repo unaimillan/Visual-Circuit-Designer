@@ -19,6 +19,7 @@ async def test_simulations_correctness1(socketio_client):
         done.set()
 
     mock_circuit = {
+        "test_mode": True,
         "nodes": [
             {
               "id": "inputNodeSwitch1",
@@ -126,6 +127,7 @@ async def test_simulations_correctness2(socketio_client):
         done.set()
 
     mock_circuit = {
+        "test_mode": True,
         "nodes": [
             {
               "id": "inputNodeSwitch1",

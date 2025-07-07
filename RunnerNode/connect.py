@@ -1,6 +1,5 @@
 import multiprocessing
 import os
-import shutil
 import uuid
 from verilogGenerator import generate_verilog_from_json
 from fastapi import FastAPI
@@ -54,6 +53,12 @@ async def run_simulation(sid, circuit_data=None):
         await sio.emit("error", {"msg": "Simulation already running"}, room=sid)
         return
 
+    try:
+        flag = circuit_data.get("test_mode")
+        test_mode = flag
+    except Exception:
+        test_mode = False
+
     sim_id = str(uuid.uuid4())
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
@@ -74,7 +79,7 @@ async def run_simulation(sid, circuit_data=None):
 
     p = multiprocessing.Process(
         target=run_cocotb_test,
-        args=(sim_path, sid)
+        args=(sim_path, sid, test_mode)
     )
     p.start()
     simulation_processes[sid] = p
