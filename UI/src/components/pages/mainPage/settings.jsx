@@ -17,7 +17,7 @@ import {
   IconTabBell,
 } from "../../../../assets/ui-icons.jsx";
 
-export function Settings({
+export default function Settings({
   openSettings,
   showMinimap,
   setShowMinimap,

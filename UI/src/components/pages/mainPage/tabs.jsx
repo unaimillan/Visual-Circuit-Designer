@@ -10,7 +10,7 @@ export default function TabsContainer({
   const addTab = () => {
     const newTab = {
       id: Date.now(),
-      title: "Новая вкладка!",
+      title: "New Tab",
       nodes: [],
       edges: [],
     };
@@ -21,7 +21,7 @@ export default function TabsContainer({
   const removeTab = (id) => {
     const updatedTabs = tabs.filter(tab => tab.id !== id);
     onTabsChange(updatedTabs);
-    // Если удалили активную — делаем активной первую оставшуюся
+
     if (id === activeTabId && updatedTabs.length > 0) {
       onActiveTabIdChange(updatedTabs[0].id);
     }
@@ -47,7 +47,7 @@ export default function TabsContainer({
             value={tab.title}
             onClick={e => e.stopPropagation()}
             onChange={e => updateTabTitle(tab.id, e.target.value)}
-            placeholder="Название вкладки"
+            placeholder="Tab name"
           />
 
           {tabs.length > 1 && (

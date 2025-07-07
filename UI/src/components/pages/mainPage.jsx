@@ -21,31 +21,23 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import { nanoid } from "nanoid";
 
-
-import { useHotkeys } from "./mainPage/hotkeys-handler.js";
-//Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
+import Settings from "./mainPage/settings.jsx";
+
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
-
 import { nodeTypes } from "../codeComponents/nodes.js";
-// import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
-// import { initialEdges } from "../codeComponents/edges.js";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
-
-import { Settings } from "./mainPage/settings.jsx";
-
-import { updateInputState } from "./mainPage/runnerHandler.jsx";
-import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
-
-
+import { useHotkeys } from "./mainPage/hotkeys-handler.js";
 import { Toaster } from "react-hot-toast";
-import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
+import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
+import { updateInputState } from "./mainPage/runnerHandler.jsx";
+import { LOG_LEVELS } from "../codeComponents/logger.jsx";
+import { nanoid } from "nanoid";
 
 import {
   getSelectedElements,
