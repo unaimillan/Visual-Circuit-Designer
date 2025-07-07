@@ -16,3 +16,18 @@ export function MinimapSwitch({ minimapState, minimapToggle }) {
     </div>
   );
 }
+
+export function KostyaSwitch({ boolVar, toggleBootVar }) {
+  return (
+    <div style={{ display: "flex", alignItems: "", gap: "5rem" }}>
+      <Switch.Root
+        className="SwitchRoot"
+        id="minimapSwitch"
+        checked={boolVar}
+        onCheckedChange={toggleBootVar}
+      >
+        <Switch.Thumb className="SwitchThumb" />
+      </Switch.Root>
+    </div>
+  );
+}
