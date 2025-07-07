@@ -97,7 +97,6 @@ def cleanup_sessions(sim_path=None):
 
 
 def run_cocotb_test(sim_path, user_sid, test_mode):
-    global _redirect_on_test
     os.environ["user_sid"] = user_sid
     os.environ["REDIRECT_ON_TEST"] = str(test_mode)
     runner = get_runner("icarus")
