@@ -413,13 +413,6 @@ export default function Main() {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-
-
-
-
-
-
-
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
@@ -832,7 +825,6 @@ export default function Main() {
               setOpenSettings(false);
             }}
           />
-
           <Settings
             openSettings={openSettings}
             showMinimap={showMinimap}
