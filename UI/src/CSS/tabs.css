@@ -1,0 +1,8 @@
+.main-tabs-wrapper{
+  width: 100vw;
+  height: 5vh;
+  background-color: var(--main-2);
+  color: var(--main-0);
+  padding: 0.04vh 0.04vh 0.04vh 0.04vh;
+  border-bottom: 1px solid var(--main-5);
+}

@@ -462,7 +462,6 @@ export default function Main() {
         5: () => setActiveWire("default"),
         6: () => setActiveWire("step"),
         7: () => setActiveWire("straight"),
-
       };
       if (hotkeys[e.key]) {
         e.preventDefault();
@@ -750,6 +749,9 @@ export default function Main() {
       <SimulateStateContext.Provider
         value={{ simulateState, setSimulateState, updateInputState }}
       >
+        <div className={'main-tabs-wrapper'}>
+
+        </div>
         <>
           <ReactFlow
             style={{ backgroundColor: "var(--main-2)" }}
