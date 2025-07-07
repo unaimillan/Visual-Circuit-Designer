@@ -92,6 +92,12 @@ function hotkeyHandler(e, {
     return;
   }
 
+  if (isCtrlOrCmd && e.key.toLowerCase() === "t") {
+    e.preventDefault();
+    // handleOpenClick();
+    // return;
+  }
+
   const hotkeys = {
     1: () => {
       setActiveAction("cursor");
