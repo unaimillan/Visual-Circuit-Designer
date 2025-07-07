@@ -1,0 +1,34 @@
+@startuml
+actor User as act
+participant "Registration page" as pg
+participant "APIGateway" as gate
+participant "Auth microservice" as auth
+participant "PostgreSQL" as db
+
+== Request traversal ==
+act --> pg : 1) User fills the registration form
+pg --> gate : 2) Passes the form
+gate --> auth : 3) Routes to the microservice
+
+== Request handling ==
+auth --> auth : 4) Check request format/headers
+alt Correct format
+    auth --> db : 5) Create User entry
+    alt Success
+        db --> auth : 6) Success
+        auth --> gate : 7) Return HTTP 201
+        gate --> pg: 8) Return HTTP 201
+        pg --> act: 9) User created
+    else User exists
+        db --> auth : 6) User exists
+        auth --> gate : 7) Return HTTP 409
+        gate --> pg: 8) Return HTTP 409
+        pg --> act: 9) User alredy exists
+    end
+else Invalid format
+    auth --> gate : 5) Return HTTP 400/411/415/500
+    gate --> pg : 6) Return HTTP 400/411/415/500
+    pg --> act : 7) Error
+end
+
+@enduml

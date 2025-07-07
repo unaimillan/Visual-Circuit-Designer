@@ -1,0 +1,56 @@
+@startuml
+actor User as act
+participant "Frontend" as front
+participant "APIGateway" as gate
+participant "Some service" as serv
+participant "Auth microservice" as auth
+participant "Redis" as db
+
+act --> front : 1) User performs some actions
+
+== Access token expired ==
+front --> gate : 2) Passes request with access token
+gate --> serv : 3) Routes to the microservice
+serv --> auth : 4) Check access token
+auth --> serv : 5) Token expired
+serv --> gate : 6) Return HTTP 401
+gate --> front : 7) Return HTTP 401
+
+== Refresing procedure ==
+front --> gate : 8) Refresh request
+gate --> auth : 9) Routes to the microservice
+auth --> auth : 10) Check refresh token validity
+alt Refresh token is valid
+    auth --> db : 11) Check token in blacklist table
+    alt Token is not blacklisted
+        db --> auth : 12) Token is not blacklisted
+        auth --> db : 13) Add current token to the blacklist
+        db --> auth : 14) Success
+        auth --> auth : 15) Generate new access and refresh tokens
+        auth --> gate : 16) Return HTTP 200 with new tokens
+        gate --> front: 17) Return HTTP 200 with new tokens
+        front --> front : 18) Save new tokens
+    else Token is blacklisted
+        db --> auth : 12) Token is blacklisted
+        auth --> gate : 11) Return HTTP 401
+        gate --> front : 12) Return HTTP 401
+        front --> front : 13) Redirect to login page
+        front --> act : 14) Session expired
+    end
+else Refresh token expired
+    auth --> gate : 11) Return HTTP 401
+    gate --> front : 12) Return HTTP 401
+    front --> front : 13) Redirect to login page
+    front --> act : 14) Session expired
+end
+
+== Retry initial request ==
+front --> gate : 19) Passes request with new access token
+gate --> serv : 20) Routes to the microservice
+serv --> auth : 21) Check access token
+auth --> serv : 22) Token is valid
+serv --> serv : 23) Process request
+serv --> gate : 24) Return
+gate --> front : 25) Return
+front --> act : 26) Action results
+@enduml
