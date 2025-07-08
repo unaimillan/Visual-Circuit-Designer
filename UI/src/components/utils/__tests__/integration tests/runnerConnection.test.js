@@ -11,7 +11,7 @@ describe("Socket.IO integration", () => {
 
     client.on("connect", () => {
       expect(client.connected).toBe(true);
-      client.disconnect()
+      client.disconnect();
       done();
     });
   });
