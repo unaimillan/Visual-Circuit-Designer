@@ -41,8 +41,8 @@ import { nanoid } from "nanoid";
 import { deleteSelected } from "../utils/deleteSelected.js";
 import { deselectAll } from "../utils/deselectAll.js";
 import { getSelectedElements } from "../utils/getSelected.js";
-import { isValidConnection} from "../utils/isValidConnection.js";
-import { selectAll} from "../utils/selectAll.js";
+import { isValidConnection } from "../utils/isValidConnection.js";
+import { selectAll } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
 import { loadUserSettings } from "./mainPage/local-save.jsx";
 
@@ -327,7 +327,11 @@ export default function Main() {
   const handleDeleteSelected = useCallback(() => {
     if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
-    const { newNodes, newEdges } = deleteSelected(nodesRef.current, edgesRef.current, clipboard);
+    const { newNodes, newEdges } = deleteSelected(
+      nodesRef.current,
+      edgesRef.current,
+      clipboard,
+    );
     setNodes(newNodes);
     setEdges(newEdges);
 

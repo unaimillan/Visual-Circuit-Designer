@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { hotkeyHandler } from '../../utils/hotkeyHandler.js';
+import { useEffect } from "react";
+import { hotkeyHandler } from "../../utils/hotkeyHandler.js";
 
 export function useHotkeys(deps, dependencies) {
   useEffect(() => {
