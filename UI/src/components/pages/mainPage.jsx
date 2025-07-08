@@ -44,7 +44,7 @@ import { getSelectedElements } from "../utils/getSelected.js";
 import { isValidConnection } from "../utils/isValidConnection.js";
 import { selectAll } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
-import { loadUserSettings } from "./mainPage/local-save.jsx";
+import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -345,7 +345,7 @@ export default function Main() {
   }, [nodes, edges, handleGetSelectedElements]);
 
   useEffect(() => {
-    loadUserSettings({
+    loadLocalStorage({
       setCurrentBG,
       setShowMinimap,
       setTheme,

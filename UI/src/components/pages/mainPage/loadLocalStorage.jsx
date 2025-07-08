@@ -1,5 +1,5 @@
 // file: loadUserSettings.js
-export function loadUserSettings({
+export function loadLocalStorage({
   setCurrentBG,
   setShowMinimap,
   setTheme,
