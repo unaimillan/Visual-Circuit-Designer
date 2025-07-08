@@ -30,7 +30,7 @@ import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
 import { nodeTypes } from "../codeComponents/nodes.js";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
-import { useHotkeys } from "./mainPage/hotkeys-handler.js";
+import { useHotkeys } from "./mainPage/useHotkeys.js";
 import { Toaster } from "react-hot-toast";
 
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
@@ -38,12 +38,11 @@ import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
-import {
-  getSelectedElements,
-  isValidConnection,
-  selectAll,
-  deselectAll,
-} from "../utils/flowHelpers";
+import { deleteSelected } from "../utils/deleteSelected.js";
+import { deselectAll } from "../utils/deselectAll.js";
+import { getSelectedElements } from "../utils/getSelected.js";
+import { isValidConnection} from "../utils/isValidConnection.js";
+import { selectAll} from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
 import { loadUserSettings } from "./mainPage/local-save.jsx";
 
@@ -186,7 +185,6 @@ export default function Main() {
   }, [tabs, activeTabId]);
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
-  const [cutMode, setCutMode] = useState(false);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const newId = () => nanoid();
 
@@ -243,7 +241,7 @@ export default function Main() {
     if (selected.nodes.length === 0) return;
 
     setClipboard(selected);
-    setCutMode(false);
+
     console.log(
       "Copied:",
       selected.nodes.length,
@@ -258,13 +256,8 @@ export default function Main() {
     if (selected.nodes.length === 0 && selected.edges.length === 0) return;
 
     setClipboard(selected);
-    setCutMode(true);
 
-    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
-
-    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+    handleDeleteSelected();
 
     console.log(
       "Cut:",
@@ -329,22 +322,14 @@ export default function Main() {
 
     setNodes((nds) => nds.concat(newNodes));
     setEdges((eds) => eds.concat(newEdges));
+  }, [clipboard, reactFlowInstance]);
 
-    if (cutMode) {
-      setClipboard({ nodes: [], edges: [] });
-      setCutMode(false);
-    }
-  }, [clipboard, cutMode, reactFlowInstance]);
+  const handleDeleteSelected = useCallback(() => {
+    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
-  const deleteSelected = useCallback(() => {
-    const selected = handleGetSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
-
-    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
-
-    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+    const { newNodes, newEdges } = deleteSelected(nodesRef.current, edgesRef.current, clipboard);
+    setNodes(newNodes);
+    setEdges(newEdges);
 
     console.log(
       "Deleted:",
@@ -749,7 +734,7 @@ export default function Main() {
             minZoom={0.2}
             maxZoom={10}
             deleteKeyCode={["Delete", "Backspace"]}
-            onDelete={deleteSelected}
+            onDelete={handleDeleteSelected}
             // onlyRenderVisibleElements={true}
           >
             <Background
