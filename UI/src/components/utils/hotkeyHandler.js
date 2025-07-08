@@ -1,17 +1,5 @@
-import { useEffect } from "react";
-
-export function useHotkeys(deps, dependencies) {
-  useEffect(() => {
-    const handleKeyDown = (e) => hotkeyHandler(e, deps);
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, dependencies);
-}
-
-function hotkeyHandler(
-  e,
-  {
+export function hotkeyHandler(e, context) {
+  const {
     openSettings,
     setOpenSettings,
     copyElements,
@@ -30,8 +18,8 @@ function hotkeyHandler(
     setActiveAction,
     setPanOnDrag,
     setActiveWire,
-  },
-) {
+  } = context;
+
   const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
   if (isCtrlOrCmd) {
@@ -92,12 +80,6 @@ function hotkeyHandler(
     e.preventDefault();
     handleOpenClick();
     return;
-  }
-
-  if (isCtrlOrCmd && e.key.toLowerCase() === "t") {
-    e.preventDefault();
-    // handleOpenClick();
-    // return;
   }
 
   const hotkeys = {

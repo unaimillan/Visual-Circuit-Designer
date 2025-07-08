@@ -1,4 +1,4 @@
-import { selectAll } from "../flowHelpers";
+import { selectAll } from "../../selectAll.js";
 
 describe("selectAll", () => {
   it("selects logic gates and wires", () => {
