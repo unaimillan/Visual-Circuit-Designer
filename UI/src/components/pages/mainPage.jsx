@@ -21,34 +21,31 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import { nanoid } from "nanoid";
-
-//Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
+import Settings from "./mainPage/settings.jsx";
+
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
-
-import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
-import { initialEdges } from "../codeComponents/edges.js";
+import { nodeTypes } from "../codeComponents/nodes.js";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import { useHotkeys } from "./mainPage/useHotkeys.js";
+import { Toaster } from "react-hot-toast";
 
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
-
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
-import { Toaster } from "react-hot-toast";
-import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
+import { nanoid } from "nanoid";
 
-import {
-  getSelectedElements,
-  isValidConnection,
-  selectAll,
-  deselectAll,
-} from "../utils/flowHelpers";
+import { deleteSelected } from "../utils/deleteSelected.js";
+import { deselectAll } from "../utils/deselectAll.js";
+import { getSelectedElements } from "../utils/getSelected.js";
+import { isValidConnection } from "../utils/isValidConnection.js";
+import { selectAll } from "../utils/selectAll.js";
+import TabsContainer from "./mainPage/tabs.jsx";
+import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
   setSimulateState: () => {},
@@ -80,6 +77,7 @@ export function useNotificationsLevel() {
 
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 1;
+const STORAGE_KEY = "myCircuits";
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -93,8 +91,16 @@ export default function Main() {
   const [toastPosition, setToastPosition] = useState("top-center");
   const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  // Хуки React Flow
+  const [nodes, setNodes, onNodesChangeFromHook] = useNodesState([]);
+  const [edges, setEdges, onEdgesChangeFromHook] = useEdgesState([]);
+
+  const [tabs, setTabs] = useState([]);
+  const [activeTabId, setActiveTabId] = useState(null);
+
+  // Если где-то нужен доступ через рефы — поддерживаем их
+  const nodesRef = useRef(nodes);
+  const edgesRef = useRef(edges);
 
   const [menu, setMenu] = useState(null);
 
@@ -114,12 +120,71 @@ export default function Main() {
     }
   };
 
-  //Load saved settings from localStorage
-  const nodesRef = useRef(nodes);
-  const edgesRef = useRef(edges);
+  // 1) Загрузка списка вкладок и сохранённого activeTabId из localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const { tabs: savedTabs, activeTabId: savedActive } =
+          JSON.parse(stored);
+        if (Array.isArray(savedTabs) && savedActive != null) {
+          setTabs(savedTabs);
+          setActiveTabId(savedActive);
+          return;
+        }
+      } catch {}
+    }
+    // Если в хранилище ничего нет — создаём одну начальную вкладку
+    const initial = [
+      { id: Date.now(), title: "New Tab", nodes: [], edges: [] },
+    ];
+    setTabs(initial);
+    setActiveTabId(initial[0].id);
+  }, []);
+
+  // 2) Получение текущей активной вкладки по её id
+  const activeTab = tabs.find((t) => t.id === activeTabId) || {
+    nodes: [],
+    edges: [],
+  };
+
+  // 3) При смене вкладки: проставляем её nodes/edges в локальный стейт ReactFlow
+  useEffect(() => {
+    setNodes(activeTab.nodes);
+    setEdges(activeTab.edges);
+  }, [activeTabId]);
+
+  // 4) Обновляем внешние рефы, если они используются в другой логике вне ReactFlow
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+
+  useEffect(() => {
+    edgesRef.current = edges;
+  }, [edges]);
+
+  // 5) Синхронизация изменений из ReactFlow обратно в массив tabs:
+  //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
+  useEffect(() => {
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, nodes } : tab)),
+    );
+  }, [nodes, activeTabId]);
+
+  //    5b) при любом обновлении edges сохраняем их в текущей вкладке
+  useEffect(() => {
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, edges } : tab)),
+    );
+  }, [edges, activeTabId]);
+
+  useEffect(() => {
+    if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
+    const toStore = { tabs, activeTabId }; // вся структура
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  }, [tabs, activeTabId]);
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
-  const [cutMode, setCutMode] = useState(false);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const newId = () => nanoid();
 
@@ -176,7 +241,7 @@ export default function Main() {
     if (selected.nodes.length === 0) return;
 
     setClipboard(selected);
-    setCutMode(false);
+
     console.log(
       "Copied:",
       selected.nodes.length,
@@ -191,13 +256,8 @@ export default function Main() {
     if (selected.nodes.length === 0 && selected.edges.length === 0) return;
 
     setClipboard(selected);
-    setCutMode(true);
 
-    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
-
-    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+    handleDeleteSelected();
 
     console.log(
       "Cut:",
@@ -262,22 +322,18 @@ export default function Main() {
 
     setNodes((nds) => nds.concat(newNodes));
     setEdges((eds) => eds.concat(newEdges));
+  }, [clipboard, reactFlowInstance]);
 
-    if (cutMode) {
-      setClipboard({ nodes: [], edges: [] });
-      setCutMode(false);
-    }
-  }, [clipboard, cutMode, reactFlowInstance]);
+  const handleDeleteSelected = useCallback(() => {
+    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
-  const deleteSelected = useCallback(() => {
-    const selected = handleGetSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
-
-    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
-
-    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+    const { newNodes, newEdges } = deleteSelected(
+      nodesRef.current,
+      edgesRef.current,
+      clipboard,
+    );
+    setNodes(newNodes);
+    setEdges(newEdges);
 
     console.log(
       "Deleted:",
@@ -289,96 +345,17 @@ export default function Main() {
   }, [nodes, edges, handleGetSelectedElements]);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey || event.metaKey) {
-        switch (event.key) {
-          case "c":
-          case "с":
-            event.preventDefault();
-            copyElements();
-            break;
-          case "x":
-          case "ч":
-            event.preventDefault();
-            cutElements();
-            break;
-          case "v":
-          case "м":
-            pasteElements();
-            event.preventDefault();
-            break;
-          case "a":
-          case "ф":
-            event.preventDefault();
-            handleSelectAll();
-            break;
-          case "d":
-          case "в":
-            event.preventDefault();
-            handleDeselectAll();
-            break;
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [
-    copyElements,
-    cutElements,
-    pasteElements,
-    handleSelectAll,
-    handleDeselectAll,
-    deleteSelected,
-  ]);
-
-  useEffect(() => {
-    const savedCircuit = localStorage.getItem("savedCircuit");
-    if (savedCircuit) {
-      try {
-        const circuitData = JSON.parse(savedCircuit);
-        setNodes(circuitData.nodes || []);
-        setEdges(circuitData.edges || []);
-      } catch (e) {
-        setNodes(initialNodes);
-        setEdges(initialEdges);
-      }
-    } else {
-      setNodes(initialNodes);
-      setEdges(initialEdges);
-    }
-  }, []);
-
-  useEffect(() => {
-    const circuitData = JSON.stringify({ nodes, edges });
-    localStorage.setItem("savedCircuit", circuitData);
-  }, [nodes, edges]);
-
-  useEffect(() => {
-    nodesRef.current = nodes;
-  }, [nodes]);
-
-  useEffect(() => {
-    edgesRef.current = edges;
-  }, [edges]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("userSettings");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.currentBG) setCurrentBG(parsed.currentBG);
-      if (typeof parsed.showMinimap === "boolean")
-        setShowMinimap(parsed.showMinimap);
-      if (parsed.theme) setTheme(parsed.theme);
-      if (parsed.activeAction) setActiveAction(parsed.activeAction);
-      if (parsed.activeWire) setActiveWire(parsed.activeWire);
-      if (typeof parsed.openSettings === "boolean")
-        setOpenSettings(parsed.openSettings);
-      if (typeof parsed.circuitsMenuState === "boolean")
-        setCircuitsMenuState(parsed.circuitsMenuState);
-      if (parsed.logLevel) setLogLevel(parsed.logLevel);
-      if (parsed.toastPosition) setToastPosition(parsed.toastPosition);
-    }
+    loadLocalStorage({
+      setCurrentBG,
+      setShowMinimap,
+      setTheme,
+      setActiveAction,
+      setActiveWire,
+      setOpenSettings,
+      setCircuitsMenuState,
+      setLogLevel,
+      setToastPosition,
+    });
   }, []);
 
   //Saves user setting to localStorage
@@ -407,78 +384,7 @@ export default function Main() {
     toastPosition,
   ]);
 
-  //Hotkeys handler
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
-
-      //Ctrl + Shift + S - Open/close settings
-      if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        setOpenSettings((prev) => !prev);
-        return;
-      }
-
-      //Ctrl + S - Save circuit.json
-      if (isCtrlOrCmd && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        saveCircuit();
-        return;
-      }
-
-      //Ctrl + Shift + R - Start/stop simulation
-      if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        handleSimulateClick({
-          simulateState,
-          setSimulateState,
-          socketRef,
-          nodes,
-          edges,
-        });
-        return;
-      }
-
-      //Ctrl + Shift + O - Load file
-      if (isCtrlOrCmd && e.key.toLowerCase() === "o") {
-        e.preventDefault();
-
-        handleOpenClick();
-
-        return;
-      }
-
-      //1...6 - Change selected tool
-      const hotkeys = {
-        1: () => {
-          setActiveAction("cursor");
-          setPanOnDrag([2]);
-        },
-        2: () => {
-          setActiveAction("hand");
-          setPanOnDrag(true);
-        },
-        3: () => setActiveWire("default"),
-        4: () => setActiveWire("step"),
-        5: () => setActiveWire("straight"),
-        6: () => setActiveAction("eraser"),
-        7: () => setActiveAction("text"),
-      };
-      if (hotkeys[e.key]) {
-        e.preventDefault();
-        hotkeys[e.key]();
-      }
-
-      //Escape to close Settings
-      if (e.key === "Escape" && openSettings) {
-        setOpenSettings(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [openSettings]);
-
-  //Sets current theme to the whole document (наверное)
+  //Sets current theme to the whole document
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
@@ -709,7 +615,6 @@ export default function Main() {
           });
         }
       });
-
       return closestEdge;
     },
     [store, getInternalNode],
@@ -745,19 +650,72 @@ export default function Main() {
         ? BackgroundVariant.Cross
         : BackgroundVariant.Lines;
 
+  //Hotkeys handler
+  useHotkeys(
+    {
+      saveCircuit,
+      nodes,
+      edges,
+      openSettings,
+      setOpenSettings,
+      copyElements,
+      cutElements,
+      pasteElements,
+      handleSelectAll,
+      handleDeselectAll,
+      handleSimulateClick,
+      simulateState,
+      setSimulateState,
+      setActiveAction,
+      setPanOnDrag,
+      setActiveWire,
+      socketRef,
+      handleOpenClick,
+    },
+    [
+      saveCircuit,
+      nodes,
+      edges,
+      openSettings,
+      setOpenSettings,
+      copyElements,
+      cutElements,
+      pasteElements,
+      handleSelectAll,
+      handleDeselectAll,
+      handleSimulateClick,
+      simulateState,
+      setSimulateState,
+      setActiveAction,
+      setPanOnDrag,
+      setActiveWire,
+      socketRef,
+      handleOpenClick,
+    ],
+  );
+
   return (
     <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
       <SimulateStateContext.Provider
         value={{ simulateState, setSimulateState, updateInputState }}
       >
+        <div className={"main-tabs-wrapper"}>
+          <TabsContainer
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onTabsChange={setTabs}
+            onActiveTabIdChange={setActiveTabId}
+          />
+        </div>
+
         <>
           <ReactFlow
             style={{ backgroundColor: "var(--main-2)" }}
             ref={ref}
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
+            onNodesChange={onNodesChangeFromHook}
+            onEdgesChange={onEdgesChangeFromHook}
             defaultEdgeOptions={{
               type: activeWire,
             }}
@@ -780,7 +738,7 @@ export default function Main() {
             minZoom={0.2}
             maxZoom={10}
             deleteKeyCode={["Delete", "Backspace"]}
-            onDelete={deleteSelected}
+            onDelete={handleDeleteSelected}
             // onlyRenderVisibleElements={true}
           >
             <Background

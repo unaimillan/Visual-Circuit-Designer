@@ -1,4 +1,4 @@
-import { isValidConnection } from "../../flowHelpers";
+import { isValidConnection } from "../../isValidConnection";
 
 describe("isValidConnection", () => {
   it("returns false when source equals to target", () => {

@@ -1,0 +1,47 @@
+@startuml
+left to right direction
+agent "Client WebBrowser" as client
+
+cloud "Server" {
+    frame "Coolify" {
+        node "Coolify Reverse Proxy" as proxy {
+            usecase "visual-circuit-designer.ru" as domain
+        }
+        package "Visual Circuit Designer" {
+            frame "Coolify Network" {
+                database "PostgreSQL" as sql
+                database "Redis" as redis
+
+                frame "Docker Compose" {
+                    node "Nginx (APIGateway)" as gate 
+                    node "Auth microservice" as auth
+                    node "Profile microservice" as profile
+                    node "Library microservice" as library
+                    node "Runner Node" as runner
+                }
+            }
+
+            storage "Coolify storage" {
+                artifact "nginx.conf" as conf
+                artifact "frontend" as frontend
+            }
+        }
+    }
+}
+
+client --> proxy : HTTPS
+domain --> gate : HTTP
+
+gate --> auth : http://auth
+gate --> profile : http://profile
+gate --> library : http://library
+gate --> runner : http://runner
+
+auth --> sql : TCP/IP
+auth --> redis : TCP/IP
+profile --> sql : TCP/IP
+library --> sql : TCP/IP
+
+frontend --> gate : File System
+conf --> gate : File System
+@enduml

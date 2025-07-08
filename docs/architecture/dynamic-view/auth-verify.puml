@@ -1,0 +1,22 @@
+@startuml
+actor "Any actor" as act
+participant "Auth microservice" as auth
+
+act --> auth : 1) Sends request to verify access token
+auth --> auth : 2) Check request headers
+alt Valid headers
+    auth --> auth : 3) Check token signature
+    alt Valid signature
+        auth --> auth : 4) Check token expiration
+        alt Token is valid
+            auth --> act : 5) Return HTTP 200
+        else Token expired
+            auth --> act : 5) Return HTTP 401
+        end
+    else Invalid signature
+        auth --> act : 4) Return HTTP 401
+    end
+else Invalid headers
+    auth --> act : 3) Return HTTP 401
+end
+@enduml

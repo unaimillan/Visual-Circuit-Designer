@@ -12,6 +12,8 @@ app = FastAPI()
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
 user_simulations = {}
+simulation_paths = {}
+simulation_processes = {}
 
 @sio.on("connect")
 async def connect(sid, environ):
@@ -51,9 +53,16 @@ async def run_simulation(sid, circuit_data=None):
         await sio.emit("error", {"msg": "Simulation already running"}, room=sid)
         return
 
+    try:
+        flag = circuit_data.get("test_mode")
+        test_mode = flag
+    except Exception:
+        test_mode = False
+
     sim_id = str(uuid.uuid4())
     sim_path = os.path.join("simulations", sim_id)
     os.makedirs(sim_path, exist_ok=True)
+    simulation_paths[sid] = sim_path
 
     try:
         verilog_code = generate_verilog_from_json(circuit_data)
@@ -70,9 +79,10 @@ async def run_simulation(sid, circuit_data=None):
 
     p = multiprocessing.Process(
         target=run_cocotb_test,
-        args=(sim_path, sid)
+        args=(sim_path, sid, test_mode)
     )
     p.start()
+    simulation_processes[sid] = p
 
 
 @sio.on("set_inputs")
