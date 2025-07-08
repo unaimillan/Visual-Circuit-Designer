@@ -37,6 +37,7 @@ jobs:
           pip install -r RunnerNode/requirements.txt
 
       - name: Install Node.js dependencies
+        working-directory: UI
         run: npm ci
 
       - name: Start FastAPI server in background
@@ -46,4 +47,5 @@ jobs:
           sleep 5
 
       - name: Run Jest tests
+        working-directory: UI
         run: npm run test
