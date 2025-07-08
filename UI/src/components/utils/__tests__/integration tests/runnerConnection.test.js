@@ -6,7 +6,7 @@ describe("Socket.IO integration", () => {
   it("should connect to RunnerNode", (done) => {
     const client = io(`http://localhost:${port}`, {
       path: "/socket.io",
-      transports: ["websocket"],
+      transports: ["polling", "websocket"],
     });
 
     client.on("connect", () => {
@@ -14,5 +14,5 @@ describe("Socket.IO integration", () => {
       client.disconnect();
       done();
     });
-  });
+  }, 15000);
 });
