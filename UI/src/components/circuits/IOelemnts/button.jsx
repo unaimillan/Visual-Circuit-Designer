@@ -11,12 +11,8 @@ function InputNodeButton({ id, data, isConnectable }) {
   const delay = 500;
   const rotation = data.rotation || 0;
 
-  const { getHandlePosition, RotatedNodeWrapper, triggerUpdate } = useRotatedNode(
-    id,
-    rotation,
-    60,
-    80
-  );
+  const { getHandlePosition, RotatedNodeWrapper, triggerUpdate } =
+    useRotatedNode(id, rotation, 60, 80);
 
   const getHandleStyle = () => {
     switch (rotation) {
