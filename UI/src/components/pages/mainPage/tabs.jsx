@@ -50,6 +50,11 @@ export default function TabsContainer({
           key={tab.id}
           className={`tab ${tab.id === activeTabId ? "active" : ""}`}
           onClick={() => onActiveTabIdChange(tab.id)}
+          style={{
+            width: `min(${nextTabWidthVW * 0.9}vw, 200px)`, // ограничение на max ширину (например, 200px)
+            minWidth: "80px",
+            flexShrink: 0, // не сжимать ниже minWidth
+          }}
         >
           <textarea
             className="name-text-area"
@@ -73,9 +78,11 @@ export default function TabsContainer({
         </div>
       ))}
 
-      <button className="add-btn" onClick={addTab}>
-        ＋
-      </button>
+      {canAddTab && (
+        <button className="add-btn" onClick={addTab}>
+          ＋
+        </button>
+      )}
     </div>
   );
 }

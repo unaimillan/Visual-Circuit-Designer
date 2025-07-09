@@ -8,6 +8,7 @@
   border-bottom: 1px solid var(--main-4);
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
+  white-space: nowrap;
 }
 
 .tab {
@@ -26,6 +27,10 @@
   border-radius: 5px;
   background: var(--main-2);
   transition: 0.15s;
+
+
+
+  box-sizing: border-box;
 
   &:hover {
     background: var(--main-4);
@@ -51,11 +56,19 @@
   font-family: Montserrat, serif;
   resize: none;
   color: var(--main-0);
-  width: 7vw;
+  /*width: 7vw;*/
   height: 2vh;
   text-align: center;
-  padding: 0; /* убираем лишний отступ */
+  padding: 0;
   border: none;
+
+
+  width: 100%;
+  /*font-weight: bold;*/
+  /*font-size: 0.9rem;*/
+  /*padding: 4px;*/
+  outline: none;
+  /*text-align: center;*/
 }
 
 .close-btn {
@@ -72,4 +85,14 @@
 .close-tab-cross {
   width: 10px;
   height: auto;
+}
+
+
+.main-tabs-wrapper {
+
+}
+
+
+.name-text-area {
+
 }
