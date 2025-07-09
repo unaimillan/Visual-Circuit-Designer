@@ -4,6 +4,7 @@
 
 #include <Poco/JWT/Signer.h>
 #include <Poco/JWT/Token.h>
+#include <unordered_set>
 #include <string>
 
 using Poco::JWT::Signer;
@@ -32,4 +33,5 @@ private:
 
 private:
   Signer m_signer;
+  std::unordered_set<std::string> m_blacklist;
 };

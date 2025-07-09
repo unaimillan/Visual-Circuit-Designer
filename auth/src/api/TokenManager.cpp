@@ -73,6 +73,7 @@ User TokenManager::getUser(std::string const& token) const {
 }
 
 std::string TokenManager::refresh(std::string const& token) {
+  m_blacklist.insert(token);
   return generate(getUser(token));
 }
 
@@ -87,7 +88,7 @@ bool TokenManager::_verify(
     switch (realType) {
     case ACCESS: return !out.getIssuedAt().isElapsed(15LL * 60000000LL);
     case REFRESH:
-      return !out.getIssuedAt().isElapsed(30LL * 24LL * 60LL * 60000000LL);
+      return !out.getIssuedAt().isElapsed(30LL * 24LL * 60LL * 60000000LL) && (m_blacklist.find(token) == m_blacklist.cend());
     default: return false;
     }
   } else {
