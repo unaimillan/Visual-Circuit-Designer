@@ -50,6 +50,7 @@ import TabsContainer from "./mainPage/tabs.jsx";
 import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
 import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
+import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -390,25 +391,12 @@ export default function Main() {
     [setNodes, setEdges]
   );
 
-  const spawnCircuit = (type) => {
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    });
-
-    const newNode = {
-      id: `${type}_${Date.now()}`,
-      type,
-      position,
-      data: {
-        customId: `${type}_${Date.now()}`,
-        simState: simulateState,
-        value: false,
-      },
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  };
+  const spawnCircuit = useCallback(
+    (type) => {
+      spawnCircuitUtil(type, reactFlowInstance, simulateState, setNodes);
+    },
+    [reactFlowInstance, simulateState, setNodes]
+  );
 
   const getClosestEdge = useCallback(
     (draggedNode) => {
