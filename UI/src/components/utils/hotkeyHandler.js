@@ -5,8 +5,8 @@ export function hotkeyHandler(e, context) {
     copyElements,
     cutElements,
     pasteElements,
-    handleSelectAll,
-    handleDeselectAll,
+    selectAll,
+    deselectAll,
     saveCircuit,
     handleSimulateClick,
     simulateState,
@@ -42,12 +42,12 @@ export function hotkeyHandler(e, context) {
       case "a":
       case "ф":
         e.preventDefault();
-        handleSelectAll();
+        selectAll();
         return;
       case "d":
       case "в":
         e.preventDefault();
-        handleDeselectAll();
+        deselectAll();
         return;
     }
   }

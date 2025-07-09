@@ -38,11 +38,12 @@ import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
-import { deleteSelected } from "../utils/deleteSelected.js";
-import { deselectAll } from "../utils/deselectAll.js";
-import { getSelectedElements } from "../utils/getSelected.js";
-import { isValidConnection } from "../utils/isValidConnection.js";
-import { selectAll } from "../utils/selectAll.js";
+import { copyElements as copyUtil } from "../utils/copyElements.js";
+import { deleteSelectedElements as deleteSelectedUtil } from "../utils/deleteSelectedElements.js";
+import { deselectAll as deselectAllUtil } from "../utils/deselectAll.js";
+import { getSelectedElements as getSelectedUtil } from "../utils/getSelectedElements.js";
+import { isValidConnection as isValidConnectionUtil } from "../utils/isValidConnection.js";
+import { selectAll as selectAllUtil } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
 import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 
@@ -215,49 +216,48 @@ export default function Main() {
     );
   }, [nodes]);
 
-  const handleGetSelectedElements = useCallback(() => {
-    return getSelectedElements(nodes, edges);
+  const getSelectedElements = useCallback(() => {
+    return getSelectedUtil(nodes, edges);
   });
 
-  const validateConnection = useCallback(
-    (connection) => isValidConnection(connection, edgesRef.current),
+  const isValidConnection = useCallback(
+    (connection) => isValidConnectionUtil(connection, edgesRef.current),
     [edgesRef],
   );
 
-  const handleSelectAll = useCallback(() => {
-    const { nodes: newNodes, edges: newEdges } = selectAll(nodes, edges);
+  const selectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = selectAllUtil(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
 
-  const handleDeselectAll = useCallback(() => {
-    const { nodes: newNodes, edges: newEdges } = deselectAll(nodes, edges);
+  const deselectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = deselectAllUtil(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
+
+  const deleteSelectedElements = useCallback(() => {
+    const selected = getSelectedElements();
+    const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, clipboard]);
 
   const copyElements = useCallback(() => {
-    const selected = handleGetSelectedElements();
-    if (selected.nodes.length === 0) return;
-
-    setClipboard(selected);
-
-    console.log(
-      "Copied:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges, handleGetSelectedElements]);
+    copyUtil({
+      getSelectedElements,
+      setClipboard,
+    });
+  }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
-    const selected = handleGetSelectedElements();
+    const selected = getSelectedElements();
     if (selected.nodes.length === 0 && selected.edges.length === 0) return;
 
     setClipboard(selected);
 
-    handleDeleteSelected();
+    deleteSelectedElements();
 
     console.log(
       "Cut:",
@@ -266,7 +266,7 @@ export default function Main() {
       selected.edges.length,
       "edges",
     );
-  }, [nodes, edges, handleGetSelectedElements]);
+  }, [nodes, edges, getSelectedElements]);
 
   const pasteElements = useCallback(() => {
     if (!reactFlowInstance) {
@@ -323,26 +323,6 @@ export default function Main() {
     setNodes((nds) => nds.concat(newNodes));
     setEdges((eds) => eds.concat(newEdges));
   }, [clipboard, reactFlowInstance]);
-
-  const handleDeleteSelected = useCallback(() => {
-    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
-
-    const { newNodes, newEdges } = deleteSelected(
-      nodesRef.current,
-      edgesRef.current,
-      clipboard,
-    );
-    setNodes(newNodes);
-    setEdges(newEdges);
-
-    console.log(
-      "Deleted:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges, handleGetSelectedElements]);
 
   useEffect(() => {
     loadLocalStorage({
@@ -661,8 +641,8 @@ export default function Main() {
       copyElements,
       cutElements,
       pasteElements,
-      handleSelectAll,
-      handleDeselectAll,
+      selectAll,
+      deselectAll,
       handleSimulateClick,
       simulateState,
       setSimulateState,
@@ -681,8 +661,8 @@ export default function Main() {
       copyElements,
       cutElements,
       pasteElements,
-      handleSelectAll,
-      handleDeselectAll,
+      selectAll,
+      deselectAll,
       handleSimulateClick,
       simulateState,
       setSimulateState,
@@ -727,7 +707,7 @@ export default function Main() {
             onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
             onInit={setReactFlowInstance}
-            isValidConnection={validateConnection}
+            isValidConnection={isValidConnection}
             nodeTypes={nodeTypes}
             panOnDrag={panOnDrag}
             selectionOnDrag
@@ -738,7 +718,7 @@ export default function Main() {
             minZoom={0.2}
             maxZoom={10}
             deleteKeyCode={["Delete", "Backspace"]}
-            onDelete={handleDeleteSelected}
+            onDelete={deleteSelectedElements}
             // onlyRenderVisibleElements={true}
           >
             <Background

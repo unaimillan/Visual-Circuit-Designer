@@ -1,4 +1,4 @@
-import { getSelectedElements } from "../../getSelected.js";
+import { getSelectedElements } from "../../getSelectedElements.js";
 
 describe("getSelectedElements", () => {
   it("returns only selected nodes and edges between them", () => {

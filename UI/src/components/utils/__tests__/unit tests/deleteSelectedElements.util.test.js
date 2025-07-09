@@ -1,6 +1,12 @@
-import { deleteSelected } from "../../deleteSelected.js";
+import { deleteSelectedElements } from "../../deleteSelectedElements.js";
 
-describe("deleteSelected", () => {
+describe("deleteSelectedElements", () => {
+  let consoleSpy;
+
+  beforeEach(() => {
+    consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
   it("delete selected gates and wires", () => {
     const allNodes = [{ id: "1" }, { id: "2" }, { id: "3" }];
 
@@ -14,7 +20,7 @@ describe("deleteSelected", () => {
       edges: [{ id: "e1" }],
     };
 
-    const { newNodes, newEdges } = deleteSelected(
+    const { newNodes, newEdges } = deleteSelectedElements(
       allNodes,
       allEdges,
       clipboard,
@@ -23,6 +29,14 @@ describe("deleteSelected", () => {
     expect(newNodes).toEqual([{ id: "2" }, { id: "3" }]);
 
     expect(newEdges).toEqual([{ id: "e2", source: "2", target: "3" }]);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Deleted:',
+      1 ,
+      'nodes and',
+      1,
+      'edges',
+    );
   });
 
   it("returns initial data if nothing was selected", () => {
@@ -31,7 +45,7 @@ describe("deleteSelected", () => {
 
     const clipboard = { nodes: [], edges: [] };
 
-    const { newNodes, newEdges } = deleteSelected(
+    const { newNodes, newEdges } = deleteSelectedElements(
       allNodes,
       allEdges,
       clipboard,
