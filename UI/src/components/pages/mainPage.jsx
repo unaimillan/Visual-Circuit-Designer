@@ -48,6 +48,7 @@ import { isValidConnection as isValidConnectionUtil } from "../utils/isValidConn
 import { selectAll as selectAllUtil } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
 import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
+import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -379,33 +380,7 @@ export default function Main() {
   const onPaneClick = useCallback(() => setMenu(null), []);
 
   //Allows user to download circuit JSON
-  const saveCircuit = () => {
-    const flowData = {
-      nodes: nodes.map((n) => ({
-        id: n.id,
-        type: n.type,
-        position: n.position,
-        data: n.data,
-      })),
-      edges: edges.map((e) => ({
-        id: e.id,
-        source: e.source,
-        target: e.target,
-        sourceHandle: e.sourceHandle,
-        targetHandle: e.targetHandle,
-      })),
-    };
-
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(flowData, null, 2));
-    const downloadAnchorNode = document.createElement("a");
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "circuit.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  };
+  const saveCircuit = () => saveCircuitUtil(nodes, edges);
 
   const loadCircuit = (event) => {
     const fileReader = new FileReader();
