@@ -38,7 +38,8 @@ import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
-import { copyElements as copyUtil } from "../utils/copyElements.js";
+import { copyElements as copyElementsUtil } from "../utils/copyElements.js";
+import { cutElements as cutElementsUtil } from "../utils/cutElementsUtil.js";
 import { deleteSelectedElements as deleteSelectedUtil } from "../utils/deleteSelectedElements.js";
 import { deselectAll as deselectAllUtil } from "../utils/deselectAll.js";
 import { getSelectedElements as getSelectedUtil } from "../utils/getSelectedElements.js";
@@ -245,28 +246,19 @@ export default function Main() {
   }, [nodes, edges, clipboard]);
 
   const copyElements = useCallback(() => {
-    copyUtil({
+    copyElementsUtil({
       getSelectedElements,
       setClipboard,
     });
   }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
-    const selected = getSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
-
-    setClipboard(selected);
-
-    deleteSelectedElements();
-
-    console.log(
-      "Cut:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges, getSelectedElements]);
+    cutElementsUtil({
+      getSelectedElements,
+      setClipboard,
+      deleteSelectedElements,
+    });
+  }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
     if (!reactFlowInstance) {
