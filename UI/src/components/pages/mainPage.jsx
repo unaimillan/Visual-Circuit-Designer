@@ -21,25 +21,20 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-//Importing components
-import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
-import Toolbar from "./mainPage/toolbar.jsx";
-import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
-import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
+import CircuitsMenu from "../components/mainPage/circuitsMenu.jsx";
+import Toolbar from "../components/mainPage/toolbar.jsx";
+import ContextMenu from "../components/codeComponents/ContextMenu";
 
-import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
-import { initialEdges } from "../codeComponents/edges.js";
+import { initialNodes, nodeTypes } from "../components/codeComponents/nodes";
+import { initialEdges } from "../components/codeComponents/edges";
+import { MinimapSwitch } from "../components/mainPage/switch.jsx";
+import { SelectCanvasBG, SelectTheme } from "../components/mainPage/select.jsx";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
 
-import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
-
-import { updateInputState } from "./mainPage/runnerHandler.jsx";
-import { Toaster } from "react-hot-toast";
-import { Settings } from "./mainPage/settings.jsx";
-import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { Link } from "react-router-dom";
 
+import { handleSimulateClick } from "../components/mainPage/runnerHandler.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
@@ -55,21 +50,21 @@ export const NotificationsLevelContext = createContext({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useSimulateState() {
-  const context = useContext(SimulateStateContext);
-  if (!context)
+  const ctx = useContext(SimulateStateContext);
+  if (!ctx) {
     throw new Error(
       "useSimulateState must be used within SimulateStateProvider",
     );
-  return context;
+  return ctx;
 }
 
 export function useNotificationsLevel() {
-  const context = useContext(NotificationsLevelContext);
-  if (!context)
+  const ctx = useContext(NotificationsLevelContext);
+  if (!ctx)
     throw new Error(
       "useNotificationsLevel must be used within NotificationsLevelProvider",
     );
-  return context;
+  return ctx;
 }
 
 const GAP_SIZE = 10;
@@ -151,6 +146,7 @@ export default function Main() {
       if (parsed.theme) setTheme(parsed.theme);
       if (parsed.activeAction) setActiveAction(parsed.activeAction);
       if (parsed.activeWire) setActiveWire(parsed.activeWire);
+      if (parsed.activeButton) setActiveButton(parsed.activeButton);
       if (typeof parsed.openSettings === "boolean")
         setOpenSettings(parsed.openSettings);
       if (typeof parsed.circuitsMenuState === "boolean")
@@ -651,11 +647,11 @@ export default function Main() {
             SVGClassName="openSettingsButtonIcon"
             draggable="false"
           />
-      </button>
+        </button>
         <Link
-            to="/auth"
-            className="login-button"
-            style={{ textDecoration: "none" }}
+          to="/auth"
+          className="login-button"
+          style={{ textDecoration: "none" }}
         >
           <span className="login-button-text">Log in</span>
         </Link>
