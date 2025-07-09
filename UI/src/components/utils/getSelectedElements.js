@@ -5,10 +5,9 @@ export function getSelectedElements(nodes, edges) {
   const selectedEdges = edges.filter(
     (edge) =>
       (edge.selected &&
-      !selectedNodeIds.has(edge.source) &&
-      !selectedNodeIds.has(edge.target)) ||
-      (selectedNodeIds.has(edge.source) &&
-        selectedNodeIds.has(edge.target)),
+        !selectedNodeIds.has(edge.source) &&
+        !selectedNodeIds.has(edge.target)) ||
+      (selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)),
   );
 
   return { nodes: selectedNodes, edges: selectedEdges };

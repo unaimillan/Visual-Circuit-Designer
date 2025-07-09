@@ -480,7 +480,9 @@ export default function Main() {
 
   const onNodeDragStop = useCallback(
     (_, draggedNode) => {
-      const selectedNodes = nodes.filter((n) => n.selected || n.id === draggedNode.id);
+      const selectedNodes = nodes.filter(
+        (n) => n.selected || n.id === draggedNode.id,
+      );
 
       setEdges((es) => {
         let nextEdges = es.filter((e) => e.className !== "temp");
@@ -495,7 +497,7 @@ export default function Main() {
                 target: closeEdge.target,
                 targetHandle: closeEdge.targetHandle,
               },
-              nextEdges
+              nextEdges,
             );
           }
         }
