@@ -95,6 +95,14 @@
   pointer-events: none;
 }
 
+.led-icon {
+  position: absolute;
+  top: 27px;
+  left: 16px;
+
+  transform: rotate(45deg);
+}
+
 .button-wrapper {
   align-content: center;
   justify-content: center;
@@ -134,17 +142,4 @@
   color: var(--main-0);
   width: 1.7rem;
   height: 1.7rem;
-}
-
-.led-icon {
-  position: absolute;
-  top: 27px;
-  left: 16px;
-
-  transform: rotate(45deg);
-}
-
-.led-text {
-  transform: rotate(-45deg) translateY(1px);
-  transform-origin: center;
 }
