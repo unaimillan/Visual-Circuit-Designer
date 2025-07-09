@@ -155,7 +155,7 @@ export default function Main() {
     }
     // Если в хранилище ничего нет — создаём одну начальную вкладку
     const initial = [
-      { id: Date.now(), title: "New Tab", nodes: [], edges: [] },
+      { id: newId(), title: "New Tab", nodes: [], edges: [] },
     ];
     setTabs(initial);
     setActiveTabId(initial[0].id);
@@ -352,12 +352,11 @@ export default function Main() {
         nodeSize,
       );
 
-      const timestamp = Date.now();
       const newNode = {
-        id: `${type}_${timestamp}`,
+        id: newId(),
         type,
         position,
-        data: { customId: `${type}_${timestamp}` },
+        data: { customId: newId() },
       };
 
       setNodes((nds) => nds.concat(newNode));
