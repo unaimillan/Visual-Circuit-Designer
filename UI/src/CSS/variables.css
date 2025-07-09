@@ -31,7 +31,6 @@
   --menu-darker: var(--main-2);
 
   --switch-bg-color: hsl(0, 0%, 52%);
-  --led-active-color: hsl(210, 80%, 70%);
   --mask: hsla(0, 0%, 80%, 0.2);
   --secondary-text: hsl(0, 0%, 60%);
 }
@@ -64,7 +63,6 @@
   --status-error-2: hsl(0, 70%, 80%);
 
   --switch-bg-color: hsl(0, 0%, 33%);
-  --led-active-color: hsl(220, 35%, 45%);
   --mask: hsla(0, 0%, 60%, 0.1);
   --secondary-text: hsl(0, 0%, 35%);
 }
@@ -97,8 +95,8 @@
   --status-error-2: hsl(345, 60%, 20%);
 
   --switch-bg-color: hsl(345, 20%, 70%);
-  --led-active-color: hsl(360, 50%, 70%);
   --mask: hsla(340, 20%, 70%, 0.2);
+
   --secondary-text: hsl(345, 20%, 65%);
 }
 
@@ -113,7 +111,7 @@
   --menu-lighter: var(--main-3);
   --menu-darker: var(--main-2);
 
-  --select-1: hsl(245, 30%, 30%);
+  --select-1: hsl(245, 30%, 25%);
   --select-2: hsl(245, 30%, 40%);
   --select-mask: hsla(245, 30%, 25%, 50%);
 
@@ -130,7 +128,6 @@
   --status-error-2: hsl(350, 50%, 80%);
 
   --switch-bg-color: hsl(220, 89%, 71%);
-  --led-active-color: hsl(245, 30%, 53%);
   --mask: hsl(220, 89%, 71%, 0.1);
   --secondary-text: hsl(230, 25%, 35%);
 }
@@ -163,7 +160,6 @@
   --status-error-2: hsl(15, 50%, 30%);
 
   --switch-bg-color: hsl(111, 10%, 56%);
-  --led-active-color: hsl(185, 45%, 60%);
   --mask: hsla(144, 100%, 90%, 0.1);
   --secondary-text: hsl(132, 20%, 65%);
 }
@@ -196,7 +192,6 @@
   --status-error-2: hsl(0, 50%, 60%);
 
   --switch-bg-color: hsl(0, 10%, 15%);
-  --led-active-color: hsl(0, 40%, 45%);
   --mask: hsla(0, 100%, 65%, 0.2);
   --secondary-text: hsl(0, 0%, 35%);
 }

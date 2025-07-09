@@ -4,7 +4,7 @@ import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 
 function OutputNodeLed({ id, data, isConnectable }) {
-  const [isActive, setIsActive] = useState("z");
+  const [isActive, setIsActive] = useState("0");
   const rotation = data.rotation || 0;
   const updateNodeInternals = useUpdateNodeInternals();
 
@@ -74,7 +74,7 @@ const Led = ({ isActive, SVGclassName }) => {
   const showLetter = isActive === "x" || isActive === "z";
 
   return (
-    <svg width={25} height={25} viewBox="0 0 25 25" className={SVGclassName}>
+    <svg width="25" height="25" viewBox="0 0 25 25" className={SVGclassName}>
       <defs>
         <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
           <feDropShadow
@@ -87,7 +87,6 @@ const Led = ({ isActive, SVGclassName }) => {
         </filter>
       </defs>
 
-      {/* квадрат светодиода */}
       <rect
         x="2"
         y="2"
