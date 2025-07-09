@@ -27,39 +27,36 @@ import Settings from "./mainPage/settings.jsx";
 
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
-import {nodeTypes} from "../codeComponents/nodes.js";
+import { nodeTypes } from "../codeComponents/nodes.js";
 
 // import {TabsContext} from "/mainPage/tabs.jsx"
 
-import {IconSettings, IconMenu} from "../../../assets/ui-icons.jsx";
-import {useHotkeys} from "./mainPage/useHotkeys.js";
-import {Toaster} from "react-hot-toast";
+import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import { useHotkeys } from "./mainPage/useHotkeys.js";
+import { Toaster } from "react-hot-toast";
 
-import {handleSimulateClick} from "./mainPage/runnerHandler.jsx";
-import {updateInputState} from "./mainPage/runnerHandler.jsx";
-import {LOG_LEVELS} from "../codeComponents/logger.jsx";
-import {nanoid} from "nanoid";
+import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
+import { updateInputState } from "./mainPage/runnerHandler.jsx";
+import { LOG_LEVELS } from "../codeComponents/logger.jsx";
+import { nanoid } from "nanoid";
 
-import {deleteSelected} from "../utils/deleteSelected.js";
-import {deselectAll} from "../utils/deselectAll.js";
-import {getSelectedElements} from "../utils/getSelected.js";
-import {isValidConnection} from "../utils/isValidConnection.js";
-import {selectAll} from "../utils/selectAll.js";
+import { deleteSelected } from "../utils/deleteSelected.js";
+import { deselectAll } from "../utils/deselectAll.js";
+import { getSelectedElements } from "../utils/getSelected.js";
+import { isValidConnection } from "../utils/isValidConnection.js";
+import { selectAll } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
-import {loadLocalStorage} from "./mainPage/loadLocalStorage.jsx";
+import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {
-  },
-  updateInputState: () => {
-  },
+  setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {
-  },
+  setLogLevel: () => {},
 });
 
 export function useSimulateState() {
@@ -111,7 +108,7 @@ export default function Main() {
 
   const ref = useRef(null);
   const store = useStoreApi();
-  const {getInternalNode} = useReactFlow();
+  const { getInternalNode } = useReactFlow();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [panOnDrag, setPanOnDrag] = useState([2]);
 
@@ -130,19 +127,18 @@ export default function Main() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const {tabs: savedTabs, activeTabId: savedActive} =
+        const { tabs: savedTabs, activeTabId: savedActive } =
           JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
           setTabs(savedTabs);
           setActiveTabId(savedActive);
           return;
         }
-      } catch {
-      }
+      } catch {}
     }
     // Если в хранилище ничего нет — создаём одну начальную вкладку
     const initial = [
-      {id: Date.now(), title: "New Tab", nodes: [], edges: []},
+      { id: Date.now(), title: "New Tab", nodes: [], edges: [] },
     ];
     setTabs(initial);
     setActiveTabId(initial[0].id);
@@ -173,25 +169,25 @@ export default function Main() {
   //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
   useEffect(() => {
     setTabs((prev) =>
-      prev.map((tab) => (tab.id === activeTabId ? {...tab, nodes} : tab)),
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, nodes } : tab)),
     );
   }, [nodes, activeTabId]);
 
   //    5b) при любом обновлении edges сохраняем их в текущей вкладке
   useEffect(() => {
     setTabs((prev) =>
-      prev.map((tab) => (tab.id === activeTabId ? {...tab, edges} : tab)),
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, edges } : tab)),
     );
   }, [edges, activeTabId]);
 
   useEffect(() => {
     if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
-    const toStore = {tabs, activeTabId}; // вся структура
+    const toStore = { tabs, activeTabId }; // вся структура
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
   }, [tabs, activeTabId]);
 
-  const [clipboard, setClipboard] = useState({nodes: [], edges: []});
-  const mousePositionRef = useRef({x: 0, y: 0});
+  const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
+  const mousePositionRef = useRef({ x: 0, y: 0 });
   const newId = () => nanoid();
 
   useEffect(() => {
@@ -216,7 +212,7 @@ export default function Main() {
         const isBetweenSelected =
           selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target);
 
-        return isBetweenSelected ? {...edge, selected: true} : edge;
+        return isBetweenSelected ? { ...edge, selected: true } : edge;
       }),
     );
   }, [nodes]);
@@ -231,13 +227,13 @@ export default function Main() {
   );
 
   const handleSelectAll = useCallback(() => {
-    const {nodes: newNodes, edges: newEdges} = selectAll(nodes, edges);
+    const { nodes: newNodes, edges: newEdges } = selectAll(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
 
   const handleDeselectAll = useCallback(() => {
-    const {nodes: newNodes, edges: newEdges} = deselectAll(nodes, edges);
+    const { nodes: newNodes, edges: newEdges } = deselectAll(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
@@ -281,10 +277,10 @@ export default function Main() {
     }
 
     setNodes((prevNodes) =>
-      prevNodes.map((node) => ({...node, selected: false})),
+      prevNodes.map((node) => ({ ...node, selected: false })),
     );
     setEdges((prevEdges) =>
-      prevEdges.map((edge) => ({...edge, selected: false})),
+      prevEdges.map((edge) => ({ ...edge, selected: false })),
     );
 
     if (clipboard.nodes.length === 0) return;
@@ -333,7 +329,7 @@ export default function Main() {
   const handleDeleteSelected = useCallback(() => {
     if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
 
-    const {newNodes, newEdges} = deleteSelected(
+    const { newNodes, newEdges } = deleteSelected(
       nodesRef.current,
       edgesRef.current,
       clipboard,
@@ -415,7 +411,7 @@ export default function Main() {
       id: `${type}_${Date.now()}`,
       type,
       position,
-      data: {customId: `${type}_${Date.now()}`},
+      data: { customId: `${type}_${Date.now()}` },
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -521,7 +517,7 @@ export default function Main() {
 
   const getClosestEdge = useCallback(
     (draggedNode) => {
-      const {nodeLookup} = store.getState();
+      const { nodeLookup } = store.getState();
       const internalNode = getInternalNode(draggedNode.id);
       if (!internalNode) return null;
 
@@ -702,186 +698,186 @@ export default function Main() {
 
   return (
     // <TabsProvider>
-      <NotificationsLevelContext.Provider value={{logLevel, setLogLevel}}>
-        <SimulateStateContext.Provider
-          value={{simulateState, setSimulateState, updateInputState}}
-        >
-          <div className={"main-tabs-wrapper"}>
-            <TabsContainer
-              tabs={tabs}
-              activeTabId={activeTabId}
-              onTabsChange={setTabs}
-              onActiveTabIdChange={setActiveTabId}
+    <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
+      <SimulateStateContext.Provider
+        value={{ simulateState, setSimulateState, updateInputState }}
+      >
+        <div className={"main-tabs-wrapper"}>
+          <TabsContainer
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onTabsChange={setTabs}
+            onActiveTabIdChange={setActiveTabId}
+          />
+        </div>
+
+        <>
+          <ReactFlow
+            style={{ backgroundColor: "var(--main-2)" }}
+            ref={ref}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChangeFromHook}
+            onEdgesChange={onEdgesChangeFromHook}
+            defaultEdgeOptions={{
+              type: activeWire,
+            }}
+            onNodeContextMenu={onNodeContextMenu}
+            onEdgeContextMenu={onEdgeContextMenu}
+            onPaneClick={onPaneClick}
+            onConnect={onConnect}
+            onNodeDragStop={onNodeDragStop}
+            onDrop={onDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onInit={setReactFlowInstance}
+            isValidConnection={validateConnection}
+            nodeTypes={nodeTypes}
+            panOnDrag={panOnDrag}
+            selectionOnDrag
+            panOnScroll
+            snapToGrid
+            snapGrid={[GAP_SIZE, GAP_SIZE]}
+            selectionMode={SelectionMode.Partial}
+            minZoom={0.2}
+            maxZoom={10}
+            deleteKeyCode={["Delete", "Backspace"]}
+            onDelete={handleDeleteSelected}
+            // onlyRenderVisibleElements={true}
+          >
+            <Background
+              offset={[10.5, 5]}
+              bgColor="var(--main-1)"
+              color="var(--main-4)"
+              gap={GAP_SIZE}
+              size={1.6}
+              variant={variant}
+              style={{ transition: "var(--ttime)" }}
             />
-          </div>
-
-          <>
-            <ReactFlow
-              style={{backgroundColor: "var(--main-2)"}}
-              ref={ref}
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChangeFromHook}
-              onEdgesChange={onEdgesChangeFromHook}
-              defaultEdgeOptions={{
-                type: activeWire,
-              }}
-              onNodeContextMenu={onNodeContextMenu}
-              onEdgeContextMenu={onEdgeContextMenu}
-              onPaneClick={onPaneClick}
-              onConnect={onConnect}
-              onNodeDragStop={onNodeDragStop}
-              onDrop={onDrop}
-              onDragOver={(e) => e.preventDefault()}
-              onInit={setReactFlowInstance}
-              isValidConnection={validateConnection}
-              nodeTypes={nodeTypes}
-              panOnDrag={panOnDrag}
-              selectionOnDrag
-              panOnScroll
-              snapToGrid
-              snapGrid={[GAP_SIZE, GAP_SIZE]}
-              selectionMode={SelectionMode.Partial}
-              minZoom={0.2}
-              maxZoom={10}
-              deleteKeyCode={["Delete", "Backspace"]}
-              onDelete={handleDeleteSelected}
-              // onlyRenderVisibleElements={true}
-            >
-              <Background
-                offset={[10.5, 5]}
-                bgColor="var(--main-1)"
-                color="var(--main-4)"
-                gap={GAP_SIZE}
-                size={1.6}
-                variant={variant}
-                style={{transition: "var(--ttime)"}}
-              />
-              <Controls
-                className="controls"
-                style={{transition: "var(--ttime)"}}
-              />
-              {showMinimap && (
-                <MiniMap
-                  className="miniMap"
-                  bgColor="var(--main-3)"
-                  maskColor="var(--mask)"
-                  nodeColor="var(--main-4)"
-                  position="top-right"
-                  style={{
-                    borderRadius: "0.5rem",
-                    overflow: "hidden",
-                    transition:
-                      "background-color var(--ttime),border var(--ttime)",
-                  }}
-                />
-              )}
-            </ReactFlow>
-
-            {menu && menu.type === "node" && (
-              <NodeContextMenu onClick={onPaneClick} {...menu} />
-            )}
-
-            {menu && menu.type === "edge" && (
-              <EdgeContextMenu onClick={onPaneClick} {...menu} />
-            )}
-
-            <Toaster
-              position={toastPosition}
-              toastOptions={{
-                style: {
-                  backgroundColor: "var(--main-2)",
-                  color: "var(--main-0)",
-                  fontSize: "12px",
+            <Controls
+              className="controls"
+              style={{ transition: "var(--ttime)" }}
+            />
+            {showMinimap && (
+              <MiniMap
+                className="miniMap"
+                bgColor="var(--main-3)"
+                maskColor="var(--mask)"
+                nodeColor="var(--main-4)"
+                position="top-right"
+                style={{
                   borderRadius: "0.5rem",
-                  padding: "10px 25px 10px 10px",
-                  border: "0.05rem solid var(--main-5)",
-                  fontFamily: "Montserrat, serif",
-                },
-                duration: 2000,
-                error: {
-                  duration: 10000,
-                },
-              }}
-            />
-
-            <button
-              className="openCircuitsMenuButton"
-              onClick={() => setCircuitsMenuState(!circuitsMenuState)}
-            >
-              <IconMenu
-                SVGClassName="openCircuitsMenuButtonIcon"
-                draggable="false"
+                  overflow: "hidden",
+                  transition:
+                    "background-color var(--ttime),border var(--ttime)",
+                }}
               />
-            </button>
+            )}
+          </ReactFlow>
 
-            <button
-              className="openSettingsButton"
-              onClick={() => setOpenSettings(true)}
-            >
-              <IconSettings
-                SVGClassName="openSettingsButtonIcon"
-                draggable="false"
-              />
-            </button>
+          {menu && menu.type === "node" && (
+            <NodeContextMenu onClick={onPaneClick} {...menu} />
+          )}
 
-            <div
-              className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
-              onClick={() => {
-                setMenu(null);
-                setOpenSettings(false);
-              }}
-            />
-            <Settings
-              openSettings={openSettings}
-              showMinimap={showMinimap}
-              setShowMinimap={setShowMinimap}
-              currentBG={currentBG}
-              setCurrentBG={setCurrentBG}
-              theme={theme}
-              setTheme={setTheme}
-              toastPosition={toastPosition}
-              setToastPosition={setToastPosition}
-              currentLogLevel={logLevel}
-              setLogLevel={setLogLevel}
-              closeSettings={() => {
-                setMenu(null);
-                setOpenSettings(false);
-              }}
-            />
+          {menu && menu.type === "edge" && (
+            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+          )}
 
-            <CircuitsMenu
-              circuitsMenuState={circuitsMenuState}
-              onDragStart={onDragStart}
-              spawnCircuit={spawnCircuit}
-            />
+          <Toaster
+            position={toastPosition}
+            toastOptions={{
+              style: {
+                backgroundColor: "var(--main-2)",
+                color: "var(--main-0)",
+                fontSize: "12px",
+                borderRadius: "0.5rem",
+                padding: "10px 25px 10px 10px",
+                border: "0.05rem solid var(--main-5)",
+                fontFamily: "Montserrat, serif",
+              },
+              duration: 2000,
+              error: {
+                duration: 10000,
+              },
+            }}
+          />
 
-            <Toolbar
-              simulateState={simulateState}
-              setSimulateState={setSimulateState}
-              activeAction={activeAction}
-              setActiveAction={setActiveAction}
-              activeWire={activeWire}
-              setActiveWire={setActiveWire}
-              setPanOnDrag={setPanOnDrag}
-              saveCircuit={saveCircuit}
-              loadCircuit={loadCircuit}
-              fileInputRef={fileInputRef}
-              handleOpenClick={handleOpenClick}
-              setMenu={setMenu}
-              onSimulateClick={() =>
-                handleSimulateClick({
-                  simulateState,
-                  setSimulateState,
-                  socketRef,
-                  nodes,
-                  edges,
-                })
-              }
+          <button
+            className="openCircuitsMenuButton"
+            onClick={() => setCircuitsMenuState(!circuitsMenuState)}
+          >
+            <IconMenu
+              SVGClassName="openCircuitsMenuButtonIcon"
+              draggable="false"
             />
-          </>
-        </SimulateStateContext.Provider>
-      </NotificationsLevelContext.Provider>
+          </button>
+
+          <button
+            className="openSettingsButton"
+            onClick={() => setOpenSettings(true)}
+          >
+            <IconSettings
+              SVGClassName="openSettingsButtonIcon"
+              draggable="false"
+            />
+          </button>
+
+          <div
+            className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
+            onClick={() => {
+              setMenu(null);
+              setOpenSettings(false);
+            }}
+          />
+          <Settings
+            openSettings={openSettings}
+            showMinimap={showMinimap}
+            setShowMinimap={setShowMinimap}
+            currentBG={currentBG}
+            setCurrentBG={setCurrentBG}
+            theme={theme}
+            setTheme={setTheme}
+            toastPosition={toastPosition}
+            setToastPosition={setToastPosition}
+            currentLogLevel={logLevel}
+            setLogLevel={setLogLevel}
+            closeSettings={() => {
+              setMenu(null);
+              setOpenSettings(false);
+            }}
+          />
+
+          <CircuitsMenu
+            circuitsMenuState={circuitsMenuState}
+            onDragStart={onDragStart}
+            spawnCircuit={spawnCircuit}
+          />
+
+          <Toolbar
+            simulateState={simulateState}
+            setSimulateState={setSimulateState}
+            activeAction={activeAction}
+            setActiveAction={setActiveAction}
+            activeWire={activeWire}
+            setActiveWire={setActiveWire}
+            setPanOnDrag={setPanOnDrag}
+            saveCircuit={saveCircuit}
+            loadCircuit={loadCircuit}
+            fileInputRef={fileInputRef}
+            handleOpenClick={handleOpenClick}
+            setMenu={setMenu}
+            onSimulateClick={() =>
+              handleSimulateClick({
+                simulateState,
+                setSimulateState,
+                socketRef,
+                nodes,
+                edges,
+              })
+            }
+          />
+        </>
+      </SimulateStateContext.Provider>
+    </NotificationsLevelContext.Provider>
     // </TabsProvider>
   );
 }
