@@ -33,7 +33,7 @@ describe("saveCircuit", () => {
     expect(document.createElement).toHaveBeenCalledWith("a");
     expect(setAttributeMock).toHaveBeenCalledWith(
       "href",
-      expect.stringContaining("data:text/json")
+      expect.stringContaining("data:text/json"),
     );
     expect(setAttributeMock).toHaveBeenCalledWith("download", "circuit.json");
     expect(document.body.appendChild).toHaveBeenCalledWith(mockAnchor);

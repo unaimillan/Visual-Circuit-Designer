@@ -48,13 +48,13 @@ describe("loadCircuit", () => {
     expect(mockSetNodes).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({ id: "1", type: "AND" }),
-      ])
+      ]),
     );
 
     expect(mockSetEdges).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({ id: "e1", source: "1", target: "2" }),
-      ])
+      ]),
     );
   });
 });

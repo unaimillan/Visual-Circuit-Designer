@@ -1,9 +1,9 @@
-import { pasteElements } from '../../pasteElements';
+import { pasteElements } from "../../pasteElements";
 
-describe('pasteElements', () => {
+describe("pasteElements", () => {
   const mockSetNodes = jest.fn((fn) => fn([]));
   const mockSetEdges = jest.fn((fn) => fn([]));
-  const mockNewId = jest.fn(() => 'new-id');
+  const mockNewId = jest.fn(() => "new-id");
 
   const mockReactFlowInstance = {
     screenToFlowPosition: jest.fn(() => ({ x: 50, y: 50 })),
@@ -12,16 +12,16 @@ describe('pasteElements', () => {
   const clipboard = {
     nodes: [
       {
-        id: '1',
+        id: "1",
         position: { x: 10, y: 10 },
-        data: { customId: 'old' },
+        data: { customId: "old" },
       },
     ],
     edges: [
       {
-        id: 'e1',
-        source: '1',
-        target: '1',
+        id: "e1",
+        source: "1",
+        target: "1",
       },
     ],
   };
@@ -30,8 +30,10 @@ describe('pasteElements', () => {
     jest.clearAllMocks();
   });
 
-  it('does nothing if reactFlowInstance is null', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  it("does nothing if reactFlowInstance is null", () => {
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     pasteElements({
       clipboard,
@@ -42,10 +44,12 @@ describe('pasteElements', () => {
       newId: mockNewId,
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith('React Flow instance not available');
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "React Flow instance not available",
+    );
   });
 
-  it('does nothing if clipboard is empty', () => {
+  it("does nothing if clipboard is empty", () => {
     pasteElements({
       clipboard: { nodes: [], edges: [] },
       mousePosition: { x: 0, y: 0 },
@@ -59,7 +63,7 @@ describe('pasteElements', () => {
     expect(mockSetEdges).toHaveBeenCalledTimes(1); // for deselection
   });
 
-  it('pastes gates and wires with offset', () => {
+  it("pastes gates and wires with offset", () => {
     pasteElements({
       clipboard,
       mousePosition: { x: 50, y: 50 },

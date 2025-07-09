@@ -51,7 +51,7 @@ import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
 import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
-import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js"
+import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
 import { calculateDropPosition } from "../utils/calculateDropPosition.js";
 
 export const SimulateStateContext = createContext({
@@ -339,28 +339,31 @@ export default function Main() {
   };
 
   //Create new node after dragAndDrop
-  const onDrop = useCallback((event) => {
-    event.preventDefault();
-    const type = event.dataTransfer.getData("application/reactflow");
-    if (!type || !reactFlowInstance) return;
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+      const type = event.dataTransfer.getData("application/reactflow");
+      if (!type || !reactFlowInstance) return;
 
-    const nodeSize = NODE_SIZES[type] || NODE_SIZES.default;
-    const position = calculateDropPosition(
-      event,
-      reactFlowInstance.screenToFlowPosition,
-      nodeSize
-    );
+      const nodeSize = NODE_SIZES[type] || NODE_SIZES.default;
+      const position = calculateDropPosition(
+        event,
+        reactFlowInstance.screenToFlowPosition,
+        nodeSize,
+      );
 
-    const timestamp = Date.now();
-    const newNode = {
-      id: `${type}_${timestamp}`,
-      type,
-      position,
-      data: { customId: `${type}_${timestamp}` },
-    };
+      const timestamp = Date.now();
+      const newNode = {
+        id: `${type}_${timestamp}`,
+        type,
+        position,
+        data: { customId: `${type}_${timestamp}` },
+      };
 
-    setNodes((nds) => nds.concat(newNode));
-  }, [reactFlowInstance, setNodes]);
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance, setNodes],
+  );
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -388,14 +391,14 @@ export default function Main() {
     (event) => {
       loadCircuitUtil(event, setNodes, setEdges);
     },
-    [setNodes, setEdges]
+    [setNodes, setEdges],
   );
 
   const spawnCircuit = useCallback(
     (type) => {
       spawnCircuitUtil(type, reactFlowInstance, simulateState, setNodes);
     },
-    [reactFlowInstance, simulateState, setNodes]
+    [reactFlowInstance, simulateState, setNodes],
   );
 
   const getClosestEdge = useCallback(

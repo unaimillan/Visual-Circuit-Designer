@@ -1,11 +1,11 @@
 export function pasteElements({
-                                clipboard,
-                                mousePosition,
-                                reactFlowInstance,
-                                setNodes,
-                                setEdges,
-                                newId,
-                              }) {
+  clipboard,
+  mousePosition,
+  reactFlowInstance,
+  setNodes,
+  setEdges,
+  newId,
+}) {
   if (!reactFlowInstance) {
     console.error("React Flow instance not available");
     return;

@@ -5,7 +5,7 @@ export function calculateDropPosition(event, screenToFlowPosition, nodeSize) {
   });
 
   return {
-    x: rawPos.x - nodeSize.width  / 2,
+    x: rawPos.x - nodeSize.width / 2,
     y: rawPos.y - nodeSize.height / 2,
   };
 }
