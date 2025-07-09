@@ -479,26 +479,30 @@ export default function Main() {
   );
 
   const onNodeDragStop = useCallback(
-    (_, node) => {
+    (_, draggedNode) => {
+      const selectedNodes = nodes.filter((n) => n.selected || n.id === draggedNode.id);
+
       setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== "temp");
-        const closeEdge = getClosestEdge(node);
-        if (closeEdge) {
-          return addEdge(
-            {
-              type: "straight",
-              source: closeEdge.source,
-              sourceHandle: closeEdge.sourceHandle,
-              target: closeEdge.target,
-              targetHandle: closeEdge.targetHandle,
-            },
-            nextEdges,
-          );
+        let nextEdges = es.filter((e) => e.className !== "temp");
+        for (const node of selectedNodes) {
+          const closeEdge = getClosestEdge(node);
+          if (closeEdge) {
+            nextEdges = addEdge(
+              {
+                type: "straight",
+                source: closeEdge.source,
+                sourceHandle: closeEdge.sourceHandle,
+                target: closeEdge.target,
+                targetHandle: closeEdge.targetHandle,
+              },
+              nextEdges
+            );
+          }
         }
         return nextEdges;
       });
     },
-    [getClosestEdge, setEdges],
+    [getClosestEdge, setEdges, nodes],
   );
 
   const variant =

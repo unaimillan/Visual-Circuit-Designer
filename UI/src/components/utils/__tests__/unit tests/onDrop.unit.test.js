@@ -56,7 +56,7 @@ describe("onDrop", () => {
     expect(setNodes).not.toHaveBeenCalled();
   });
 
-  it("creates a new node with correct shape for known type", () => {
+  it("creates a new gate with correct shape for known type", () => {
     event.dataTransfer.getData.mockReturnValue("foo");
     onDrop(event, reactFlowInstance, newId, setNodes);
 

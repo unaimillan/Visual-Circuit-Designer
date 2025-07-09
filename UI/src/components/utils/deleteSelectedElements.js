@@ -14,9 +14,7 @@ export function deleteSelectedElements(nodes, edges, clipboard) {
   adjacentEdgeIds.forEach(selectedEdgeIds.add, selectedEdgeIds);
 
   const newNodes = nodes.filter((node) => !selectedNodeIds.has(node.id));
-  const newEdges = edges.filter(
-    (edge) => !selectedEdgeIds.has(edge.id) && !adjacentEdgeIds.has(edge.id),
-  );
+  const newEdges = edges.filter((edge) => !selectedEdgeIds.has(edge.id));
 
   console.log(
     "Deleted:",

@@ -22,7 +22,7 @@ describe("spawnCircuit", () => {
     expect(mockNewId).not.toHaveBeenCalled();
   });
 
-  it("calls screenToFlowPosition and setNodes with a selected node", () => {
+  it("calls screenToFlowPosition and setNodes with a selected gate", () => {
     spawnCircuit("AND", mockInstance, mockSetNodes, mockNewId);
 
     expect(mockInstance.screenToFlowPosition).toHaveBeenCalledWith({
