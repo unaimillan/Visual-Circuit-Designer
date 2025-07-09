@@ -1,7 +1,7 @@
 import { getSelectedElements } from "../../getSelectedElements.js";
 
 describe("getSelectedElements", () => {
-  it("returns only selected nodes and edges between them", () => {
+  it("returns only selected gates and wires between them", () => {
     const nodes = [
       { id: "1", selected: true },
       { id: "2", selected: true },

@@ -59,7 +59,7 @@ describe('pasteElements', () => {
     expect(mockSetEdges).toHaveBeenCalledTimes(1); // for deselection
   });
 
-  it('pastes nodes and edges with offset', () => {
+  it('pastes gates and wires with offset', () => {
     pasteElements({
       clipboard,
       mousePosition: { x: 50, y: 50 },

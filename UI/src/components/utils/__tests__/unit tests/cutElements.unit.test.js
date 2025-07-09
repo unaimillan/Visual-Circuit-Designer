@@ -13,7 +13,7 @@ describe('cutElements', () => {
     jest.resetAllMocks();
   });
 
-  it('does nothing if no nodes and no edges are selected', () => {
+  it('does nothing if no gates and no wires are selected', () => {
     getSelectedElements = jest.fn(() => ({ nodes: [], edges: [] }));
 
     cutElements({ getSelectedElements, setClipboard, deleteSelectedElements });

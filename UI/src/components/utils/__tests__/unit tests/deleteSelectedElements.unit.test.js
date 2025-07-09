@@ -54,4 +54,36 @@ describe("deleteSelectedElements", () => {
     expect(newNodes).toEqual(allNodes);
     expect(newEdges).toEqual(allEdges);
   });
+
+  it("delete wires adjacent to selected gates", () => {
+    const allNodes = [{ id: "1" }, { id: "2" }, { id: "3" }];
+
+    const allEdges = [
+      { id: "e1", source: "1", target: "2" },
+      { id: "e2", source: "2", target: "3" },
+    ];
+
+    const clipboard = {
+      nodes: [{ id: "1" }],
+      edges: [],
+    };
+
+    const { newNodes, newEdges } = deleteSelectedElements(
+      allNodes,
+      allEdges,
+      clipboard,
+    );
+
+    expect(newNodes).toEqual([{ id: "2" }, { id: "3" }]);
+
+    expect(newEdges).toEqual([{ id: "e2", source: "2", target: "3" }]);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Deleted:",
+      1,
+      "nodes and",
+      1,
+      "edges",
+    );
+  });
 });

@@ -12,7 +12,7 @@ describe("copyElements", () => {
     jest.resetAllMocks();
   });
 
-  it("should do nothing if no nodes are selected", () => {
+  it("should do nothing if no gates are selected", () => {
     getSelectedElements = jest.fn(() => ({ nodes: [], edges: [] }));
 
     copyElements({ getSelectedElements, setClipboard });

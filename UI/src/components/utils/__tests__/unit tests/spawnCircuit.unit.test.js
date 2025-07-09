@@ -1,6 +1,6 @@
 import { spawnCircuit } from "../../spawnCircuit.js";
 
-test("spawnCircuit creates node with expected structure", () => {
+test("spawnCircuit creates logic gate with expected structure", () => {
   const mockInstance = {
     screenToFlowPosition: jest.fn(() => ({ x: 100, y: 200 })),
   };

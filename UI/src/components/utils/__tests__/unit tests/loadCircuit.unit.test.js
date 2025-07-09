@@ -10,7 +10,7 @@ describe("loadCircuit", () => {
     jest.restoreAllMocks();
   });
 
-  it("loads circuit from file and sets nodes and edges", () => {
+  it("loads circuit from file and sets gates and wires", () => {
     const mockSetNodes = jest.fn();
     const mockSetEdges = jest.fn();
 
