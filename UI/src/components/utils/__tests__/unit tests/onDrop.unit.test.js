@@ -6,7 +6,7 @@ jest.mock("../../calculateDropPosition.js");
 jest.mock("../../../constants/nodeSizes", () => ({
   NODE_SIZES: {
     default: { width: 10, height: 20 },
-    foo:     { width: 30, height: 40 },
+    foo: { width: 30, height: 40 },
   },
 }));
 
@@ -32,9 +32,10 @@ describe("onDrop", () => {
 
     calculateDropPosition.mockReturnValue({ x: 100, y: 200 });
 
-    newId = jest.fn()
-      .mockReturnValueOnce("node-123")   // for id
-      .mockReturnValueOnce("node-456");  // for customId
+    newId = jest
+      .fn()
+      .mockReturnValueOnce("node-123") // for id
+      .mockReturnValueOnce("node-456"); // for customId
 
     setNodes = jest.fn();
   });

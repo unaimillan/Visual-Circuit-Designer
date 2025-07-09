@@ -143,9 +143,7 @@ export default function Main() {
       } catch {}
     }
     // Если в хранилище ничего нет — создаём одну начальную вкладку
-    const initial = [
-      { id: newId(), title: "New Tab", nodes: [], edges: [] },
-    ];
+    const initial = [{ id: newId(), title: "New Tab", nodes: [], edges: [] }];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
@@ -330,15 +328,10 @@ export default function Main() {
   //Create new node after dragAndDrop
   const onDrop = useCallback(
     (event) => {
-      deselectAll()
-      onDropUtil(
-        event,
-        reactFlowInstance,
-        () => newId(),
-        setNodes
-      );
+      deselectAll();
+      onDropUtil(event, reactFlowInstance, () => newId(), setNodes);
     },
-    [reactFlowInstance, setNodes, deselectAll]
+    [reactFlowInstance, setNodes, deselectAll],
   );
 
   const onConnect = useCallback(
