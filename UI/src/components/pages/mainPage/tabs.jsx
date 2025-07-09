@@ -10,9 +10,6 @@ import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 // 6) сделать редактирование text-area по двойному клику
 // 7) добавить возможность перемещения табов (пиздец)
 
-
-
-
 export default function TabsContainer({
   tabs,
   activeTabId,
