@@ -1,10 +1,10 @@
-import { copyElements } from '../../copyElements';
+import { copyElements } from "../../copyElements";
 
-describe('copyElements', () => {
+describe("copyElements", () => {
   let getSelectedElements, setClipboard, consoleSpy;
 
   beforeEach(() => {
-    consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
     setClipboard = jest.fn();
   });
 
@@ -12,7 +12,7 @@ describe('copyElements', () => {
     jest.resetAllMocks();
   });
 
-  it('should do nothing if no nodes are selected', () => {
+  it("should do nothing if no nodes are selected", () => {
     getSelectedElements = jest.fn(() => ({ nodes: [], edges: [] }));
 
     copyElements({ getSelectedElements, setClipboard });
@@ -21,10 +21,10 @@ describe('copyElements', () => {
     expect(consoleSpy).not.toHaveBeenCalled();
   });
 
-  it('should copy selected elements and log the action', () => {
+  it("should copy selected elements and log the action", () => {
     const mockSelection = {
-      nodes: [{ id: '1' }, { id: '2' }],
-      edges: [{ id: 'e1' }],
+      nodes: [{ id: "1" }, { id: "2" }],
+      edges: [{ id: "e1" }],
     };
     getSelectedElements = jest.fn(() => mockSelection);
 
@@ -32,11 +32,11 @@ describe('copyElements', () => {
 
     expect(setClipboard).toHaveBeenCalledWith(mockSelection);
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Copied:',
+      "Copied:",
       2,
-      'nodes and',
+      "nodes and",
       1,
-      'edges',
+      "edges",
     );
   });
 });

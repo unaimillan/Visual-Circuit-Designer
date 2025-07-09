@@ -4,7 +4,7 @@ describe("deleteSelectedElements", () => {
   let consoleSpy;
 
   beforeEach(() => {
-    consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
   });
 
   it("delete selected gates and wires", () => {
@@ -31,11 +31,11 @@ describe("deleteSelectedElements", () => {
     expect(newEdges).toEqual([{ id: "e2", source: "2", target: "3" }]);
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Deleted:',
-      1 ,
-      'nodes and',
+      "Deleted:",
       1,
-      'edges',
+      "nodes and",
+      1,
+      "edges",
     );
   });
 
