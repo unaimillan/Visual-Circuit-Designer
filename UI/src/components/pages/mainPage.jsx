@@ -49,6 +49,7 @@ import { selectAll as selectAllUtil } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
 import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
+import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -382,19 +383,12 @@ export default function Main() {
   //Allows user to download circuit JSON
   const saveCircuit = () => saveCircuitUtil(nodes, edges);
 
-  const loadCircuit = (event) => {
-    const fileReader = new FileReader();
-    fileReader.readAsText(event.target.files[0]);
-    fileReader.onload = (e) => {
-      const circuitData = JSON.parse(e.target.result);
-      setNodes([]);
-      setEdges([]);
-      setTimeout(() => {
-        setNodes(circuitData.nodes || []);
-        setEdges(circuitData.edges || []);
-      }, 100);
-    };
-  };
+  const loadCircuit = useCallback(
+    (event) => {
+      loadCircuitUtil(event, setNodes, setEdges);
+    },
+    [setNodes, setEdges]
+  );
 
   const spawnCircuit = (type) => {
     const position = reactFlowInstance.screenToFlowPosition({
