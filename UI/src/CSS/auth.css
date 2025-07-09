@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: ;
 }
 
 .auth-window {
@@ -99,18 +100,13 @@
     width: 4rem;
     height: 2rem;
     margin-left: 0.4rem;
-    background-color: var(--main-2);
+    background-color: var(--menu-lighter);
     border: var(--main-5) solid 0.07rem;
     border-radius: 0.33rem;
     display: flex;
     text-align: center;
     justify-content: center;
     align-items: center;
-}
-
-.login-button:hover {
-    transition: 0.15s ease-out;
-    background-color: var(--main-3);
 }
 
 .login-button-text {
