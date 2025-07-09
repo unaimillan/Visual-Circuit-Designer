@@ -51,6 +51,7 @@ import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
 import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
+import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js"
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -354,29 +355,13 @@ export default function Main() {
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu({
-      id: node.id,
-      name: node.type,
-      type: "node",
-      top: event.clientY < pane.height - 200 && event.clientY,
-      left: event.clientX < pane.width - 200 && event.clientX,
-      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
-    });
+    setMenu(calculateContextMenuPosition(event, node, pane));
   }, []);
 
   const onEdgeContextMenu = useCallback((event, edge) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu({
-      id: edge.id,
-      name: edge.type,
-      type: "edge",
-      top: event.clientY < pane.height - 200 && event.clientY,
-      left: event.clientX < pane.width - 200 && event.clientX,
-      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
-    });
+    setMenu(calculateContextMenuPosition(event, edge, pane));
   }, []);
 
   const onPaneClick = useCallback(() => setMenu(null), []);
