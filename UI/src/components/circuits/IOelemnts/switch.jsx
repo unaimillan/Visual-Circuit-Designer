@@ -96,7 +96,7 @@ const SvgSwitch = ({ checked, onChange, SWGclassName }) => {
         width="42"
         height="25"
         rx="12.5"
-        fill={checked ? "var(--select-1)" : "var(--switch-bg-color)"}
+        fill={checked ? "var(--led-active-color)" : "var(--switch-bg-color)"}
         onClick={() => onChange(!checked)}
         style={{ cursor: "pointer", transition: "fill 0.1s ease" }}
       />
