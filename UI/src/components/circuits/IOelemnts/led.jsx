@@ -40,7 +40,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
   useEffect(() => {
     const outputId = `out_${id}`; // Пример: "out_output1"
     const unsubscribe = subscribeToOutput(outputId, (newVal) => {
-      setIsActive(newVal);
+      setIsActive(String(newVal));
     });
 
     return () => {
