@@ -1,4 +1,4 @@
-export function spawnCircuit(type, reactFlowInstance, simulateState, setNodes) {
+export function spawnCircuit(type, reactFlowInstance, setNodes, newId) {
   if (!reactFlowInstance) return;
 
   const position = reactFlowInstance.screenToFlowPosition({
@@ -6,15 +6,14 @@ export function spawnCircuit(type, reactFlowInstance, simulateState, setNodes) {
     y: window.innerHeight / 2,
   });
 
-  const timestamp = Date.now();
+  const id = newId();
   const newNode = {
-    id: `${type}_${timestamp}`,
+    id: id,
     type,
     position,
+    selected: true,
     data: {
-      customId: `${type}_${timestamp}`,
-      simState: simulateState,
-      value: false,
+      customId: newId(),
     },
   };
 
