@@ -50,7 +50,25 @@ export const IconToolbarHand = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconToolbarSquareWire = ({ SVGClassName }) => (
+export const IconToolbarBezierWire = ({ SVGClassName }) => (
+  <svg
+    width="19"
+    height="19"
+    viewBox="0 0 19 19"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={SVGClassName}
+  >
+    <path
+      d="M1.64514 17.6461C1.64704 1.64607 17.6448 17.6465 17.6451 1.64612"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+export const IconToolbarStepWire = ({ SVGClassName }) => (
   <svg
     width="25"
     height="28"
@@ -68,7 +86,7 @@ export const IconToolbarSquareWire = ({ SVGClassName }) => (
   </svg>
 );
 
-export const IconToolbarDiagWire = ({ SVGClassName }) => (
+export const IconToolbarStraightWire = ({ SVGClassName }) => (
   <svg
     width="29"
     height="29"

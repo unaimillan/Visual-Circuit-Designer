@@ -11,15 +11,14 @@
   user-select: none;
 }
 
+.dndnode:hover {
+  background-color: var(--main-4);
+}
+
 .dndnode svg {
   width: 50px;
   height: auto;
   user-select: none;
-}
-
-/* Ensure handles are visible over images */
-.react-flow__handle {
-  z-index: 10;
 }
 
 .react-flow__edge.temp path {
@@ -35,12 +34,6 @@
 }
 
 .circuit-button {
-  width: 80px;
-  height: 70px;
-  position: relative;
-  border: 0.05rem solid var(--main-5);
-  border-radius: 4px;
-  background: var(--menu-lighter);
   display: flex;
   box-sizing: border-box;
   align-items: center;
@@ -48,13 +41,10 @@
 }
 
 .circuit-button-icon {
+  margin: -2% -14% 0 -14%;
   color: var(--main-0);
   object-fit: cover;
-  transform: scale(1.23);
-}
-
-.circuit-button-icon:hover {
-  color: var(--select-1);
+  /*scale: 2;*/
 }
 
 .switch-icon-wrapper {

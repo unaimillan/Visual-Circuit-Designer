@@ -24,7 +24,7 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
     const sin = Math.abs(Math.sin(radians));
     const newWidth = width * cos + height * sin;
     const newHeight = width * sin + height * cos;
-    return { width: Math.ceil(newWidth), height: Math.ceil(newHeight) };
+    return { width: Math.floor(newWidth), height: Math.floor(newHeight) };
   };
 
   useEffect(() => {
@@ -41,8 +41,8 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
               ...node,
               style: {
                 ...node.style,
-                width: `${width - 1}px`,
-                height: `${height - 1}px`,
+                width: `${width}px`,
+                height: `${height}px`,
               },
             }
           : node,

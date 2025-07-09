@@ -43,19 +43,19 @@ export const getNotGateHandleStyle = (handle, rotation) => {
   switch (rotation) {
     case 90:
       return handle === "input-1"
-        ? { top: 34, left: -1 }
-        : { top: 26.5, left: 79 };
+        ? { top: 29, left: -1 }
+        : { top: 21.5, left: 79 };
     case 180:
       return handle === "input-1"
-        ? { top: 34, left: -8 }
-        : { top: 34, left: 79 };
+        ? { top: 29, left: -8 }
+        : { top: 29, left: 79 };
     case 270:
       return handle === "input-1"
-        ? { top: 27.5, left: -1 }
-        : { top: 34.5, left: 79 };
+        ? { top: 22.5, left: -1 }
+        : { top: 29.5, left: 79 };
     default:
       return handle === "input-1"
-        ? { top: 35, left: -1 }
-        : { top: 35, left: 72 };
+        ? { top: 30, left: -1 }
+        : { top: 30, left: 72 };
   }
 };

@@ -21,36 +21,52 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import CircuitsMenu from "../pages/mainPage/circuitsMenu.jsx";
-import Toolbar from "../pages/mainPage/toolbar.jsx";
+//Importing components
+import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
+import Toolbar from "./mainPage/toolbar.jsx";
+import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
+import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
 
-import { initialNodes, nodeTypes } from "../codeComponents/nodes";
-import { initialEdges } from "../codeComponents/edges";
-import { MinimapSwitch } from "./mainPage/switch.jsx";
-import { SelectCanvasBG, SelectTheme } from "./mainPage/select.jsx";
+import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
+import { initialEdges } from "../codeComponents/edges.js";
 
-import { IconSettings, IconMenu } from "../../../assets/ui-icons";
-import UserIcon from "../../../assets/userIcon.png";
-
-import { Link } from "react-router-dom";
+import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
 
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
+
+import { updateInputState } from "./mainPage/runnerHandler.jsx";
+import { Toaster } from "react-hot-toast";
+import { Settings } from "./mainPage/settings.jsx";
+import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const SimulateStateContext = createContext({
   simulateState: "idle",
   setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
+export const NotificationsLevelContext = createContext({
+  logLevel: "idle",
+  setLogLevel: () => {},
+});
+
 export function useSimulateState() {
-  const ctx = useContext(SimulateStateContext);
-  if (!ctx) {
+  const context = useContext(SimulateStateContext);
+  if (!context)
     throw new Error(
       "useSimulateState must be used within SimulateStateProvider",
     );
-  }
-  return ctx;
+  return context;
+}
+
+export function useNotificationsLevel() {
+  const context = useContext(NotificationsLevelContext);
+  if (!context)
+    throw new Error(
+      "useNotificationsLevel must be used within NotificationsLevelProvider",
+    );
+  return context;
 }
 
 const GAP_SIZE = 10;
@@ -60,16 +76,17 @@ export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
-  const [activeWire, setActiveWire] = useState("stepWire");
-  const [activeButton, setActiveButton] = useState("text");
+  const [activeWire, setActiveWire] = useState("default");
   const [currentBG, setCurrentBG] = useState("dots");
   const [showMinimap, setShowMinimap] = useState(true);
   const [simulateState, setSimulateState] = useState("idle");
   const [theme, setTheme] = useState("light");
+  const [toastPosition, setToastPosition] = useState("top-center");
+  const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [wireType, setWireType] = useState("step");
+
   const [menu, setMenu] = useState(null);
 
   const ref = useRef(null);
@@ -80,14 +97,276 @@ export default function Main() {
 
   const socketRef = useRef(null);
 
+  const fileInputRef = useRef(null);
+
+  const handleOpenClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  //Load saved settings from localStorage
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
+
+  const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
+  const [cutMode, setCutMode] = useState(false);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
+
+  // Update the ref in a window mousemove listener
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      mousePositionRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+  const idCounter = useRef(
+    parseInt(localStorage.getItem("idCounter") || "100", 10),
+  );
+
+  const generateId = () => {
+    idCounter.current += 1;
+    localStorage.setItem("idCounter", idCounter.current.toString());
+    return idCounter.current.toString();
+  };
+
+  useEffect(() => {
+    const selectedNodeIds = new Set(
+      nodes.filter((node) => node.selected).map((node) => node.id),
+    );
+
+    setEdges((edges) =>
+      edges.map((edge) => {
+        const isBetweenSelected =
+          selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target);
+
+        // Only auto-select if both nodes are selected
+        // Preserve manual selections if edge is not between selected nodes
+        return isBetweenSelected ? { ...edge, selected: true } : edge;
+      }),
+    );
+  }, [nodes]); // Runs when node selection changes
+
+  // Update getSelectedElements
+  const getSelectedElements = useCallback(() => {
+    const selectedNodes = nodes.filter((node) => node.selected);
+    const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
+
+    // Only include edges that are BOTH:
+    // 1. Explicitly selected AND
+    // 2. Connect two selected nodes
+    const selectedEdges = edges.filter(
+      (edge) =>
+        edge.selected &&
+        selectedNodeIds.has(edge.source) &&
+        selectedNodeIds.has(edge.target),
+    );
+
+    return { nodes: selectedNodes, edges: selectedEdges };
+  }, [nodes, edges]);
+
+  const copyElements = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0) return;
+
+    setClipboard(selected);
+    setCutMode(false);
+    console.log(
+      "Copied:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
+  }, [nodes, edges, getSelectedElements]);
+
+  const cutElements = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    setClipboard(selected);
+    setCutMode(true);
+
+    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
+
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
+    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+
+    console.log(
+      "Cut:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
+  }, [nodes, edges]);
+
+  const pasteElements = useCallback(() => {
+    if (!reactFlowInstance) {
+      console.error("React Flow instance not available");
+      return;
+    }
+
+    // Deselect all existing nodes and edges
+    setNodes((prevNodes) =>
+      prevNodes.map((node) => ({ ...node, selected: false })),
+    );
+    setEdges((prevEdges) =>
+      prevEdges.map((edge) => ({ ...edge, selected: false })),
+    );
+
+    if (clipboard.nodes.length === 0) return;
+
+    const flowPosition = reactFlowInstance.screenToFlowPosition({
+      x: mousePositionRef.current.x,
+      y: mousePositionRef.current.y,
+    });
+
+    const offset = {
+      x: flowPosition.x - clipboard.nodes[0].position.x,
+      y: flowPosition.y - clipboard.nodes[0].position.y,
+    };
+
+    const nodeIdMap = {};
+    const newNodes = clipboard.nodes.map((node) => {
+      const newId = generateId();
+      nodeIdMap[node.id] = newId;
+
+      return {
+        ...node,
+        id: newId,
+        position: {
+          x: node.position.x + offset.x,
+          y: node.position.y + offset.y,
+        },
+        selected: true,
+        data: {
+          ...node.data,
+          customId: newId,
+        },
+      };
+    });
+
+    const newEdges = clipboard.edges.map((edge) => ({
+      ...edge,
+      id: generateId(),
+      source: nodeIdMap[edge.source] || edge.source,
+      target: nodeIdMap[edge.target] || edge.target,
+    }));
+
+    setNodes((nds) => nds.concat(newNodes));
+    setEdges((eds) => eds.concat(newEdges));
+
+    if (cutMode) {
+      setClipboard({ nodes: [], edges: [] });
+      setCutMode(false);
+    }
+  }, [clipboard, cutMode, reactFlowInstance]);
+
+  const deleteSelected = useCallback(() => {
+    const selected = getSelectedElements();
+    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
+
+    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
+
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
+    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
+
+    console.log(
+      "Deleted:",
+      selected.nodes.length,
+      "nodes and",
+      selected.edges.length,
+      "edges",
+    );
+  }, [nodes, edges]);
+
+  const selectAll = useCallback(() => {
+    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: true })));
+    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: true })));
+  }, []);
+
+  const deselectAll = useCallback(() => {
+    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
+    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: false })));
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case "c":
+          case "с":
+            event.preventDefault();
+            copyElements();
+            break;
+          case "x":
+          case "ч":
+            event.preventDefault();
+            cutElements();
+            break;
+          case "v":
+          case "м":
+            pasteElements();
+            event.preventDefault();
+            break;
+          case "a":
+          case "ф":
+            event.preventDefault();
+            selectAll();
+            break;
+          case "d":
+          case "в":
+            event.preventDefault();
+            deselectAll();
+            break;
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [
+    copyElements,
+    cutElements,
+    pasteElements,
+    selectAll,
+    deselectAll,
+    deleteSelected,
+  ]);
 
   useEffect(() => {
     const savedCircuit = localStorage.getItem("savedCircuit");
     if (savedCircuit) {
       try {
         const circuitData = JSON.parse(savedCircuit);
+
+        let maxId = 0;
+        const allIds = [
+          ...(circuitData.nodes || [])
+            .map((n) => parseInt(n.id, 10))
+            .filter(Number.isInteger),
+          ...(circuitData.edges || [])
+            .map((e) => parseInt(e.id, 10))
+            .filter(Number.isInteger),
+        ];
+
+        if (allIds.length > 0) {
+          maxId = Math.max(...allIds);
+        }
+
+        if (maxId > idCounter.current) {
+          idCounter.current = maxId + 1;
+          localStorage.setItem("idCounter", idCounter.current.toString());
+        }
+
         setNodes(circuitData.nodes || []);
         setEdges(circuitData.edges || []);
       } catch (e) {
@@ -98,6 +377,12 @@ export default function Main() {
       setNodes(initialNodes);
       setEdges(initialEdges);
     }
+  }, [setEdges, setNodes]);
+
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("idCounter", idCounter.current.toString());
+    };
   }, []);
 
   useEffect(() => {
@@ -116,19 +401,19 @@ export default function Main() {
   useEffect(() => {
     const saved = localStorage.getItem("userSettings");
     if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.currentBG) setCurrentBG(parsed.currentBG);
-        if (typeof parsed.showMinimap === "boolean")
-          setShowMinimap(parsed.showMinimap);
-        if (parsed.theme) setTheme(parsed.theme);
-        if (parsed.activeAction) setActiveAction(parsed.activeAction);
-        if (parsed.activeWire) setActiveWire(parsed.activeWire);
-        if (parsed.activeButton) setActiveButton(parsed.activeButton);
-        if (typeof parsed.openSettings === "boolean")
-          setOpenSettings(parsed.openSettings);
-        if (typeof parsed.circuitsMenuState === "boolean")
-          setCircuitsMenuState(parsed.circuitsMenuState);
-
+      const parsed = JSON.parse(saved);
+      if (parsed.currentBG) setCurrentBG(parsed.currentBG);
+      if (typeof parsed.showMinimap === "boolean")
+        setShowMinimap(parsed.showMinimap);
+      if (parsed.theme) setTheme(parsed.theme);
+      if (parsed.activeAction) setActiveAction(parsed.activeAction);
+      if (parsed.activeWire) setActiveWire(parsed.activeWire);
+      if (typeof parsed.openSettings === "boolean")
+        setOpenSettings(parsed.openSettings);
+      if (typeof parsed.circuitsMenuState === "boolean")
+        setCircuitsMenuState(parsed.circuitsMenuState);
+      if (parsed.logLevel) setLogLevel(parsed.logLevel);
+      if (parsed.toastPosition) setToastPosition(parsed.toastPosition);
     }
   }, []);
 
@@ -140,9 +425,10 @@ export default function Main() {
       theme,
       activeAction,
       activeWire,
-      activeButton,
       openSettings,
       circuitsMenuState,
+      logLevel,
+      toastPosition,
     };
     localStorage.setItem("userSettings", JSON.stringify(settings));
   }, [
@@ -151,35 +437,15 @@ export default function Main() {
     theme,
     activeAction,
     activeWire,
-    activeButton,
     openSettings,
     circuitsMenuState,
+    logLevel,
+    toastPosition,
   ]);
 
   //Hotkeys handler
   useEffect(() => {
     const handleKeyDown = (e) => {
-      //deleting by clicking delete/backspace(delete for windows and macOS, backspace for windows)
-      if (e.key === 'Delete' || e.key === 'Backspace') {
-        e.preventDefault();
-        const currentNodes = nodesRef.current;
-        const currentEdges = edgesRef.current;
-        const selectedNodes = currentNodes.filter(node => node.selected);
-        const selectedEdges = currentEdges.filter(edge => edge.selected);
-        if (selectedNodes.length === 0 && selectedEdges.length === 0) return;
-        const nodeIdsToRemove = selectedNodes.map(node => node.id);
-        const newNodes = currentNodes.filter(
-            node => !nodeIdsToRemove.includes(node.id)
-        );
-        const newEdges = currentEdges.filter(
-            edge =>
-                !selectedEdges.some(selected => selected.id === edge.id) &&
-                !nodeIdsToRemove.includes(edge.source) &&
-                !nodeIdsToRemove.includes(edge.target)
-        );
-        setNodes(newNodes);
-        setEdges(newEdges);
-      }
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
       //Ctrl + Shift + S - Open/close settings
@@ -196,6 +462,28 @@ export default function Main() {
         return;
       }
 
+      //Ctrl + Shift + R - Start/stop simulation
+      if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+        handleSimulateClick({
+          simulateState,
+          setSimulateState,
+          socketRef,
+          nodes,
+          edges,
+        });
+        return;
+      }
+
+      //Ctrl + Shift + O - Load file
+      if (isCtrlOrCmd && e.key.toLowerCase() === "o") {
+        e.preventDefault();
+
+        handleOpenClick();
+
+        return;
+      }
+
       //1...6 - Change selected tool
       const hotkeys = {
         1: () => {
@@ -206,16 +494,11 @@ export default function Main() {
           setActiveAction("hand");
           setPanOnDrag(true);
         },
-        3: () => {
-          setActiveWire("stepWire");
-          setWireType("step");
-        },
-        4: () => {
-          setActiveWire("straightWire");
-          setWireType("straight");
-        },
-        5: () => setActiveButton("eraser"),
-        6: () => setActiveButton("text"),
+        3: () => setActiveWire("default"),
+        4: () => setActiveWire("step"),
+        5: () => setActiveWire("straight"),
+        6: () => setActiveAction("eraser"),
+        7: () => setActiveAction("text"),
       };
       if (hotkeys[e.key]) {
         e.preventDefault();
@@ -226,11 +509,9 @@ export default function Main() {
       if (e.key === "Escape" && openSettings) {
         setOpenSettings(false);
       }
-
-
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [openSettings]);
 
   //Sets current theme to the whole document (наверное)
@@ -239,9 +520,14 @@ export default function Main() {
   }, [theme]);
 
   // Я не знаю, что это
-  // const validateConnection = useCallback((connection) => {
-  //   return connection.source !== connection.target;
-  // }, []);
+  const isValidConnection = useCallback(({ source, target, targetHandle }) => {
+    if (source === target) {
+      return false;
+    }
+    return !edgesRef.current.some(
+      (e) => e.target === target && e.targetHandle === targetHandle,
+    );
+  }, []);
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
@@ -260,10 +546,10 @@ export default function Main() {
     });
 
     const newNode = {
-      id: `${type}-${Date.now()}`,
+      id: `${type}_${Date.now()}`,
       type,
       position,
-      data: { customId: `${type}-${Date.now()}` },
+      data: { customId: `${type}_${Date.now()}` },
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -280,6 +566,21 @@ export default function Main() {
     setMenu({
       id: node.id,
       name: node.type,
+      type: "node",
+      top: event.clientY < pane.height - 200 && event.clientY,
+      left: event.clientX < pane.width - 200 && event.clientX,
+      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
+    });
+  }, []);
+
+  const onEdgeContextMenu = useCallback((event, edge) => {
+    event.preventDefault();
+    const pane = ref.current.getBoundingClientRect();
+    setMenu({
+      id: edge.id,
+      name: edge.type,
+      type: "edge",
       top: event.clientY < pane.height - 200 && event.clientY,
       left: event.clientX < pane.width - 200 && event.clientX,
       right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
@@ -339,10 +640,14 @@ export default function Main() {
     });
 
     const newNode = {
-      id: `${type}-${Date.now()}`,
+      id: `${type}_${Date.now()}`,
       type,
       position,
-      data: { customId: `${type}-${Date.now()}`, simState: simulateState },
+      data: {
+        customId: `${type}_${Date.now()}`,
+        simState: simulateState,
+        value: false,
+      },
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -377,6 +682,12 @@ export default function Main() {
 
             if (nodeHandles.target) {
               nodeHandles.target.forEach((tgtHandle) => {
+                const alreadyUsed = edgesRef.current.some(
+                  (e) =>
+                    e.target === node.id && e.targetHandle === tgtHandle.id,
+                );
+                if (alreadyUsed) return;
+
                 const tgtHandlePos = {
                   x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
                   y: nodePos.y + tgtHandle.y + tgtHandle.height / 2,
@@ -389,7 +700,7 @@ export default function Main() {
                 if (distance < minDistance) {
                   minDistance = distance;
                   closestEdge = {
-                    id: `temp-${internalNode.id}-${srcHandle.id}-to-${node.id}-${tgtHandle.id}`,
+                    id: `temp_${internalNode.id}_${srcHandle.id}_to_${node.id}_${tgtHandle.id}`,
                     source: internalNode.id,
                     sourceHandle: srcHandle.id,
                     target: node.id,
@@ -412,6 +723,13 @@ export default function Main() {
 
             if (nodeHandles.source) {
               nodeHandles.source.forEach((srcHandle) => {
+                const alreadyUsed = edgesRef.current.some(
+                  (e) =>
+                    e.target === internalNode.id &&
+                    e.targetHandle === tgtHandle.id,
+                );
+                if (alreadyUsed) return;
+
                 const srcHandlePos = {
                   x: nodePos.x + srcHandle.x + srcHandle.width / 2,
                   y: nodePos.y + srcHandle.y + srcHandle.height / 2,
@@ -424,7 +742,7 @@ export default function Main() {
                 if (distance < minDistance) {
                   minDistance = distance;
                   closestEdge = {
-                    id: `temp-${node.id}-${srcHandle.id}-to-${internalNode.id}-${tgtHandle.id}`,
+                    id: `temp_${node.id}_${srcHandle.id}_to_${internalNode.id}_${tgtHandle.id}`,
                     source: node.id,
                     sourceHandle: srcHandle.id,
                     target: internalNode.id,
@@ -443,18 +761,6 @@ export default function Main() {
     [store, getInternalNode],
   );
 
-  const onNodeDrag = useCallback(
-    (_, node) => {
-      const closeEdge = getClosestEdge(node);
-      setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== "temp");
-        if (closeEdge !== null) nextEdges.push(closeEdge);
-        return nextEdges;
-      });
-    },
-    [getClosestEdge, setEdges],
-  );
-
   const onNodeDragStop = useCallback(
     (_, node) => {
       setEdges((es) => {
@@ -463,6 +769,7 @@ export default function Main() {
         if (closeEdge) {
           return addEdge(
             {
+              type: "straight",
               source: closeEdge.source,
               sourceHandle: closeEdge.sourceHandle,
               target: closeEdge.target,
@@ -485,159 +792,176 @@ export default function Main() {
         : BackgroundVariant.Lines;
 
   return (
-    <SimulateStateContext.Provider value={{ simulateState, setSimulateState }}>
-      <>
-        <ReactFlow
-          ref={ref}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          defaultEdgeOptions={{
-            type: wireType,
-          }}
-          onNodeContextMenu={onNodeContextMenu}
-          onPaneClick={onPaneClick}
-          onConnect={onConnect}
-          onNodeDrag={onNodeDrag}
-          onNodeDragStop={onNodeDragStop}
-          onDrop={onDrop}
-          onDragOver={(e) => e.preventDefault()}
-          onInit={setReactFlowInstance}
-          nodeTypes={nodeTypes}
-          panOnDrag={panOnDrag}
-          selectionOnDrag
-          panOnScroll
-          snapToGrid
-          snapGrid={[GAP_SIZE, GAP_SIZE]}
-          selectionMode={SelectionMode.Partial}
-          minZoom={0.2}
-          maxZoom={10}
-        >
-          <Background
-            offset={[10.5, 5]}
-            bgColor="var(--canvas-bg-color)"
-            color="var(--canvas-color)"
-            gap={GAP_SIZE}
-            size={0.8}
-            variant={variant}
-          />
-          <Controls className="controls" />
-          {showMinimap && (
-            <MiniMap
-              className="miniMap"
-              bgColor="var(--canvas-bg-color)"
-              maskColor="var(--minimap-mask-color)"
-              nodeColor="var(--minimap-node-color)"
-              position="top-right"
-              style={{ borderRadius: "0.5rem" }}
-            />
-          )}
-          {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-        </ReactFlow>
-
-        <button
-          className="openCircuitsMenuButton"
-          onClick={() => setCircuitsMenuState(!circuitsMenuState)}
-        >
-          <IconMenu
-            SVGClassName="openCircuitsMenuButtonIcon"
-            draggable="false"
-          />
-        </button>
-
-        <button
-          onClick={() => setOpenSettings(true)}
-          className="openSettingsButton"
-        >
-          <IconSettings
-            SVGClassName="openSettingsButtonIcon"
-            draggable="false"
-          />
-      </button>
-        <Link
-            to="/auth"
-            className="login-button"
-            style={{ textDecoration: "none" }}
-        >
-          <span className="login-button-text">Log in</span>
-        </Link>
-
-        <div
-          className={`backdrop ${openSettings ? "cover" : ""}`}
-          onClick={() => setOpenSettings(false)}
-        />
-        <div className={`settingsMenu ${openSettings ? "showed" : ""}`}>
-          <p className="settingsMenuTitle">Settings</p>
-          <Link
-            to="/profile"
-            className="openProfileButton"
-            style={{ textDecoration: "none" }}
+    <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
+      <SimulateStateContext.Provider
+        value={{ simulateState, setSimulateState, updateInputState }}
+      >
+        <>
+          <ReactFlow
+            style={{ backgroundColor: "var(--main-2)" }}
+            ref={ref}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            defaultEdgeOptions={{
+              type: activeWire,
+            }}
+            onNodeContextMenu={onNodeContextMenu}
+            onEdgeContextMenu={onEdgeContextMenu}
+            onPaneClick={onPaneClick}
+            onConnect={onConnect}
+            onNodeDragStop={onNodeDragStop}
+            onDrop={onDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onInit={setReactFlowInstance}
+            isValidConnection={isValidConnection}
+            nodeTypes={nodeTypes}
+            panOnDrag={panOnDrag}
+            selectionOnDrag
+            panOnScroll
+            snapToGrid
+            snapGrid={[GAP_SIZE, GAP_SIZE]}
+            selectionMode={SelectionMode.Partial}
+            minZoom={0.2}
+            maxZoom={10}
+            deleteKeyCode={["Delete", "Backspace"]}
+            onDelete={deleteSelected}
+            // onlyRenderVisibleElements={true}
           >
-            <img className="settingUserIcon" src={UserIcon} alt="User" />
-            <span className="settingUserName">UserName</span>
-          </Link>
-          <div className="minimapSwitchBlock">
-            <p className="minimapSwitchLabel">Show mini-map</p>
-            <MinimapSwitch
-              className="minimapSwitch"
-              minimapState={showMinimap}
-              minimapToggle={setShowMinimap}
+            <Background
+              offset={[10.5, 5]}
+              bgColor="var(--main-1)"
+              color="var(--main-4)"
+              gap={GAP_SIZE}
+              size={1.6}
+              variant={variant}
+              style={{ transition: "var(--ttime)" }}
             />
-          </div>
-          <div className="backgroundVariantBlock">
-            <p className="selectCanvasBG">Canvas background</p>
-            <SelectCanvasBG
-              currentBG={currentBG}
-              setCurrentBG={setCurrentBG}
-              className="selectBG"
+            <Controls
+              className="controls"
+              style={{ transition: "var(--ttime)" }}
             />
-          </div>
-          <div className="backgroundVariantBlock">
-            <p className="minimapSwitchLabel">Theme</p>
-            <SelectTheme
-              theme={theme}
-              setTheme={setTheme}
-              className="selectTheme"
-            />
-          </div>
-          <button onClick={saveCircuit}>Save Circuit</button>
-          <input
-            type="file"
-            accept=".json"
-            onChange={loadCircuit}
-            style={{ marginTop: "10px" }}
+            {showMinimap && (
+              <MiniMap
+                className="miniMap"
+                bgColor="var(--main-3)"
+                maskColor="var(--mask)"
+                nodeColor="var(--main-4)"
+                position="top-right"
+                style={{
+                  borderRadius: "0.5rem",
+                  overflow: "hidden",
+                  transition:
+                    "background-color var(--ttime),border var(--ttime)",
+                }}
+              />
+            )}
+          </ReactFlow>
+
+          {menu && menu.type === "node" && (
+            <NodeContextMenu onClick={onPaneClick} {...menu} />
+          )}
+
+          {menu && menu.type === "edge" && (
+            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+          )}
+
+          <Toaster
+            position={toastPosition}
+            toastOptions={{
+              style: {
+                backgroundColor: "var(--main-2)",
+                color: "var(--main-0)",
+                fontSize: "12px",
+                borderRadius: "0.5rem",
+                padding: "10px 25px 10px 10px",
+                border: "0.05rem solid var(--main-5)",
+                fontFamily: "Montserrat, serif",
+              },
+              duration: 2000,
+              error: {
+                duration: 10000,
+              },
+            }}
           />
-        </div>
 
-        <CircuitsMenu
-          circuitsMenuState={circuitsMenuState}
-          onDragStart={onDragStart}
-          spawnCircuit={spawnCircuit}
-        />
+          <button
+            className="openCircuitsMenuButton"
+            onClick={() => setCircuitsMenuState(!circuitsMenuState)}
+          >
+            <IconMenu
+              SVGClassName="openCircuitsMenuButtonIcon"
+              draggable="false"
+            />
+          </button>
 
-        <Toolbar
-          simulateState={simulateState}
-          setSimulateState={setSimulateState}
-          activeAction={activeAction}
-          setActiveAction={setActiveAction}
-          activeWire={activeWire}
-          setActiveWire={setActiveWire}
-          activeButton={activeButton}
-          setActiveButton={setActiveButton}
-          setPanOnDrag={setPanOnDrag}
-          setWireType={setWireType}
-          onSimulateClick={() =>
-            handleSimulateClick({
-              simulateState,
-              setSimulateState,
-              socketRef,
-              nodes,
-              edges,
-            })
-          }
-        />
-      </>
-    </SimulateStateContext.Provider>
+          <button
+            className="openSettingsButton"
+            onClick={() => setOpenSettings(true)}
+          >
+            <IconSettings
+              SVGClassName="openSettingsButtonIcon"
+              draggable="false"
+            />
+          </button>
+
+          <div
+            className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
+            onClick={() => {
+              setMenu(null);
+              setOpenSettings(false);
+            }}
+          />
+          <Settings
+            openSettings={openSettings}
+            showMinimap={showMinimap}
+            setShowMinimap={setShowMinimap}
+            currentBG={currentBG}
+            setCurrentBG={setCurrentBG}
+            theme={theme}
+            setTheme={setTheme}
+            toastPosition={toastPosition}
+            setToastPosition={setToastPosition}
+            currentLogLevel={logLevel}
+            setLogLevel={setLogLevel}
+            closeSettings={() => {
+              setMenu(null);
+              setOpenSettings(false);
+            }}
+          />
+
+          <CircuitsMenu
+            circuitsMenuState={circuitsMenuState}
+            onDragStart={onDragStart}
+            spawnCircuit={spawnCircuit}
+          />
+
+          <Toolbar
+            simulateState={simulateState}
+            setSimulateState={setSimulateState}
+            activeAction={activeAction}
+            setActiveAction={setActiveAction}
+            activeWire={activeWire}
+            setActiveWire={setActiveWire}
+            setPanOnDrag={setPanOnDrag}
+            saveCircuit={saveCircuit}
+            loadCircuit={loadCircuit}
+            fileInputRef={fileInputRef}
+            handleOpenClick={handleOpenClick}
+            setMenu={setMenu}
+            onSimulateClick={() =>
+              handleSimulateClick({
+                simulateState,
+                setSimulateState,
+                socketRef,
+                nodes,
+                edges,
+              })
+            }
+          />
+        </>
+      </SimulateStateContext.Provider>
+    </NotificationsLevelContext.Provider>
   );
 }

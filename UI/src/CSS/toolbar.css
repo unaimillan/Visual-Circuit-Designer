@@ -33,7 +33,7 @@
 
 .toolbarButton:hover {
   transition: 0.15s ease-out;
-  background-color: var(--main-3);
+  background-color: var(--main-4);
 }
 
 .toolbarButton:active {
@@ -140,5 +140,5 @@
 }
 
 .toolbar.download {
-  right: 21.63rem;
+  right: 24.03rem;
 }
