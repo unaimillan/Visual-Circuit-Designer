@@ -144,7 +144,7 @@
   transform: rotate(45deg);
 }
 
-.led-text{
+.led-text {
   transform: rotate(-45deg) translateY(1px);
   transform-origin: center;
 }

@@ -70,7 +70,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
 }
 
 const Led = ({ isActive, SVGclassName }) => {
-// решаем, нужно ли показывать букву
+  // решаем, нужно ли показывать букву
   const showLetter = isActive === "x" || isActive === "z";
 
   return (
