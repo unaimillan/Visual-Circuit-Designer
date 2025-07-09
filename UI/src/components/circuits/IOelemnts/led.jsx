@@ -4,7 +4,7 @@ import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 
 function OutputNodeLed({ id, data, isConnectable }) {
-  const [isActive, setIsActive] = useState("1");
+  const [isActive, setIsActive] = useState(false);
   const rotation = data.rotation || 0;
   const updateNodeInternals = useUpdateNodeInternals();
 
@@ -40,7 +40,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
   useEffect(() => {
     const outputId = `out_${id}`; // Пример: "out_output1"
     const unsubscribe = subscribeToOutput(outputId, (newVal) => {
-      setIsActive(newVal);
+      setIsActive(newVal === 1);
     });
 
     return () => {
@@ -70,24 +70,20 @@ function OutputNodeLed({ id, data, isConnectable }) {
 }
 
 const Led = ({ isActive, SVGclassName }) => {
-  // решаем, нужно ли показывать букву
-  const showLetter = isActive === "x" || isActive === "z";
-
   return (
-    <svg width={25} height={25} viewBox="0 0 25 25" className={SVGclassName}>
+    <svg width="25" height="25" viewBox="0 0 25 25" className={SVGclassName}>
       <defs>
         <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
           <feDropShadow
             dx="0"
             dy="0"
             stdDeviation="1.5"
-            floodColor="var(--led-active-color)"
+            floodColor="red"
             floodOpacity="0.8"
           />
         </filter>
       </defs>
 
-      {/* квадрат светодиода */}
       <rect
         x="2"
         y="2"
@@ -95,27 +91,11 @@ const Led = ({ isActive, SVGclassName }) => {
         height="21"
         rx="4"
         ry="4"
-        stroke="var(--main-0)"
+        stroke="black"
         strokeWidth="1"
-        fill={isActive === "1" ? "var(--led-active-color)" : "none"}
-        filter={isActive === "1" ? "url(#glow)" : "none"}
+        fill={isActive ? "red" : "none"}
+        filter={isActive ? "url(#glow)" : "none"}
       />
-
-      {/* буква X или Z поверх, по центру */}
-      {showLetter && (
-        <text
-          className={"led-text"}
-          x="50%"
-          y="50%"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fontSize="14"
-          fontWeight="bold"
-          fill="var(--main-0)"
-        >
-          {isActive.toUpperCase()}
-        </text>
-      )}
     </svg>
   );
 };
