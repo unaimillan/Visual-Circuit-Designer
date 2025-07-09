@@ -39,7 +39,8 @@ import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
 import { copyElements as copyElementsUtil } from "../utils/copyElements.js";
-import { cutElements as cutElementsUtil } from "../utils/cutElementsUtil.js";
+import { cutElements as cutElementsUtil } from "../utils/cutElements.js";
+import { pasteElements as pasteElementsUtil } from "../utils/pasteElements.js";
 import { deleteSelectedElements as deleteSelectedUtil } from "../utils/deleteSelectedElements.js";
 import { deselectAll as deselectAllUtil } from "../utils/deselectAll.js";
 import { getSelectedElements as getSelectedUtil } from "../utils/getSelectedElements.js";
@@ -261,59 +262,14 @@ export default function Main() {
   }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
-    if (!reactFlowInstance) {
-      console.error("React Flow instance not available");
-      return;
-    }
-
-    setNodes((prevNodes) =>
-      prevNodes.map((node) => ({ ...node, selected: false })),
-    );
-    setEdges((prevEdges) =>
-      prevEdges.map((edge) => ({ ...edge, selected: false })),
-    );
-
-    if (clipboard.nodes.length === 0) return;
-
-    const flowPosition = reactFlowInstance.screenToFlowPosition({
-      x: mousePositionRef.current.x,
-      y: mousePositionRef.current.y,
+    pasteElementsUtil({
+      clipboard,
+      mousePosition: mousePositionRef.current,
+      reactFlowInstance,
+      setNodes,
+      setEdges,
+      newId,
     });
-
-    const offset = {
-      x: flowPosition.x - clipboard.nodes[0].position.x,
-      y: flowPosition.y - clipboard.nodes[0].position.y,
-    };
-
-    const nodeIdMap = {};
-    const newNodes = clipboard.nodes.map((node) => {
-      const id = newId();
-      nodeIdMap[node.id] = id;
-
-      return {
-        ...node,
-        id: id,
-        position: {
-          x: node.position.x + offset.x,
-          y: node.position.y + offset.y,
-        },
-        selected: true,
-        data: {
-          ...node.data,
-          customId: newId,
-        },
-      };
-    });
-
-    const newEdges = clipboard.edges.map((edge) => ({
-      ...edge,
-      id: newId(),
-      source: nodeIdMap[edge.source] || edge.source,
-      target: nodeIdMap[edge.target] || edge.target,
-    }));
-
-    setNodes((nds) => nds.concat(newNodes));
-    setEdges((eds) => eds.concat(newEdges));
   }, [clipboard, reactFlowInstance]);
 
   useEffect(() => {
