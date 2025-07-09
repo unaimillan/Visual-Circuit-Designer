@@ -52,6 +52,7 @@ import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
 import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
 import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js"
+import { calculateDropPosition } from "../utils/calculateDropPosition.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -85,6 +86,17 @@ export function useNotificationsLevel() {
 const GAP_SIZE = 10;
 const MIN_DISTANCE = 1;
 const STORAGE_KEY = "myCircuits";
+const NODE_SIZES = {
+  andNode: { width: 80, height: 60 },
+  orNode: { width: 80, height: 60 },
+  notNode: { width: 80, height: 60 },
+  nandNode: { width: 80, height: 60 },
+  norNode: { width: 80, height: 60 },
+  xorNode: { width: 80, height: 60 },
+  inputNodeSwitch: { width: 60, height: 80 },
+  inputNodeButton: { width: 60, height: 80 },
+  outputNodeLed: { width: 60, height: 80 },
+};
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -327,25 +339,28 @@ export default function Main() {
   };
 
   //Create new node after dragAndDrop
-  const onDrop = (event) => {
+  const onDrop = useCallback((event) => {
     event.preventDefault();
     const type = event.dataTransfer.getData("application/reactflow");
     if (!type || !reactFlowInstance) return;
 
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
+    const nodeSize = NODE_SIZES[type] || NODE_SIZES.default;
+    const position = calculateDropPosition(
+      event,
+      reactFlowInstance.screenToFlowPosition,
+      nodeSize
+    );
 
+    const timestamp = Date.now();
     const newNode = {
-      id: `${type}_${Date.now()}`,
+      id: `${type}_${timestamp}`,
       type,
       position,
-      data: { customId: `${type}_${Date.now()}` },
+      data: { customId: `${type}_${timestamp}` },
     };
 
     setNodes((nds) => nds.concat(newNode));
-  };
+  }, [reactFlowInstance, setNodes]);
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
