@@ -4,7 +4,7 @@ import { subscribeToOutput } from "../../codeComponents/outputStateManager.js";
 import CustomHandle from "../../codeComponents/CustomHandle.jsx";
 
 function OutputNodeLed({ id, data, isConnectable }) {
-  const [isActive, setIsActive] = useState("1");
+  const [isActive, setIsActive] = useState("z");
   const rotation = data.rotation || 0;
   const updateNodeInternals = useUpdateNodeInternals();
 
@@ -101,17 +101,17 @@ const Led = ({ isActive, SVGclassName }) => {
         filter={isActive === "1" ? "url(#glow)" : "none"}
       />
 
-      {/* буква X или Z поверх, по центру */}
       {showLetter && (
         <text
-          className={"led-text"}
-          x="50%"
-          y="50%"
+          className="led-text"
+          x="12.5"
+          y="12.5"
           textAnchor="middle"
           dominantBaseline="middle"
           fontSize="14"
           fontWeight="bold"
           fill="var(--main-0)"
+          transform="rotate(-45 12.5 12.5)"
         >
           {isActive.toUpperCase()}
         </text>
