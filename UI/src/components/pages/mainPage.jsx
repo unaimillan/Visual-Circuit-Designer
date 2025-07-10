@@ -53,6 +53,7 @@ import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
 import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
+import { getClosestEdge } from "../utils/getClosestEdge.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -84,7 +85,6 @@ export function useNotificationsLevel() {
 }
 
 const GAP_SIZE = 10;
-const MIN_DISTANCE = 1;
 const STORAGE_KEY = "myCircuits";
 
 export default function Main() {
@@ -371,113 +371,6 @@ export default function Main() {
     [reactFlowInstance, setNodes, deselectAll],
   );
 
-  const getClosestEdge = useCallback(
-    (draggedNode) => {
-      const { nodeLookup } = store.getState();
-      const internalNode = getInternalNode(draggedNode.id);
-      if (!internalNode) return null;
-
-      const draggedHandles = internalNode.internals.handleBounds;
-      if (!draggedHandles) return null;
-
-      const draggedPos = internalNode.internals.positionAbsolute;
-      let closestEdge = null;
-      let minDistance = MIN_DISTANCE;
-
-      nodeLookup.forEach((node) => {
-        if (node.id === draggedNode.id) return;
-        const nodeHandles = node.internals.handleBounds;
-        if (!nodeHandles) return;
-        const nodePos = node.internals.positionAbsolute;
-
-        // Check source->target connections
-        if (draggedHandles.source) {
-          draggedHandles.source.forEach((srcHandle) => {
-            const srcHandlePos = {
-              x: draggedPos.x + srcHandle.x + srcHandle.width / 2,
-              y: draggedPos.y + srcHandle.y + srcHandle.height / 2,
-            };
-
-            if (nodeHandles.target) {
-              nodeHandles.target.forEach((tgtHandle) => {
-                const alreadyUsed = edgesRef.current.some(
-                  (e) =>
-                    e.target === node.id && e.targetHandle === tgtHandle.id,
-                );
-                if (alreadyUsed) return;
-
-                const tgtHandlePos = {
-                  x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
-                  y: nodePos.y + tgtHandle.y + tgtHandle.height / 2,
-                };
-
-                const dx = srcHandlePos.x - tgtHandlePos.x;
-                const dy = srcHandlePos.y - tgtHandlePos.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestEdge = {
-                    id: `temp_${internalNode.id}_${srcHandle.id}_to_${node.id}_${tgtHandle.id}`,
-                    source: internalNode.id,
-                    sourceHandle: srcHandle.id,
-                    target: node.id,
-                    targetHandle: tgtHandle.id,
-                    className: "temp",
-                  };
-                }
-              });
-            }
-          });
-        }
-
-        // Check target->source connections
-        if (draggedHandles.target) {
-          draggedHandles.target.forEach((tgtHandle) => {
-            const tgtHandlePos = {
-              x: draggedPos.x + tgtHandle.x + tgtHandle.width / 2,
-              y: draggedPos.y + tgtHandle.y + tgtHandle.height / 2,
-            };
-
-            if (nodeHandles.source) {
-              nodeHandles.source.forEach((srcHandle) => {
-                const alreadyUsed = edgesRef.current.some(
-                  (e) =>
-                    e.target === internalNode.id &&
-                    e.targetHandle === tgtHandle.id,
-                );
-                if (alreadyUsed) return;
-
-                const srcHandlePos = {
-                  x: nodePos.x + srcHandle.x + srcHandle.width / 2,
-                  y: nodePos.y + srcHandle.y + srcHandle.height / 2,
-                };
-
-                const dx = tgtHandlePos.x - srcHandlePos.x;
-                const dy = tgtHandlePos.y - srcHandlePos.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestEdge = {
-                    id: `temp_${node.id}_${srcHandle.id}_to_${internalNode.id}_${tgtHandle.id}`,
-                    source: node.id,
-                    sourceHandle: srcHandle.id,
-                    target: internalNode.id,
-                    targetHandle: tgtHandle.id,
-                    className: "temp",
-                  };
-                }
-              });
-            }
-          });
-        }
-      });
-      return closestEdge;
-    },
-    [store, getInternalNode],
-  );
-
   const onNodeDragStop = useCallback(
     (_, draggedNode) => {
       const selectedNodes = nodes.filter(
@@ -485,11 +378,16 @@ export default function Main() {
       );
 
       setEdges((es) => {
-        let nextEdges = es.filter((e) => e.className !== "temp");
+        let newEdges = es.filter((e) => e.className !== "temp");
         for (const node of selectedNodes) {
-          const closeEdge = getClosestEdge(node);
+          const closeEdge = getClosestEdge({
+            draggedNode: node,
+            nodeLookup: store.getState().nodeLookup,
+            getInternalNode,
+            edges: newEdges,
+          });
           if (closeEdge) {
-            nextEdges = addEdge(
+            newEdges = addEdge(
               {
                 type: "straight",
                 source: closeEdge.source,
@@ -497,11 +395,11 @@ export default function Main() {
                 target: closeEdge.target,
                 targetHandle: closeEdge.targetHandle,
               },
-              nextEdges,
+              newEdges,
             );
           }
         }
-        return nextEdges;
+        return newEdges;
       });
     },
     [getClosestEdge, setEdges, nodes],
