@@ -1,10 +1,14 @@
+import { calculatePosition } from "./calculatePosition.js";
+
 export function spawnCircuit(type, reactFlowInstance, setNodes, newId) {
   if (!reactFlowInstance) return;
 
-  const position = reactFlowInstance.screenToFlowPosition({
+  const rawPos = reactFlowInstance.screenToFlowPosition({
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
   });
+
+  const position = calculatePosition(rawPos, type);
 
   const id = newId();
   const newNode = {

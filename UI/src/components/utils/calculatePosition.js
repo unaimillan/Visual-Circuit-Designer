@@ -1,6 +1,6 @@
 import { NODE_SIZES } from "../constants/nodeSizes";
 
-export function calculateDropPosition(rawPos, type) {
+export function calculatePosition(rawPos, type) {
   const nodeSize = NODE_SIZES[type] || NODE_SIZES.default;
 
   return {

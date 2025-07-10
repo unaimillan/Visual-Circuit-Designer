@@ -1,7 +1,7 @@
 import { onDrop } from "../../onDrop.js";
-import { calculateDropPosition } from "../../calculateDropPosition.js";
+import { calculatePosition } from "../../calculatePosition.js";
 
-jest.mock("../../calculateDropPosition.js");
+jest.mock("../../calculatePosition.js");
 
 describe("onDrop", () => {
   let event;
@@ -21,7 +21,7 @@ describe("onDrop", () => {
       screenToFlowPosition: jest.fn().mockReturnValue({ x: 50, y: 75 }),
     };
 
-    calculateDropPosition.mockReturnValue({ x: 100, y: 200 });
+    calculatePosition.mockReturnValue({ x: 100, y: 200 });
 
     newId = jest
       .fn()
@@ -59,7 +59,7 @@ describe("onDrop", () => {
       y: 15,
     });
 
-    expect(calculateDropPosition).toHaveBeenCalledWith(rawPos, "foo");
+    expect(calculatePosition).toHaveBeenCalledWith(rawPos, "foo");
 
     expect(newId).toHaveBeenCalledTimes(2);
 
@@ -85,7 +85,7 @@ describe("onDrop", () => {
 
     onDrop(event, reactFlowInstance, newId, setNodes);
 
-    expect(calculateDropPosition).toHaveBeenCalledWith(
+    expect(calculatePosition).toHaveBeenCalledWith(
       { x: 50, y: 75 },
       "unknown"
     );

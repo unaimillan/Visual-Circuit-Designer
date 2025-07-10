@@ -1,4 +1,4 @@
-import { calculateDropPosition } from "./calculateDropPosition.js";
+import { calculatePosition } from "./calculatePosition.js";
 
 export function pasteElements({
   clipboard,
@@ -23,7 +23,7 @@ export function pasteElements({
     y: mousePosition.y,
   });
 
-  const position = calculateDropPosition(
+  const position = calculatePosition(
     rawPos,
     clipboard.nodes[0].type,
   );

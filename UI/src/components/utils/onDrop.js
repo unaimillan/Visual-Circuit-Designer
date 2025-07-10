@@ -1,4 +1,4 @@
-import { calculateDropPosition } from "./calculateDropPosition.js";
+import { calculatePosition } from "./calculatePosition.js";
 
 export function onDrop(event, reactFlowInstance, newId, setNodes) {
   event.preventDefault();
@@ -10,7 +10,7 @@ export function onDrop(event, reactFlowInstance, newId, setNodes) {
     y: event.clientY,
   });
 
-  const position = calculateDropPosition(
+  const position = calculatePosition(
     rawPos,
     type,
   );
