@@ -24,10 +24,7 @@ describe("getClosestEdge", () => {
       : null;
 
   const nodeLookup = new Map([
-    [
-      "n2",
-      createNode("n2", 0.5, 0, { target: [createHandle(0, 0, "t1")] }),
-    ],
+    ["n2", createNode("n2", 0.5, 0, { target: [createHandle(0, 0, "t1")] })],
   ]);
 
   it("should return a temp edge when handle distance is below threshold", () => {
@@ -56,8 +53,7 @@ describe("getClosestEdge", () => {
   });
 
   it("should return null if no handle bounds", () => {
-    const getBad = () =>
-      createNode("n1", 0, 0, null);
+    const getBad = () => createNode("n1", 0, 0, null);
     const edge = getClosestEdge({
       draggedNode,
       nodeLookup,
@@ -68,9 +64,7 @@ describe("getClosestEdge", () => {
   });
 
   it("should not connect to already used target handles", () => {
-    const edges = [
-      { target: "n2", targetHandle: "t1" },
-    ];
+    const edges = [{ target: "n2", targetHandle: "t1" }];
     const edge = getClosestEdge({
       draggedNode,
       nodeLookup,

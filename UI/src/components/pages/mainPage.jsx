@@ -379,7 +379,7 @@ export default function Main() {
       store,
       addEdge,
     }),
-    [nodes, setEdges, getInternalNode, store]
+    [nodes, setEdges, getInternalNode, store],
   );
 
   const variant =

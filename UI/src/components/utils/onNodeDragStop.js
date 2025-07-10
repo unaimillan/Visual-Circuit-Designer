@@ -1,13 +1,19 @@
 import { getClosestEdge } from "./getClosestEdge.js";
 
-export function onNodeDragStop({ nodes, setEdges, getInternalNode, store, addEdge }) {
+export function onNodeDragStop({
+  nodes,
+  setEdges,
+  getInternalNode,
+  store,
+  addEdge,
+}) {
   return (_, draggedNode) => {
     const selectedNodes = nodes.filter(
       (n) => n.selected || n.id === draggedNode.id,
     );
 
     setEdges((edges) => {
-      let newEdges = edges.filter((e) => e.className !== 'temp');
+      let newEdges = edges.filter((e) => e.className !== "temp");
       for (const node of selectedNodes) {
         const closeEdge = getClosestEdge({
           draggedNode: node,
@@ -19,7 +25,7 @@ export function onNodeDragStop({ nodes, setEdges, getInternalNode, store, addEdg
         if (closeEdge) {
           newEdges = addEdge(
             {
-              type: 'straight',
+              type: "straight",
               source: closeEdge.source,
               sourceHandle: closeEdge.sourceHandle,
               target: closeEdge.target,

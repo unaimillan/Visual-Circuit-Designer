@@ -1,23 +1,23 @@
-import { onNodeDragStop } from '../../onNodeDragStop';
-import { getClosestEdge } from '../../getClosestEdge';
+import { onNodeDragStop } from "../../onNodeDragStop";
+import { getClosestEdge } from "../../getClosestEdge";
 
-jest.mock('../../getClosestEdge', () => ({
+jest.mock("../../getClosestEdge", () => ({
   getClosestEdge: jest.fn(),
 }));
 
-describe('onNodeDragStop util', () => {
-  it('calls addEdge and setEdges when getClosestEdge returns an edge', () => {
+describe("onNodeDragStop util", () => {
+  it("calls addEdge and setEdges when getClosestEdge returns an edge", () => {
     const mockEdge = {
-      source: '1',
-      sourceHandle: 's',
-      target: '2',
-      targetHandle: 't',
-      className: 'temp',
+      source: "1",
+      sourceHandle: "s",
+      target: "2",
+      targetHandle: "t",
+      className: "temp",
     };
     getClosestEdge.mockReturnValue(mockEdge);
 
-    const nodes = [{ id: '1', selected: true }];
-    const draggedNode = { id: '1' };
+    const nodes = [{ id: "1", selected: true }];
+    const draggedNode = { id: "1" };
     const mockSetEdges = jest.fn((updater) => {
       return updater([]);
     });
@@ -40,10 +40,10 @@ describe('onNodeDragStop util', () => {
     expect(mockSetEdges).toHaveBeenCalled();
   });
 
-  it('does nothing when getClosestEdge returns null', () => {
+  it("does nothing when getClosestEdge returns null", () => {
     getClosestEdge.mockReturnValue(null);
 
-    const nodes = [{ id: '1', selected: true }];
+    const nodes = [{ id: "1", selected: true }];
     const handler = onNodeDragStop({
       nodes,
       setEdges: jest.fn(),
@@ -52,7 +52,7 @@ describe('onNodeDragStop util', () => {
       addEdge: jest.fn(),
     });
 
-    handler(null, { id: '1' });
+    handler(null, { id: "1" });
 
     expect(getClosestEdge).toHaveBeenCalled();
   });

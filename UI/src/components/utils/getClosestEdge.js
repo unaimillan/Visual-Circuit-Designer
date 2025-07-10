@@ -1,11 +1,11 @@
 import { MIN_DISTANCE } from "../constants/numbers";
 
 export function getClosestEdge({
-                                 draggedNode,
-                                 nodeLookup,
-                                 getInternalNode,
-                                 edges,
-                               }) {
+  draggedNode,
+  nodeLookup,
+  getInternalNode,
+  edges,
+}) {
   const internalNode = getInternalNode(draggedNode.id);
   if (!internalNode) return null;
 
@@ -33,7 +33,7 @@ export function getClosestEdge({
         if (nodeHandles.target) {
           for (const tgtHandle of nodeHandles.target) {
             const alreadyUsed = edges.some(
-              (e) => e.target === node.id && e.targetHandle === tgtHandle.id
+              (e) => e.target === node.id && e.targetHandle === tgtHandle.id,
             );
             if (alreadyUsed) continue;
 
@@ -74,8 +74,7 @@ export function getClosestEdge({
           for (const srcHandle of nodeHandles.source) {
             const alreadyUsed = edges.some(
               (e) =>
-                e.target === internalNode.id &&
-                e.targetHandle === tgtHandle.id
+                e.target === internalNode.id && e.targetHandle === tgtHandle.id,
             );
             if (alreadyUsed) continue;
 
