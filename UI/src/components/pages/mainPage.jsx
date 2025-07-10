@@ -53,7 +53,7 @@ import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
 import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
-import { loadLocalStorage } from "../utils/loadLocalStorage.jsx";
+import { loadLocalStorage } from "../utils/loadLocalStorage.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
