@@ -53,7 +53,7 @@ import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
 import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
-import { getClosestEdge } from "../utils/getClosestEdge.js";
+import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -372,37 +372,14 @@ export default function Main() {
   );
 
   const onNodeDragStop = useCallback(
-    (_, draggedNode) => {
-      const selectedNodes = nodes.filter(
-        (n) => n.selected || n.id === draggedNode.id,
-      );
-
-      setEdges((es) => {
-        let newEdges = es.filter((e) => e.className !== "temp");
-        for (const node of selectedNodes) {
-          const closeEdge = getClosestEdge({
-            draggedNode: node,
-            nodeLookup: store.getState().nodeLookup,
-            getInternalNode,
-            edges: newEdges,
-          });
-          if (closeEdge) {
-            newEdges = addEdge(
-              {
-                type: "straight",
-                source: closeEdge.source,
-                sourceHandle: closeEdge.sourceHandle,
-                target: closeEdge.target,
-                targetHandle: closeEdge.targetHandle,
-              },
-              newEdges,
-            );
-          }
-        }
-        return newEdges;
-      });
-    },
-    [getClosestEdge, setEdges, nodes],
+    onNodeDragStopUtil({
+      nodes,
+      setEdges,
+      getInternalNode,
+      store,
+      addEdge,
+    }),
+    [nodes, setEdges, getInternalNode, store]
   );
 
   const variant =
