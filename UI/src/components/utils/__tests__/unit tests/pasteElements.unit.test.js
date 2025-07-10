@@ -1,9 +1,18 @@
 import { pasteElements } from "../../pasteElements";
+import { calculateDropPosition } from "../../calculateDropPosition";
+
+jest.mock("../../calculateDropPosition", () => ({
+  calculateDropPosition: jest.fn(() => ({ x: 100, y: 100 })),
+}));
 
 describe("pasteElements", () => {
   const mockSetNodes = jest.fn((fn) => fn([]));
   const mockSetEdges = jest.fn((fn) => fn([]));
-  const mockNewId = jest.fn(() => "new-id");
+  const mockNewId = jest
+    .fn()
+    .mockReturnValueOnce("node-1")   // first node id
+    .mockReturnValueOnce("custom-1") // customId for node
+    .mockReturnValueOnce("edge-1");  // edge id
 
   const mockReactFlowInstance = {
     screenToFlowPosition: jest.fn(() => ({ x: 50, y: 50 })),
@@ -13,6 +22,7 @@ describe("pasteElements", () => {
     nodes: [
       {
         id: "1",
+        type: "foo",
         position: { x: 10, y: 10 },
         data: { customId: "old" },
       },
@@ -59,8 +69,8 @@ describe("pasteElements", () => {
       newId: mockNewId,
     });
 
-    expect(mockSetNodes).toHaveBeenCalledTimes(1); // for deselection
-    expect(mockSetEdges).toHaveBeenCalledTimes(1); // for deselection
+    expect(mockSetNodes).toHaveBeenCalledTimes(1); // deselect call
+    expect(mockSetEdges).toHaveBeenCalledTimes(1); // deselect call
   });
 
   it("pastes gates and wires with offset", () => {
@@ -73,8 +83,12 @@ describe("pasteElements", () => {
       newId: mockNewId,
     });
 
-    expect(mockSetNodes).toHaveBeenCalledTimes(2); // deselect + add
-    expect(mockSetEdges).toHaveBeenCalledTimes(2); // deselect + add
-    expect(mockNewId).toHaveBeenCalled();
+    expect(mockSetNodes).toHaveBeenCalledTimes(2); // deselect + add new
+    expect(mockSetEdges).toHaveBeenCalledTimes(2); // deselect + add new
+    expect(mockNewId).toHaveBeenCalledTimes(3);
+    expect(calculateDropPosition).toHaveBeenCalledWith(
+      { x: 50, y: 50 },
+      "foo"
+    );
   });
 });

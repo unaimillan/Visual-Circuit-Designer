@@ -1,3 +1,5 @@
+import { calculateDropPosition } from "./calculateDropPosition.js";
+
 export function pasteElements({
   clipboard,
   mousePosition,
@@ -16,14 +18,19 @@ export function pasteElements({
 
   if (clipboard.nodes.length === 0) return;
 
-  const flowPosition = reactFlowInstance.screenToFlowPosition({
+  const rawPos = reactFlowInstance.screenToFlowPosition({
     x: mousePosition.x,
     y: mousePosition.y,
   });
 
+  const position = calculateDropPosition(
+    rawPos,
+    clipboard.nodes[0].type,
+  );
+
   const offset = {
-    x: flowPosition.x - clipboard.nodes[0].position.x,
-    y: flowPosition.y - clipboard.nodes[0].position.y,
+    x: position.x - clipboard.nodes[0].position.x,
+    y: position.y - clipboard.nodes[0].position.y,
   };
 
   const nodeIdMap = {};

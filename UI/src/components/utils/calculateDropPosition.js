@@ -1,8 +1,7 @@
-export function calculateDropPosition(event, screenToFlowPosition, nodeSize) {
-  const rawPos = screenToFlowPosition({
-    x: event.clientX,
-    y: event.clientY,
-  });
+import { NODE_SIZES } from "../constants/nodeSizes";
+
+export function calculateDropPosition(rawPos, type) {
+  const nodeSize = NODE_SIZES[type] || NODE_SIZES.default;
 
   return {
     x: rawPos.x - nodeSize.width / 2,

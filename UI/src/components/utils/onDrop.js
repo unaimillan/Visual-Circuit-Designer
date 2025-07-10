@@ -1,16 +1,18 @@
 import { calculateDropPosition } from "./calculateDropPosition.js";
-import { NODE_SIZES } from "../constants/nodeSizes";
 
 export function onDrop(event, reactFlowInstance, newId, setNodes) {
   event.preventDefault();
   const type = event.dataTransfer.getData("application/reactflow");
   if (!type || !reactFlowInstance) return;
 
-  const nodeSize = NODE_SIZES[type] || NODE_SIZES.default;
+  const rawPos = reactFlowInstance.screenToFlowPosition({
+    x: event.clientX,
+    y: event.clientY,
+  });
+
   const position = calculateDropPosition(
-    event,
-    reactFlowInstance.screenToFlowPosition,
-    nodeSize,
+    rawPos,
+    type,
   );
 
   const id = newId();

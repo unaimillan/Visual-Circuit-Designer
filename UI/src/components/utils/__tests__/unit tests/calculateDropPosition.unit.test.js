@@ -1,35 +1,38 @@
-import { calculateDropPosition } from "../../calculateDropPosition.js";
+import { calculateDropPosition } from "../../calculateDropPosition";
+
+jest.mock("../../../constants/nodeSizes", () => ({
+  NODE_SIZES: {
+    default: { width: 10, height: 20 },
+    foo: { width: 100, height: 80 },
+    bar: { width: 60, height: 120 },
+  },
+}));
 
 describe("calculateDropPosition", () => {
-  const makeEvent = (x, y) => ({ clientX: x, clientY: y });
-  const fakeScreenToFlow = jest.fn(({ x, y }) => ({ x: x + 20, y: y + 30 }));
-
-  const nodeSize = { width: 100, height: 80 };
-
-  beforeEach(() => {
-    fakeScreenToFlow.mockClear();
+  it("offsets correctly for known type 'foo'", () => {
+    const rawPos = { x: 150, y: 200 };
+    const result = calculateDropPosition(rawPos, "foo");
+    expect(result).toEqual({
+      x: 100,
+      y: 160,
+    });
   });
 
-  it("offsets by half of width and half of height of node", () => {
-    const evt = makeEvent(50, 60);
-    const pos = calculateDropPosition(evt, fakeScreenToFlow, nodeSize);
-
-    expect(fakeScreenToFlow).toHaveBeenCalledWith({ x: 50, y: 60 });
-    expect(pos).toEqual({ x: 20, y: 50 });
+  it("offsets correctly for known type 'bar'", () => {
+    const rawPos = { x: 50, y: 75 };
+    const result = calculateDropPosition(rawPos, "bar");
+    expect(result).toEqual({
+      x: 20,
+      y: 15,
+    });
   });
 
-  it("works correctly for other coordinates", () => {
-    const evt = makeEvent(200, 150);
-    const pos = calculateDropPosition(evt, fakeScreenToFlow, nodeSize);
-
-    expect(pos).toEqual({ x: 170, y: 140 });
-  });
-
-  it("supports nodes with unique sizes", () => {
-    const customSize = { width: 60, height: 120 };
-    const evt = makeEvent(10, 20);
-    const pos = calculateDropPosition(evt, fakeScreenToFlow, customSize);
-
-    expect(pos).toEqual({ x: 0, y: -10 });
+  it("falls back to default size for unknown type", () => {
+    const rawPos = { x: 100, y: 100 };
+    const result = calculateDropPosition(rawPos, "unknown");
+    expect(result).toEqual({
+      x: 95,
+      y: 90,
+    });
   });
 });

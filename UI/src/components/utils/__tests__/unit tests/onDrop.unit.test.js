@@ -1,14 +1,7 @@
-import { calculateDropPosition } from "../../calculateDropPosition.js";
-import { NODE_SIZES } from "../../../constants/nodeSizes";
 import { onDrop } from "../../onDrop.js";
+import { calculateDropPosition } from "../../calculateDropPosition.js";
 
 jest.mock("../../calculateDropPosition.js");
-jest.mock("../../../constants/nodeSizes", () => ({
-  NODE_SIZES: {
-    default: { width: 10, height: 20 },
-    foo: { width: 30, height: 40 },
-  },
-}));
 
 describe("onDrop", () => {
   let event;
@@ -19,23 +12,21 @@ describe("onDrop", () => {
   beforeEach(() => {
     event = {
       preventDefault: jest.fn(),
-      dataTransfer: {
-        getData: jest.fn(),
-      },
+      dataTransfer: { getData: jest.fn() },
       clientX: 5,
       clientY: 15,
     };
 
     reactFlowInstance = {
-      screenToFlowPosition: jest.fn(),
+      screenToFlowPosition: jest.fn().mockReturnValue({ x: 50, y: 75 }),
     };
 
     calculateDropPosition.mockReturnValue({ x: 100, y: 200 });
 
     newId = jest
       .fn()
-      .mockReturnValueOnce("node-123") // for id
-      .mockReturnValueOnce("node-456"); // for customId
+      .mockReturnValueOnce("node-123") // id
+      .mockReturnValueOnce("node-456"); // customId
 
     setNodes = jest.fn();
   });
@@ -47,7 +38,6 @@ describe("onDrop", () => {
   it("does nothing when no type or no instance", () => {
     event.dataTransfer.getData.mockReturnValue("");
     onDrop(event, reactFlowInstance, newId, setNodes);
-
     expect(event.preventDefault).toHaveBeenCalled();
     expect(setNodes).not.toHaveBeenCalled();
 
@@ -56,16 +46,21 @@ describe("onDrop", () => {
     expect(setNodes).not.toHaveBeenCalled();
   });
 
-  it("creates a new gate with correct shape for known type", () => {
+  it("creates a new node with correct parameters for known type", () => {
     event.dataTransfer.getData.mockReturnValue("foo");
+
     onDrop(event, reactFlowInstance, newId, setNodes);
 
     expect(event.preventDefault).toHaveBeenCalled();
-    expect(calculateDropPosition).toHaveBeenCalledWith(
-      event,
-      reactFlowInstance.screenToFlowPosition,
-      NODE_SIZES.foo,
-    );
+
+    const rawPos = { x: 50, y: 75 };
+    expect(reactFlowInstance.screenToFlowPosition).toHaveBeenCalledWith({
+      x: 5,
+      y: 15,
+    });
+
+    expect(calculateDropPosition).toHaveBeenCalledWith(rawPos, "foo");
+
     expect(newId).toHaveBeenCalledTimes(2);
 
     expect(setNodes).toHaveBeenCalledWith(expect.any(Function));
@@ -85,14 +80,14 @@ describe("onDrop", () => {
     ]);
   });
 
-  it("falls back to default size for unknown type", () => {
+  it("falls back gracefully for unknown type", () => {
     event.dataTransfer.getData.mockReturnValue("unknown");
+
     onDrop(event, reactFlowInstance, newId, setNodes);
 
     expect(calculateDropPosition).toHaveBeenCalledWith(
-      event,
-      reactFlowInstance.screenToFlowPosition,
-      NODE_SIZES.default,
+      { x: 50, y: 75 },
+      "unknown"
     );
     expect(setNodes).toHaveBeenCalled();
   });
