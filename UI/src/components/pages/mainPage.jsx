@@ -47,13 +47,13 @@ import { getSelectedElements as getSelectedUtil } from "../utils/getSelectedElem
 import { isValidConnection as isValidConnectionUtil } from "../utils/isValidConnection.js";
 import { selectAll as selectAllUtil } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
-import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
 import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
 import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
 import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
 import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
+import { loadLocalStorage } from "../utils/loadLocalStorage.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
