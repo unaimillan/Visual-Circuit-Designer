@@ -15,9 +15,7 @@ describe("spawnCircuit", () => {
     };
     mockSetNodes = jest.fn();
 
-    generateId
-      .mockReturnValueOnce("node-123")
-      .mockReturnValueOnce("node-456");
+    generateId.mockReturnValueOnce("node-123").mockReturnValueOnce("node-456");
 
     calculatePosition.mockReturnValue({ x: 70, y: 170 });
   });

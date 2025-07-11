@@ -41,7 +41,9 @@ describe("pasteElements", () => {
   });
 
   it("does nothing if reactFlowInstance is null", () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     pasteElements({
       clipboard,
@@ -51,7 +53,9 @@ describe("pasteElements", () => {
       setEdges: mockSetEdges,
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith("React Flow instance not available");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "React Flow instance not available",
+    );
   });
 
   it("does nothing if clipboard is empty", () => {

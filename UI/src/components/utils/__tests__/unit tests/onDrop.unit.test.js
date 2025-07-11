@@ -24,9 +24,7 @@ describe("onDrop", () => {
 
     calculatePosition.mockReturnValue({ x: 100, y: 200 });
 
-    generateId
-      .mockReturnValueOnce("node-123")
-      .mockReturnValueOnce("node-456");
+    generateId.mockReturnValueOnce("node-123").mockReturnValueOnce("node-456");
 
     setNodes = jest.fn();
   });
