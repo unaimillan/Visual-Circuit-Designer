@@ -1,5 +1,5 @@
 import { calculatePosition } from "./calculatePosition.js";
-import { generateId } from "./GenerateId.js";
+import { generateId } from "./generateId.js";
 
 export function onDrop(event, reactFlowInstance, setNodes) {
   event.preventDefault();
