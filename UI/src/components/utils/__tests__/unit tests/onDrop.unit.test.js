@@ -85,10 +85,7 @@ describe("onDrop", () => {
 
     onDrop(event, reactFlowInstance, newId, setNodes);
 
-    expect(calculatePosition).toHaveBeenCalledWith(
-      { x: 50, y: 75 },
-      "unknown"
-    );
+    expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 75 }, "unknown");
     expect(setNodes).toHaveBeenCalled();
   });
 });

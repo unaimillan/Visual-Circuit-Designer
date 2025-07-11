@@ -10,10 +10,7 @@ export function onDrop(event, reactFlowInstance, newId, setNodes) {
     y: event.clientY,
   });
 
-  const position = calculatePosition(
-    rawPos,
-    type,
-  );
+  const position = calculatePosition(rawPos, type);
 
   const id = newId();
   const newNode = {

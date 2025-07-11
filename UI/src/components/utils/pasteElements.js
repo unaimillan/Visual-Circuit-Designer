@@ -23,10 +23,7 @@ export function pasteElements({
     y: mousePosition.y,
   });
 
-  const position = calculatePosition(
-    rawPos,
-    clipboard.nodes[0].type,
-  );
+  const position = calculatePosition(rawPos, clipboard.nodes[0].type);
 
   const offset = {
     x: position.x - clipboard.nodes[0].position.x,

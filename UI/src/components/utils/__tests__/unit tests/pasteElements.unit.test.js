@@ -10,9 +10,9 @@ describe("pasteElements", () => {
   const mockSetEdges = jest.fn((fn) => fn([]));
   const mockNewId = jest
     .fn()
-    .mockReturnValueOnce("node-1")   // first node id
+    .mockReturnValueOnce("node-1") // first node id
     .mockReturnValueOnce("custom-1") // customId for node
-    .mockReturnValueOnce("edge-1");  // edge id
+    .mockReturnValueOnce("edge-1"); // edge id
 
   const mockReactFlowInstance = {
     screenToFlowPosition: jest.fn(() => ({ x: 50, y: 50 })),
@@ -86,9 +86,6 @@ describe("pasteElements", () => {
     expect(mockSetNodes).toHaveBeenCalledTimes(2);
     expect(mockSetEdges).toHaveBeenCalledTimes(2);
     expect(mockNewId).toHaveBeenCalledTimes(3);
-    expect(calculatePosition).toHaveBeenCalledWith(
-      { x: 50, y: 50 },
-      "foo"
-    );
+    expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 50 }, "foo");
   });
 });
