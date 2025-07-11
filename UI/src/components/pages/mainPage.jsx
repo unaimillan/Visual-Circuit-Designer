@@ -271,7 +271,6 @@ export default function Main() {
       reactFlowInstance,
       setNodes,
       setEdges,
-      newId,
     });
   }, [clipboard, reactFlowInstance]);
 
@@ -329,7 +328,7 @@ export default function Main() {
   const onDrop = useCallback(
     (event) => {
       deselectAll();
-      onDropUtil(event, reactFlowInstance, () => newId(), setNodes);
+      onDropUtil(event, reactFlowInstance, setNodes);
     },
     [reactFlowInstance, setNodes, deselectAll],
   );
@@ -366,7 +365,7 @@ export default function Main() {
   const spawnCircuit = useCallback(
     (type) => {
       deselectAll();
-      spawnCircuitUtil(type, reactFlowInstance, setNodes, () => newId());
+      spawnCircuitUtil(type, reactFlowInstance, setNodes);
     },
     [reactFlowInstance, setNodes, deselectAll],
   );

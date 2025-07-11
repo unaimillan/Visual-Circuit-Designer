@@ -1,6 +1,7 @@
 import { calculatePosition } from "./calculatePosition.js";
+import { generateId } from "./GenerateId.js";
 
-export function spawnCircuit(type, reactFlowInstance, setNodes, newId) {
+export function spawnCircuit(type, reactFlowInstance, setNodes) {
   if (!reactFlowInstance) return;
 
   const rawPos = reactFlowInstance.screenToFlowPosition({
@@ -10,14 +11,14 @@ export function spawnCircuit(type, reactFlowInstance, setNodes, newId) {
 
   const position = calculatePosition(rawPos, type);
 
-  const id = type + "_" + newId();
+  const id = generateId();
   const newNode = {
     id: id,
     type,
     position,
     selected: true,
     data: {
-      customId: newId(),
+      customId: generateId(),
     },
   };
 

@@ -1,4 +1,5 @@
 import { calculatePosition } from "./calculatePosition.js";
+import { generateId } from "./GenerateId.js";
 
 export function pasteElements({
   clipboard,
@@ -6,7 +7,6 @@ export function pasteElements({
   reactFlowInstance,
   setNodes,
   setEdges,
-  newId,
 }) {
   if (!reactFlowInstance) {
     console.error("React Flow instance not available");
@@ -32,7 +32,7 @@ export function pasteElements({
 
   const nodeIdMap = {};
   const newNodes = clipboard.nodes.map((node) => {
-    const id = type + "_" + newId();
+    const id = generateId();
     nodeIdMap[node.id] = id;
 
     return {
@@ -45,14 +45,14 @@ export function pasteElements({
       selected: true,
       data: {
         ...node.data,
-        customId: newId(),
+        customId: generateId(),
       },
     };
   });
 
   const newEdges = clipboard.edges.map((edge) => ({
     ...edge,
-    id: newId(),
+    id: generateId(),
     source: nodeIdMap[edge.source] || edge.source,
     target: nodeIdMap[edge.target] || edge.target,
   }));

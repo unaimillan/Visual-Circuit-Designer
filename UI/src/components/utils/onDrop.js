@@ -1,6 +1,7 @@
 import { calculatePosition } from "./calculatePosition.js";
+import { generateId } from "./GenerateId.js";
 
-export function onDrop(event, reactFlowInstance, newId, setNodes) {
+export function onDrop(event, reactFlowInstance, setNodes) {
   event.preventDefault();
   const type = event.dataTransfer.getData("application/reactflow");
   if (!type || !reactFlowInstance) return;
@@ -12,13 +13,13 @@ export function onDrop(event, reactFlowInstance, newId, setNodes) {
 
   const position = calculatePosition(rawPos, type);
 
-  const id = type + "_" + newId();
+  const id = generateId();
   const newNode = {
     id,
     type,
     position,
     selected: true,
-    data: { customId: newId() },
+    data: { customId: generateId() },
   };
 
   setNodes((nds) => nds.concat(newNode));
