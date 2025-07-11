@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../CSS/reg.css";
-import "../../CSS/variables.css"
-import {Link} from "react-router-dom";
+import "../../CSS/variables.css";
+import { Link } from "react-router-dom";
 
-const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+const EMAIL_REGEXP =
+  /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 const USERNAME_REGEXP = /^[a-zA-Z0-9._-]{4,25}$/;
 
 const Auth = () => {
@@ -16,7 +17,8 @@ const Auth = () => {
   const usernameRef = useRef(null);
 
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] = useState(false);
+  const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
+    useState(false);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
 
@@ -44,7 +46,8 @@ const Auth = () => {
 
   useEffect(() => {
     if (usernameRef.current) {
-      const showError = isUsernameTouched && !isValidUsername && username !== "";
+      const showError =
+        isUsernameTouched && !isValidUsername && username !== "";
       usernameRef.current.style.borderColor = showError
         ? "red"
         : "var(--main-5)";
@@ -62,38 +65,43 @@ const Auth = () => {
     }
 
     if (confirmPasswordRef.current) {
-      const showError = isConfirmPasswordTouched && !passwordsMatch && confirmPassword !== "";
-      confirmPasswordRef.current.style.borderColor = showError ? "red" : "var(--main-5)";
+      const showError =
+        isConfirmPasswordTouched && !passwordsMatch && confirmPassword !== "";
+      confirmPasswordRef.current.style.borderColor = showError
+        ? "red"
+        : "var(--main-5)";
     }
   }, [
-    isValidUsername, isUsernameTouched, username, isValidEmail,
-    isTouched, email, passwordsMatch, isConfirmPasswordTouched,
-    confirmPassword
+    isValidUsername,
+    isUsernameTouched,
+    username,
+    isValidEmail,
+    isTouched,
+    email,
+    passwordsMatch,
+    isConfirmPasswordTouched,
+    confirmPassword,
   ]);
 
   return (
     <div className="reg-container">
       <div className="reg-window">
-        <div className="reg-window-text">
-          Registration
-        </div>
+        <div className="reg-window-text">Registration</div>
         <div className="input-line-container">
-          <div className="input-username-text">
-            Username
-          </div>
+          <div className="input-username-text">Username</div>
           <input
             ref={usernameRef}
             className={`input-username-window ${
-              isUsernameTouched && !isValidUsername && username !== "" ? "invalid" : ""
+              isUsernameTouched && !isValidUsername && username !== ""
+                ? "invalid"
+                : ""
             }`}
             value={username}
             onChange={handleUsernameChange}
             onBlur={() => setIsUsernameTouched(true)}
           />
 
-          <div className="input-email-text">
-            Email
-          </div>
+          <div className="input-email-text">Email</div>
           <input
             ref={emailRef}
             className={`input-email-window ${isTouched && !isValidEmail && email !== "" ? "invalid" : ""}`}
@@ -103,9 +111,7 @@ const Auth = () => {
             placeholder="myEmail@example.com"
           />
 
-          <div className="input-password-text">
-            Password
-          </div>
+          <div className="input-password-text">Password</div>
           <input
             className="input-password-window"
             type="password"
@@ -116,7 +122,11 @@ const Auth = () => {
           <input
             ref={confirmPasswordRef}
             className={`input-password-window ${
-              isConfirmPasswordTouched && !passwordsMatch && confirmPassword !== "" ? "invalid" : ""
+              isConfirmPasswordTouched &&
+              !passwordsMatch &&
+              confirmPassword !== ""
+                ? "invalid"
+                : ""
             }`}
             type="password"
             value={confirmPassword}

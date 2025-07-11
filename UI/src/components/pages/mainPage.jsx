@@ -38,7 +38,7 @@ import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { copyElements as copyElementsUtil } from "../utils/copyElements.js";
 import { cutElements as cutElementsUtil } from "../utils/cutElements.js";

@@ -2,7 +2,7 @@ import Auth from "./components/pages/auth.jsx";
 import Main from "./components/pages/mainPage.jsx";
 import Profile from "./components/pages/profile.jsx";
 import HelloPage from "./components/pages/hello-page.jsx";
-import Registration from "./components/pages/register.jsx"
+import Registration from "./components/pages/register.jsx";
 
 import "@xyflow/react/dist/style.css";
 

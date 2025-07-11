@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../CSS/auth.css";
-import "../../CSS/variables.css"
-import {Link} from "react-router-dom";
+import "../../CSS/variables.css";
+import { Link } from "react-router-dom";
 
-const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+const EMAIL_REGEXP =
+  /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -30,15 +31,10 @@ const Auth = () => {
 
   return (
     <div className="auth-container">
-
       <div className="auth-window">
-        <div className="auth-window-text">
-          Log in
-        </div>
+        <div className="auth-window-text">Log in</div>
         <div className="input-line-container">
-          <div className="input-email-text">
-            Enter email:
-          </div>
+          <div className="input-email-text">Enter email:</div>
           <input
             ref={emailRef}
             className={`input-email-window ${isTouched && !isValidEmail && email !== "" ? "invalid" : ""}`}
@@ -48,9 +44,7 @@ const Auth = () => {
             placeholder="myEmail@example.com"
           />
 
-          <div className="input-password-text">
-            Enter password:
-          </div>
+          <div className="input-password-text">Enter password:</div>
           <input
             className="input-password-window"
             type="password"
@@ -66,10 +60,7 @@ const Auth = () => {
           <span className="log-in-button-text">Log in</span>
         </Link>
         <div className="register-text"> Have no account? </div>
-        <Link
-          to="/reg"
-          className="register-link"
-        >
+        <Link to="/reg" className="register-link">
           <span className="register-link-text">Register</span>
         </Link>
       </div>
