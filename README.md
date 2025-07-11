@@ -1,6 +1,17 @@
 # Visual-Circuit-Designer
 Visual-Circuit-Designer is web-based platform that could provide students and learners good experience in designing circuits similar to the Block Diagrams (like on Computer Architecture), but without the need to install Quartus Prime or huge Virtual box image. 
-## Usage
+
+
+[Link to our product](https://www.visual-circuit-designer.ru/)
+
+[DEMO]()
+
+
+## <div align="center">Usage</div>
+
+### <div align="center">Project goal</div>
+
+The goal of our project is to create web-based platform for designing, simulating, and managing digital logic circuits with an intuitive interface.
 
 Follow these steps to launch and explore the MVP v2:
 
