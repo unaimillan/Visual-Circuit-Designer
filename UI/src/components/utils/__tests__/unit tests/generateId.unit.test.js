@@ -1,8 +1,8 @@
-import { generateId } from '../../generateId';
+import { generateId } from "../../generateId";
 
-test('generates id of expected format', () => {
+test("generates id of expected format", () => {
   const id = generateId();
-  expect(typeof id).toBe('string');
+  expect(typeof id).toBe("string");
   expect(id.length).toBe(22);
   expect(/^[A-Za-z0-9]{22}$/.test(id)).toBe(true);
 });
