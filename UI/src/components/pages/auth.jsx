@@ -45,6 +45,7 @@ const Auth = () => {
             value={email}
             onChange={handleEmailChange}
             onBlur={() => setIsTouched(true)}
+            placeholder="myEmail@example.com"
           />
 
           <div className="input-password-text">
