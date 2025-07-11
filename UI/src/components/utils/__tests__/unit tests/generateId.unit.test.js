@@ -1,4 +1,4 @@
-import { generateId } from '../../generateId';
+import { generateId } from '../../generateId.js';
 
 test('generates id of expected format', () => {
   const id = generateId();
