@@ -1,12 +1,13 @@
 import { onDrop } from "../../onDrop.js";
 import { calculatePosition } from "../../calculatePosition.js";
+import { generateId } from "../../generateId.js";
 
 jest.mock("../../calculatePosition.js");
+jest.mock("../../generateId.js");
 
 describe("onDrop", () => {
   let event;
   let reactFlowInstance;
-  let newId;
   let setNodes;
 
   beforeEach(() => {
@@ -23,10 +24,9 @@ describe("onDrop", () => {
 
     calculatePosition.mockReturnValue({ x: 100, y: 200 });
 
-    newId = jest
-      .fn()
-      .mockReturnValueOnce("node-123") // id
-      .mockReturnValueOnce("node-456"); // customId
+    generateId
+      .mockReturnValueOnce("node-123")
+      .mockReturnValueOnce("node-456");
 
     setNodes = jest.fn();
   });
@@ -37,31 +37,28 @@ describe("onDrop", () => {
 
   it("does nothing when no type or no instance", () => {
     event.dataTransfer.getData.mockReturnValue("");
-    onDrop(event, reactFlowInstance, newId, setNodes);
+    onDrop(event, reactFlowInstance, setNodes);
     expect(event.preventDefault).toHaveBeenCalled();
     expect(setNodes).not.toHaveBeenCalled();
 
     event.dataTransfer.getData.mockReturnValue("foo");
-    onDrop(event, null, newId, setNodes);
+    onDrop(event, null, setNodes);
     expect(setNodes).not.toHaveBeenCalled();
   });
 
   it("creates a new node with correct parameters for known type", () => {
     event.dataTransfer.getData.mockReturnValue("foo");
 
-    onDrop(event, reactFlowInstance, newId, setNodes);
+    onDrop(event, reactFlowInstance, setNodes);
 
     expect(event.preventDefault).toHaveBeenCalled();
-
-    const rawPos = { x: 50, y: 75 };
     expect(reactFlowInstance.screenToFlowPosition).toHaveBeenCalledWith({
       x: 5,
       y: 15,
     });
 
-    expect(calculatePosition).toHaveBeenCalledWith(rawPos, "foo");
-
-    expect(newId).toHaveBeenCalledTimes(2);
+    expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 75 }, "foo");
+    expect(generateId).toHaveBeenCalledTimes(2);
 
     expect(setNodes).toHaveBeenCalledWith(expect.any(Function));
 
@@ -80,10 +77,10 @@ describe("onDrop", () => {
     ]);
   });
 
-  it("falls back gracefully for unknown type", () => {
+  it("supports unknown types (graceful fallback)", () => {
     event.dataTransfer.getData.mockReturnValue("unknown");
 
-    onDrop(event, reactFlowInstance, newId, setNodes);
+    onDrop(event, reactFlowInstance, setNodes);
 
     expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 75 }, "unknown");
     expect(setNodes).toHaveBeenCalled();
