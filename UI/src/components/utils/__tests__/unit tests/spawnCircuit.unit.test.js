@@ -43,7 +43,7 @@ describe("spawnCircuit", () => {
       {
         id: "node-123",
         type: "AND",
-        position: { x: 100, y: 200 },
+        position: { x: 70, y: 170 },
         selected: true,
         data: { customId: "node-456" },
       },

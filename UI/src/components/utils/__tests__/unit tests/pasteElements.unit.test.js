@@ -2,7 +2,7 @@ import { pasteElements } from "../../pasteElements";
 import { calculatePosition } from "../../calculatePosition.js";
 
 jest.mock("../../calculatePosition.js", () => ({
-  calculateDropPosition: jest.fn(() => ({ x: 100, y: 100 })),
+  calculatePosition: jest.fn(() => ({ x: 100, y: 100 })),
 }));
 
 describe("pasteElements", () => {
@@ -83,8 +83,8 @@ describe("pasteElements", () => {
       newId: mockNewId,
     });
 
-    expect(mockSetNodes).toHaveBeenCalledTimes(2); // deselect + add new
-    expect(mockSetEdges).toHaveBeenCalledTimes(2); // deselect + add new
+    expect(mockSetNodes).toHaveBeenCalledTimes(2);
+    expect(mockSetEdges).toHaveBeenCalledTimes(2);
     expect(mockNewId).toHaveBeenCalledTimes(3);
     expect(calculatePosition).toHaveBeenCalledWith(
       { x: 50, y: 50 },
