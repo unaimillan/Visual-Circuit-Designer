@@ -32,7 +32,7 @@ export function pasteElements({
 
   const nodeIdMap = {};
   const newNodes = clipboard.nodes.map((node) => {
-    const id = newId();
+    const id = type + "_" + newId();
     nodeIdMap[node.id] = id;
 
     return {

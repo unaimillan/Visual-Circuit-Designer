@@ -10,7 +10,7 @@ export function spawnCircuit(type, reactFlowInstance, setNodes, newId) {
 
   const position = calculatePosition(rawPos, type);
 
-  const id = newId();
+  const id = type + "_" + newId();
   const newNode = {
     id: id,
     type,
