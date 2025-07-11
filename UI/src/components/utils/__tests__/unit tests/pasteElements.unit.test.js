@@ -1,19 +1,13 @@
 import { pasteElements } from "../../pasteElements";
 import { calculatePosition } from "../../calculatePosition.js";
+import { generateId } from "../../generateId.js";
 
-jest.mock("../../calculatePosition.js", () => ({
-  calculatePosition: jest.fn(() => ({ x: 100, y: 100 })),
-}));
+jest.mock("../../calculatePosition.js");
+jest.mock("../../generateId.js");
 
 describe("pasteElements", () => {
   const mockSetNodes = jest.fn((fn) => fn([]));
   const mockSetEdges = jest.fn((fn) => fn([]));
-  const mockNewId = jest
-    .fn()
-    .mockReturnValueOnce("node-1") // first node id
-    .mockReturnValueOnce("custom-1") // customId for node
-    .mockReturnValueOnce("edge-1"); // edge id
-
   const mockReactFlowInstance = {
     screenToFlowPosition: jest.fn(() => ({ x: 50, y: 50 })),
   };
@@ -38,6 +32,12 @@ describe("pasteElements", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    calculatePosition.mockReturnValue({ x: 100, y: 100 });
+
+    generateId
+      .mockReturnValueOnce("node-1")
+      .mockReturnValueOnce("custom-1")
+      .mockReturnValueOnce("edge-1");
   });
 
   it("does nothing if reactFlowInstance is null", () => {
@@ -51,7 +51,6 @@ describe("pasteElements", () => {
       reactFlowInstance: null,
       setNodes: mockSetNodes,
       setEdges: mockSetEdges,
-      newId: mockNewId,
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -66,11 +65,10 @@ describe("pasteElements", () => {
       reactFlowInstance: mockReactFlowInstance,
       setNodes: mockSetNodes,
       setEdges: mockSetEdges,
-      newId: mockNewId,
     });
 
-    expect(mockSetNodes).toHaveBeenCalledTimes(1); // deselect call
-    expect(mockSetEdges).toHaveBeenCalledTimes(1); // deselect call
+    expect(mockSetNodes).toHaveBeenCalledTimes(1);
+    expect(mockSetEdges).toHaveBeenCalledTimes(1);
   });
 
   it("pastes gates and wires with offset", () => {
@@ -80,12 +78,34 @@ describe("pasteElements", () => {
       reactFlowInstance: mockReactFlowInstance,
       setNodes: mockSetNodes,
       setEdges: mockSetEdges,
-      newId: mockNewId,
     });
 
     expect(mockSetNodes).toHaveBeenCalledTimes(2);
     expect(mockSetEdges).toHaveBeenCalledTimes(2);
-    expect(mockNewId).toHaveBeenCalledTimes(3);
+
+    expect(generateId).toHaveBeenCalledTimes(3);
     expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 50 }, "foo");
+
+    const addNodesFn = mockSetNodes.mock.calls[1][0];
+    const resultNodes = addNodesFn([]);
+    expect(resultNodes).toEqual([
+      {
+        id: "node-1",
+        type: "foo",
+        position: { x: 100, y: 100 },
+        selected: true,
+        data: { customId: "custom-1" },
+      },
+    ]);
+
+    const addEdgesFn = mockSetEdges.mock.calls[1][0];
+    const resultEdges = addEdgesFn([]);
+    expect(resultEdges).toEqual([
+      {
+        id: "edge-1",
+        source: "node-1",
+        target: "node-1",
+      },
+    ]);
   });
 });
