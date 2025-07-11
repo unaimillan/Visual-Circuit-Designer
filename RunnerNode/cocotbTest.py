@@ -60,6 +60,7 @@ async def simulation(dut):
         try:
             data = inputs_queue.get(timeout=0.1)
             for name, value in data.items():
+                name = name.replace("-", "_")
                 if hasattr(dut, name):
                     getattr(dut, name).value = value
                 else:
