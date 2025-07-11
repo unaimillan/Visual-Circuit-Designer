@@ -21,5 +21,3 @@ export const nodeTypes = {
   outputNodeLed: OutputNodeLed,
   switchNode: SwitchNode,
 };
-
-export const initialNodes = [];

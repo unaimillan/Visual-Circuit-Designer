@@ -11,6 +11,7 @@ async def test_run_simulation_invalid_data1(socketio_client):
         received_errors.append(data)
 
     mock_circuit = {
+        "test_mode": True,
         "nodes": [],
         "edges": []
     }
@@ -32,6 +33,7 @@ async def test_run_simulation_invalid_data2(socketio_client):
 
     # Output absence
     mock_circuit = {
+        "test_mode": True,
         "nodes": [
             {
               "id": "inputNodeSwitch1",

@@ -16,6 +16,7 @@ import "./CSS/circuitsMenu.css";
 import "./CSS/contextMenu.css";
 import "./CSS/auth.css";
 import "./CSS/button.css";
+import "./CSS/tabs.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

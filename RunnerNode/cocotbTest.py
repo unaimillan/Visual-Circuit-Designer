@@ -1,5 +1,6 @@
 import os
 import queue
+import shutil
 import threading
 import time
 
@@ -10,8 +11,9 @@ from cocotb.runner import get_runner
 
 
 @cocotb.test()
-async def interactive_test(dut):
+async def simulation(dut):
     user_sid = os.environ["user_sid"]
+    _redirect_on_test = os.environ.get("REDIRECT_ON_TEST", "False") == "True"
 
     inputs_queue = queue.Queue()
     stop_event = threading.Event()
@@ -40,7 +42,11 @@ async def interactive_test(dut):
 
     def socket_thread():
         try:
-            sio.connect("http://localhost:80", wait=True)
+            if _redirect_on_test:
+                dut._log.info("Starting testing Socket.IO session")
+                sio.connect("http://localhost:52525", wait=True)
+            else:
+                sio.connect("http://localhost:80", wait=True)
             sio.wait()
         except Exception as e:
             dut._log.error(f"Socket.IO failed: {e}")
@@ -62,7 +68,11 @@ async def interactive_test(dut):
             await Timer(1, units="ns")
 
             outputs = {
-                name: int(getattr(dut, name).value)
+                name: (
+                    int(getattr(dut, name).value)
+                    if getattr(dut, name).value in (0, 1)
+                    else str(getattr(dut, name).value)
+                )
                 for name in dir(dut)
                 if name.startswith("out_")
             }
@@ -77,8 +87,18 @@ async def interactive_test(dut):
     sio.disconnect()
 
 
-def run_cocotb_test(sim_path, user_sid):
+def cleanup_sessions(sim_path=None):
+    try:
+        if sim_path and os.path.exists(sim_path):
+            shutil.rmtree(sim_path)
+    except Exception as e:
+        if "already terminated" not in str(e):
+            print(f"Error cleaning up: {e}")
+
+
+def run_cocotb_test(sim_path, user_sid, test_mode):
     os.environ["user_sid"] = user_sid
+    os.environ["REDIRECT_ON_TEST"] = str(test_mode)
     runner = get_runner("icarus")
 
     try:
@@ -93,19 +113,25 @@ def run_cocotb_test(sim_path, user_sid):
             test_module="cocotbTest",
         )
     except Exception as e:
-        handle_simulation_error(user_sid, f"Simulation error: {str(e)}")
+        handle_simulation_error(user_sid, f"Simulation error: {str(e)}", redirect=test_mode)
     except SystemExit as se:
         if se.code != 0:
-            handle_simulation_error(user_sid, f"SystemExit with code {se.code}")
+            handle_simulation_error(user_sid, f"SystemExit with code {se.code}", redirect=test_mode)
     except BaseException as be:
-        handle_simulation_error(user_sid, f"Critical error: {str(be)}")
+        handle_simulation_error(user_sid, f"Critical error: {str(be)}", redirect=test_mode)
+    finally:
+        cleanup_sessions(sim_path)
 
 
-def handle_simulation_error(user_sid, error_msg):
+
+def handle_simulation_error(user_sid, error_msg, redirect=False):
     try:
         print(f"[ERROR] {error_msg}")
         error_sio = socketio.Client()
-        error_sio.connect("http://localhost:80")
+        if redirect:
+            error_sio.connect("http://localhost:52525")
+        else:
+            error_sio.connect("http://localhost:80")
         error_sio.emit("internal_simulation_error", {
             "user_sid": user_sid,
             "msg": error_msg
