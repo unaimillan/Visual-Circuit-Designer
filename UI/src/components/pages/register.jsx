@@ -79,7 +79,7 @@ const Auth = () => {
         </div>
         <div className="input-line-container">
           <div className="input-username-text">
-            Enter username:
+            Username
           </div>
           <input
             ref={usernameRef}
@@ -92,7 +92,7 @@ const Auth = () => {
           />
 
           <div className="input-email-text">
-            Enter email:
+            Email
           </div>
           <input
             ref={emailRef}
@@ -103,7 +103,7 @@ const Auth = () => {
           />
 
           <div className="input-password-text">
-            Enter password:
+            Password
           </div>
           <input
             className="input-password-window"
