@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../CSS/auth.css";
 import "../../CSS/variables.css"
+import {Link} from "react-router-dom";
 
 const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
@@ -29,6 +30,7 @@ const Auth = () => {
 
   return (
     <div className="auth-container">
+
       <div className="auth-window">
         <div className="auth-window-text">
           Log in
@@ -55,9 +57,20 @@ const Auth = () => {
             onChange={handlePasswordChange}
           />
         </div>
-        <div className="log-in-button">
-          <span className="log-in-button-text"> Log in</span>
-        </div>
+        <Link
+          to="/profile"
+          className="log-in-button"
+          style={{ textDecoration: "none" }}
+        >
+          <span className="log-in-button-text">Log in</span>
+        </Link>
+        <div className="register-text"> Have no account? </div>
+        <Link
+          to="/reg"
+          className="register-link"
+        >
+          <span className="register-link-text">Register</span>
+        </Link>
       </div>
     </div>
   );

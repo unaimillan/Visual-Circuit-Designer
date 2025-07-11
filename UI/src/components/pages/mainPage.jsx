@@ -38,7 +38,6 @@ import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { Toaster } from "react-hot-toast";
 import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
-import UserIcon from "../../../assets/userIcon.png";
 import {Link} from "react-router-dom";
 
 // eslint-disable-next-line react-refresh/only-export-components
