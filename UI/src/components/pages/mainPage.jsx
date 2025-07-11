@@ -38,13 +38,22 @@ import { updateInputState } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
-import { deleteSelected } from "../utils/deleteSelected.js";
-import { deselectAll } from "../utils/deselectAll.js";
-import { getSelectedElements } from "../utils/getSelected.js";
-import { isValidConnection } from "../utils/isValidConnection.js";
-import { selectAll } from "../utils/selectAll.js";
+import { copyElements as copyElementsUtil } from "../utils/copyElements.js";
+import { cutElements as cutElementsUtil } from "../utils/cutElements.js";
+import { pasteElements as pasteElementsUtil } from "../utils/pasteElements.js";
+import { deleteSelectedElements as deleteSelectedUtil } from "../utils/deleteSelectedElements.js";
+import { deselectAll as deselectAllUtil } from "../utils/deselectAll.js";
+import { getSelectedElements as getSelectedUtil } from "../utils/getSelectedElements.js";
+import { isValidConnection as isValidConnectionUtil } from "../utils/isValidConnection.js";
+import { selectAll as selectAllUtil } from "../utils/selectAll.js";
 import TabsContainer from "./mainPage/tabs.jsx";
-import { loadLocalStorage } from "./mainPage/loadLocalStorage.jsx";
+import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
+import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
+import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
+import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
+import { onDrop as onDropUtil } from "../utils/onDrop.js";
+import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
+import { loadLocalStorage } from "../utils/loadLocalStorage.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -76,7 +85,6 @@ export function useNotificationsLevel() {
 }
 
 const GAP_SIZE = 10;
-const MIN_DISTANCE = 1;
 const STORAGE_KEY = "myCircuits";
 
 export default function Main() {
@@ -135,9 +143,7 @@ export default function Main() {
       } catch {}
     }
     // Если в хранилище ничего нет — создаём одну начальную вкладку
-    const initial = [
-      { id: Date.now(), title: "New Tab", nodes: [], edges: [] },
-    ];
+    const initial = [{ id: newId(), title: "New Tab", nodes: [], edges: [] }];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
@@ -215,134 +221,59 @@ export default function Main() {
     );
   }, [nodes]);
 
-  const handleGetSelectedElements = useCallback(() => {
-    return getSelectedElements(nodes, edges);
+  const getSelectedElements = useCallback(() => {
+    return getSelectedUtil(nodes, edges);
   });
 
-  const validateConnection = useCallback(
-    (connection) => isValidConnection(connection, edgesRef.current),
+  const isValidConnection = useCallback(
+    (connection) => isValidConnectionUtil(connection, edgesRef.current),
     [edgesRef],
   );
 
-  const handleSelectAll = useCallback(() => {
-    const { nodes: newNodes, edges: newEdges } = selectAll(nodes, edges);
+  const selectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = selectAllUtil(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
 
-  const handleDeselectAll = useCallback(() => {
-    const { nodes: newNodes, edges: newEdges } = deselectAll(nodes, edges);
+  const deselectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = deselectAllUtil(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [nodes, edges, setNodes, setEdges]);
+
+  const deleteSelectedElements = useCallback(() => {
+    const selected = getSelectedElements();
+    const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, clipboard]);
 
   const copyElements = useCallback(() => {
-    const selected = handleGetSelectedElements();
-    if (selected.nodes.length === 0) return;
-
-    setClipboard(selected);
-
-    console.log(
-      "Copied:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges, handleGetSelectedElements]);
+    copyElementsUtil({
+      getSelectedElements,
+      setClipboard,
+    });
+  }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
-    const selected = handleGetSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
-
-    setClipboard(selected);
-
-    handleDeleteSelected();
-
-    console.log(
-      "Cut:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges, handleGetSelectedElements]);
+    cutElementsUtil({
+      getSelectedElements,
+      setClipboard,
+      deleteSelectedElements,
+    });
+  }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
-    if (!reactFlowInstance) {
-      console.error("React Flow instance not available");
-      return;
-    }
-
-    setNodes((prevNodes) =>
-      prevNodes.map((node) => ({ ...node, selected: false })),
-    );
-    setEdges((prevEdges) =>
-      prevEdges.map((edge) => ({ ...edge, selected: false })),
-    );
-
-    if (clipboard.nodes.length === 0) return;
-
-    const flowPosition = reactFlowInstance.screenToFlowPosition({
-      x: mousePositionRef.current.x,
-      y: mousePositionRef.current.y,
-    });
-
-    const offset = {
-      x: flowPosition.x - clipboard.nodes[0].position.x,
-      y: flowPosition.y - clipboard.nodes[0].position.y,
-    };
-
-    const nodeIdMap = {};
-    const newNodes = clipboard.nodes.map((node) => {
-      const id = newId();
-      nodeIdMap[node.id] = id;
-
-      return {
-        ...node,
-        id: id,
-        position: {
-          x: node.position.x + offset.x,
-          y: node.position.y + offset.y,
-        },
-        selected: true,
-        data: {
-          ...node.data,
-          customId: newId,
-        },
-      };
-    });
-
-    const newEdges = clipboard.edges.map((edge) => ({
-      ...edge,
-      id: newId(),
-      source: nodeIdMap[edge.source] || edge.source,
-      target: nodeIdMap[edge.target] || edge.target,
-    }));
-
-    setNodes((nds) => nds.concat(newNodes));
-    setEdges((eds) => eds.concat(newEdges));
-  }, [clipboard, reactFlowInstance]);
-
-  const handleDeleteSelected = useCallback(() => {
-    if (clipboard.nodes.length === 0 && clipboard.edges.length === 0) return;
-
-    const { newNodes, newEdges } = deleteSelected(
-      nodesRef.current,
-      edgesRef.current,
+    pasteElementsUtil({
       clipboard,
-    );
-    setNodes(newNodes);
-    setEdges(newEdges);
-
-    console.log(
-      "Deleted:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges, handleGetSelectedElements]);
+      mousePosition: mousePositionRef.current,
+      reactFlowInstance,
+      setNodes,
+      setEdges,
+      newId,
+    });
+  }, [clipboard, reactFlowInstance]);
 
   useEffect(() => {
     loadLocalStorage({
@@ -395,25 +326,13 @@ export default function Main() {
   };
 
   //Create new node after dragAndDrop
-  const onDrop = (event) => {
-    event.preventDefault();
-    const type = event.dataTransfer.getData("application/reactflow");
-    if (!type || !reactFlowInstance) return;
-
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
-
-    const newNode = {
-      id: `${type}_${Date.now()}`,
-      type,
-      position,
-      data: { customId: `${type}_${Date.now()}` },
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  };
+  const onDrop = useCallback(
+    (event) => {
+      deselectAll();
+      onDropUtil(event, reactFlowInstance, () => newId(), setNodes);
+    },
+    [reactFlowInstance, setNodes, deselectAll],
+  );
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -423,224 +342,44 @@ export default function Main() {
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu({
-      id: node.id,
-      name: node.type,
-      type: "node",
-      top: event.clientY < pane.height - 200 && event.clientY,
-      left: event.clientX < pane.width - 200 && event.clientX,
-      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
-    });
+    setMenu(calculateContextMenuPosition(event, node, pane));
   }, []);
 
   const onEdgeContextMenu = useCallback((event, edge) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu({
-      id: edge.id,
-      name: edge.type,
-      type: "edge",
-      top: event.clientY < pane.height - 200 && event.clientY,
-      left: event.clientX < pane.width - 200 && event.clientX,
-      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
-    });
+    setMenu(calculateContextMenuPosition(event, edge, pane));
   }, []);
 
   const onPaneClick = useCallback(() => setMenu(null), []);
 
   //Allows user to download circuit JSON
-  const saveCircuit = () => {
-    const flowData = {
-      nodes: nodes.map((n) => ({
-        id: n.id,
-        type: n.type,
-        position: n.position,
-        data: n.data,
-      })),
-      edges: edges.map((e) => ({
-        id: e.id,
-        source: e.source,
-        target: e.target,
-        sourceHandle: e.sourceHandle,
-        targetHandle: e.targetHandle,
-      })),
-    };
+  const saveCircuit = () => saveCircuitUtil(nodes, edges);
 
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(flowData, null, 2));
-    const downloadAnchorNode = document.createElement("a");
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "circuit.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  };
-
-  const loadCircuit = (event) => {
-    const fileReader = new FileReader();
-    fileReader.readAsText(event.target.files[0]);
-    fileReader.onload = (e) => {
-      const circuitData = JSON.parse(e.target.result);
-      setNodes([]);
-      setEdges([]);
-      setTimeout(() => {
-        setNodes(circuitData.nodes || []);
-        setEdges(circuitData.edges || []);
-      }, 100);
-    };
-  };
-
-  const spawnCircuit = (type) => {
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    });
-
-    const newNode = {
-      id: `${type}_${Date.now()}`,
-      type,
-      position,
-      data: {
-        customId: `${type}_${Date.now()}`,
-        simState: simulateState,
-        value: false,
-      },
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  };
-
-  const getClosestEdge = useCallback(
-    (draggedNode) => {
-      const { nodeLookup } = store.getState();
-      const internalNode = getInternalNode(draggedNode.id);
-      if (!internalNode) return null;
-
-      const draggedHandles = internalNode.internals.handleBounds;
-      if (!draggedHandles) return null;
-
-      const draggedPos = internalNode.internals.positionAbsolute;
-      let closestEdge = null;
-      let minDistance = MIN_DISTANCE;
-
-      nodeLookup.forEach((node) => {
-        if (node.id === draggedNode.id) return;
-        const nodeHandles = node.internals.handleBounds;
-        if (!nodeHandles) return;
-        const nodePos = node.internals.positionAbsolute;
-
-        // Check source->target connections
-        if (draggedHandles.source) {
-          draggedHandles.source.forEach((srcHandle) => {
-            const srcHandlePos = {
-              x: draggedPos.x + srcHandle.x + srcHandle.width / 2,
-              y: draggedPos.y + srcHandle.y + srcHandle.height / 2,
-            };
-
-            if (nodeHandles.target) {
-              nodeHandles.target.forEach((tgtHandle) => {
-                const alreadyUsed = edgesRef.current.some(
-                  (e) =>
-                    e.target === node.id && e.targetHandle === tgtHandle.id,
-                );
-                if (alreadyUsed) return;
-
-                const tgtHandlePos = {
-                  x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
-                  y: nodePos.y + tgtHandle.y + tgtHandle.height / 2,
-                };
-
-                const dx = srcHandlePos.x - tgtHandlePos.x;
-                const dy = srcHandlePos.y - tgtHandlePos.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestEdge = {
-                    id: `temp_${internalNode.id}_${srcHandle.id}_to_${node.id}_${tgtHandle.id}`,
-                    source: internalNode.id,
-                    sourceHandle: srcHandle.id,
-                    target: node.id,
-                    targetHandle: tgtHandle.id,
-                    className: "temp",
-                  };
-                }
-              });
-            }
-          });
-        }
-
-        // Check target->source connections
-        if (draggedHandles.target) {
-          draggedHandles.target.forEach((tgtHandle) => {
-            const tgtHandlePos = {
-              x: draggedPos.x + tgtHandle.x + tgtHandle.width / 2,
-              y: draggedPos.y + tgtHandle.y + tgtHandle.height / 2,
-            };
-
-            if (nodeHandles.source) {
-              nodeHandles.source.forEach((srcHandle) => {
-                const alreadyUsed = edgesRef.current.some(
-                  (e) =>
-                    e.target === internalNode.id &&
-                    e.targetHandle === tgtHandle.id,
-                );
-                if (alreadyUsed) return;
-
-                const srcHandlePos = {
-                  x: nodePos.x + srcHandle.x + srcHandle.width / 2,
-                  y: nodePos.y + srcHandle.y + srcHandle.height / 2,
-                };
-
-                const dx = tgtHandlePos.x - srcHandlePos.x;
-                const dy = tgtHandlePos.y - srcHandlePos.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestEdge = {
-                    id: `temp_${node.id}_${srcHandle.id}_to_${internalNode.id}_${tgtHandle.id}`,
-                    source: node.id,
-                    sourceHandle: srcHandle.id,
-                    target: internalNode.id,
-                    targetHandle: tgtHandle.id,
-                    className: "temp",
-                  };
-                }
-              });
-            }
-          });
-        }
-      });
-      return closestEdge;
+  const loadCircuit = useCallback(
+    (event) => {
+      loadCircuitUtil(event, setNodes, setEdges);
     },
-    [store, getInternalNode],
+    [setNodes, setEdges],
+  );
+
+  const spawnCircuit = useCallback(
+    (type) => {
+      deselectAll();
+      spawnCircuitUtil(type, reactFlowInstance, setNodes, () => newId());
+    },
+    [reactFlowInstance, setNodes, deselectAll],
   );
 
   const onNodeDragStop = useCallback(
-    (_, node) => {
-      setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== "temp");
-        const closeEdge = getClosestEdge(node);
-        if (closeEdge) {
-          return addEdge(
-            {
-              type: "straight",
-              source: closeEdge.source,
-              sourceHandle: closeEdge.sourceHandle,
-              target: closeEdge.target,
-              targetHandle: closeEdge.targetHandle,
-            },
-            nextEdges,
-          );
-        }
-        return nextEdges;
-      });
-    },
-    [getClosestEdge, setEdges],
+    onNodeDragStopUtil({
+      nodes,
+      setEdges,
+      getInternalNode,
+      store,
+      addEdge,
+    }),
+    [nodes, setEdges, getInternalNode, store],
   );
 
   const variant =
@@ -661,8 +400,8 @@ export default function Main() {
       copyElements,
       cutElements,
       pasteElements,
-      handleSelectAll,
-      handleDeselectAll,
+      selectAll,
+      deselectAll,
       handleSimulateClick,
       simulateState,
       setSimulateState,
@@ -681,8 +420,8 @@ export default function Main() {
       copyElements,
       cutElements,
       pasteElements,
-      handleSelectAll,
-      handleDeselectAll,
+      selectAll,
+      deselectAll,
       handleSimulateClick,
       simulateState,
       setSimulateState,
@@ -727,7 +466,7 @@ export default function Main() {
             onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
             onInit={setReactFlowInstance}
-            isValidConnection={validateConnection}
+            isValidConnection={isValidConnection}
             nodeTypes={nodeTypes}
             panOnDrag={panOnDrag}
             selectionOnDrag
@@ -738,7 +477,7 @@ export default function Main() {
             minZoom={0.2}
             maxZoom={10}
             deleteKeyCode={["Delete", "Backspace"]}
-            onDelete={handleDeleteSelected}
+            onDelete={deleteSelectedElements}
             // onlyRenderVisibleElements={true}
           >
             <Background

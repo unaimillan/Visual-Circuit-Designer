@@ -1,7 +1,7 @@
 import { deselectAll } from "../../deselectAll";
 
 describe("deselectAll", () => {
-  it("removes the selection of nodes and edges", () => {
+  it("removes the selection of gates and wires", () => {
     const nodes = [
       { id: "1", selected: true },
       { id: "2", selected: true },
