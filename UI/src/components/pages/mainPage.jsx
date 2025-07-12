@@ -384,13 +384,13 @@ export default function Main() {
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, node, pane));
+    setMenu(calculateContextMenuPosition(event, node, pane, "node"));
   }, []);
 
   const onEdgeContextMenu = useCallback((event, edge) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, edge, pane));
+    setMenu(calculateContextMenuPosition(event, edge, pane, "edge"));
   }, []);
 
   const onPaneClick = useCallback(() => setMenu(null), []);
