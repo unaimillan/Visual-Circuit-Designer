@@ -12,6 +12,7 @@ async def test_cocotb_runner_backend_connection(socketio_client):
 
     # Sample circuit
     mock_circuit = {
+        "test_mode": True,
         "nodes": [
             {
               "id": "inputNodeSwitch",

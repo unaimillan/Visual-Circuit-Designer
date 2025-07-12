@@ -21,25 +21,40 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-//Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
+import Settings from "./mainPage/settings.jsx";
+
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
-
-import { initialNodes, nodeTypes } from "../codeComponents/nodes.js";
-import { initialEdges } from "../codeComponents/edges.js";
+import { nodeTypes } from "../codeComponents/nodes.js";
 
 import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import { useHotkeys } from "./mainPage/useHotkeys.js";
+import { Toaster } from "react-hot-toast";
 
 import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
-
 import { updateInputState } from "./mainPage/runnerHandler.jsx";
-import { Toaster } from "react-hot-toast";
-import { Settings } from "./mainPage/settings.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
+import { nanoid } from "nanoid";
 
-// eslint-disable-next-line react-refresh/only-export-components
+import { copyElements as copyElementsUtil } from "../utils/copyElements.js";
+import { cutElements as cutElementsUtil } from "../utils/cutElements.js";
+import { pasteElements as pasteElementsUtil } from "../utils/pasteElements.js";
+import { deleteSelectedElements as deleteSelectedUtil } from "../utils/deleteSelectedElements.js";
+import { deselectAll as deselectAllUtil } from "../utils/deselectAll.js";
+import { getSelectedElements as getSelectedUtil } from "../utils/getSelectedElements.js";
+import { isValidConnection as isValidConnectionUtil } from "../utils/isValidConnection.js";
+import { selectAll as selectAllUtil } from "../utils/selectAll.js";
+import TabsContainer from "./mainPage/tabs.jsx";
+import { saveCircuit as saveCircuitUtil } from "../utils/saveCircuit.js";
+import { loadCircuit as loadCircuitUtil } from "../utils/loadCircuit.js";
+import { spawnCircuit as spawnCircuitUtil } from "../utils/spawnCircuit.js";
+import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosition.js";
+import { onDrop as onDropUtil } from "../utils/onDrop.js";
+import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
+import { loadLocalStorage } from "../utils/loadLocalStorage.js";
+
 export const SimulateStateContext = createContext({
   simulateState: "idle",
   setSimulateState: () => {},
@@ -70,7 +85,7 @@ export function useNotificationsLevel() {
 }
 
 const GAP_SIZE = 10;
-const MIN_DISTANCE = 1;
+const STORAGE_KEY = "myCircuits";
 
 export default function Main() {
   const [circuitsMenuState, setCircuitsMenuState] = useState(false);
@@ -84,8 +99,16 @@ export default function Main() {
   const [toastPosition, setToastPosition] = useState("top-center");
   const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  // Хуки React Flow
+  const [nodes, setNodes, onNodesChangeFromHook] = useNodesState([]);
+  const [edges, setEdges, onEdgesChangeFromHook] = useEdgesState([]);
+
+  const [tabs, setTabs] = useState([]);
+  const [activeTabId, setActiveTabId] = useState(null);
+
+  // Если где-то нужен доступ через рефы — поддерживаем их
+  const nodesRef = useRef(nodes);
+  const edgesRef = useRef(edges);
 
   const [menu, setMenu] = useState(null);
 
@@ -105,15 +128,72 @@ export default function Main() {
     }
   };
 
-  //Load saved settings from localStorage
-  const nodesRef = useRef(nodes);
-  const edgesRef = useRef(edges);
+  // 1) Загрузка списка вкладок и сохранённого activeTabId из localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const { tabs: savedTabs, activeTabId: savedActive } =
+          JSON.parse(stored);
+        if (Array.isArray(savedTabs) && savedActive != null) {
+          setTabs(savedTabs);
+          setActiveTabId(savedActive);
+          return;
+        }
+      } catch {}
+    }
+    // Если в хранилище ничего нет — создаём одну начальную вкладку
+    const initial = [{ id: newId(), title: "New Tab", nodes: [], edges: [] }];
+    setTabs(initial);
+    setActiveTabId(initial[0].id);
+  }, []);
+
+  // 2) Получение текущей активной вкладки по её id
+  const activeTab = tabs.find((t) => t.id === activeTabId) || {
+    nodes: [],
+    edges: [],
+  };
+
+  // 3) При смене вкладки: проставляем её nodes/edges в локальный стейт ReactFlow
+  useEffect(() => {
+    setNodes(activeTab.nodes);
+    setEdges(activeTab.edges);
+  }, [activeTabId]);
+
+  // 4) Обновляем внешние рефы, если они используются в другой логике вне ReactFlow
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+
+  useEffect(() => {
+    edgesRef.current = edges;
+  }, [edges]);
+
+  // 5) Синхронизация изменений из ReactFlow обратно в массив tabs:
+  //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
+  useEffect(() => {
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, nodes } : tab)),
+    );
+  }, [nodes, activeTabId]);
+
+  //    5b) при любом обновлении edges сохраняем их в текущей вкладке
+  useEffect(() => {
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === activeTabId ? { ...tab, edges } : tab)),
+    );
+  }, [edges, activeTabId]);
+
+  useEffect(() => {
+    if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
+    const toStore = { tabs, activeTabId }; // вся структура
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  }, [tabs, activeTabId]);
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
-  const [cutMode, setCutMode] = useState(false);
   const mousePositionRef = useRef({ x: 0, y: 0 });
+  const newId = () => nanoid();
 
-  // Update the ref in a window mousemove listener
   useEffect(() => {
     const handleMouseMove = (event) => {
       mousePositionRef.current = {
@@ -125,15 +205,6 @@ export default function Main() {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-  const idCounter = useRef(
-    parseInt(localStorage.getItem("idCounter") || "100", 10),
-  );
-
-  const generateId = () => {
-    idCounter.current += 1;
-    localStorage.setItem("idCounter", idCounter.current.toString());
-    return idCounter.current.toString();
-  };
 
   useEffect(() => {
     const selectedNodeIds = new Set(
@@ -145,276 +216,76 @@ export default function Main() {
         const isBetweenSelected =
           selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target);
 
-        // Only auto-select if both nodes are selected
-        // Preserve manual selections if edge is not between selected nodes
         return isBetweenSelected ? { ...edge, selected: true } : edge;
       }),
     );
-  }, [nodes]); // Runs when node selection changes
+  }, [nodes]);
 
-  // Update getSelectedElements
   const getSelectedElements = useCallback(() => {
-    const selectedNodes = nodes.filter((node) => node.selected);
-    const selectedNodeIds = new Set(selectedNodes.map((node) => node.id));
+    return getSelectedUtil(nodes, edges);
+  });
 
-    // Only include edges that are BOTH:
-    // 1. Explicitly selected AND
-    // 2. Connect two selected nodes
-    const selectedEdges = edges.filter(
-      (edge) =>
-        edge.selected &&
-        selectedNodeIds.has(edge.source) &&
-        selectedNodeIds.has(edge.target),
-    );
+  const isValidConnection = useCallback(
+    (connection) => isValidConnectionUtil(connection, edgesRef.current),
+    [edgesRef],
+  );
 
-    return { nodes: selectedNodes, edges: selectedEdges };
-  }, [nodes, edges]);
+  const selectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = selectAllUtil(nodes, edges);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, setNodes, setEdges]);
+
+  const deselectAll = useCallback(() => {
+    const { nodes: newNodes, edges: newEdges } = deselectAllUtil(nodes, edges);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, setNodes, setEdges]);
+
+  const deleteSelectedElements = useCallback(() => {
+    const selected = getSelectedElements();
+    const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [nodes, edges, clipboard]);
 
   const copyElements = useCallback(() => {
-    const selected = getSelectedElements();
-    if (selected.nodes.length === 0) return;
-
-    setClipboard(selected);
-    setCutMode(false);
-    console.log(
-      "Copied:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
+    copyElementsUtil({
+      getSelectedElements,
+      setClipboard,
+    });
   }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
-    const selected = getSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
-
-    setClipboard(selected);
-    setCutMode(true);
-
-    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
-
-    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
-
-    console.log(
-      "Cut:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges]);
+    cutElementsUtil({
+      getSelectedElements,
+      setClipboard,
+      deleteSelectedElements,
+    });
+  }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
-    if (!reactFlowInstance) {
-      console.error("React Flow instance not available");
-      return;
-    }
-
-    // Deselect all existing nodes and edges
-    setNodes((prevNodes) =>
-      prevNodes.map((node) => ({ ...node, selected: false })),
-    );
-    setEdges((prevEdges) =>
-      prevEdges.map((edge) => ({ ...edge, selected: false })),
-    );
-
-    if (clipboard.nodes.length === 0) return;
-
-    const flowPosition = reactFlowInstance.screenToFlowPosition({
-      x: mousePositionRef.current.x,
-      y: mousePositionRef.current.y,
+    pasteElementsUtil({
+      clipboard,
+      mousePosition: mousePositionRef.current,
+      reactFlowInstance,
+      setNodes,
+      setEdges,
     });
+  }, [clipboard, reactFlowInstance]);
 
-    const offset = {
-      x: flowPosition.x - clipboard.nodes[0].position.x,
-      y: flowPosition.y - clipboard.nodes[0].position.y,
-    };
-
-    const nodeIdMap = {};
-    const newNodes = clipboard.nodes.map((node) => {
-      const newId = generateId();
-      nodeIdMap[node.id] = newId;
-
-      return {
-        ...node,
-        id: newId,
-        position: {
-          x: node.position.x + offset.x,
-          y: node.position.y + offset.y,
-        },
-        selected: true,
-        data: {
-          ...node.data,
-          customId: newId,
-        },
-      };
+  useEffect(() => {
+    loadLocalStorage({
+      setCurrentBG,
+      setShowMinimap,
+      setTheme,
+      setActiveAction,
+      setActiveWire,
+      setOpenSettings,
+      setCircuitsMenuState,
+      setLogLevel,
+      setToastPosition,
     });
-
-    const newEdges = clipboard.edges.map((edge) => ({
-      ...edge,
-      id: generateId(),
-      source: nodeIdMap[edge.source] || edge.source,
-      target: nodeIdMap[edge.target] || edge.target,
-    }));
-
-    setNodes((nds) => nds.concat(newNodes));
-    setEdges((eds) => eds.concat(newEdges));
-
-    if (cutMode) {
-      setClipboard({ nodes: [], edges: [] });
-      setCutMode(false);
-    }
-  }, [clipboard, cutMode, reactFlowInstance]);
-
-  const deleteSelected = useCallback(() => {
-    const selected = getSelectedElements();
-    if (selected.nodes.length === 0 && selected.edges.length === 0) return;
-
-    const selectedNodeIds = new Set(selected.nodes.map((n) => n.id));
-    const selectedEdgeIds = new Set(selected.edges.map((e) => e.id));
-
-    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-    setEdges((edges) => edges.filter((edge) => !selectedEdgeIds.has(edge.id)));
-
-    console.log(
-      "Deleted:",
-      selected.nodes.length,
-      "nodes and",
-      selected.edges.length,
-      "edges",
-    );
-  }, [nodes, edges]);
-
-  const selectAll = useCallback(() => {
-    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: true })));
-    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: true })));
-  }, []);
-
-  const deselectAll = useCallback(() => {
-    setNodes((nodes) => nodes.map((node) => ({ ...node, selected: false })));
-    setEdges((edges) => edges.map((edge) => ({ ...edge, selected: false })));
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey || event.metaKey) {
-        switch (event.key) {
-          case "c":
-          case "с":
-            event.preventDefault();
-            copyElements();
-            break;
-          case "x":
-          case "ч":
-            event.preventDefault();
-            cutElements();
-            break;
-          case "v":
-          case "м":
-            pasteElements();
-            event.preventDefault();
-            break;
-          case "a":
-          case "ф":
-            event.preventDefault();
-            selectAll();
-            break;
-          case "d":
-          case "в":
-            event.preventDefault();
-            deselectAll();
-            break;
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [
-    copyElements,
-    cutElements,
-    pasteElements,
-    selectAll,
-    deselectAll,
-    deleteSelected,
-  ]);
-
-  useEffect(() => {
-    const savedCircuit = localStorage.getItem("savedCircuit");
-    if (savedCircuit) {
-      try {
-        const circuitData = JSON.parse(savedCircuit);
-
-        let maxId = 0;
-        const allIds = [
-          ...(circuitData.nodes || [])
-            .map((n) => parseInt(n.id, 10))
-            .filter(Number.isInteger),
-          ...(circuitData.edges || [])
-            .map((e) => parseInt(e.id, 10))
-            .filter(Number.isInteger),
-        ];
-
-        if (allIds.length > 0) {
-          maxId = Math.max(...allIds);
-        }
-
-        if (maxId > idCounter.current) {
-          idCounter.current = maxId + 1;
-          localStorage.setItem("idCounter", idCounter.current.toString());
-        }
-
-        setNodes(circuitData.nodes || []);
-        setEdges(circuitData.edges || []);
-      } catch (e) {
-        setNodes(initialNodes);
-        setEdges(initialEdges);
-      }
-    } else {
-      setNodes(initialNodes);
-      setEdges(initialEdges);
-    }
-  }, [setEdges, setNodes]);
-
-  useEffect(() => {
-    return () => {
-      localStorage.setItem("idCounter", idCounter.current.toString());
-    };
-  }, []);
-
-  useEffect(() => {
-    const circuitData = JSON.stringify({ nodes, edges });
-    localStorage.setItem("savedCircuit", circuitData);
-  }, [nodes, edges]);
-
-  useEffect(() => {
-    nodesRef.current = nodes;
-  }, [nodes]);
-
-  useEffect(() => {
-    edgesRef.current = edges;
-  }, [edges]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("userSettings");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.currentBG) setCurrentBG(parsed.currentBG);
-      if (typeof parsed.showMinimap === "boolean")
-        setShowMinimap(parsed.showMinimap);
-      if (parsed.theme) setTheme(parsed.theme);
-      if (parsed.activeAction) setActiveAction(parsed.activeAction);
-      if (parsed.activeWire) setActiveWire(parsed.activeWire);
-      if (typeof parsed.openSettings === "boolean")
-        setOpenSettings(parsed.openSettings);
-      if (typeof parsed.circuitsMenuState === "boolean")
-        setCircuitsMenuState(parsed.circuitsMenuState);
-      if (parsed.logLevel) setLogLevel(parsed.logLevel);
-      if (parsed.toastPosition) setToastPosition(parsed.toastPosition);
-    }
   }, []);
 
   //Saves user setting to localStorage
@@ -443,91 +314,10 @@ export default function Main() {
     toastPosition,
   ]);
 
-  //Hotkeys handler
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
-
-      //Ctrl + Shift + S - Open/close settings
-      if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        setOpenSettings((prev) => !prev);
-        return;
-      }
-
-      //Ctrl + S - Save circuit.json
-      if (isCtrlOrCmd && e.key.toLowerCase() === "s") {
-        e.preventDefault();
-        saveCircuit();
-        return;
-      }
-
-      //Ctrl + Shift + R - Start/stop simulation
-      if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        handleSimulateClick({
-          simulateState,
-          setSimulateState,
-          socketRef,
-          nodes,
-          edges,
-        });
-        return;
-      }
-
-      //Ctrl + Shift + O - Load file
-      if (isCtrlOrCmd && e.key.toLowerCase() === "o") {
-        e.preventDefault();
-
-        handleOpenClick();
-
-        return;
-      }
-
-      //1...6 - Change selected tool
-      const hotkeys = {
-        1: () => {
-          setActiveAction("cursor");
-          setPanOnDrag([2]);
-        },
-        2: () => {
-          setActiveAction("hand");
-          setPanOnDrag(true);
-        },
-        3: () => setActiveWire("default"),
-        4: () => setActiveWire("step"),
-        5: () => setActiveWire("straight"),
-        6: () => setActiveAction("eraser"),
-        7: () => setActiveAction("text"),
-      };
-      if (hotkeys[e.key]) {
-        e.preventDefault();
-        hotkeys[e.key]();
-      }
-
-      //Escape to close Settings
-      if (e.key === "Escape" && openSettings) {
-        setOpenSettings(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [openSettings]);
-
-  //Sets current theme to the whole document (наверное)
+  //Sets current theme to the whole document
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
-
-  // Я не знаю, что это
-  const isValidConnection = useCallback(({ source, target, targetHandle }) => {
-    if (source === target) {
-      return false;
-    }
-    return !edgesRef.current.some(
-      (e) => e.target === target && e.targetHandle === targetHandle,
-    );
-  }, []);
 
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
@@ -535,25 +325,13 @@ export default function Main() {
   };
 
   //Create new node after dragAndDrop
-  const onDrop = (event) => {
-    event.preventDefault();
-    const type = event.dataTransfer.getData("application/reactflow");
-    if (!type || !reactFlowInstance) return;
-
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
-
-    const newNode = {
-      id: `${type}_${Date.now()}`,
-      type,
-      position,
-      data: { customId: `${type}_${Date.now()}` },
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  };
+  const onDrop = useCallback(
+    (event) => {
+      deselectAll();
+      onDropUtil(event, reactFlowInstance, setNodes);
+    },
+    [reactFlowInstance, setNodes, deselectAll],
+  );
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -563,225 +341,44 @@ export default function Main() {
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu({
-      id: node.id,
-      name: node.type,
-      type: "node",
-      top: event.clientY < pane.height - 200 && event.clientY,
-      left: event.clientX < pane.width - 200 && event.clientX,
-      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
-    });
+    setMenu(calculateContextMenuPosition(event, node, pane));
   }, []);
 
   const onEdgeContextMenu = useCallback((event, edge) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu({
-      id: edge.id,
-      name: edge.type,
-      type: "edge",
-      top: event.clientY < pane.height - 200 && event.clientY,
-      left: event.clientX < pane.width - 200 && event.clientX,
-      right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
-      bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
-    });
+    setMenu(calculateContextMenuPosition(event, edge, pane));
   }, []);
 
   const onPaneClick = useCallback(() => setMenu(null), []);
 
   //Allows user to download circuit JSON
-  const saveCircuit = () => {
-    const flowData = {
-      nodes: nodes.map((n) => ({
-        id: n.id,
-        type: n.type,
-        position: n.position,
-        data: n.data,
-      })),
-      edges: edges.map((e) => ({
-        id: e.id,
-        source: e.source,
-        target: e.target,
-        sourceHandle: e.sourceHandle,
-        targetHandle: e.targetHandle,
-      })),
-    };
+  const saveCircuit = () => saveCircuitUtil(nodes, edges);
 
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(flowData, null, 2));
-    const downloadAnchorNode = document.createElement("a");
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "circuit.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  };
-
-  const loadCircuit = (event) => {
-    const fileReader = new FileReader();
-    fileReader.readAsText(event.target.files[0]);
-    fileReader.onload = (e) => {
-      const circuitData = JSON.parse(e.target.result);
-      setNodes([]);
-      setEdges([]);
-      setTimeout(() => {
-        setNodes(circuitData.nodes || []);
-        setEdges(circuitData.edges || []);
-      }, 100);
-    };
-  };
-
-  const spawnCircuit = (type) => {
-    const position = reactFlowInstance.screenToFlowPosition({
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    });
-
-    const newNode = {
-      id: `${type}_${Date.now()}`,
-      type,
-      position,
-      data: {
-        customId: `${type}_${Date.now()}`,
-        simState: simulateState,
-        value: false,
-      },
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  };
-
-  const getClosestEdge = useCallback(
-    (draggedNode) => {
-      const { nodeLookup } = store.getState();
-      const internalNode = getInternalNode(draggedNode.id);
-      if (!internalNode) return null;
-
-      const draggedHandles = internalNode.internals.handleBounds;
-      if (!draggedHandles) return null;
-
-      const draggedPos = internalNode.internals.positionAbsolute;
-      let closestEdge = null;
-      let minDistance = MIN_DISTANCE;
-
-      nodeLookup.forEach((node) => {
-        if (node.id === draggedNode.id) return;
-        const nodeHandles = node.internals.handleBounds;
-        if (!nodeHandles) return;
-        const nodePos = node.internals.positionAbsolute;
-
-        // Check source->target connections
-        if (draggedHandles.source) {
-          draggedHandles.source.forEach((srcHandle) => {
-            const srcHandlePos = {
-              x: draggedPos.x + srcHandle.x + srcHandle.width / 2,
-              y: draggedPos.y + srcHandle.y + srcHandle.height / 2,
-            };
-
-            if (nodeHandles.target) {
-              nodeHandles.target.forEach((tgtHandle) => {
-                const alreadyUsed = edgesRef.current.some(
-                  (e) =>
-                    e.target === node.id && e.targetHandle === tgtHandle.id,
-                );
-                if (alreadyUsed) return;
-
-                const tgtHandlePos = {
-                  x: nodePos.x + tgtHandle.x + tgtHandle.width / 2,
-                  y: nodePos.y + tgtHandle.y + tgtHandle.height / 2,
-                };
-
-                const dx = srcHandlePos.x - tgtHandlePos.x;
-                const dy = srcHandlePos.y - tgtHandlePos.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestEdge = {
-                    id: `temp_${internalNode.id}_${srcHandle.id}_to_${node.id}_${tgtHandle.id}`,
-                    source: internalNode.id,
-                    sourceHandle: srcHandle.id,
-                    target: node.id,
-                    targetHandle: tgtHandle.id,
-                    className: "temp",
-                  };
-                }
-              });
-            }
-          });
-        }
-
-        // Check target->source connections
-        if (draggedHandles.target) {
-          draggedHandles.target.forEach((tgtHandle) => {
-            const tgtHandlePos = {
-              x: draggedPos.x + tgtHandle.x + tgtHandle.width / 2,
-              y: draggedPos.y + tgtHandle.y + tgtHandle.height / 2,
-            };
-
-            if (nodeHandles.source) {
-              nodeHandles.source.forEach((srcHandle) => {
-                const alreadyUsed = edgesRef.current.some(
-                  (e) =>
-                    e.target === internalNode.id &&
-                    e.targetHandle === tgtHandle.id,
-                );
-                if (alreadyUsed) return;
-
-                const srcHandlePos = {
-                  x: nodePos.x + srcHandle.x + srcHandle.width / 2,
-                  y: nodePos.y + srcHandle.y + srcHandle.height / 2,
-                };
-
-                const dx = tgtHandlePos.x - srcHandlePos.x;
-                const dy = tgtHandlePos.y - srcHandlePos.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestEdge = {
-                    id: `temp_${node.id}_${srcHandle.id}_to_${internalNode.id}_${tgtHandle.id}`,
-                    source: node.id,
-                    sourceHandle: srcHandle.id,
-                    target: internalNode.id,
-                    targetHandle: tgtHandle.id,
-                    className: "temp",
-                  };
-                }
-              });
-            }
-          });
-        }
-      });
-
-      return closestEdge;
+  const loadCircuit = useCallback(
+    (event) => {
+      loadCircuitUtil(event, setNodes, setEdges);
     },
-    [store, getInternalNode],
+    [setNodes, setEdges],
+  );
+
+  const spawnCircuit = useCallback(
+    (type) => {
+      deselectAll();
+      spawnCircuitUtil(type, reactFlowInstance, setNodes);
+    },
+    [reactFlowInstance, setNodes, deselectAll],
   );
 
   const onNodeDragStop = useCallback(
-    (_, node) => {
-      setEdges((es) => {
-        const nextEdges = es.filter((e) => e.className !== "temp");
-        const closeEdge = getClosestEdge(node);
-        if (closeEdge) {
-          return addEdge(
-            {
-              type: "straight",
-              source: closeEdge.source,
-              sourceHandle: closeEdge.sourceHandle,
-              target: closeEdge.target,
-              targetHandle: closeEdge.targetHandle,
-            },
-            nextEdges,
-          );
-        }
-        return nextEdges;
-      });
-    },
-    [getClosestEdge, setEdges],
+    onNodeDragStopUtil({
+      nodes,
+      setEdges,
+      getInternalNode,
+      store,
+      addEdge,
+    }),
+    [nodes, setEdges, getInternalNode, store],
   );
 
   const variant =
@@ -791,19 +388,72 @@ export default function Main() {
         ? BackgroundVariant.Cross
         : BackgroundVariant.Lines;
 
+  //Hotkeys handler
+  useHotkeys(
+    {
+      saveCircuit,
+      nodes,
+      edges,
+      openSettings,
+      setOpenSettings,
+      copyElements,
+      cutElements,
+      pasteElements,
+      selectAll,
+      deselectAll,
+      handleSimulateClick,
+      simulateState,
+      setSimulateState,
+      setActiveAction,
+      setPanOnDrag,
+      setActiveWire,
+      socketRef,
+      handleOpenClick,
+    },
+    [
+      saveCircuit,
+      nodes,
+      edges,
+      openSettings,
+      setOpenSettings,
+      copyElements,
+      cutElements,
+      pasteElements,
+      selectAll,
+      deselectAll,
+      handleSimulateClick,
+      simulateState,
+      setSimulateState,
+      setActiveAction,
+      setPanOnDrag,
+      setActiveWire,
+      socketRef,
+      handleOpenClick,
+    ],
+  );
+
   return (
     <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
       <SimulateStateContext.Provider
         value={{ simulateState, setSimulateState, updateInputState }}
       >
+        <div className={"main-tabs-wrapper"}>
+          <TabsContainer
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onTabsChange={setTabs}
+            onActiveTabIdChange={setActiveTabId}
+          />
+        </div>
+
         <>
           <ReactFlow
             style={{ backgroundColor: "var(--main-2)" }}
             ref={ref}
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
+            onNodesChange={onNodesChangeFromHook}
+            onEdgesChange={onEdgesChangeFromHook}
             defaultEdgeOptions={{
               type: activeWire,
             }}
@@ -826,7 +476,7 @@ export default function Main() {
             minZoom={0.2}
             maxZoom={10}
             deleteKeyCode={["Delete", "Backspace"]}
-            onDelete={deleteSelected}
+            onDelete={deleteSelectedElements}
             // onlyRenderVisibleElements={true}
           >
             <Background

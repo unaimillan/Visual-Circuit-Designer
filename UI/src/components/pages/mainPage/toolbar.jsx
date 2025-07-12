@@ -88,6 +88,23 @@ export default function Toolbar({
           <IconToolbarHand SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
 
+        <button
+          className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
+          onClick={() => setActiveAction("eraser")}
+        >
+          <IconToolbarEraser
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
+        </button>
+
+        <button
+          className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
+          onClick={() => setActiveAction("text")}
+        >
+          <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
+        </button>
+
         <div className="toolbar-separator"></div>
 
         <button
@@ -124,25 +141,6 @@ export default function Toolbar({
             SVGClassName="toolbarButtonIcon"
             draggable="false"
           />
-        </button>
-
-        <div className="toolbar-separator"></div>
-
-        <button
-          className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
-          onClick={() => setActiveAction("eraser")}
-        >
-          <IconToolbarEraser
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
-        </button>
-
-        <button
-          className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
-          onClick={() => setActiveAction("text")}
-        >
-          <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
       </div>
 

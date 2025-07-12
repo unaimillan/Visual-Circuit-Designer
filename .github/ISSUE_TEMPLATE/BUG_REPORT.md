@@ -1,3 +1,11 @@
+---
+name: Issue for bug report
+about: Template providing the bug report
+title: ''
+labels: ''
+assignees: ''
+---
+
 **Title**
 
 <!-- Provide a short, descriptive title for the bug report. -->

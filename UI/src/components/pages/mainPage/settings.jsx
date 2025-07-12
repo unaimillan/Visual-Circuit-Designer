@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import UserIcon from "../../../../assets/userIcon.png";
 
-import { MinimapSwitch } from "./switch.jsx";
+import { MinimapSwitch, KostyaSwitch } from "./switch.jsx";
 import { useNotificationsLevel } from "../mainPage.jsx";
 import {
   SelectCanvasBG,
@@ -17,7 +17,7 @@ import {
   IconTabBell,
 } from "../../../../assets/ui-icons.jsx";
 
-export function Settings({
+export default function Settings({
   openSettings,
   showMinimap,
   setShowMinimap,
@@ -208,6 +208,23 @@ function TabContent({
               setTheme={setTheme}
               className="selectTheme"
             />
+          </div>
+        </div>
+
+        <div className="settingBlock">
+          <div className="setting-text">
+            <p className="setting-title">Kostya switch</p>
+            <p className="setting-description">
+              Если что, switch есть, он просто закомментирован. Надо ему указать
+              boolVar и toggleBoolVar
+            </p>
+          </div>
+
+          <div className={"interactive-wrapper"}>
+            {/*<KostyaSwitch*/}
+            {/*  boolVar={}*/}
+            {/*  toggleBootVar={}*/}
+            {/*/>*/}
           </div>
         </div>
       </div>
