@@ -1,14 +1,53 @@
+from typing import Optional
 from uuid import UUID, uuid4
-from fastapi_users.manager import BaseUserManager, UUIDIDMixin
-from ..models import UserDB
-from fastapi_users.authentication import JWTStrategy, AuthenticationBackend, CookieTransport
-from ..config import SECRET
-from ..schema import UserCreate
 
+from fastapi.openapi.models import Response
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_users.manager import BaseUserManager, UUIDIDMixin
+from backend.app.models import UserDB
+from fastapi_users.authentication import JWTStrategy, AuthenticationBackend, CookieTransport
+from fastapi_users.authentication import BearerTransport
+from fastapi_users.password import PasswordHelper
+from backend.app.config import SECRET
+from backend.app.schema import UserCreate
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
+    reset_password_token_secret = SECRET
+    verification_token_secret = SECRET
+    password_helper = PasswordHelper()
+
     async def on_after_register(self, user: UserDB, request=None):
         print(f"User registered: {user}")
+
+    async def authenticate(
+            self, credentials: OAuth2PasswordRequestForm
+    ) -> Optional[UserDB]:
+        logger.debug(f"Authenticating user: {credentials.username}")
+        try:
+            user = await self.get_by_email(credentials.username)
+            if user is None:
+                # Run the hasher to mitigate timing attack
+                self.password_helper.hash(credentials.password)
+                return None
+
+            verified, updated_password_hash = self.password_helper.verify_and_update(
+                credentials.password, user.hashed_password
+            )
+            if not verified:
+                return None
+
+            if updated_password_hash is not None:
+                user.hashed_password = updated_password_hash
+                await self.user_db.update(user, {})
+
+            return user
+        except Exception:
+            # В случае любой ошибки возвращаем None
+            return None
 
     async def create(self, user_create: UserCreate, safe: bool = False, request=None) -> UserDB:
         # Ensure all required fields are included
@@ -27,10 +66,18 @@ class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
         created_user = await self.user_db.create(user_dict)
         return await self.get(created_user["id"])
 
-def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
 
-cookie_transport = CookieTransport(cookie_name="refresh_token", cookie_max_age=3600, cookie_secure=False)
+class CustomCookieTransport(CookieTransport):
+    async def get_login_response(self, token: str) -> Response:
+        response = await super().get_login_response(token)
+        response.status_code = 200  # Меняем статус
+        return response
+
+def get_jwt_strategy() -> JWTStrategy:
+    return JWTStrategy(secret=SECRET, lifetime_seconds=3600, algorithm="HS256")
+
+cookie_transport = CustomCookieTransport(cookie_name="refresh_token", cookie_max_age=3600, cookie_secure=False)
+# bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 auth_backend = AuthenticationBackend(
     name="jwt",

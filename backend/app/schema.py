@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
 from typing import Optional
 from uuid import UUID
 from fastapi_users import schemas

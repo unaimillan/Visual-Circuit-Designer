@@ -1,8 +1,8 @@
 from fastapi_users.db.base import BaseUserDatabase
-from ..models import UserDB
+from backend.app.models import UserDB
 from motor.motor_asyncio import AsyncIOMotorCollection
 from uuid import UUID, uuid4
-from typing import Optional, Any, Coroutine
+from typing import Optional, Dict, Any
 
 
 class MongoUserDatabase(BaseUserDatabase[UserDB, UUID]):
@@ -15,7 +15,11 @@ class MongoUserDatabase(BaseUserDatabase[UserDB, UUID]):
 
     async def get_by_email(self, email: str) -> Optional[UserDB]:
         user = await self.collection.find_one({"email": email})
-        return self._convert_to_userdb(dict(user)) if user else None
+        if user:
+            # Ensure the ID is properly converted
+            user["id"] = str(user["id"]) if isinstance(user.get("id"), UUID) else user.get("id")
+            return UserDB(**user)
+        return None
 
     async def create(self, user: dict) -> dict:
         if "id" not in user:
@@ -27,9 +31,25 @@ class MongoUserDatabase(BaseUserDatabase[UserDB, UUID]):
         await self.collection.insert_one(user)
         return user
 
-    async def update(self, user: UserDB) -> UserDB:
-        await self.collection.replace_one({"id": str(user.id)}, user.dict())
-        return user
+    async def update(
+            self,
+            user: UserDB,
+            update_dict: Dict[str, Any] = None,
+    ) -> UserDB:
+        if update_dict:
+            user_dict = user.model_dump()
+            user_dict.update(update_dict)
+            await self.collection.replace_one(
+                {"id": str(user.id)},
+                user_dict
+            )
+            return UserDB(**user_dict)
+        else:
+            await self.collection.replace_one(
+                {"id": str(user.id)},
+                user.model_dump()
+            )
+            return user
 
     async def delete(self, user: UserDB) -> None:
         await self.collection.delete_one({"id": str(user.id)})

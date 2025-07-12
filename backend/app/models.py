@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr, Field
 from uuid import UUID, uuid4
 
 class UserDB(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    id: UUID
     name: str
     username: str
     email: EmailStr

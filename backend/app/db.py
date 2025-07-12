@@ -1,4 +1,4 @@
-from ..app.config import MONGO_URI
+from backend.app.config import MONGO_URI
 from motor.motor_asyncio import AsyncIOMotorClient
 
 client = AsyncIOMotorClient(MONGO_URI)
