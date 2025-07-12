@@ -6,10 +6,9 @@ export function onNodeDragStop({
                                  getInternalNode,
                                  store,
                                  addEdge,
-                                 onComplete,
+                                 recordHistory,
                                }) {
   return (_, draggedNode) => {
-    if (onComplete) onComplete();
     const selectedNodes = nodes.filter(
       (n) => n.selected || n.id === draggedNode.id,
     );
@@ -37,6 +36,8 @@ export function onNodeDragStop({
           );
         }
       }
+
+      setTimeout(() => onComplete && onComplete(), 0);
 
       return newEdges;
     });

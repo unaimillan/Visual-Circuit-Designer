@@ -185,10 +185,10 @@ export default function Main() {
   const recordHistory = useCallback(() => {
     setTabs(tabs => tabs.map(tab => {
       if (tab.id !== activeTabId) return tab;
-      console.log(tab.history)
-      return historyUpdater.record(tab, nodes, edges);
+      console.log(tab.history, "nodes:", nodesRef.current, "edges:", edgesRef.current);
+      return historyUpdater.record(tab, nodesRef.current, edgesRef.current);
     }));
-  }, [nodes, edges, activeTabId, historyUpdater]);
+  }, [nodesRef, edgesRef, activeTabId, historyUpdater]);
 
   // 2) Получение текущей активной вкладки по её id
   const activeTab = tabs.find((t) => t.id === activeTabId) || {
@@ -219,21 +219,6 @@ export default function Main() {
   const redo = useCallback(() => {
     redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges);
   }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
-
-  // 5) Синхронизация изменений из ReactFlow обратно в массив tabs:
-  //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
-  useEffect(() => {
-    setTabs((prev) =>
-      prev.map((tab) => (tab.id === activeTabId ? { ...tab, nodes } : tab)),
-    );
-  }, [nodes, activeTabId]);
-
-  //    5b) при любом обновлении edges сохраняем их в текущей вкладке
-  useEffect(() => {
-    setTabs((prev) =>
-      prev.map((tab) => (tab.id === activeTabId ? { ...tab, edges } : tab)),
-    );
-  }, [edges, activeTabId]);
 
   useEffect(() => {
     if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
@@ -294,12 +279,12 @@ export default function Main() {
   }, [nodes, edges, setNodes, setEdges]);
 
   const deleteSelectedElements = useCallback(() => {
-    recordHistory();
     const selected = getSelectedElements();
     const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [nodes, edges, clipboard]);
+    setTimeout(recordHistory, 0);
+  }, [nodes, edges, getSelectedElements, recordHistory]);
 
   const copyElements = useCallback(() => {
     copyElementsUtil({
@@ -317,7 +302,6 @@ export default function Main() {
   }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
-    recordHistory();
     pasteElementsUtil({
       clipboard,
       mousePosition: mousePositionRef.current,
@@ -325,7 +309,8 @@ export default function Main() {
       setNodes,
       setEdges,
     });
-  }, [clipboard, reactFlowInstance]);
+    setTimeout(recordHistory, 0);
+  }, [clipboard, reactFlowInstance, recordHistory]);
 
   useEffect(() => {
     loadLocalStorage({
@@ -379,20 +364,21 @@ export default function Main() {
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => {
-      recordHistory();
-      return addEdge(connection, eds);
+      const newEdges = addEdge(connection, eds);
+      setTimeout(recordHistory, 0);
+      return newEdges;
     }),
-    [setEdges],
+    [setEdges, recordHistory],
   );
 
   //Create new node after dragAndDrop
   const onDrop = useCallback(
     (event) => {
-      recordHistory();
       deselectAll();
       onDropUtil(event, reactFlowInstance, setNodes);
+      setTimeout(recordHistory, 0);
     },
-    [reactFlowInstance, setNodes, deselectAll],
+    [reactFlowInstance, setNodes, deselectAll, recordHistory],
   );
 
   const onNodeContextMenu = useCallback((event, node) => {
@@ -423,11 +409,11 @@ export default function Main() {
     (type) => {
       deselectAll();
       spawnCircuitUtil(type, reactFlowInstance, (newNode) => {
-        recordHistory();
         setNodes((nds) => [...nds, newNode]);
       });
+      setTimeout(recordHistory, 0);
     },
-    [reactFlowInstance, setNodes, deselectAll],
+    [reactFlowInstance, setNodes, deselectAll, recordHistory],
   );
 
   const onNodeDragStop = useCallback(
@@ -437,7 +423,7 @@ export default function Main() {
       getInternalNode,
       store,
       addEdge,
-      onComplete: recordHistory,
+      onComplete: () => setTimeout(recordHistory, 0)
     }),
     [nodes, setEdges, getInternalNode, store, recordHistory],
   );

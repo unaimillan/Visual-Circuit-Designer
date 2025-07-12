@@ -10,6 +10,13 @@ export const initializeTabHistory = (tab) => ({
 export const createHistoryUpdater = () => {
   return {
     record: (tab, nodes, edges) => {
+      // Only record if state has changed
+      const lastState = tab.history[tab.index];
+      const nodesChanged = JSON.stringify(lastState.nodes) !== JSON.stringify(nodes);
+      const edgesChanged = JSON.stringify(lastState.edges) !== JSON.stringify(edges);
+
+      if (!nodesChanged && !edgesChanged) return tab;
+
       const newHistory = tab.history.slice(0, tab.index + 1);
       newHistory.push({ nodes, edges });
 
