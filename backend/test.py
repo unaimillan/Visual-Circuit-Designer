@@ -27,18 +27,18 @@ app = FastAPI()
 # === Models ===
 class User(Base):
     __tablename__ = "users"
-    id: int = Column(Integer, primary_key=True, index=True)
-    email: str = Column(String, unique=True, index=True, nullable=False)
-    full_name: str | None = Column(String, nullable=True)
-    password_hash: str = Column(String, nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    full_name = Column(String, nullable=True)
+    password_hash = Column(String, nullable=False)
 
 
 class TokenBlacklist(Base):
     __tablename__ = "token_blacklist"
-    id: int = Column(Integer, primary_key=True, index=True)
-    token: str = Column(String, unique=True, index=True, nullable=False)
-    blacklisted_at: datetime = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    expires_at: datetime = Column(DateTime, nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, unique=True, index=True, nullable=False)
+    blacklisted_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    expires_at = Column(DateTime, nullable=False)
 
 
 # === Schemas ===
@@ -106,7 +106,9 @@ def is_token_blacklisted(token: str, db: Session) -> bool:
     blacklisted_token = db.query(TokenBlacklist).filter_by(token=token).first()
     if blacklisted_token:
         # Check if blacklisted token has expired (cleanup)
-        if blacklisted_token.expires_at < datetime.now(timezone.utc):
+        # Convert to naive datetime for comparison with database
+        current_time = datetime.now(timezone.utc).replace(tzinfo=None)
+        if blacklisted_token.expires_at < current_time:
             db.delete(blacklisted_token)
             db.commit()
             return False
@@ -120,10 +122,10 @@ def add_token_to_blacklist(token: str, db: Session):
         payload = decode_token(token)
         exp_timestamp = payload.get("exp")
         if exp_timestamp:
-            expires_at = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
+            expires_at = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc).replace(tzinfo=None)
         else:
             # If no exp claim, set a reasonable expiration
-            expires_at = datetime.now(timezone.utc) + timedelta(days=1)
+            expires_at = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(days=1)
 
         blacklist_entry = TokenBlacklist(
             token=token,
@@ -135,7 +137,7 @@ def add_token_to_blacklist(token: str, db: Session):
         # If token is invalid, still add it to blacklist with short expiration
         blacklist_entry = TokenBlacklist(
             token=token,
-            expires_at=datetime.now(timezone.utc) + timedelta(hours=1)
+            expires_at=datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
         )
         db.add(blacklist_entry)
         db.commit()
@@ -364,8 +366,10 @@ def logout(
 @app.post("/api/auth/cleanup-tokens")
 def cleanup_expired_tokens(db: Session = Depends(get_db)):
     """Remove expired tokens from blacklist"""
+    # Convert to naive datetime for database comparison
+    current_time = datetime.now(timezone.utc).replace(tzinfo=None)
     expired_tokens = db.query(TokenBlacklist).filter(
-        TokenBlacklist.expires_at < datetime.now(timezone.utc)
+        TokenBlacklist.expires_at < current_time
     ).all()
 
     for token in expired_tokens:
