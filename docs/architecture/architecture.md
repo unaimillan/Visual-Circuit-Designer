@@ -85,6 +85,6 @@ This architecture ensures **secure, scalable, and maintainable** deployment with
 ## <div align="center">Tech Stack</div>
 <ul>
   <li><code>Frontend</code>: React.js, JavaScript, CSS</li>
-  <li><code>Backend</code>: Python, C++</li>
-  <li><code>Runner node</code>: Python</li>
+  <li><code>Backend</code>: Python, C++, FastAPI</li>
+  <li><code>Runner node</code>: Python, Icarus Verilog, Cocotb, Socket.IO</li>
 </ul>

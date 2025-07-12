@@ -13,8 +13,15 @@ Automated testing is an important element of our development process. All test s
 
 ### Frontend
 
-| Type        | Location |
-|-------------|----------|
-| Unit        |          |
-| Integration |          |
+| Type        | Location                                                                                                        |
+|-------------|-----------------------------------------------------------------------------------------------------------------|
+| Unit        | [Link to Integration Tests](../../UI/src/components/utils/__tests__/integration_tests/runnerConnection.test.js) |
+| Integration | [Link to Unit Tests](../../UI/src/components/utils/__tests__/unit tests)                                        |
+
+### Runner
+| Type        | Location                                                              |
+|-------------|-----------------------------------------------------------------------|
+| Unit        | [Link to Integration Tests](../../RunnerNode/tests/integration_tests) |
+| Integration | [Link to Unit Tests](../../RunnerNode/tests/unit_tests)               |
+
 
