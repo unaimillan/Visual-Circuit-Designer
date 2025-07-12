@@ -218,7 +218,7 @@ export default function Main() {
         return historyUpdater.record(tab, nodesRef.current, edgesRef.current);
       }),
     );
-  }, [nodesRef, edgesRef, activeTabId, historyUpdater]);
+  }, [nodesRef, edgesRef, activeTabId, historyUpdater, tabs]);
 
   // 2) Получение текущей активной вкладки по её id
   const activeTab = tabs.find((t) => t.id === activeTabId) || {
@@ -254,11 +254,11 @@ export default function Main() {
   // Undo/Redo functions
   const undo = useCallback(() => {
     undoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
-  }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
+  }, [tabs, activeTabId, setTabs, setNodes, setEdges, showWarning]);
 
   const redo = useCallback(() => {
     redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
-  }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
+  }, [tabs, activeTabId, setTabs, setNodes, setEdges, showWarning]);
 
   useEffect(() => {
     if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
