@@ -23,7 +23,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 app = FastAPI()
 
-
 # === Models ===
 class User(Base):
     __tablename__ = "users"
@@ -32,13 +31,11 @@ class User(Base):
     full_name: str | None = Column(String, nullable=True)
     password_hash: str = Column(String, nullable=False)
 
-
 # === Schemas ===
 class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8)
     full_name: str | None = None
-
 
 class UserResponse(BaseModel):
     id: int
@@ -48,12 +45,14 @@ class UserResponse(BaseModel):
     class Config:
         orm_mode = True
 
-
 class Token(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
 
+class VerifyResponse(BaseModel):
+    valid: bool
+    email: str | None = None
 
 # === Dependency ===
 def get_db():
@@ -63,15 +62,12 @@ def get_db():
     finally:
         db.close()
 
-
 # === Utilities ===
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
-
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
-
 
 def create_token(data: dict, expires_delta: timedelta) -> str:
     to_encode = data.copy()
@@ -79,6 +75,8 @@ def create_token(data: dict, expires_delta: timedelta) -> str:
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+def decode_token(token: str) -> dict:
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
 # === Registration ===
 @app.post(
@@ -103,20 +101,19 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     db.refresh(user)
     return user
 
-
 # === Login ===
 @app.post(
     "/api/auth/login",
     response_model=Token
 )
 def login(
-        form_data: OAuth2PasswordRequestForm = Depends(),
-        db: Session = Depends(get_db)
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
 ):
     user = db.query(User).filter_by(email=form_data.username).first()
     if not user or not verify_password(
-            form_data.password,
-            user.password_hash
+        form_data.password,
+        user.password_hash
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -136,22 +133,37 @@ def login(
         "refresh_token": refresh_token
     }
 
+# === Token Verification ===
+@app.post(
+    "/api/auth/verify",
+    response_model=VerifyResponse,
+    status_code=status.HTTP_200_OK
+)
+def verify(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = decode_token(token)
+        email: str = payload.get("sub")
+        if not email:
+            raise JWTError()
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    return {"valid": True, "email": email}
 
-# === Token Verification Example ===
+# === Protected Endpoint Example ===
 @app.get(
     "/api/auth/me",
     response_model=UserResponse
 )
 def read_users_me(
-        token: str = Depends(oauth2_scheme),
-        db: Session = Depends(get_db)
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
 ):
     try:
-        payload = jwt.decode(
-            token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
+        payload = decode_token(token)
         email: str = payload.get("sub")
         if email is None:
             raise JWTError()
@@ -169,12 +181,10 @@ def read_users_me(
         )
     return user
 
-
 # === Initialize DB Tables ===
 if __name__ == "__main__":
     Base.metadata.create_all(bind=engine)
     import uvicorn
-
     uvicorn.run(
         app,
         host="127.0.0.1",
