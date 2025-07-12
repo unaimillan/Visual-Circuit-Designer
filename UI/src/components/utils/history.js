@@ -1,7 +1,3 @@
-import { debounce } from 'lodash';
-
-const HISTORY_LIMIT = 100;
-
 export const initializeTabHistory = (tab) => ({
   ...tab,
   history: [{

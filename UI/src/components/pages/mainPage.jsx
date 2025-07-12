@@ -1,24 +1,17 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  createContext, useMemo,
-} from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, } from "react";
 
 import {
-  ReactFlow,
-  Controls,
+  addEdge,
   Background,
   BackgroundVariant,
-  addEdge,
-  SelectionMode,
-  useNodesState,
-  useEdgesState,
+  Controls,
   MiniMap,
-  useStoreApi,
+  ReactFlow,
+  SelectionMode,
+  useEdgesState,
+  useNodesState,
   useReactFlow,
+  useStoreApi,
 } from "@xyflow/react";
 
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
@@ -29,12 +22,11 @@ import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
 import { nodeTypes } from "../codeComponents/nodes.js";
 
-import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
 import { useHotkeys } from "./mainPage/useHotkeys.js";
 import { Toaster } from "react-hot-toast";
 
-import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
-import { updateInputState } from "./mainPage/runnerHandler.jsx";
+import { handleSimulateClick, updateInputState } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
@@ -54,12 +46,7 @@ import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosit
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
 import { loadLocalStorage } from "../utils/loadLocalStorage.js";
-import {
-  initializeTabHistory,
-  createHistoryUpdater,
-  undo as undoUtil,
-  redo as redoUtil,
-} from "../utils/history";
+import { createHistoryUpdater, initializeTabHistory, redo as redoUtil, undo as undoUtil, } from "../utils/history";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -198,6 +185,7 @@ export default function Main() {
   const recordHistory = useCallback(() => {
     setTabs(tabs => tabs.map(tab => {
       if (tab.id !== activeTabId) return tab;
+      console.log(tab.history)
       return historyUpdater.record(tab, nodes, edges);
     }));
   }, [nodes, edges, activeTabId, historyUpdater]);
@@ -306,11 +294,11 @@ export default function Main() {
   }, [nodes, edges, setNodes, setEdges]);
 
   const deleteSelectedElements = useCallback(() => {
+    recordHistory();
     const selected = getSelectedElements();
     const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
     setNodes(newNodes);
     setEdges(newEdges);
-    recordHistory();
   }, [nodes, edges, clipboard]);
 
   const copyElements = useCallback(() => {
@@ -318,7 +306,6 @@ export default function Main() {
       getSelectedElements,
       setClipboard,
     });
-    recordHistory();
   }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
@@ -327,10 +314,10 @@ export default function Main() {
       setClipboard,
       deleteSelectedElements,
     });
-    recordHistory();
   }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
+    recordHistory();
     pasteElementsUtil({
       clipboard,
       mousePosition: mousePositionRef.current,
@@ -338,7 +325,6 @@ export default function Main() {
       setNodes,
       setEdges,
     });
-    recordHistory();
   }, [clipboard, reactFlowInstance]);
 
   useEffect(() => {
@@ -353,7 +339,6 @@ export default function Main() {
       setLogLevel,
       setToastPosition,
     });
-    recordHistory();
   }, []);
 
   //Saves user setting to localStorage
@@ -394,9 +379,8 @@ export default function Main() {
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => {
-      const newEdges = addEdge(connection, eds);
       recordHistory();
-      return newEdges;
+      return addEdge(connection, eds);
     }),
     [setEdges],
   );
@@ -404,11 +388,9 @@ export default function Main() {
   //Create new node after dragAndDrop
   const onDrop = useCallback(
     (event) => {
+      recordHistory();
       deselectAll();
-      onDropUtil(event, reactFlowInstance, (newNode) => {
-        setNodes((nds) => [...nds, newNode]);
-        recordHistory();
-      });
+      onDropUtil(event, reactFlowInstance, setNodes);
     },
     [reactFlowInstance, setNodes, deselectAll],
   );
@@ -441,8 +423,8 @@ export default function Main() {
     (type) => {
       deselectAll();
       spawnCircuitUtil(type, reactFlowInstance, (newNode) => {
-        setNodes((nds) => [...nds, newNode]);
         recordHistory();
+        setNodes((nds) => [...nds, newNode]);
       });
     },
     [reactFlowInstance, setNodes, deselectAll],
