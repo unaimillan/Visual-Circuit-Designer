@@ -12,7 +12,7 @@ export const initializeTabHistory = (tab) => ({
 });
 
 export const createHistoryUpdater = (setTabs, activeTabId, delay = 200) => {
-  const debouncedUpdate = debounce((newNodes, newEdges) => {
+  return debounce((newNodes, newEdges) => {
     setTabs(tabs => tabs.map(tab => {
       if (tab.id !== activeTabId) return tab;
 
@@ -26,14 +26,6 @@ export const createHistoryUpdater = (setTabs, activeTabId, delay = 200) => {
       };
     }));
   }, delay);
-
-  return {
-    immediate: (newNodes, newEdges) => {
-      debouncedUpdate.cancel();
-      debouncedUpdate(newNodes, newEdges);
-    },
-    debounced: debouncedUpdate
-  };
 };
 
 export const undo = (tabs, activeTabId, setTabs, setNodes, setEdges) => {

@@ -58,7 +58,7 @@ import {
   initializeTabHistory,
   createHistoryUpdater,
   undo as undoUtil,
-  redo as redoUtil
+  redo as redoUtil,
 } from "../utils/history";
 
 export const SimulateStateContext = createContext({
@@ -143,7 +143,6 @@ export default function Main() {
       try {
         const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
-          // Convert to history-enabled tabs
           const historyTabs = savedTabs.map(initializeTabHistory);
           setTabs(historyTabs);
           setActiveTabId(savedActive);
@@ -151,7 +150,6 @@ export default function Main() {
         }
       } catch {}
     }
-    // Create initial tab with history
     const initial = [initializeTabHistory({
       id: newId(),
       title: "New Tab",
@@ -163,7 +161,7 @@ export default function Main() {
   }, []);
 
   // Create history updater
-  const historyUpdater = useMemo(() =>
+  const historyUpdate = useMemo(() =>
       createHistoryUpdater(setTabs, activeTabId),
     [setTabs, activeTabId]);
 
@@ -206,9 +204,8 @@ export default function Main() {
     if (ignoreChangesRef.current) return;
     if (!activeTabId) return;
 
-    // Use debounced update for better performance
-    historyUpdater.debounced(nodes, edges);
-  }, [nodes, edges]);
+    historyUpdate(nodes, edges);
+  }, [nodes, edges, historyUpdate]);
 
   // Save to localStorage
   useEffect(() => {
@@ -502,11 +499,6 @@ export default function Main() {
       undo,
       redo,
     ],
-    {
-      "mod+z": () => undo(),
-      "mod+y": () => redo(),
-      "mod+shift+z": () => redo()
-    }
   );
 
   return (
@@ -689,7 +681,7 @@ export default function Main() {
             undo={undo}
             redo={redo}
             canUndo={activeTab?.index > 0}
-            canRedo={activeTab?.index < (activeTab?.history?.length || 0) - 1}
+            canRedo={activeTab?.index < (activeTab?.history?.length || 1) - 1}
           />
         </>
       </SimulateStateContext.Provider>
