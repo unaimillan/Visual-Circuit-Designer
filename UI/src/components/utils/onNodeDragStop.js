@@ -1,13 +1,13 @@
 import { getClosestEdge } from "./getClosestEdge.js";
 
 export function onNodeDragStop({
-                                 nodes,
-                                 setEdges,
-                                 getInternalNode,
-                                 store,
-                                 addEdge,
-                                 onComplete,
-                               }) {
+  nodes,
+  setEdges,
+  getInternalNode,
+  store,
+  addEdge,
+  onComplete,
+}) {
   return (_, draggedNode) => {
     const selectedNodes = nodes.filter(
       (n) => n.selected || n.id === draggedNode.id,

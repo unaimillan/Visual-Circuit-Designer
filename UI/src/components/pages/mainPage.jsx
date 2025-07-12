@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   addEdge,
@@ -26,7 +34,10 @@ import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
 import { useHotkeys } from "./mainPage/useHotkeys.js";
 import { Toaster } from "react-hot-toast";
 
-import { handleSimulateClick, updateInputState } from "./mainPage/runnerHandler.jsx";
+import {
+  handleSimulateClick,
+  updateInputState,
+} from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
@@ -46,7 +57,12 @@ import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosit
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
 import { loadLocalStorage } from "../utils/loadLocalStorage.js";
-import { createHistoryUpdater, initializeTabHistory, redo as redoUtil, undo as undoUtil, } from "../utils/history";
+import {
+  createHistoryUpdater,
+  initializeTabHistory,
+  redo as redoUtil,
+  undo as undoUtil,
+} from "../utils/history";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -131,7 +147,8 @@ export default function Main() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
+        const { tabs: savedTabs, activeTabId: savedActive } =
+          JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
           const historyTabs = savedTabs.map(initializeTabHistory);
           setTabs(historyTabs);
@@ -140,12 +157,14 @@ export default function Main() {
         }
       } catch {}
     }
-    const initial = [initializeTabHistory({
-      id: newId(),
-      title: "New Tab",
-      nodes: [],
-      edges: []
-    })];
+    const initial = [
+      initializeTabHistory({
+        id: newId(),
+        title: "New Tab",
+        nodes: [],
+        edges: [],
+      }),
+    ];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
@@ -153,7 +172,7 @@ export default function Main() {
   // When active tab changes
   useEffect(() => {
     if (!activeTabId) return;
-    const activeTab = tabs.find(t => t.id === activeTabId);
+    const activeTab = tabs.find((t) => t.id === activeTabId);
     if (!activeTab) return;
 
     const currentState = activeTab.history[activeTab.index];
@@ -167,27 +186,35 @@ export default function Main() {
   useEffect(() => {
     if (activeTabId == null) return;
     const toStore = {
-      tabs: tabs.map(tab => {
+      tabs: tabs.map((tab) => {
         const currentState = tab.history[tab.index];
         return {
           id: tab.id,
           title: tab.title,
           nodes: currentState.nodes,
-          edges: currentState.edges
+          edges: currentState.edges,
         };
       }),
-      activeTabId
+      activeTabId,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
   }, [tabs, activeTabId]);
 
   // Update history when nodes/edges change
   const recordHistory = useCallback(() => {
-    setTabs(tabs => tabs.map(tab => {
-      if (tab.id !== activeTabId) return tab;
-      console.log(tab.history, "nodes:", nodesRef.current, "edges:", edgesRef.current);
-      return historyUpdater.record(tab, nodesRef.current, edgesRef.current);
-    }));
+    setTabs((tabs) =>
+      tabs.map((tab) => {
+        if (tab.id !== activeTabId) return tab;
+        console.log(
+          tab.history,
+          "nodes:",
+          nodesRef.current,
+          "edges:",
+          edgesRef.current,
+        );
+        return historyUpdater.record(tab, nodesRef.current, edgesRef.current);
+      }),
+    );
   }, [nodesRef, edgesRef, activeTabId, historyUpdater]);
 
   // 2) Получение текущей активной вкладки по её id
@@ -363,11 +390,12 @@ export default function Main() {
   };
 
   const onConnect = useCallback(
-    (connection) => setEdges((eds) => {
-      const newEdges = addEdge(connection, eds);
-      setTimeout(recordHistory, 0);
-      return newEdges;
-    }),
+    (connection) =>
+      setEdges((eds) => {
+        const newEdges = addEdge(connection, eds);
+        setTimeout(recordHistory, 0);
+        return newEdges;
+      }),
     [setEdges, recordHistory],
   );
 
@@ -421,7 +449,7 @@ export default function Main() {
       getInternalNode,
       store,
       addEdge,
-      onComplete: () => setTimeout(recordHistory, 0)
+      onComplete: () => setTimeout(recordHistory, 0),
     }),
     [nodes, setEdges, getInternalNode, store, recordHistory],
   );

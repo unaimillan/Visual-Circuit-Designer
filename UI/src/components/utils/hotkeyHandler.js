@@ -64,19 +64,30 @@ export function hotkeyHandler(e, context) {
     }
   }
 
-  if (isCtrlOrCmd && e.shiftKey && (e.key.toLowerCase() === "s" || e.key.toLowerCase() === "ы")) {
+  if (
+    isCtrlOrCmd &&
+    e.shiftKey &&
+    (e.key.toLowerCase() === "s" || e.key.toLowerCase() === "ы")
+  ) {
     e.preventDefault();
     setOpenSettings((prev) => !prev);
     return;
   }
 
-  if (isCtrlOrCmd && (e.key.toLowerCase() === "s" || e.key.toLowerCase() === "ы")) {
+  if (
+    isCtrlOrCmd &&
+    (e.key.toLowerCase() === "s" || e.key.toLowerCase() === "ы")
+  ) {
     e.preventDefault();
     saveCircuit();
     return;
   }
 
-  if (isCtrlOrCmd && e.shiftKey && (e.key.toLowerCase() === "r" || e.key.toLowerCase() === "к")) {
+  if (
+    isCtrlOrCmd &&
+    e.shiftKey &&
+    (e.key.toLowerCase() === "r" || e.key.toLowerCase() === "к")
+  ) {
     e.preventDefault();
     handleSimulateClick({
       simulateState,
@@ -88,13 +99,20 @@ export function hotkeyHandler(e, context) {
     return;
   }
 
-  if (isCtrlOrCmd && (e.key.toLowerCase() === "o" || e.key.toLowerCase() === "щ")) {
+  if (
+    isCtrlOrCmd &&
+    (e.key.toLowerCase() === "o" || e.key.toLowerCase() === "щ")
+  ) {
     e.preventDefault();
     handleOpenClick();
     return;
   }
 
-  if (isCtrlOrCmd && e.shiftKey && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "я")) {
+  if (
+    isCtrlOrCmd &&
+    e.shiftKey &&
+    (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "я")
+  ) {
     e.preventDefault();
     setOpenSettings((prev) => !prev);
     return;

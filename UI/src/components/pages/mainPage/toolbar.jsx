@@ -91,10 +91,7 @@ export default function Toolbar({
             setPanOnDrag(true);
           }}
         >
-          <IconToolbarHand
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconToolbarHand SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
 
         <button
@@ -111,10 +108,7 @@ export default function Toolbar({
           className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
           onClick={() => setActiveAction("text")}
         >
-          <IconToolbarText
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
 
         <div className="toolbar-separator"></div>
@@ -163,10 +157,7 @@ export default function Toolbar({
           className="toolbarButton"
           title="Undo (Ctrl+Z)"
         >
-          <IconUndo
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconUndo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
 
         <button
@@ -175,10 +166,7 @@ export default function Toolbar({
           className="toolbarButton"
           title="Redo (Ctrl+Y)"
         >
-          <IconRedo
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconRedo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
       </div>
 
@@ -193,10 +181,7 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button className={`toolbarButton `} onClick={handleOpenClick}>
-          <IconOpenFile
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconOpenFile SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
         <input
           className={`hidden `}

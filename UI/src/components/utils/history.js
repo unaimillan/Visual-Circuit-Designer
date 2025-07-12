@@ -1,10 +1,12 @@
 export const initializeTabHistory = (tab) => ({
   ...tab,
-  history: [{
-    nodes: tab.nodes || [],
-    edges: tab.edges || []
-  }],
-  index: 0
+  history: [
+    {
+      nodes: tab.nodes || [],
+      edges: tab.edges || [],
+    },
+  ],
+  index: 0,
 });
 
 export const createHistoryUpdater = () => {
@@ -12,8 +14,10 @@ export const createHistoryUpdater = () => {
     record: (tab, nodes, edges) => {
       // Only record if state has changed
       const lastState = tab.history[tab.index];
-      const nodesChanged = JSON.stringify(lastState.nodes) !== JSON.stringify(nodes);
-      const edgesChanged = JSON.stringify(lastState.edges) !== JSON.stringify(edges);
+      const nodesChanged =
+        JSON.stringify(lastState.nodes) !== JSON.stringify(nodes);
+      const edgesChanged =
+        JSON.stringify(lastState.edges) !== JSON.stringify(edges);
 
       if (!nodesChanged && !edgesChanged) return tab;
 
@@ -23,51 +27,51 @@ export const createHistoryUpdater = () => {
       return {
         ...tab,
         history: newHistory,
-        index: newHistory.length - 1
+        index: newHistory.length - 1,
       };
     },
     undo: (tab) => {
       if (tab.index <= 0) return tab;
       return {
         ...tab,
-        index: tab.index - 1
+        index: tab.index - 1,
       };
     },
     redo: (tab) => {
       if (tab.index >= tab.history.length - 1) return tab;
       return {
         ...tab,
-        index: tab.index + 1
+        index: tab.index + 1,
       };
-    }
+    },
   };
 };
 
 export const undo = (tabs, activeTabId, setTabs, setNodes, setEdges) => {
-  const tab = tabs.find(t => t.id === activeTabId);
+  const tab = tabs.find((t) => t.id === activeTabId);
   if (!tab || tab.index <= 0) return;
 
   const newIndex = tab.index - 1;
   const newState = tab.history[newIndex];
 
-  setTabs(tabs.map(t =>
-    t.id === activeTabId ? { ...t, index: newIndex } : t
-  ));
+  setTabs(
+    tabs.map((t) => (t.id === activeTabId ? { ...t, index: newIndex } : t)),
+  );
 
   setNodes(newState.nodes);
   setEdges(newState.edges);
 };
 
 export const redo = (tabs, activeTabId, setTabs, setNodes, setEdges) => {
-  const tab = tabs.find(t => t.id === activeTabId);
+  const tab = tabs.find((t) => t.id === activeTabId);
   if (!tab || tab.index >= tab.history.length - 1) return;
 
   const newIndex = tab.index + 1;
   const newState = tab.history[newIndex];
 
-  setTabs(tabs.map(t =>
-    t.id === activeTabId ? { ...t, index: newIndex } : t
-  ));
+  setTabs(
+    tabs.map((t) => (t.id === activeTabId ? { ...t, index: newIndex } : t)),
+  );
 
   setNodes(newState.nodes);
   setEdges(newState.edges);

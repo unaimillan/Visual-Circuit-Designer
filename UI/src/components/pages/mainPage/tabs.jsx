@@ -12,11 +12,11 @@ import { initializeTabHistory } from "../../utils/history.js";
 // 7) добавить возможность перемещения табов (пиздец)
 
 export default function TabsContainer({
-                                        tabs,
-                                        activeTabId,
-                                        onTabsChange,
-                                        onActiveTabIdChange,
-                                      }) {
+  tabs,
+  activeTabId,
+  onTabsChange,
+  onActiveTabIdChange,
+}) {
   const addTab = () => {
     const newTab = initializeTabHistory({
       id: Date.now(),

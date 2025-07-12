@@ -1,4 +1,9 @@
-export function calculateContextMenuPosition(event, object, containerRect, string) {
+export function calculateContextMenuPosition(
+  event,
+  object,
+  containerRect,
+  string,
+) {
   return {
     id: object.id,
     name: object.type,
