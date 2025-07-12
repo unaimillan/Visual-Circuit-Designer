@@ -25,4 +25,3 @@ async def test_login_success(test_client, registered_user):
     print("Response:", response.text)
     print("Cookies:", response.cookies)
     assert "refresh_token" in response.cookies
-    # assert "access_token" in response.json()
