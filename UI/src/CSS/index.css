@@ -13,3 +13,89 @@ body {
   top: 0;
   right: 0;
 }
+
+.centered-controls {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 280px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.controls-card h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.control-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.undo {
+  background: linear-gradient(to right, #3498db, #2980b9);
+  color: white;
+}
+
+.undo:not(:disabled):hover {
+  background: linear-gradient(to right, #2980b9, #1c6ea4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.redo {
+  background: linear-gradient(to right, #2ecc71, #27ae60);
+  color: white;
+}
+
+.redo:not(:disabled):hover {
+  background: linear-gradient(to right, #27ae60, #219653);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.history-info {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  background: rgba(236, 240, 241, 0.7);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+}

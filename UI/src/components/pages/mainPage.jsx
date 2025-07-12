@@ -4,7 +4,7 @@ import React, {
   useRef,
   useState,
   useContext,
-  createContext,
+  createContext, useMemo,
 } from "react";
 
 import {
@@ -54,6 +54,12 @@ import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosit
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
 import { loadLocalStorage } from "../utils/loadLocalStorage.js";
+import {
+  initializeTabHistory,
+  createHistoryUpdater,
+  undo as undoUtil,
+  redo as redoUtil
+} from "../utils/history";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -122,6 +128,8 @@ export default function Main() {
 
   const fileInputRef = useRef(null);
 
+  const ignoreChangesRef = useRef(false);
+
   const handleOpenClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -133,20 +141,44 @@ export default function Main() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const { tabs: savedTabs, activeTabId: savedActive } =
-          JSON.parse(stored);
+        const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
-          setTabs(savedTabs);
+          // Convert to history-enabled tabs
+          const historyTabs = savedTabs.map(initializeTabHistory);
+          setTabs(historyTabs);
           setActiveTabId(savedActive);
           return;
         }
       } catch {}
     }
-    // Если в хранилище ничего нет — создаём одну начальную вкладку
-    const initial = [{ id: newId(), title: "New Tab", nodes: [], edges: [] }];
+    // Create initial tab with history
+    const initial = [initializeTabHistory({
+      id: newId(),
+      title: "New Tab",
+      nodes: [],
+      edges: []
+    })];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
+
+  // Create history updater
+  const historyUpdater = useMemo(() =>
+      createHistoryUpdater(setTabs, activeTabId),
+    [setTabs, activeTabId]);
+
+  // When active tab changes
+  useEffect(() => {
+    if (!activeTabId) return;
+    const activeTab = tabs.find(t => t.id === activeTabId);
+    if (!activeTab) return;
+
+    const currentState = activeTab.history[activeTab.index];
+    ignoreChangesRef.current = true;
+    setNodes(currentState.nodes);
+    setEdges(currentState.edges);
+    ignoreChangesRef.current = false;
+  }, [activeTabId]);
 
   // 2) Получение текущей активной вкладки по её id
   const activeTab = tabs.find((t) => t.id === activeTabId) || {
@@ -168,6 +200,42 @@ export default function Main() {
   useEffect(() => {
     edgesRef.current = edges;
   }, [edges]);
+
+  // Update history when nodes/edges change
+  useEffect(() => {
+    if (ignoreChangesRef.current) return;
+    if (!activeTabId) return;
+
+    // Use debounced update for better performance
+    historyUpdater.debounced(nodes, edges);
+  }, [nodes, edges]);
+
+  // Save to localStorage
+  useEffect(() => {
+    if (activeTabId == null) return;
+    const toStore = {
+      tabs: tabs.map(tab => {
+        const currentState = tab.history[tab.index];
+        return {
+          id: tab.id,
+          title: tab.title,
+          nodes: currentState.nodes,
+          edges: currentState.edges
+        };
+      }),
+      activeTabId
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  }, [tabs, activeTabId]);
+
+  // Undo/Redo functions
+  const undo = useCallback(() => {
+    undoUtil(tabs, activeTabId, setTabs, setNodes, setEdges);
+  }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
+
+  const redo = useCallback(() => {
+    redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges);
+  }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
 
   // 5) Синхронизация изменений из ReactFlow обратно в массив tabs:
   //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
@@ -409,6 +477,8 @@ export default function Main() {
       setActiveWire,
       socketRef,
       handleOpenClick,
+      undo,
+      redo,
     },
     [
       saveCircuit,
@@ -429,7 +499,14 @@ export default function Main() {
       setActiveWire,
       socketRef,
       handleOpenClick,
+      undo,
+      redo,
     ],
+    {
+      "mod+z": () => undo(),
+      "mod+y": () => redo(),
+      "mod+shift+z": () => redo()
+    }
   );
 
   return (
@@ -609,6 +686,10 @@ export default function Main() {
                 edges,
               })
             }
+            undo={undo}
+            redo={redo}
+            canUndo={activeTab?.index > 0}
+            canRedo={activeTab?.index < (activeTab?.history?.length || 0) - 1}
           />
         </>
       </SimulateStateContext.Provider>

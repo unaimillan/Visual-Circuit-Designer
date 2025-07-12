@@ -5,6 +5,8 @@ import {
   IconError,
   IconDownloadFile,
   IconOpenFile,
+  IconUndo,
+  IconRedo,
 } from "../../../../assets/ui-icons.jsx";
 
 import {
@@ -29,6 +31,10 @@ export default function Toolbar({
   loadCircuit,
   fileInputRef,
   handleOpenClick,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
 }) {
   return (
     <div>
@@ -85,7 +91,10 @@ export default function Toolbar({
             setPanOnDrag(true);
           }}
         >
-          <IconToolbarHand SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconToolbarHand
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <button
@@ -102,7 +111,10 @@ export default function Toolbar({
           className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
           onClick={() => setActiveAction("text")}
         >
-          <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconToolbarText
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
         </button>
 
         <div className="toolbar-separator"></div>
@@ -142,6 +154,30 @@ export default function Toolbar({
             draggable="false"
           />
         </button>
+
+        <button
+          onClick={undo}
+          disabled={!canUndo}
+          className="toolbarButton"
+          title="Undo (Ctrl+Z)"
+        >
+          <IconUndo
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
+        </button>
+
+        <button
+          onClick={redo}
+          disabled={!canRedo}
+          className="toolbarButton"
+          title="Redo (Ctrl+Y)"
+        >
+          <IconRedo
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
+        </button>
       </div>
 
       <div className="toolbar download">
@@ -155,7 +191,10 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button className={`toolbarButton `} onClick={handleOpenClick}>
-          <IconOpenFile SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconOpenFile
+            SVGClassName="toolbarButtonIcon"
+            draggable="false"
+          />
         </button>
         <input
           className={`hidden `}

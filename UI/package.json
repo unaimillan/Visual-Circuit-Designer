@@ -23,6 +23,7 @@
     "babel-jest": "^30.0.4",
     "classnames": "^2.5.1",
     "jest": "^30.0.4",
+    "lodash": "^4.17.21",
     "nanoid": "^5.1.5",
     "radix-ui": "^1.4.2",
     "react": "^19.1.0",
