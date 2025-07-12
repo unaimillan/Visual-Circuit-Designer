@@ -81,3 +81,10 @@ The system is deployed using **Coolify** for container orchestration, with **Ngi
     - **Redis** (used by **Auth** for token blacklisting)
 
 This architecture ensures **secure, scalable, and maintainable** deployment with clear separation of concerns.
+
+## <div align="center">Tech Stack</div>
+<ul>
+  <li><code>Frontend</code>: React.js, JavaScript, CSS</li>
+  <li><code>Backend</code>: Python, C++</li>
+  <li><code>Runner node</code>: Python</li>
+</ul>
