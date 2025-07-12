@@ -12,9 +12,11 @@ User Acceptance Tests are directly related to the issues of our project.
 
 
 **Description**: User may need many tabs to work with multiple circuits or custom nodes.
-Acceptance Criteria.
-GIVEN: User wants to work with 2 independent circuits
 
-WHEN: User clicks "create new tab"
+**Acceptance Criteria**
 
-THEN: New tab appears on screen and allows to work with multiple circuits
+**GIVEN:** User wants to work with 2 independent circuits
+
+**WHEN:** User clicks "create new tab"
+
+**THEN:** New tab appears on screen and allows to work with multiple circuits
