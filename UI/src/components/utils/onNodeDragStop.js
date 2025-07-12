@@ -6,7 +6,7 @@ export function onNodeDragStop({
                                  getInternalNode,
                                  store,
                                  addEdge,
-                                 recordHistory,
+                                 onComplete,
                                }) {
   return (_, draggedNode) => {
     const selectedNodes = nodes.filter(

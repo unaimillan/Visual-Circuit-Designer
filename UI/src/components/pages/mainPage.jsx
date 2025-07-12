@@ -408,9 +408,7 @@ export default function Main() {
   const spawnCircuit = useCallback(
     (type) => {
       deselectAll();
-      spawnCircuitUtil(type, reactFlowInstance, (newNode) => {
-        setNodes((nds) => [...nds, newNode]);
-      });
+      spawnCircuitUtil(type, reactFlowInstance, setNodes);
       setTimeout(recordHistory, 0);
     },
     [reactFlowInstance, setNodes, deselectAll, recordHistory],

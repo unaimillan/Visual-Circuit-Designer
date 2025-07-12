@@ -155,6 +155,8 @@ export default function Toolbar({
           />
         </button>
 
+        <div className="toolbar-separator"></div>
+
         <button
           onClick={undo}
           disabled={!canUndo}
