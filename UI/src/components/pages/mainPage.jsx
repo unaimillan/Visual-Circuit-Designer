@@ -33,6 +33,7 @@ import { nodeTypes } from "../codeComponents/nodes.js";
 import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
 import { useHotkeys } from "./mainPage/useHotkeys.js";
 import { Toaster } from "react-hot-toast";
+import toast from 'react-hot-toast';
 
 import {
   handleSimulateClick,
@@ -147,9 +148,9 @@ export default function Main() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const { tabs: savedTabs, activeTabId: savedActive } =
-          JSON.parse(stored);
+        const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
+          // Convert saved tabs to history-enabled tabs
           const historyTabs = savedTabs.map(initializeTabHistory);
           setTabs(historyTabs);
           setActiveTabId(savedActive);
@@ -157,14 +158,13 @@ export default function Main() {
         }
       } catch {}
     }
-    const initial = [
-      initializeTabHistory({
-        id: newId(),
-        title: "New Tab",
-        nodes: [],
-        edges: [],
-      }),
-    ];
+    // Initial setup for new users
+    const initial = [initializeTabHistory({
+      id: newId(),
+      title: "New Tab",
+      nodes: [],
+      edges: []
+    })];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
@@ -185,18 +185,21 @@ export default function Main() {
   // Save to localStorage
   useEffect(() => {
     if (activeTabId == null) return;
+
     const toStore = {
-      tabs: tabs.map((tab) => {
+      tabs: tabs.map(tab => {
+        // Get the current state from history
         const currentState = tab.history[tab.index];
         return {
           id: tab.id,
           title: tab.title,
           nodes: currentState.nodes,
-          edges: currentState.edges,
+          edges: currentState.edges
         };
       }),
-      activeTabId,
+      activeTabId
     };
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
   }, [tabs, activeTabId]);
 
@@ -238,13 +241,23 @@ export default function Main() {
     edgesRef.current = edges;
   }, [edges]);
 
+  const showWarning = useCallback((message) => {
+    toast(message, {
+      icon: '⚠️',
+      style: {
+        backgroundColor: 'var(--warning-bg)',
+        color: 'var(--warning-text)'
+      }
+    });
+  }, []);
+
   // Undo/Redo functions
   const undo = useCallback(() => {
-    undoUtil(tabs, activeTabId, setTabs, setNodes, setEdges);
+    undoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
   }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
 
   const redo = useCallback(() => {
-    redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges);
+    redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
   }, [tabs, activeTabId, setTabs, setNodes, setEdges]);
 
   useEffect(() => {
@@ -610,6 +623,11 @@ export default function Main() {
               error: {
                 duration: 10000,
               },
+              warning: {
+                className: 'toast-warning',
+                duration: 3000,
+                icon: '⚠️'
+              }
             }}
           />
 

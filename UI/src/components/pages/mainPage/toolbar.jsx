@@ -155,7 +155,7 @@ export default function Toolbar({
           onClick={undo}
           disabled={!canUndo}
           className="toolbarButton"
-          title="Undo (Ctrl+Z)"
+          title={canUndo ? "Undo (Ctrl+Z)" : "Nothing to undo in this tab"}
         >
           <IconUndo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
@@ -164,7 +164,7 @@ export default function Toolbar({
           onClick={redo}
           disabled={!canRedo}
           className="toolbarButton"
-          title="Redo (Ctrl+Y)"
+          title={canRedo ? "Redo (Ctrl+Y)" : "Nothing to redo in this tab"}
         >
           <IconRedo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>

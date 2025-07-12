@@ -99,3 +99,15 @@ body {
   border-radius: 6px;
   font-weight: 500;
 }
+
+:root {
+  --warning-bg: #ffecb3;
+  --warning-text: #5d4037;
+}
+
+/* Toast styling */
+.toast-warning {
+  background-color: var(--warning-bg) !important;
+  color: var(--warning-text) !important;
+  border-color: #ffd54f !important;
+}
