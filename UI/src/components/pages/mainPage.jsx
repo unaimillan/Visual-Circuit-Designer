@@ -136,6 +136,9 @@ export default function Main() {
     }
   };
 
+  // Create history updater
+  const historyUpdater = useMemo(() => createHistoryUpdater(), []);
+
   // 1) Загрузка списка вкладок и сохранённого activeTabId из localStorage
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -160,11 +163,6 @@ export default function Main() {
     setActiveTabId(initial[0].id);
   }, []);
 
-  // Create history updater
-  const historyUpdate = useMemo(() =>
-      createHistoryUpdater(setTabs, activeTabId),
-    [setTabs, activeTabId]);
-
   // When active tab changes
   useEffect(() => {
     if (!activeTabId) return;
@@ -177,6 +175,32 @@ export default function Main() {
     setEdges(currentState.edges);
     ignoreChangesRef.current = false;
   }, [activeTabId]);
+
+  // Save to localStorage
+  useEffect(() => {
+    if (activeTabId == null) return;
+    const toStore = {
+      tabs: tabs.map(tab => {
+        const currentState = tab.history[tab.index];
+        return {
+          id: tab.id,
+          title: tab.title,
+          nodes: currentState.nodes,
+          edges: currentState.edges
+        };
+      }),
+      activeTabId
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  }, [tabs, activeTabId]);
+
+  // Update history when nodes/edges change
+  const recordHistory = useCallback(() => {
+    setTabs(tabs => tabs.map(tab => {
+      if (tab.id !== activeTabId) return tab;
+      return historyUpdater.record(tab, nodes, edges);
+    }));
+  }, [nodes, edges, activeTabId, historyUpdater]);
 
   // 2) Получение текущей активной вкладки по её id
   const activeTab = tabs.find((t) => t.id === activeTabId) || {
@@ -198,32 +222,6 @@ export default function Main() {
   useEffect(() => {
     edgesRef.current = edges;
   }, [edges]);
-
-  // Update history when nodes/edges change
-  useEffect(() => {
-    if (ignoreChangesRef.current) return;
-    if (!activeTabId) return;
-
-    historyUpdate(nodes, edges);
-  }, [nodes, edges, historyUpdate]);
-
-  // Save to localStorage
-  useEffect(() => {
-    if (activeTabId == null) return;
-    const toStore = {
-      tabs: tabs.map(tab => {
-        const currentState = tab.history[tab.index];
-        return {
-          id: tab.id,
-          title: tab.title,
-          nodes: currentState.nodes,
-          edges: currentState.edges
-        };
-      }),
-      activeTabId
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
-  }, [tabs, activeTabId]);
 
   // Undo/Redo functions
   const undo = useCallback(() => {
@@ -312,6 +310,7 @@ export default function Main() {
     const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
     setNodes(newNodes);
     setEdges(newEdges);
+    recordHistory();
   }, [nodes, edges, clipboard]);
 
   const copyElements = useCallback(() => {
@@ -319,6 +318,7 @@ export default function Main() {
       getSelectedElements,
       setClipboard,
     });
+    recordHistory();
   }, [nodes, edges, getSelectedElements]);
 
   const cutElements = useCallback(() => {
@@ -327,6 +327,7 @@ export default function Main() {
       setClipboard,
       deleteSelectedElements,
     });
+    recordHistory();
   }, [getSelectedElements]);
 
   const pasteElements = useCallback(() => {
@@ -337,6 +338,7 @@ export default function Main() {
       setNodes,
       setEdges,
     });
+    recordHistory();
   }, [clipboard, reactFlowInstance]);
 
   useEffect(() => {
@@ -351,6 +353,7 @@ export default function Main() {
       setLogLevel,
       setToastPosition,
     });
+    recordHistory();
   }, []);
 
   //Saves user setting to localStorage
@@ -389,18 +392,25 @@ export default function Main() {
     event.dataTransfer.effectAllowed = "move";
   };
 
+  const onConnect = useCallback(
+    (connection) => setEdges((eds) => {
+      const newEdges = addEdge(connection, eds);
+      recordHistory();
+      return newEdges;
+    }),
+    [setEdges],
+  );
+
   //Create new node after dragAndDrop
   const onDrop = useCallback(
     (event) => {
       deselectAll();
-      onDropUtil(event, reactFlowInstance, setNodes);
+      onDropUtil(event, reactFlowInstance, (newNode) => {
+        setNodes((nds) => [...nds, newNode]);
+        recordHistory();
+      });
     },
     [reactFlowInstance, setNodes, deselectAll],
-  );
-
-  const onConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
-    [setEdges],
   );
 
   const onNodeContextMenu = useCallback((event, node) => {
@@ -430,7 +440,10 @@ export default function Main() {
   const spawnCircuit = useCallback(
     (type) => {
       deselectAll();
-      spawnCircuitUtil(type, reactFlowInstance, setNodes);
+      spawnCircuitUtil(type, reactFlowInstance, (newNode) => {
+        setNodes((nds) => [...nds, newNode]);
+        recordHistory();
+      });
     },
     [reactFlowInstance, setNodes, deselectAll],
   );
@@ -442,8 +455,9 @@ export default function Main() {
       getInternalNode,
       store,
       addEdge,
+      onComplete: recordHistory,
     }),
-    [nodes, setEdges, getInternalNode, store],
+    [nodes, setEdges, getInternalNode, store, recordHistory],
   );
 
   const variant =

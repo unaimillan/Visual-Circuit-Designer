@@ -11,21 +11,33 @@ export const initializeTabHistory = (tab) => ({
   index: 0
 });
 
-export const createHistoryUpdater = (setTabs, activeTabId, delay = 200) => {
-  return debounce((newNodes, newEdges) => {
-    setTabs(tabs => tabs.map(tab => {
-      if (tab.id !== activeTabId) return tab;
-
+export const createHistoryUpdater = () => {
+  return {
+    record: (tab, nodes, edges) => {
       const newHistory = tab.history.slice(0, tab.index + 1);
-      newHistory.push({ nodes: newNodes, edges: newEdges });
+      newHistory.push({ nodes, edges });
 
       return {
         ...tab,
-        history: newHistory.slice(-HISTORY_LIMIT),
-        index: Math.min(newHistory.length - 1, HISTORY_LIMIT - 1)
+        history: newHistory,
+        index: newHistory.length - 1
       };
-    }));
-  }, delay);
+    },
+    undo: (tab) => {
+      if (tab.index <= 0) return tab;
+      return {
+        ...tab,
+        index: tab.index - 1
+      };
+    },
+    redo: (tab) => {
+      if (tab.index >= tab.history.length - 1) return tab;
+      return {
+        ...tab,
+        index: tab.index + 1
+      };
+    }
+  };
 };
 
 export const undo = (tabs, activeTabId, setTabs, setNodes, setEdges) => {
