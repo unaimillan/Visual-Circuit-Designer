@@ -7,7 +7,7 @@ async def test_get_current_user(test_client, registered_user):
     _, user = registered_user
 
     # First login to get token
-    login_response = await test_client.post("/auth/jwt/login", data={
+    login_response = await test_client.post("/auth/login", data={
         "username": user["email"],
         "password": "TestPassword123"
     })

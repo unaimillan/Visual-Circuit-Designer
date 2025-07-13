@@ -5,7 +5,7 @@ from fastapi import status
 @pytest.mark.asyncio
 async def test_login_wrong_password(test_client, registered_user):
     user_data, _ = registered_user
-    response = await test_client.post("/auth/jwt/login", data={
+    response = await test_client.post("/auth/login", data={
         "username": user_data["email"],
         "password": "WrongPassword"
     })

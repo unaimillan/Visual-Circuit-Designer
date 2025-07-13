@@ -7,7 +7,7 @@ async def test_update_user(test_client, registered_user):
     _, user = registered_user
 
     # Login
-    login_response = await test_client.post("/auth/jwt/login", data={
+    login_response = await test_client.post("/auth/login", data={
         "username": user["email"],
         "password": "TestPassword123"
     })

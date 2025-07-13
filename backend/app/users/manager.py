@@ -65,14 +65,37 @@ class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
         created_user = await self.user_db.create(user_dict)
         return await self.get(created_user["id"])
 
-def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=SECRET, lifetime_seconds=3600, algorithm="HS256")
-
-cookie_transport = CookieTransport(cookie_name="refresh_token", cookie_max_age=3600, cookie_secure=False)
+# Transport for access token (Bearer token in response)
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
+# Transport for refresh token (HTTP-only cookie)
+cookie_transport = CookieTransport(cookie_name="refresh_token", cookie_max_age=86_400)
+
+# Стратегия для access token (JSON)
+def get_access_strategy() -> JWTStrategy:
+    return JWTStrategy(
+        secret=SECRET,
+        lifetime_seconds=3600 * 24,  # 24 часа
+        algorithm="HS256"
+    )
+
+# Стратегия для refresh token (Cookie)
+def get_refresh_strategy() -> JWTStrategy:
+    return JWTStrategy(
+        secret=SECRET,
+        lifetime_seconds=86400 * 30,  # 30 дней
+        algorithm="HS256"
+    )
+
+# Create authentication backends
 auth_backend = AuthenticationBackend(
     name="jwt",
     transport=bearer_transport,
-    get_strategy=get_jwt_strategy,
+    get_strategy=get_access_strategy,
+)
+
+refresh_backend = AuthenticationBackend(
+    name="cookie",
+    transport=cookie_transport,
+    get_strategy=get_refresh_strategy,
 )

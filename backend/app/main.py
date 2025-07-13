@@ -1,7 +1,14 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Depends, APIRouter
+from fastapi import FastAPI, Depends, APIRouter, HTTPException
+from fastapi.responses import Response
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import status
 from fastapi_users import FastAPIUsers
+from fastapi_users.manager import UserManagerDependency, BaseUserManager
+from fastapi_users.router import ErrorCode
+from fastapi_users.router.common import ErrorModel
+from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError
 from starlette.responses import JSONResponse
 
@@ -9,7 +16,7 @@ from ..app.schema import UserCreate, UserRead, UserUpdate
 from ..app.models import UserDB
 from ..app.db import user_collection
 from ..app.users.mongo_users import MongoUserDatabase
-from ..app.users.manager import MyUserManager, auth_backend
+from ..app.users.manager import MyUserManager, auth_backend, refresh_backend
 from uuid import UUID
 
 user_db = MongoUserDatabase(user_collection)
@@ -22,7 +29,7 @@ async def get_user_manager(db=Depends(get_user_db)):
 
 fastapi_users = FastAPIUsers[UserDB, UUID](
     get_user_manager,
-    [auth_backend],
+    [auth_backend, refresh_backend],
 )
 
 app = FastAPI()
@@ -40,11 +47,11 @@ async def mongo_duplicate_handler(request, exc):
         content={"detail": detail},
     )
 
-app.include_router(
-    fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
-    tags=["auth"]
-)
+# app.include_router(
+#     fastapi_users.get_auth_router(auth_backend),
+#     prefix="/auth/jwt",
+#     tags=["auth"]
+# )
 
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
@@ -57,6 +64,31 @@ app.include_router(
     prefix="/users",
     tags=["users"]
 )
+
+@router.post("/login")
+async def login(
+    response: Response,
+    credentials: OAuth2PasswordRequestForm = Depends(),
+    user_manager: BaseUserManager[UserDB, UUID] = Depends(get_user_manager),
+):
+    user = await user_manager.authenticate(credentials)
+
+    if not user or not user.is_active:
+        raise HTTPException(status_code=400, detail="LOGIN_BAD_CREDENTIALS")
+
+    # Generate tokens
+    access_token = await auth_backend.get_strategy().write_token(user)
+    refresh_token = await refresh_backend.get_strategy().write_token(user)
+
+    # Set cookie
+    refresh_backend.transport._set_login_cookie(response, refresh_token)
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
+
+app.include_router(router, prefix="/auth", tags=["auth"])
 
 async def create_indexes():
     await user_collection.create_index("email", unique=True)
