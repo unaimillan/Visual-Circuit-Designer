@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Bezier Curve: Set Bezier curve as the default wire rendering style for better UX. `Issue#121`
 
 ### Fixed
-- Proximity connection: Prevent from creating wires when wire already creating
+- Proximity connection: Prevent from creating wires when wire already creating. `PR#112`
 - Start Simulation Bug: Pressing the input button or starting the simulation now affects only the current circuit instead of all circuits.
 - Blurry terms: Elements in the workspace (ReactFlow) became blurry after certain actions, as well as when switching to another tab in the browser and returning back.`Issue 102`
 ---
