@@ -47,8 +47,15 @@ export const createHistoryUpdater = () => {
   };
 };
 
-export const undo = (tabs, activeTabId, setTabs, setNodes, setEdges, showWarning) => {
-  const tab = tabs.find(t => t.id === activeTabId);
+export const undo = (
+  tabs,
+  activeTabId,
+  setTabs,
+  setNodes,
+  setEdges,
+  showWarning,
+) => {
+  const tab = tabs.find((t) => t.id === activeTabId);
   if (!tab) {
     showWarning("No active tab selected");
     return;
@@ -62,16 +69,23 @@ export const undo = (tabs, activeTabId, setTabs, setNodes, setEdges, showWarning
   const newIndex = tab.index - 1;
   const newState = tab.history[newIndex];
 
-  setTabs(tabs.map(t =>
-    t.id === activeTabId ? { ...t, index: newIndex } : t
-  ));
+  setTabs(
+    tabs.map((t) => (t.id === activeTabId ? { ...t, index: newIndex } : t)),
+  );
 
   setNodes(newState.nodes);
   setEdges(newState.edges);
 };
 
-export const redo = (tabs, activeTabId, setTabs, setNodes, setEdges, showWarning) => {
-  const tab = tabs.find(t => t.id === activeTabId);
+export const redo = (
+  tabs,
+  activeTabId,
+  setTabs,
+  setNodes,
+  setEdges,
+  showWarning,
+) => {
+  const tab = tabs.find((t) => t.id === activeTabId);
   if (!tab) {
     showWarning("No active tab selected");
     return;
@@ -85,9 +99,9 @@ export const redo = (tabs, activeTabId, setTabs, setNodes, setEdges, showWarning
   const newIndex = tab.index + 1;
   const newState = tab.history[newIndex];
 
-  setTabs(tabs.map(t =>
-    t.id === activeTabId ? { ...t, index: newIndex } : t
-  ));
+  setTabs(
+    tabs.map((t) => (t.id === activeTabId ? { ...t, index: newIndex } : t)),
+  );
 
   setNodes(newState.nodes);
   setEdges(newState.edges);
