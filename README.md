@@ -1,10 +1,11 @@
-# Visual-Circuit-Designer
+### <div align="center"><img src="./docs/logo.png" width="200"> 
+# <div align="center">Visual-Circuit-Designer<div>
 Visual-Circuit-Designer is web-based platform that could provide students and learners good experience in designing circuits similar to the Block Diagrams (like on Computer Architecture), but without the need to install Quartus Prime or huge Virtual box image. 
 
 
 [Link to our product](https://www.visual-circuit-designer.ru/)
 
-[DEMO]()
+[DEMO](https://www.dropbox.com/scl/fi/mze6fzacqzvccibqd7kt5/Screen-Recording-2025-07-13-at-18.40.22.mov?rlkey=czj11gd1n8xcegfsybchm6tyn&st=1ittlg4n&dl=0)
 
 
 ## <div align="center">Usage</div>
