@@ -156,7 +156,9 @@ export default function TabsContainer({
                   removeTab(tab.id);
                 }}
               >
-                <IconCloseCross SVGClassName="close-tab-cross" />
+                <IconCloseCross
+                  SVGClassName="close-tab-cross"
+                />
               </button>
             )}
           </div>

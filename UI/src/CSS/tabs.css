@@ -119,6 +119,7 @@
 .close-tab-cross {
   width: 10px;
   height: auto;
+  color: var(--main-0);
 }
 
 /* Context Menu Styles */
