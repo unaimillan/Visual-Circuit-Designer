@@ -3,11 +3,11 @@ import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 
 export default function TabsContainer({
-                                        tabs,
-                                        activeTabId,
-                                        onTabsChange,
-                                        onActiveTabIdChange,
-                                      }) {
+  tabs,
+  activeTabId,
+  onTabsChange,
+  onActiveTabIdChange,
+}) {
   const scrollRef = useRef(null);
   const textareaRefs = useRef({});
   const [contextMenu, setContextMenu] = useState(null);
@@ -33,13 +33,13 @@ export default function TabsContainer({
   // Close context menu on click outside
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (contextMenu && !e.target.closest('.context-menu')) {
+      if (contextMenu && !e.target.closest(".context-menu")) {
         setContextMenu(null);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [contextMenu]);
 
   // Focus textarea when editing starts
@@ -82,7 +82,7 @@ export default function TabsContainer({
     setContextMenu({
       x: e.clientX,
       y: e.clientY,
-      tabId: tabId
+      tabId: tabId,
     });
   };
 
@@ -156,7 +156,7 @@ export default function TabsContainer({
                   removeTab(tab.id);
                 }}
               >
-                <IconCloseCross SVGClassName="close-tab-cross"/>
+                <IconCloseCross SVGClassName="close-tab-cross" />
               </button>
             )}
           </div>
