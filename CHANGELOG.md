@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ---
 
 ### Added
-- Circuits menu with basic logic gates (AND, OR, NOT)
-- Workspace Canvas powered by ReactFlow
-- Toolbar layout
+- Circuits menu with basic logic gates (AND, OR, NOT) `Issue#29`
+- Workspace Canvas powered by ReactFlow `Issue#6`
+- Toolbar layout `Issue#18`
 
