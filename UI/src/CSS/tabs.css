@@ -38,7 +38,6 @@
   background-color: var(--main-0);
 }
 
-
 .tab {
   display: flex; /* включаем flex */
   align-items: center; /* по вертикали по центру */

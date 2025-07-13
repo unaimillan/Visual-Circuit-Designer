@@ -12,11 +12,11 @@ import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 // 7) добавить возможность перемещения табов (пиздец)
 
 export default function TabsContainer({
-                                        tabs,
-                                        activeTabId,
-                                        onTabsChange,
-                                        onActiveTabIdChange,
-                                      }) {
+  tabs,
+  activeTabId,
+  onTabsChange,
+  onActiveTabIdChange,
+}) {
   const addTab = () => {
     const newTab = initializeTabHistory({
       id: Date.now(),
@@ -77,20 +77,20 @@ export default function TabsContainer({
             className={`tab ${tab.id === activeTabId ? "active" : ""}`}
             onClick={() => onActiveTabIdChange(tab.id)}
           >
-          <textarea
-            className="name-text-area"
-            value={tab.title}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(e) => updateTabTitle(tab.id, e.target.value)}
-            placeholder="Tab name"
-            onKeyDown={(e) => {
-              // Prevent Enter key from creating new line
-              if (e.key === "Enter") {
-                e.preventDefault();
-                // e.target.blur();
-              }
-            }}
-          />
+            <textarea
+              className="name-text-area"
+              value={tab.title}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => updateTabTitle(tab.id, e.target.value)}
+              placeholder="Tab name"
+              onKeyDown={(e) => {
+                // Prevent Enter key from creating new line
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  // e.target.blur();
+                }
+              }}
+            />
 
             {tabs.length > 1 && (
               <button
@@ -100,7 +100,7 @@ export default function TabsContainer({
                   removeTab(tab.id);
                 }}
               >
-                <IconCloseCross SVGClassName="close-tab-cross"/>
+                <IconCloseCross SVGClassName="close-tab-cross" />
               </button>
             )}
           </div>
