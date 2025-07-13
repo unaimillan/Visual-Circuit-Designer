@@ -62,6 +62,7 @@ import { initializeTabHistory } from "../utils/initializeTabHistory.js";
 import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
 import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
+import { handleTabSwitch as handleTabSwitchUtil} from "../utils/handleTabSwitch.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -248,24 +249,14 @@ export default function Main() {
 
   const handleTabSwitch = useCallback(
     (newTabId) => {
-      if (activeTabId != null) {
-        setTabs((tabs) =>
-          tabs.map((tab) => {
-            if (tab.id !== activeTabId) return tab;
-            const updatedHistory = [...tab.history];
-            updatedHistory[tab.index] = {
-              nodes: nodesRef.current,
-              edges: edgesRef.current,
-            };
-            return {
-              ...tab,
-              history: updatedHistory,
-            };
-          }),
-        );
-      }
-      // Наконец — меняем активную вкладку
-      setActiveTabId(newTabId);
+      handleTabSwitchUtil({
+        activeTabId,
+        newTabId,
+        setTabs,
+        setActiveTabId,
+        nodes: nodesRef.current,
+        edges: edgesRef.current,
+      });
     },
     [activeTabId],
   );
