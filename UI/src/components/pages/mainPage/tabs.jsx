@@ -1,6 +1,6 @@
 import React from "react";
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
-import { initializeTabHistory } from "../../utils/history.js";
+import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 
 // Что надо сделать:
 // 1) хендлить много вкладок (уменьшать их размер или делать горизонтальный скролл)

@@ -58,12 +58,10 @@ import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosit
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
 import { loadLocalStorage } from "../utils/loadLocalStorage.js";
-import {
-  createHistoryUpdater,
-  initializeTabHistory,
-  redo as redoUtil,
-  undo as undoUtil,
-} from "../utils/history";
+import { initializeTabHistory } from "../utils/initializeTabHistory.js";
+import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
+import { undo as undoUtil } from "../utils/undo.js";
+import { redo as redoUtil } from "../utils/redo.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
