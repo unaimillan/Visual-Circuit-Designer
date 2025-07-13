@@ -72,7 +72,7 @@ For those who want locally launch our project
 
       In terminal run
     ```bash
-      cd path/to/project
+      cd Visual-Circuit-Designer
     ```
 3. **Make sure you have all needed dependencies**
 
@@ -81,6 +81,43 @@ For those who want locally launch our project
       cd UI
       npm install
     ```
+4. **Make sure you have needed Runner Node requirements**
+    This part depends on Operation System you have
+   - For _Linux_:
+
+    Type in terminal:
+    ```bash
+        sudo apt-get update
+        sudo apt-get install -y iverilog
+    ```
+    - For _macOS_:
+    
+      Type in terminal
+    ```bash
+        sudo port install iverilog
+    ```
+    - For _Windows_:
+    
+      Install Icarus Verilog from this [site](https://bleyer.org/icarus/)
+5. **Install Python dependencies**
+    ```bash
+        python -m pip install --upgrade pip
+        pip install -r RunnerNode/requirements.txt
+    ```
+   
+6. **Run Runner Node Server**
+    ```bash
+       PYTHONPATH=RunnerNode uvicorn connect:socket_app --host 0.0.0.0 --port 80 --reload
+    ```
+   
+7. **Run Frontend Server**
+    ```bash
+       cd UI
+       npm run dev
+    ```
+
+8. **Open Project**
+    Open the link from terminal and get started!
 
 ## Documentation
 - [Development](./CONTRIBUTING.md)

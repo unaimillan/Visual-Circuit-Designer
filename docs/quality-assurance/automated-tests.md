@@ -36,7 +36,7 @@ To run runner tests:
 1. **Install Icarus Verilog**
 
    This part depends on what operating system the user has.
-- For _Linux.org_:
+- For _Linux_:
 
   Type in terminal:
 ```bash
@@ -51,7 +51,7 @@ To run runner tests:
 ```
 - For _Windows_:
 
-  Install Icarus Verilog from this [cite](https://bleyer.org/icarus/)
+  Install Icarus Verilog from this [site](https://bleyer.org/icarus/)
 
 2. **Update** `pip`
 
