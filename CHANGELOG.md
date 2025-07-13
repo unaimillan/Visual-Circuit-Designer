@@ -27,8 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 - Proximity connection: Prevent from creating wires when wire already creating
-- Start Simulation Bug: Pressing the input button or starting the simulation now affects only the current circuit instead of all circuits. [#102]
-
+- Start Simulation Bug: Pressing the input button or starting the simulation now affects only the current circuit instead of all circuits.
+- Blurry terms: Elements in the workspace (ReactFlow) became blurry after certain actions, as well as when switching to another tab in the browser and returning back.`Issue 102`
 ---
 
 ## [MVP v1] — 2025-06-22
