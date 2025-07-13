@@ -172,10 +172,7 @@ export default function Toolbar({
           disabled={!canUndo}
           title={canUndo ? "Undo (Ctrl+Z)" : "Nothing to undo in this tab"}
         >
-          <IconUndo
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconUndo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
 
         <button
@@ -184,10 +181,7 @@ export default function Toolbar({
           disabled={!canRedo}
           title={canRedo ? "Redo (Ctrl+Y)" : "Nothing to redo in this tab"}
         >
-          <IconRedo
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconRedo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
       </div>
 
@@ -210,10 +204,7 @@ export default function Toolbar({
           onClick={handleOpenClick}
           title={"Upload"}
         >
-          <IconOpenFile
-            SVGClassName="toolbarButtonIcon"
-            draggable="false"
-          />
+          <IconOpenFile SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
         <input
           className={`hidden`}

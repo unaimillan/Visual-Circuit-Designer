@@ -114,7 +114,7 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--main-3); /* scroll handle */
-  border-radius: 4px;     /* rounded corners */
+  border-radius: 4px; /* rounded corners */
 }
 
 ::-webkit-scrollbar-thumb:hover {
