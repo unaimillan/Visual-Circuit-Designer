@@ -629,6 +629,7 @@ export default function Main() {
           <button
             className="openCircuitsMenuButton"
             onClick={() => setCircuitsMenuState(!circuitsMenuState)}
+            title={"Circuits menu"}
           >
             <IconMenu
               SVGClassName="openCircuitsMenuButtonIcon"
@@ -639,6 +640,7 @@ export default function Main() {
           <button
             className="openSettingsButton"
             onClick={() => setOpenSettings(true)}
+            title={"Settings"}
           >
             <IconSettings
               SVGClassName="openSettingsButtonIcon"

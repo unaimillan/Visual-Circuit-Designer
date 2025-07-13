@@ -85,6 +85,7 @@ export default function CircuitsMenu({
                       className="dndnode"
                       draggable
                       onDragStart={(e) => onDragStart(e, node.id)}
+                      title={node.label}
                     >
                       <button onClick={() => spawnCircuit(node.id)}>
                         <node.icon
