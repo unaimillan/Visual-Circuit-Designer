@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 
@@ -12,11 +12,11 @@ import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 // 7) добавить возможность перемещения табов (пиздец)
 
 export default function TabsContainer({
-  tabs,
-  activeTabId,
-  onTabsChange,
-  onActiveTabIdChange,
-}) {
+                                        tabs,
+                                        activeTabId,
+                                        onTabsChange,
+                                        onActiveTabIdChange,
+                                      }) {
   const addTab = () => {
     const newTab = initializeTabHistory({
       id: Date.now(),
@@ -44,14 +44,39 @@ export default function TabsContainer({
     onTabsChange(updatedTabs);
   };
 
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e) => {
+      // Если колесо прокручивается вертикально — прокручиваем горизонтально
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+
+        // Можно настроить скорость скролла
+        const SCROLL_SPEED = 1.5;
+        el.scrollLeft += e.deltaY * SCROLL_SPEED;
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+    };
+  }, []);
+
   return (
-    <div className="main-tabs-wrapper">
-      {tabs.map((tab) => (
-        <div
-          key={tab.id}
-          className={`tab ${tab.id === activeTabId ? "active" : ""}`}
-          onClick={() => onActiveTabIdChange(tab.id)}
-        >
+    <div className="tabs-scroll-container">
+      <div className="main-tabs-wrapper" ref={scrollRef}>
+        {tabs.map((tab) => (
+          <div
+            key={tab.id}
+            className={`tab ${tab.id === activeTabId ? "active" : ""}`}
+            onClick={() => onActiveTabIdChange(tab.id)}
+          >
           <textarea
             className="name-text-area"
             value={tab.title}
@@ -67,23 +92,24 @@ export default function TabsContainer({
             }}
           />
 
-          {tabs.length > 1 && (
-            <button
-              className="close-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeTab(tab.id);
-              }}
-            >
-              <IconCloseCross SVGClassName="close-tab-cross" />
-            </button>
-          )}
-        </div>
-      ))}
+            {tabs.length > 1 && (
+              <button
+                className="close-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeTab(tab.id);
+                }}
+              >
+                <IconCloseCross SVGClassName="close-tab-cross"/>
+              </button>
+            )}
+          </div>
+        ))}
 
-      <button className="add-btn" onClick={addTab}>
-        ＋
-      </button>
+        <button className="add-btn" onClick={addTab}>
+          ＋
+        </button>
+      </div>
     </div>
   );
 }
