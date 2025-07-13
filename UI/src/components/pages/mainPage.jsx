@@ -196,13 +196,6 @@ export default function Main() {
     setTabs((tabs) =>
       tabs.map((tab) => {
         if (tab.id !== activeTabId) return tab;
-        console.log(
-          tab.history,
-          "nodes:",
-          nodesRef.current,
-          "edges:",
-          edgesRef.current,
-        );
         return historyUpdater.record(tab, nodesRef.current, edgesRef.current);
       }),
     );
@@ -240,8 +233,8 @@ export default function Main() {
     toast(message, {
       icon: "⚠️",
       style: {
-        backgroundColor: "var(--warning-bg)",
-        color: "var(--warning-text)",
+        backgroundColor: "var(--status-warning-1)",
+        color: "var(--status-warning-2)",
       },
     });
   }, []);

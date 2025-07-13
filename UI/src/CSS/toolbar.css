@@ -31,21 +31,17 @@
   border-radius: 0.33rem;
 }
 
-.toolbarButton:hover {
-  transition: 0.15s ease-out;
-  /*background-color: var(--menu-lighter);*/
-}
-
-.toolbarButton:not(:disabled):active {
-  transition: 0.05s ease-out;
-  background-color: var(--select-1);
-  box-shadow: none;
-  border: var(--select-1) solid 0.05rem;
-}
-
 .toolbarButton:not(:disabled):hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.toolbarButton:not(:disabled):active {
+  transform: translateY(0px);
+  transition: 0.05s ease-out;
+  background-color: var(--select-2);
+  box-shadow: none;
+  border: var(--select-1) solid 0.05rem;
 }
 
 .toolbarButtonIcon {
