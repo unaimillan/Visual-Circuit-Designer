@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [MVP v2] — 2025-07-06
+## [MVP v2] — 2025-07-13
 (2.0.0)
 ---
 
@@ -17,13 +17,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **RunnerNode API**: Implemented runner API for circuit simulation. `PR#109`
 - Added support for rotating nodes on workflow. `PR#111`, `PR#130`
 - Added copy / paste functionality in nodes. `PR#127`
+- Added undo / redo functionality on workflow. `PR#154`
 - Creating and including frontend integration, unit tests in CI `PR#132`
 - Including RunnerNode integration, unit tests in CI `PR#133`
 - README, CHANGELOG, Issues templates, Architecture Docs . `PR#131`, `PR#134`, `PR#136`, `PR#129`
 
 ### Changed
-- **Bezier Curve**: Set Bezier curve as the default wire rendering style for better UX. `Issue#121`
+- Bezier Curve: Set Bezier curve as the default wire rendering style for better UX. `Issue#121`
 
 ### Fixed
-- **Proximity connection**: Prevent from creating wires when wire already creating
-- **Start Simulation Bug**: Pressing the input button or starting the simulation now affects only the current circuit instead of all circuits. [#102]
+- Proximity connection: Prevent from creating wires when wire already creating
+- Start Simulation Bug: Pressing the input button or starting the simulation now affects only the current circuit instead of all circuits. [#102]
+
+---
+
+## [MVP v1] — 2025-06-22
+(1.0.0)
+---
+
+### Added
+- Logic Gates view, connection system
+- Drag & Drop, spawn by click system for creating new nodes.
+- Settings menu layout
+- Simple Input Gate layout
+- Toolbar functionality: selection/move, wire type choosing
+- Saving, Uploading circuit functionality
+
+### Changed
+- Removed excess nodes in circuits menu
+- Nodes inner parameters
+
+### Fixed
+- SVG logic gates logos in circuits menu
+
+---
+
+## [MVP v0] — 2025-06-16
+(0.0.1)
+---
+
+### Added
+- Circuits menu with basic logic gates (AND, OR, NOT)
+- Workspace Canvas powered by ReactFlow
+- Toolbar layout
+
