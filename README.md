@@ -83,13 +83,12 @@ For those who want locally launch our project
     ```
 
 ## Documentation
-
-## Quality assurance
-### Quality attribute scenarios
-Link to the “docs/quality-assurance/quality-attribute-scenarios.md” file:
-https://github.com/IUMusicalFish19/Visual-Circuit-Designer/blob/readme/docs/quality-assurance/quality-attribute-scenarios.md
-
-### Automated tests
-
-
-## Build and deployment
+- [Development](./CONTRIBUTING.md)
+- [Quality characteristics and quality attribute scenarios](./docs/quality-attributes/quality-attribute-scenarios.md)
+- Quality assurance:
+  - [Automated tests](./docs/quality-assurance/automated-tests.md)
+  - [User acceptance tests](./docs/quality-assurance/user-acceptance-tests.md)
+- Build and deployment automation
+  - [Continuous Integration](./docs/automation/continuous-integration.md)
+  - [Continuous Deployment](./docs/automation/continuous-delivery.md)
+- [Architecture](./docs/architecture/architecture.md) with Static view, Dynamic view, Deployment view and Tech Stack

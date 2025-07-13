@@ -1,7 +1,7 @@
 # <div align="center">Architecture Overview</div>
 The system follows a microservice architecture with an API Gateway as the central entry point, serving as a reverse proxy to route requests to appropriate backend services. The architecture includes four main microservices, a frontend component, and supporting data stores.
 ## <div align="center">Static view</div>
-![static-view](./static-view/staic-view.png)
+![static-view](./static-view/static-view.png)
 ### Key components
 1) **API Gateway**
     - Acts as the single entry point for all client requests
