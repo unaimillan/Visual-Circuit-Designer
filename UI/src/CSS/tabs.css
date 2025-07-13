@@ -67,6 +67,7 @@
 .add-btn {
   border: none;
   background: transparent;
+  color: var(--main-0);
   cursor: pointer;
   margin-left: 5px;
   font-size: 1rem;
@@ -125,7 +126,7 @@
 /* Context Menu Styles */
 .context-menu {
   position: fixed;
-  background: var(--main-3);
+  background: var(--menu-lighter);
   border: 1px solid var(--main-1);
   border-radius: 4px;
   padding: 4px 0;
