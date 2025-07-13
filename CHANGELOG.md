@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Logic Gates view, connection system
-- Drag & Drop, spawn by click system for creating new nodes. `Issue #13`
+- Drag & Drop, spawn by click system for creating new nodes. `Issue #13` `Issue #36`
 - Settings menu layout
 - Simple Input Gate layout
 - Toolbar functionality: selection/move, wire type choosing. `Issue #18`
