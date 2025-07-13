@@ -40,21 +40,20 @@
 
 
 .tab {
-  display: flex; /* включаем flex */
-  align-items: center; /* по вертикали по центру */
-  justify-content: center; /* по горизонтали по центру */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 4px;
-  height: 4vh; /* небольшой отступ между textarea и кнопкой */
 
   margin-left: 8px;
-  position: relative;
   padding: 0 0.5rem;
-
   cursor: pointer;
   line-height: 4vh;
   border-radius: 5px;
   background: var(--main-3);
   transition: 0.15s;
+  white-space: nowrap;
+  max-width: 100%; /* важно для переиспользования */
 
   &:hover {
     background: var(--main-4);
@@ -78,13 +77,18 @@
 .name-text-area {
   background-color: transparent;
   font-family: Montserrat, serif;
-  resize: none;
+  resize: none; /* запрет ручного изменения */
+  overflow: hidden; /* убираем скроллбар */
+  white-space: nowrap;
   color: var(--main-0);
-  width: 7vw;
-  height: 2vh;
   text-align: center;
-  padding: 0; /* убираем лишний отступ */
+  padding: 0;
   border: none;
+  height: 3vh;
+  width: auto;
+
+  /* динамический размер — отключаем обрезку и перенос */
+  display: inline-block;
 }
 
 .close-btn {

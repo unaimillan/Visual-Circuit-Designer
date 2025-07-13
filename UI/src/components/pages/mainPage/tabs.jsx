@@ -1,15 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
-
-// Что надо сделать:
-// 1) хендлить много вкладок (уменьшать их размер или делать горизонтальный скролл)
-// 2) исправить хоткеи, чтобы можно было писать цифры в названии вкладок
-// 3) исправить css
-// 4) добавить горячие клавиши для перехода по вкладкам и для открытия закрытия вкладок
-// 5) добавить отслеживание несохраненных изменений и показывать toast уведу об этом как в браузере +-
-// 6) сделать редактирование text-area по двойному клику
-// 7) добавить возможность перемещения табов (пиздец)
 
 export default function TabsContainer({
                                         tabs,
@@ -17,6 +8,26 @@ export default function TabsContainer({
                                         onTabsChange,
                                         onActiveTabIdChange,
                                       }) {
+  const scrollRef = useRef(null);
+  const textareaRefs = useRef({});
+
+  // Wheel event for horizontal scroll
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        const SCROLL_SPEED = 1.5;
+        el.scrollLeft += e.deltaY * SCROLL_SPEED;
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
   const addTab = () => {
     const newTab = initializeTabHistory({
       id: Date.now(),
@@ -29,44 +40,17 @@ export default function TabsContainer({
   };
 
   const removeTab = (id) => {
-    const updatedTabs = tabs.filter((tab) => tab.id !== id);
-    onTabsChange(updatedTabs);
-
-    if (id === activeTabId && updatedTabs.length > 0) {
-      onActiveTabIdChange(updatedTabs[0].id);
+    const updated = tabs.filter((t) => t.id !== id);
+    onTabsChange(updated);
+    if (id === activeTabId && updated.length > 0) {
+      onActiveTabIdChange(updated[0].id);
     }
   };
 
   const updateTabTitle = (id, newTitle) => {
-    const updatedTabs = tabs.map((tab) =>
-      tab.id === id ? { ...tab, title: newTitle } : tab,
-    );
-    onTabsChange(updatedTabs);
+    const updated = tabs.map((t) => (t.id === id ? { ...t, title: newTitle } : t));
+    onTabsChange(updated);
   };
-
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const onWheel = (e) => {
-      // Если колесо прокручивается вертикально — прокручиваем горизонтально
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-
-        // Можно настроить скорость скролла
-        const SCROLL_SPEED = 1.5;
-        el.scrollLeft += e.deltaY * SCROLL_SPEED;
-      }
-    };
-
-    el.addEventListener("wheel", onWheel, { passive: false });
-
-    return () => {
-      el.removeEventListener("wheel", onWheel);
-    };
-  }, []);
 
   return (
     <div className="tabs-scroll-container">
@@ -77,21 +61,31 @@ export default function TabsContainer({
             className={`tab ${tab.id === activeTabId ? "active" : ""}`}
             onClick={() => onActiveTabIdChange(tab.id)}
           >
-          <textarea
-            className="name-text-area"
-            value={tab.title}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(e) => updateTabTitle(tab.id, e.target.value)}
-            placeholder="Tab name"
-            onKeyDown={(e) => {
-              // Prevent Enter key from creating new line
-              if (e.key === "Enter") {
-                e.preventDefault();
-                // e.target.blur();
-              }
-            }}
-          />
-
+            <textarea
+              ref={(el) => {
+                textareaRefs.current[tab.id] = el;
+                if (el) {
+                  el.style.width = "auto";
+                  el.style.width = `${el.scrollWidth}px`;
+                }
+              }}
+              className="name-text-area"
+              value={tab.title}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                const { value } = e.target;
+                updateTabTitle(tab.id, value);
+                const textarea = textareaRefs.current[tab.id];
+                if (textarea) {
+                  textarea.style.width = "auto";
+                  textarea.style.width = `${textarea.scrollWidth}px`;
+                }
+              }}
+              placeholder="Tab name"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") e.preventDefault();
+              }}
+            />
             {tabs.length > 1 && (
               <button
                 className="close-btn"
@@ -100,15 +94,12 @@ export default function TabsContainer({
                   removeTab(tab.id);
                 }}
               >
-                <IconCloseCross SVGClassName="close-tab-cross"/>
+                <IconCloseCross SVGClassName="close-tab-cross" />
               </button>
             )}
           </div>
         ))}
-
-        <button className="add-btn" onClick={addTab}>
-          ＋
-        </button>
+        <button className="add-btn" onClick={addTab}>＋</button>
       </div>
     </div>
   );
