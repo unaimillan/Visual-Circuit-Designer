@@ -1,4 +1,3 @@
-// initializeTabHistory.test.js
 import { initializeTabHistory } from '../../initializeTabHistory';
 
 describe('initializeTabHistory', () => {
