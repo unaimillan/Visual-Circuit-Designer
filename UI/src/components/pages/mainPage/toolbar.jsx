@@ -5,6 +5,8 @@ import {
   IconError,
   IconDownloadFile,
   IconOpenFile,
+  IconUndo,
+  IconRedo,
 } from "../../../../assets/ui-icons.jsx";
 
 import {
@@ -29,6 +31,10 @@ export default function Toolbar({
   loadCircuit,
   fileInputRef,
   handleOpenClick,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
 }) {
   return (
     <div>
@@ -71,6 +77,7 @@ export default function Toolbar({
             setActiveAction("cursor");
             setPanOnDrag([2]);
           }}
+          disabled={activeAction === "cursor"}
         >
           <IconToolbarCursor
             SVGClassName="toolbarButtonIcon"
@@ -84,6 +91,7 @@ export default function Toolbar({
             setActiveAction("hand");
             setPanOnDrag(true);
           }}
+          disabled={activeAction === "hand"}
         >
           <IconToolbarHand SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
@@ -91,6 +99,7 @@ export default function Toolbar({
         <button
           className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
           onClick={() => setActiveAction("eraser")}
+          disabled={activeAction === "eraser"}
         >
           <IconToolbarEraser
             SVGClassName="toolbarButtonIcon"
@@ -101,6 +110,7 @@ export default function Toolbar({
         <button
           className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
           onClick={() => setActiveAction("text")}
+          disabled={activeAction === "text"}
         >
           <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
@@ -112,6 +122,7 @@ export default function Toolbar({
           onClick={() => {
             setActiveWire("default");
           }}
+          disabled={activeWire === "default"}
         >
           <IconToolbarBezierWire
             SVGClassName="toolbarButtonIcon"
@@ -124,6 +135,7 @@ export default function Toolbar({
           onClick={() => {
             setActiveWire("step");
           }}
+          disabled={activeWire === "step"}
         >
           <IconToolbarStepWire
             SVGClassName="toolbarButtonIcon"
@@ -136,11 +148,32 @@ export default function Toolbar({
           onClick={() => {
             setActiveWire("straight");
           }}
+          disabled={activeWire === "straight"}
         >
           <IconToolbarStraightWire
             SVGClassName="toolbarButtonIcon"
             draggable="false"
           />
+        </button>
+
+        <div className="toolbar-separator"></div>
+
+        <button
+          className="toolbarButton"
+          onClick={undo}
+          disabled={!canUndo}
+          title={canUndo ? "Undo (Ctrl+Z)" : "Nothing to undo in this tab"}
+        >
+          <IconUndo SVGClassName="toolbarButtonIcon" draggable="false" />
+        </button>
+
+        <button
+          className="toolbarButton"
+          onClick={redo}
+          disabled={!canRedo}
+          title={canRedo ? "Redo (Ctrl+Y)" : "Nothing to redo in this tab"}
+        >
+          <IconRedo SVGClassName="toolbarButtonIcon" draggable="false" />
         </button>
       </div>
 

@@ -1,24 +1,25 @@
 import React, {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useContext,
-  createContext,
 } from "react";
 
 import {
-  ReactFlow,
-  Controls,
+  addEdge,
   Background,
   BackgroundVariant,
-  addEdge,
-  SelectionMode,
-  useNodesState,
-  useEdgesState,
+  Controls,
   MiniMap,
-  useStoreApi,
+  ReactFlow,
+  SelectionMode,
+  useEdgesState,
+  useNodesState,
   useReactFlow,
+  useStoreApi,
 } from "@xyflow/react";
 
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
@@ -29,12 +30,15 @@ import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
 import { nodeTypes } from "../codeComponents/nodes.js";
 
-import { IconSettings, IconMenu } from "../../../assets/ui-icons.jsx";
+import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
 import { useHotkeys } from "./mainPage/useHotkeys.js";
 import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
-import { handleSimulateClick } from "./mainPage/runnerHandler.jsx";
-import { updateInputState } from "./mainPage/runnerHandler.jsx";
+import {
+  handleSimulateClick,
+  updateInputState,
+} from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
 
@@ -54,6 +58,11 @@ import { calculateContextMenuPosition } from "../utils/calculateContextMenuPosit
 import { onDrop as onDropUtil } from "../utils/onDrop.js";
 import { onNodeDragStop as onNodeDragStopUtil } from "../utils/onNodeDragStop.js";
 import { loadLocalStorage } from "../utils/loadLocalStorage.js";
+import { initializeTabHistory } from "../utils/initializeTabHistory.js";
+import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
+import { undo as undoUtil } from "../utils/undo.js";
+import { redo as redoUtil } from "../utils/redo.js";
+import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -122,11 +131,16 @@ export default function Main() {
 
   const fileInputRef = useRef(null);
 
+  const ignoreChangesRef = useRef(false);
+
   const handleOpenClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
+
+  // Create history updater
+  const historyUpdater = useMemo(() => createHistoryUpdater(), []);
 
   // 1) Загрузка списка вкладок и сохранённого activeTabId из localStorage
   useEffect(() => {
@@ -136,17 +150,55 @@ export default function Main() {
         const { tabs: savedTabs, activeTabId: savedActive } =
           JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
-          setTabs(savedTabs);
+          // Convert saved tabs to history-enabled tabs
+          setTabs(savedTabs.map(initializeTabHistory));
           setActiveTabId(savedActive);
           return;
         }
       } catch {}
     }
-    // Если в хранилище ничего нет — создаём одну начальную вкладку
-    const initial = [{ id: newId(), title: "New Tab", nodes: [], edges: [] }];
+    // Initial setup for new users
+    const initial = [
+      initializeTabHistory({
+        id: newId(),
+        title: "New Tab",
+        nodes: [],
+        edges: [],
+      }),
+    ];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
+
+  const isInitialMount = useRef(true);
+
+  // Save to localStorage
+  useEffect(() => {
+    if (activeTabId == null) return;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    const toStore = {
+      tabs: tabs.map((tab) => {
+        const { nodes, edges } = tab.history[tab.index];
+        return { id: tab.id, title: tab.title, nodes, edges };
+      }),
+      activeTabId,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  }, [tabs, activeTabId]);
+
+  // Update history when nodes/edges change
+  const recordHistory = useCallback(() => {
+    setTabs((tabs) =>
+      tabs.map((tab) => {
+        if (tab.id !== activeTabId) return tab;
+        return historyUpdater.record(tab, nodesRef.current, edgesRef.current);
+      }),
+    );
+  }, [nodesRef, edgesRef, activeTabId, historyUpdater, tabs]);
 
   // 2) Получение текущей активной вкладки по её id
   const activeTab = tabs.find((t) => t.id === activeTabId) || {
@@ -154,11 +206,18 @@ export default function Main() {
     edges: [],
   };
 
-  // 3) При смене вкладки: проставляем её nodes/edges в локальный стейт ReactFlow
+  // 3) Когда меняется активная вкладка — грузим именно последнюю точку истории
   useEffect(() => {
-    setNodes(activeTab.nodes);
-    setEdges(activeTab.edges);
-  }, [activeTabId]);
+    if (!activeTabId) return;
+    const tab = tabs.find((t) => t.id === activeTabId);
+    if (!tab) return;
+
+    const { nodes: histNodes, edges: histEdges } = tab.history[tab.index];
+    ignoreChangesRef.current = true;
+    setNodes(histNodes);
+    setEdges(histEdges);
+    ignoreChangesRef.current = false;
+  }, [activeTabId, tabs]);
 
   // 4) Обновляем внешние рефы, если они используются в другой логике вне ReactFlow
   useEffect(() => {
@@ -169,26 +228,38 @@ export default function Main() {
     edgesRef.current = edges;
   }, [edges]);
 
-  // 5) Синхронизация изменений из ReactFlow обратно в массив tabs:
-  //    5a) при любом обновлении nodes сохраняем их в текущей вкладке
-  useEffect(() => {
-    setTabs((prev) =>
-      prev.map((tab) => (tab.id === activeTabId ? { ...tab, nodes } : tab)),
-    );
-  }, [nodes, activeTabId]);
+  const showWarning = useCallback((message) => {
+    toast(message, {
+      icon: "⚠️",
+      style: {
+        backgroundColor: "var(--status-warning-1)",
+        color: "var(--status-warning-2)",
+      },
+    });
+  }, []);
 
-  //    5b) при любом обновлении edges сохраняем их в текущей вкладке
-  useEffect(() => {
-    setTabs((prev) =>
-      prev.map((tab) => (tab.id === activeTabId ? { ...tab, edges } : tab)),
-    );
-  }, [edges, activeTabId]);
+  // Undo/Redo functions
+  const undo = useCallback(() => {
+    undoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
+  }, [tabs, activeTabId, setTabs, setNodes, setEdges, showWarning]);
 
-  useEffect(() => {
-    if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
-    const toStore = { tabs, activeTabId }; // вся структура
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
-  }, [tabs, activeTabId]);
+  const redo = useCallback(() => {
+    redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
+  }, [tabs, activeTabId, setTabs, setNodes, setEdges, showWarning]);
+
+  const handleTabSwitch = useCallback(
+    (newTabId) => {
+      handleTabSwitchUtil({
+        activeTabId,
+        newTabId,
+        setTabs,
+        setActiveTabId,
+        nodes: nodesRef.current,
+        edges: edgesRef.current,
+      });
+    },
+    [activeTabId],
+  );
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
   const mousePositionRef = useRef({ x: 0, y: 0 });
@@ -247,7 +318,8 @@ export default function Main() {
     const { newNodes, newEdges } = deleteSelectedUtil(nodes, edges, selected);
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [nodes, edges, clipboard]);
+    setTimeout(recordHistory, 0);
+  }, [nodes, edges, getSelectedElements, recordHistory]);
 
   const copyElements = useCallback(() => {
     copyElementsUtil({
@@ -272,7 +344,8 @@ export default function Main() {
       setNodes,
       setEdges,
     });
-  }, [clipboard, reactFlowInstance]);
+    setTimeout(recordHistory, 0);
+  }, [clipboard, reactFlowInstance, recordHistory]);
 
   useEffect(() => {
     loadLocalStorage({
@@ -324,30 +397,36 @@ export default function Main() {
     event.dataTransfer.effectAllowed = "move";
   };
 
+  const onConnect = useCallback(
+    (connection) =>
+      setEdges((eds) => {
+        const newEdges = addEdge(connection, eds);
+        setTimeout(recordHistory, 0);
+        return newEdges;
+      }),
+    [setEdges, recordHistory],
+  );
+
   //Create new node after dragAndDrop
   const onDrop = useCallback(
     (event) => {
       deselectAll();
       onDropUtil(event, reactFlowInstance, setNodes);
+      setTimeout(recordHistory, 0);
     },
-    [reactFlowInstance, setNodes, deselectAll],
-  );
-
-  const onConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
-    [setEdges],
+    [reactFlowInstance, setNodes, deselectAll, recordHistory],
   );
 
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, node, pane));
+    setMenu(calculateContextMenuPosition(event, node, pane, "node"));
   }, []);
 
   const onEdgeContextMenu = useCallback((event, edge) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, edge, pane));
+    setMenu(calculateContextMenuPosition(event, edge, pane, "edge"));
   }, []);
 
   const onPaneClick = useCallback(() => setMenu(null), []);
@@ -366,8 +445,9 @@ export default function Main() {
     (type) => {
       deselectAll();
       spawnCircuitUtil(type, reactFlowInstance, setNodes);
+      setTimeout(recordHistory, 0);
     },
-    [reactFlowInstance, setNodes, deselectAll],
+    [reactFlowInstance, setNodes, deselectAll, recordHistory],
   );
 
   const onNodeDragStop = useCallback(
@@ -377,8 +457,9 @@ export default function Main() {
       getInternalNode,
       store,
       addEdge,
+      onComplete: () => setTimeout(recordHistory, 0),
     }),
-    [nodes, setEdges, getInternalNode, store],
+    [nodes, setEdges, getInternalNode, store, recordHistory],
   );
 
   const variant =
@@ -409,6 +490,8 @@ export default function Main() {
       setActiveWire,
       socketRef,
       handleOpenClick,
+      undo,
+      redo,
     },
     [
       saveCircuit,
@@ -429,6 +512,8 @@ export default function Main() {
       setActiveWire,
       socketRef,
       handleOpenClick,
+      undo,
+      redo,
     ],
   );
 
@@ -442,7 +527,7 @@ export default function Main() {
             tabs={tabs}
             activeTabId={activeTabId}
             onTabsChange={setTabs}
-            onActiveTabIdChange={setActiveTabId}
+            onActiveTabIdChange={handleTabSwitch}
           />
         </div>
 
@@ -533,6 +618,11 @@ export default function Main() {
               error: {
                 duration: 10000,
               },
+              warning: {
+                className: "toast-warning",
+                duration: 3000,
+                icon: "⚠️",
+              },
             }}
           />
 
@@ -609,6 +699,10 @@ export default function Main() {
                 edges,
               })
             }
+            undo={undo}
+            redo={redo}
+            canUndo={activeTab?.index > 0}
+            canRedo={activeTab?.index < (activeTab?.history?.length || 1) - 1}
           />
         </>
       </SimulateStateContext.Provider>

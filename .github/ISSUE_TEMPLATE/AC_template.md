@@ -10,8 +10,8 @@ assignees: ''
 
 ## Acceptance Criteria.
 
-**GIVEN:**
+**GIVEN:** 
 
-**WHEN:**  
+**WHEN:** 
 
-**THEN:**  
+**THEN:** 

@@ -4,6 +4,9 @@
 
   --hello-animation-time: 1s;
 
+  --warning-bg: #ffecb3;
+  --warning-text: #5d4037;
+
   --main-1: hsl(0, 0%, 93%);
   --main-2: hsl(0, 0%, 90%);
   --main-3: hsl(0, 0%, 88%);

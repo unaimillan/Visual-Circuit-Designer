@@ -1,5 +1,6 @@
 import React from "react";
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
+import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 
 // Что надо сделать:
 // 1) хендлить много вкладок (уменьшать их размер или делать горизонтальный скролл)
@@ -17,12 +18,12 @@ export default function TabsContainer({
   onActiveTabIdChange,
 }) {
   const addTab = () => {
-    const newTab = {
+    const newTab = initializeTabHistory({
       id: Date.now(),
       title: "New Tab",
       nodes: [],
       edges: [],
-    };
+    });
     onTabsChange([...tabs, newTab]);
     onActiveTabIdChange(newTab.id);
   };
@@ -57,6 +58,13 @@ export default function TabsContainer({
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => updateTabTitle(tab.id, e.target.value)}
             placeholder="Tab name"
+            onKeyDown={(e) => {
+              // Prevent Enter key from creating new line
+              if (e.key === "Enter") {
+                e.preventDefault();
+                // e.target.blur();
+              }
+            }}
           />
 
           {tabs.length > 1 && (

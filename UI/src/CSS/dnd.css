@@ -12,7 +12,14 @@
 }
 
 .dndnode:hover {
-  background-color: var(--main-4);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dndnode:active {
+  background: var(--main-4);
+  transform: translateY(0px);
+  box-shadow: none;
 }
 
 .dndnode svg {
