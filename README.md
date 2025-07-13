@@ -65,19 +65,20 @@ For those who want locally launch our project
 
       In terminal run 
     ```bash
-    git clone https://github.com/IUMusicalFish19/Visual-Circuit-Designer
+      git clone https://github.com/IUMusicalFish19/Visual-Circuit-Designer
     ```
 2. **Navigate to project**
 
       In terminal run
     ```bash
-    cd path/to/project
+      cd path/to/project
     ```
 3. **Make sure you have all needed dependencies**
 
       In terminal run
     ```bash
-    cd path/to/project
+      cd UI
+      npm install
     ```
 
 ## Documentation
