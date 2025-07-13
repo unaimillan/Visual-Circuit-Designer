@@ -33,7 +33,7 @@ import { nodeTypes } from "../codeComponents/nodes.js";
 import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
 import { useHotkeys } from "./mainPage/useHotkeys.js";
 import { Toaster } from "react-hot-toast";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 import {
   handleSimulateClick,
@@ -67,16 +67,13 @@ import {
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {
-  },
-  updateInputState: () => {
-  },
+  setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {
-  },
+  setLogLevel: () => {},
 });
 
 export function useSimulateState() {
@@ -151,23 +148,25 @@ export default function Main() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
+        const { tabs: savedTabs, activeTabId: savedActive } =
+          JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
           // Convert saved tabs to history-enabled tabs
           setTabs(savedTabs.map(initializeTabHistory));
           setActiveTabId(savedActive);
           return;
         }
-      } catch {
-      }
+      } catch {}
     }
     // Initial setup for new users
-    const initial = [initializeTabHistory({
-      id: newId(),
-      title: "New Tab",
-      nodes: [],
-      edges: []
-    })];
+    const initial = [
+      initializeTabHistory({
+        id: newId(),
+        title: "New Tab",
+        nodes: [],
+        edges: [],
+      }),
+    ];
     setTabs(initial);
     setActiveTabId(initial[0].id);
   }, []);
@@ -183,7 +182,7 @@ export default function Main() {
     }
 
     const toStore = {
-      tabs: tabs.map(tab => {
+      tabs: tabs.map((tab) => {
         const { nodes, edges } = tab.history[tab.index];
         return { id: tab.id, title: tab.title, nodes, edges };
       }),
@@ -239,11 +238,11 @@ export default function Main() {
 
   const showWarning = useCallback((message) => {
     toast(message, {
-      icon: '⚠️',
+      icon: "⚠️",
       style: {
-        backgroundColor: 'var(--warning-bg)',
-        color: 'var(--warning-text)'
-      }
+        backgroundColor: "var(--warning-bg)",
+        color: "var(--warning-text)",
+      },
     });
   }, []);
 
@@ -271,13 +270,13 @@ export default function Main() {
               ...tab,
               history: updatedHistory,
             };
-          })
+          }),
         );
       }
       // Наконец — меняем активную вкладку
       setActiveTabId(newTabId);
     },
-    [activeTabId]
+    [activeTabId],
   );
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
@@ -638,10 +637,10 @@ export default function Main() {
                 duration: 10000,
               },
               warning: {
-                className: 'toast-warning',
+                className: "toast-warning",
                 duration: 3000,
-                icon: '⚠️'
-              }
+                icon: "⚠️",
+              },
             }}
           />
 
