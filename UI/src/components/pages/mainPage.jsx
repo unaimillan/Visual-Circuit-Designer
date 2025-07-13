@@ -67,13 +67,16 @@ import {
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {},
-  updateInputState: () => {},
+  setSimulateState: () => {
+  },
+  updateInputState: () => {
+  },
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {},
+  setLogLevel: () => {
+  },
 });
 
 export function useSimulateState() {
@@ -151,12 +154,12 @@ export default function Main() {
         const { tabs: savedTabs, activeTabId: savedActive } = JSON.parse(stored);
         if (Array.isArray(savedTabs) && savedActive != null) {
           // Convert saved tabs to history-enabled tabs
-          const historyTabs = savedTabs.map(initializeTabHistory);
-          setTabs(historyTabs);
+          setTabs(savedTabs.map(initializeTabHistory));
           setActiveTabId(savedActive);
           return;
         }
-      } catch {}
+      } catch {
+      }
     }
     // Initial setup for new users
     const initial = [initializeTabHistory({
@@ -169,37 +172,23 @@ export default function Main() {
     setActiveTabId(initial[0].id);
   }, []);
 
-  // When active tab changes
-  useEffect(() => {
-    if (!activeTabId) return;
-    const activeTab = tabs.find((t) => t.id === activeTabId);
-    if (!activeTab) return;
-
-    const currentState = activeTab.history[activeTab.index];
-    ignoreChangesRef.current = true;
-    setNodes(currentState.nodes);
-    setEdges(currentState.edges);
-    ignoreChangesRef.current = false;
-  }, [activeTabId]);
+  const isInitialMount = useRef(true);
 
   // Save to localStorage
   useEffect(() => {
     if (activeTabId == null) return;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
 
     const toStore = {
       tabs: tabs.map(tab => {
-        // Get the current state from history
-        const currentState = tab.history[tab.index];
-        return {
-          id: tab.id,
-          title: tab.title,
-          nodes: currentState.nodes,
-          edges: currentState.edges
-        };
+        const { nodes, edges } = tab.history[tab.index];
+        return { id: tab.id, title: tab.title, nodes, edges };
       }),
-      activeTabId
+      activeTabId,
     };
-
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
   }, [tabs, activeTabId]);
 
@@ -226,11 +215,18 @@ export default function Main() {
     edges: [],
   };
 
-  // 3) При смене вкладки: проставляем её nodes/edges в локальный стейт ReactFlow
+  // 3) Когда меняется активная вкладка — грузим именно последнюю точку истории
   useEffect(() => {
-    setNodes(activeTab.nodes);
-    setEdges(activeTab.edges);
-  }, [activeTabId]);
+    if (!activeTabId) return;
+    const tab = tabs.find((t) => t.id === activeTabId);
+    if (!tab) return;
+
+    const { nodes: histNodes, edges: histEdges } = tab.history[tab.index];
+    ignoreChangesRef.current = true;
+    setNodes(histNodes);
+    setEdges(histEdges);
+    ignoreChangesRef.current = false;
+  }, [activeTabId, tabs]);
 
   // 4) Обновляем внешние рефы, если они используются в другой логике вне ReactFlow
   useEffect(() => {
@@ -260,11 +256,29 @@ export default function Main() {
     redoUtil(tabs, activeTabId, setTabs, setNodes, setEdges, showWarning);
   }, [tabs, activeTabId, setTabs, setNodes, setEdges, showWarning]);
 
-  useEffect(() => {
-    if (activeTabId == null) return; // если ещё не инициализировались — пропускаем
-    const toStore = { tabs, activeTabId }; // вся структура
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
-  }, [tabs, activeTabId]);
+  const handleTabSwitch = useCallback(
+    (newTabId) => {
+      if (activeTabId != null) {
+        setTabs((tabs) =>
+          tabs.map((tab) => {
+            if (tab.id !== activeTabId) return tab;
+            const updatedHistory = [...tab.history];
+            updatedHistory[tab.index] = {
+              nodes: nodesRef.current,
+              edges: edgesRef.current,
+            };
+            return {
+              ...tab,
+              history: updatedHistory,
+            };
+          })
+        );
+      }
+      // Наконец — меняем активную вкладку
+      setActiveTabId(newTabId);
+    },
+    [activeTabId]
+  );
 
   const [clipboard, setClipboard] = useState({ nodes: [], edges: [] });
   const mousePositionRef = useRef({ x: 0, y: 0 });
@@ -532,7 +546,7 @@ export default function Main() {
             tabs={tabs}
             activeTabId={activeTabId}
             onTabsChange={setTabs}
-            onActiveTabIdChange={setActiveTabId}
+            onActiveTabIdChange={handleTabSwitch}
           />
         </div>
 
