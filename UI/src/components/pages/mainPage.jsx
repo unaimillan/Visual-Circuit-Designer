@@ -62,7 +62,7 @@ import { initializeTabHistory } from "../utils/initializeTabHistory.js";
 import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
 import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
-import { handleTabSwitch as handleTabSwitchUtil} from "../utils/handleTabSwitch.js";
+import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",

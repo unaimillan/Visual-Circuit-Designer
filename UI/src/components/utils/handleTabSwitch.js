@@ -1,11 +1,11 @@
 export const handleTabSwitch = ({
-                                  activeTabId,
-                                  newTabId,
-                                  setTabs,
-                                  setActiveTabId,
-                                  nodes,
-                                  edges,
-                                }) => {
+  activeTabId,
+  newTabId,
+  setTabs,
+  setActiveTabId,
+  nodes,
+  edges,
+}) => {
   if (activeTabId != null) {
     setTabs((tabs) =>
       tabs.map((tab) => {
