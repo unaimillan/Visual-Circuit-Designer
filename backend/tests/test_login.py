@@ -6,7 +6,6 @@ from fastapi import status
 async def test_login_success(test_client, registered_user):
     user_data, user = registered_user
 
-    # Используем form-data вместо json для OAuth2
     print("User in DB:", user)
     print("Attempting login with:", user_data["email"], user_data["password"])
 
@@ -24,4 +23,5 @@ async def test_login_success(test_client, registered_user):
     assert response.status_code == status.HTTP_200_OK
     print("Response:", response.text)
     print("Cookies:", response.cookies)
+    assert response.json()["access_token"]
     assert "refresh_token" in response.cookies

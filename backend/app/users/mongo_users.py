@@ -51,6 +51,13 @@ class MongoUserDatabase(BaseUserDatabase[UserDB, UUID]):
             )
             return user
 
+    async def get_by_username(self, username: str) -> Optional[UserDB]:
+        user = await self.collection.find_one({"username": username})
+        if user:
+            user["id"] = str(user["id"]) if isinstance(user.get("id"), UUID) else user.get("id")
+            return UserDB(**user)
+        return None
+
     async def delete(self, user: UserDB) -> None:
         await self.collection.delete_one({"id": str(user.id)})
 

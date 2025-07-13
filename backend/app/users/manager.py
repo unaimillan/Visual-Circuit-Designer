@@ -1,12 +1,12 @@
 from typing import Optional
 from uuid import UUID, uuid4
 
-from fastapi.openapi.models import Response
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users.manager import BaseUserManager, UUIDIDMixin
+from fastapi.responses import JSONResponse, Response
+
 from backend.app.models import UserDB
-from fastapi_users.authentication import JWTStrategy, AuthenticationBackend, CookieTransport
-from fastapi_users.authentication import BearerTransport
+from fastapi_users.authentication import JWTStrategy, AuthenticationBackend, CookieTransport, BearerTransport
 from fastapi_users.password import PasswordHelper
 from backend.app.config import SECRET
 from backend.app.schema import UserCreate
@@ -46,7 +46,6 @@ class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
 
             return user
         except Exception:
-            # В случае любой ошибки возвращаем None
             return None
 
     async def create(self, user_create: UserCreate, safe: bool = False, request=None) -> UserDB:
@@ -66,21 +65,14 @@ class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
         created_user = await self.user_db.create(user_dict)
         return await self.get(created_user["id"])
 
-
-class CustomCookieTransport(CookieTransport):
-    async def get_login_response(self, token: str) -> Response:
-        response = await super().get_login_response(token)
-        response.status_code = 200  # Меняем статус
-        return response
-
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=SECRET, lifetime_seconds=3600, algorithm="HS256")
 
-cookie_transport = CustomCookieTransport(cookie_name="refresh_token", cookie_max_age=3600, cookie_secure=False)
-# bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
+cookie_transport = CookieTransport(cookie_name="refresh_token", cookie_max_age=3600, cookie_secure=False)
+bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 auth_backend = AuthenticationBackend(
     name="jwt",
-    transport=cookie_transport,
+    transport=bearer_transport,
     get_strategy=get_jwt_strategy,
 )

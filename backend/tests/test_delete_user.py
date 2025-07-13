@@ -11,6 +11,11 @@ async def test_delete_user(test_client, registered_user):
         "username": user["email"],
         "password": "TestPassword123"
     })
+    print("Login status:", login_response.status_code)
+    print("Login body:", login_response.text)
+    assert login_response.status_code == status.HTTP_200_OK
+    assert login_response is not None
+    assert "access_token" in login_response.json()
     token = login_response.json()["access_token"]
 
     # Delete user
