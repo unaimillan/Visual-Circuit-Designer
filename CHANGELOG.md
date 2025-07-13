@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Added undo / redo functionality on workflow. `PR#154`
 - Creating and including frontend integration, unit tests in CI `PR#132`
 - Including RunnerNode integration, unit tests in CI `PR#133`
-- README, CHANGELOG, Issues templates, Architecture Docs . `PR#131`, `PR#134`, `PR#136`, `PR#129`
+- README, CHANGELOG, Issues templates, Architecture Docs . `PR#131`, `PR#162`, `PR#134`, `PR#136`, `PR#129`
 
 ### Changed
 - Bezier Curve: Set Bezier curve as the default wire rendering style for better UX. `Issue#121`
