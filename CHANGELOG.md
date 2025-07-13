@@ -36,19 +36,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ---
 
 ### Added
-- Logic Gates view, connection system
-- Drag & Drop, spawn by click system for creating new nodes. `Issue #13` `Issue #36`
-- Settings menu layout
-- Simple Input Gate layout
-- Toolbar functionality: selection/move, wire type choosing. `Issue #18`
-- Saving, Uploading circuit functionality
+- Logic Gates view, connection system. `Issue #28`
+- Drag & Drop, spawn by click system for creating new nodes. `Issue #13`, `Issue #36`
+- Settings menu layout.
+- Simple Input Gate layout. `Issue #12`
+- Toolbar functionality: selection/move, wire type choosing. `Issue #22`
+- Saving, Uploading circuit functionality. `Issue #67`
+- Dark theme and several others. `Issue #11`
+- Context menu for logic gates. `Issue #24`
 
 ### Changed
-- Removed excess nodes in circuits menu
-- Nodes inner parameters
+- Removed excess nodes in circuits menu.
+- Nodes inner parameters.
 
 ### Fixed
-- SVG logic gates logos in circuits menu
+- SVG logic gates logos in circuits menu.
 
 ---
 
@@ -57,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ---
 
 ### Added
-- Circuits menu with basic logic gates (AND, OR, NOT) `Issue#29`
-- Workspace Canvas powered by ReactFlow `Issue#6`
-- Toolbar layout `Issue#18`
+- Circuits menu with basic logic gates (AND, OR, NOT).
+- Workspace Canvas powered by ReactFlow. `Issue#6`, `Issue#17`, `Issue#29`
+- Toolbar layout. `Issue#18`
 
