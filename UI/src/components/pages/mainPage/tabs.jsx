@@ -3,11 +3,11 @@ import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
 
 export default function TabsContainer({
-                                        tabs,
-                                        activeTabId,
-                                        onTabsChange,
-                                        onActiveTabIdChange,
-                                      }) {
+  tabs,
+  activeTabId,
+  onTabsChange,
+  onActiveTabIdChange,
+}) {
   const scrollRef = useRef(null);
   const textareaRefs = useRef({});
 
@@ -48,7 +48,9 @@ export default function TabsContainer({
   };
 
   const updateTabTitle = (id, newTitle) => {
-    const updated = tabs.map((t) => (t.id === id ? { ...t, title: newTitle } : t));
+    const updated = tabs.map((t) =>
+      t.id === id ? { ...t, title: newTitle } : t,
+    );
     onTabsChange(updated);
   };
 
@@ -99,7 +101,9 @@ export default function TabsContainer({
             )}
           </div>
         ))}
-        <button className="add-btn" onClick={addTab}>＋</button>
+        <button className="add-btn" onClick={addTab}>
+          ＋
+        </button>
       </div>
     </div>
   );
