@@ -15,10 +15,6 @@
   overflow-y: hidden;
   scrollbar-width: none; /* Firefox */
   scrollbar-color: var(--main-1) transparent;
-
-  /* Safari SVG fix */
-  -webkit-overflow-scrolling: auto; /* Disables momentum scrolling */
-  /*contain: strict; !* Isolates rendering context *!*/
 }
 
 /* Горизонтальный скроллбар сверху (WebKit only) */

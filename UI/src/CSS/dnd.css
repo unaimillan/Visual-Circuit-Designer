@@ -26,11 +26,6 @@
   width: 50px;
   height: auto;
   user-select: none;
-  /* Safari SVG fix */
-  -webkit-backface-visibility: hidden; /* Fixes Safari rendering artifacts */
-  backface-visibility: hidden;
-  /*image-rendering: -webkit-optimize-contrast; !* Improves SVG quality *!*/
-  image-rendering: crisp-edges;
 }
 
 .react-flow__edge.temp path {
@@ -50,7 +45,6 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  /* Safari SVG fix */
 }
 
 .circuit-button-icon {
@@ -58,10 +52,6 @@
   color: var(--main-0);
   object-fit: cover;
   /*scale: 2;*/
-  /* Safari SVG fix */
-  shape-rendering: geometricPrecision;
-  text-rendering: optimizeLegibility;
-  vector-effect: non-scaling-stroke;
 }
 
 .switch-icon-wrapper {
