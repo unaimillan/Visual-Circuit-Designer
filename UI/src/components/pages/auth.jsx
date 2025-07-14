@@ -68,7 +68,7 @@ const Auth = () => {
     setPasswordError(passwordErr);
 
     if (!emailErr && !passwordErr) {
-      navigate('/profile');
+      navigate("/profile");
     }
   };
 
@@ -93,9 +93,7 @@ const Auth = () => {
             placeholder="myEmail@example.com"
           />
           {wasEmailFocused && emailError && (
-            <div className="error-message email-error">
-              {emailError}
-            </div>
+            <div className="error-message email-error">{emailError}</div>
           )}
 
           <div className="input-password-text">Enter password:</div>
@@ -114,16 +112,11 @@ const Auth = () => {
             }}
           />
           {wasPasswordFocused && passwordError && (
-            <div className="error-message password-error">
-              {passwordError}
-            </div>
+            <div className="error-message password-error">{passwordError}</div>
           )}
         </div>
 
-        <button
-          className="log-in-button"
-          onClick={handleLogin}
-        >
+        <button className="log-in-button" onClick={handleLogin}>
           <span className="log-in-button-text">Log in</span>
         </button>
 
