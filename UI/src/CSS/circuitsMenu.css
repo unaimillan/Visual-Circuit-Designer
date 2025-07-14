@@ -20,6 +20,29 @@
   border: 0.05rem solid var(--main-5);
 }
 
+/* Global scrollbar styles */
+.circuitsMenu::-webkit-scrollbar {
+  width: 8px; /* width of the vertical scrollbar */
+}
+
+.circuitsMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.circuitsMenu::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Invisible by default */
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.circuitsMenu:hover::-webkit-scrollbar-thumb {
+  background: var(--main-4); /* hover effect */
+}
+
+.circuitsMenu:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--main-5); /* hover effect */
+}
+
 .circuitsMenu.open {
   transition:
     0.2s ease,

@@ -9,7 +9,7 @@ body {
 #app {
   width: 100vw;
   height: 95vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
 }
