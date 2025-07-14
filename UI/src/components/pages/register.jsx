@@ -26,7 +26,8 @@ const Auth = () => {
   const [wasPasswordFocused, setWasPasswordFocused] = useState(false);
 
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [wasConfirmPasswordFocused, setWasConfirmPasswordFocused] = useState(false);
+  const [wasConfirmPasswordFocused, setWasConfirmPasswordFocused] =
+    useState(false);
 
   // Функции валидации
   const validateUsername = useCallback(() => {
@@ -110,7 +111,7 @@ const Auth = () => {
     validateUsername,
     validateEmail,
     validatePassword,
-    validateConfirmPassword
+    validateConfirmPassword,
   ]);
 
   // Обработчик регистрации
@@ -132,9 +133,9 @@ const Auth = () => {
     setPasswordError(errors.password);
     setConfirmPasswordError(errors.confirmPassword);
 
-    const hasErrors = Object.values(errors).some(error => error !== "");
+    const hasErrors = Object.values(errors).some((error) => error !== "");
     if (!hasErrors) {
-      navigate('/profile');
+      navigate("/profile");
     }
   };
 
@@ -159,9 +160,7 @@ const Auth = () => {
             }}
           />
           {wasUsernameFocused && usernameError && (
-            <div className="error-message username-error">
-              {usernameError}
-            </div>
+            <div className="error-message username-error">{usernameError}</div>
           )}
 
           {/* Поле email */}
@@ -181,9 +180,7 @@ const Auth = () => {
             placeholder="myEmail@example.com"
           />
           {wasEmailFocused && emailError && (
-            <div className="error-message email-error">
-              {emailError}
-            </div>
+            <div className="error-message email-error">{emailError}</div>
           )}
 
           {/* Поля пароля */}
@@ -230,10 +227,7 @@ const Auth = () => {
           )}
         </div>
 
-        <button
-          className="reg-button"
-          onClick={handleRegister}
-        >
+        <button className="reg-button" onClick={handleRegister}>
           <span className="reg-button-text">Register</span>
         </button>
       </div>
