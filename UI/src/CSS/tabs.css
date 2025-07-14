@@ -17,8 +17,8 @@
   scrollbar-color: var(--main-1) transparent;
 
   /* Safari SVG fix */
-  transform: translateZ(0);
-  will-change: scroll-position;
+  -webkit-overflow-scrolling: auto; /* Disables momentum scrolling */
+  contain: strict; /* Isolates rendering context */
 }
 
 /* Горизонтальный скроллбар сверху (WebKit only) */
@@ -58,6 +58,8 @@
   white-space: nowrap;
   max-width: 100%; /* важно для переиспользования */
 
+  will-change: contents; /* Optimizes rendering */
+
   &:hover {
     background: var(--main-4);
   }
@@ -66,6 +68,20 @@
 .tab.active {
   background: var(--main-4);
   font-weight: bold;
+}
+
+/* Add this media query for Safari-only fixes */
+@media not all and (min-resolution: .001dpcm) {
+  @supports (-webkit-appearance:none) {
+    .main-tabs-wrapper {
+      overflow-x: hidden; /* Uses Safari's native overlay scrollbars */
+    }
+
+    .dndnode svg {
+      transform: none !important; /* Ensures no transforms are applied */
+      filter: none !important; /* Prevents filter-induced pixelation */
+    }
+  }
 }
 
 .add-btn {

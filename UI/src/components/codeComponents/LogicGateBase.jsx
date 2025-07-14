@@ -54,7 +54,12 @@ function LogicGateBase({
 
   return (
     <RotatedNodeWrapper className="circuit-button">
-      <IconComponent SVGClassName={"circuit-button-icon"} />
+      <IconComponent
+        SVGClassName={"circuit-button-icon"}
+        shapeRendering="geometricPrecision"
+        textRendering="optimizeLegibility"
+        vectorEffect="non-scaling-stroke"
+      />
 
       {/* Handles */}
       {handleConfigs.map(({ id: handleId, type, position }) => (
