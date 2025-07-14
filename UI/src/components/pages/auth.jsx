@@ -9,8 +9,10 @@ const EMAIL_REGEXP =
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isTouched, setIsTouched] = useState(false);
   const emailRef = useRef(null);
+  const [wasEmailFocused, setWasEmailFocused] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
 
   const isValidEmail = EMAIL_REGEXP.test(email);
 
@@ -23,11 +25,21 @@ const Auth = () => {
   };
 
   useEffect(() => {
-    if (emailRef.current) {
-      const showError = isTouched && !EMAIL_REGEXP.test(email) && email !== "";
-      emailRef.current.style.borderColor = showError ? "red" : "var(--main-5)";
+    if (wasEmailFocused) {
+      const error = email.trim() !== "" && !isValidEmail
+        ? "Please enter a valid email address"
+        : "";
+      setEmailError(error);
+      if (emailRef.current) {
+        emailRef.current.style.borderColor = error ? "red" : "var(--main-5)";
+      }
+    } else {
+      setEmailError("");
+      if (emailRef.current) {
+        emailRef.current.style.borderColor = "var(--main-5)";
+      }
     }
-  }, [isValidEmail, isTouched, email]);
+  }, [isValidEmail, wasEmailFocused, email]);
 
   return (
     <div className="auth-container">
@@ -37,12 +49,26 @@ const Auth = () => {
           <div className="input-email-text">Enter email:</div>
           <input
             ref={emailRef}
-            className={`input-email-window ${isTouched && !isValidEmail && email !== "" ? "invalid" : ""}`}
+            className={`input-email-window ${
+              wasEmailFocused && emailError ? "invalid" : ""
+            }`}
             value={email}
             onChange={handleEmailChange}
-            onBlur={() => setIsTouched(true)}
+            onFocus={() => setWasEmailFocused(false)}
+            onBlur={() => {
+              if (email.trim() !== "") {
+                setWasEmailFocused(true);
+              } else {
+                setWasEmailFocused(false);
+              }
+            }}
             placeholder="myEmail@example.com"
           />
+          {wasEmailFocused && emailError && (
+            <div className="error-message email-error">
+              {emailError}
+            </div>
+          )}
 
           <div className="input-password-text">Enter password:</div>
           <input

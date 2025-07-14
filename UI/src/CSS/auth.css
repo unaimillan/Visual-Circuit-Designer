@@ -57,6 +57,16 @@
   color: var(--main-0);
 }
 
+.error-message {
+  color: #ff4d4f;
+  text-align: left;
+  width: 20rem;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  margin-right: 11rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
 .input-password-window {
   display: flex;
   align-items: center;
