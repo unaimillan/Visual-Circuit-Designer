@@ -23,6 +23,10 @@ export default function TabsContainer({
         e.preventDefault();
         const SCROLL_SPEED = 1.5;
         el.scrollLeft += e.deltaY * SCROLL_SPEED;
+      } else {
+        e.preventDefault();
+        const SCROLL_SPEED = 1.5;
+        el.scrollLeft += e.deltaX * SCROLL_SPEED;
       }
     };
 
