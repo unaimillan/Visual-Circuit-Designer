@@ -1,45 +1,76 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../../CSS/auth.css";
 import "../../CSS/variables.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Добавлен useNavigate
 
 const EMAIL_REGEXP =
   /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
 const Auth = () => {
+  const navigate = useNavigate(); // Используем хук
+
+  // Состояния полей формы
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const emailRef = useRef(null);
-  const [wasEmailFocused, setWasEmailFocused] = useState(false);
+
+  // Состояния валидации
   const [emailError, setEmailError] = useState("");
+  const [wasEmailFocused, setWasEmailFocused] = useState(false);
 
+  const [passwordError, setPasswordError] = useState("");
+  const [wasPasswordFocused, setWasPasswordFocused] = useState(false);
 
-  const isValidEmail = EMAIL_REGEXP.test(email);
+  // Функции валидации
+  const validateEmail = useCallback(() => {
+    if (email.trim() === "") {
+      return "Email is required";
+    }
+    if (!EMAIL_REGEXP.test(email)) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  }, [email]);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const validatePassword = useCallback(() => {
+    if (password.trim() === "") {
+      return "Password is required";
+    }
+    return "";
+  }, [password]);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  // Обработчики изменений
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
+  // Эффекты валидации
   useEffect(() => {
     if (wasEmailFocused) {
-      const error = email.trim() !== "" && !isValidEmail
-        ? "Please enter a valid email address"
-        : "";
-      setEmailError(error);
-      if (emailRef.current) {
-        emailRef.current.style.borderColor = error ? "red" : "var(--main-5)";
-      }
-    } else {
-      setEmailError("");
-      if (emailRef.current) {
-        emailRef.current.style.borderColor = "var(--main-5)";
-      }
+      setEmailError(validateEmail());
     }
-  }, [isValidEmail, wasEmailFocused, email]);
+  }, [email, wasEmailFocused, validateEmail]);
+
+  useEffect(() => {
+    if (wasPasswordFocused) {
+      setPasswordError(validatePassword());
+    }
+  }, [password, wasPasswordFocused, validatePassword]);
+
+  // Обработчик входа
+  const handleLogin = () => {
+    // Активируем проверку всех полей
+    setWasEmailFocused(true);
+    setWasPasswordFocused(true);
+
+    const emailErr = validateEmail();
+    const passwordErr = validatePassword();
+
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+
+    if (!emailErr && !passwordErr) {
+      navigate('/profile');
+    }
+  };
 
   return (
     <div className="auth-container">
@@ -48,7 +79,6 @@ const Auth = () => {
         <div className="input-line-container">
           <div className="input-email-text">Enter email:</div>
           <input
-            ref={emailRef}
             className={`input-email-window ${
               wasEmailFocused && emailError ? "invalid" : ""
             }`}
@@ -58,8 +88,6 @@ const Auth = () => {
             onBlur={() => {
               if (email.trim() !== "") {
                 setWasEmailFocused(true);
-              } else {
-                setWasEmailFocused(false);
               }
             }}
             placeholder="myEmail@example.com"
@@ -72,19 +100,33 @@ const Auth = () => {
 
           <div className="input-password-text">Enter password:</div>
           <input
-            className="input-password-window"
+            className={`input-password-window ${
+              wasPasswordFocused && passwordError ? "invalid" : ""
+            }`}
             type="password"
             value={password}
             onChange={handlePasswordChange}
+            onFocus={() => setWasPasswordFocused(false)}
+            onBlur={() => {
+              if (password.trim() !== "") {
+                setWasPasswordFocused(true);
+              }
+            }}
           />
+          {wasPasswordFocused && passwordError && (
+            <div className="error-message password-error">
+              {passwordError}
+            </div>
+          )}
         </div>
-        <Link
-          to="/profile"
+
+        <button
           className="log-in-button"
-          style={{ textDecoration: "none" }}
+          onClick={handleLogin}
         >
           <span className="log-in-button-text">Log in</span>
-        </Link>
+        </button>
+
         <div className="register-text"> Have no account? </div>
         <Link to="/reg" className="register-link">
           <span className="register-link-text">Register</span>
