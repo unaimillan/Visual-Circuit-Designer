@@ -71,8 +71,8 @@
 }
 
 /* Add this media query for Safari-only fixes */
-@media not all and (min-resolution: .001dpcm) {
-  @supports (-webkit-appearance:none) {
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (-webkit-appearance: none) {
     .main-tabs-wrapper {
       overflow-x: hidden; /* Uses Safari's native overlay scrollbars */
     }
