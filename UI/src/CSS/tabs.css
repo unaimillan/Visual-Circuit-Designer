@@ -13,8 +13,12 @@
   /*height: 100%;*/
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin; /* Firefox */
+  scrollbar-width: none; /* Firefox */
   scrollbar-color: var(--main-1) transparent;
+
+  /* Safari SVG fix */
+  transform: translateZ(0);
+  will-change: scroll-position;
 }
 
 /* Горизонтальный скроллбар сверху (WebKit only) */

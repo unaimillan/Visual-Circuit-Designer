@@ -26,6 +26,10 @@
   width: 50px;
   height: auto;
   user-select: none;
+  /* Safari SVG fix */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .react-flow__edge.temp path {
@@ -45,6 +49,9 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
+  /* Safari SVG fix */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .circuit-button-icon {
@@ -52,6 +59,10 @@
   color: var(--main-0);
   object-fit: cover;
   /*scale: 2;*/
+  /* Safari SVG fix */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .switch-icon-wrapper {
