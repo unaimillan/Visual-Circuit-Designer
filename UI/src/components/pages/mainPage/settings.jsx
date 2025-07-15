@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import UserIcon from "../../../../assets/userIcon.png";
 
-import { MinimapSwitch, KostyaSwitch } from "./switch.jsx";
+import { MinimapSwitch } from "./switch.jsx";
 import { useNotificationsLevel } from "../mainPage.jsx";
 import {
   SelectCanvasBG,
   SelectLogLevel,
   SelectNotificationsPosition,
   SelectTheme,
+  SelectPastePosition,
 } from "./select.jsx";
 import React, { useState } from "react";
 import {
@@ -23,11 +24,13 @@ export default function Settings({
   setShowMinimap,
   currentBG,
   setCurrentBG,
+  pastePosition,
+  setPastePosition,
   theme,
   setTheme,
   closeSettings,
-  setToastPosition,
   toastPosition,
+  setToastPosition,
   currentLogLevel,
   setLogLevel,
 }) {
@@ -79,6 +82,8 @@ export default function Settings({
           setShowMinimap={setShowMinimap}
           currentBG={currentBG}
           setCurrentBG={setCurrentBG}
+          pastePosition={pastePosition}
+          setPastePosition={setPastePosition}
           theme={theme}
           setTheme={setTheme}
           toastPosition={toastPosition}
@@ -101,6 +106,8 @@ function TabContent({
   setTheme,
   toastPosition,
   setToastPosition,
+  pastePosition,
+  setPastePosition,
 }) {
   const { logLevel, setLogLevel } = useNotificationsLevel();
 
@@ -211,22 +218,22 @@ function TabContent({
           </div>
         </div>
 
-        {/*<div className="settingBlock">*/}
-        {/*  <div className="setting-text">*/}
-        {/*    <p className="setting-title">Kostya switch</p>*/}
-        {/*    <p className="setting-description">*/}
-        {/*      Если что, switch есть, он просто закомментирован. Надо ему указать*/}
-        {/*      boolVar и toggleBoolVar*/}
-        {/*    </p>*/}
-        {/*  </div>*/}
+        <div className="settingBlock">
+          <div className="setting-text">
+            <p className="setting-title">Paste position</p>
+            <p className="setting-description">
+              Changes position of the paste.
+            </p>
+          </div>
 
-        {/*  <div className={"interactive-wrapper"}>*/}
-        {/*    <KostyaSwitch*/}
-        {/*      boolVar={}*/}
-        {/*      toggleBootVar={}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+          <div className={"interactive-wrapper"}>
+            <SelectPastePosition
+              pastePosition={pastePosition}
+              setPastePosition={setPastePosition}
+              className="selectPastePosition"
+            />
+          </div>
+        </div>
       </div>
     );
   }

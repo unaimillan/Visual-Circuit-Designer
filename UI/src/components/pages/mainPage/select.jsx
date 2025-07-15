@@ -160,3 +160,33 @@ export const SelectNotificationsPosition = ({
     </Select.Portal>
   </Select.Root>
 );
+
+export const SelectPastePosition = ({
+                                              pastePosition,
+                                              setPastePosition,
+                                            }) => (
+  <Select.Root value={pastePosition} onValueChange={setPastePosition}>
+    <Select.Trigger
+      className="SelectTrigger"
+      aria-label="Paste Position"
+    >
+      <Select.Value placeholder="Select paste position" />
+      <Select.Icon className="SelectIcon">
+        <ChevronDownIcon />
+      </Select.Icon>
+    </Select.Trigger>
+    <Select.Portal>
+      <Select.Content className="SelectContent">
+        <Select.ScrollUpButton className="SelectScrollButton">
+          <ChevronUpIcon />
+        </Select.ScrollUpButton>
+        <Select.Viewport className="SelectViewport">
+          <Select.Group>
+            <SelectItem value={"cursor"}>Near the cursor</SelectItem>
+            <SelectItem value={"center"}>Center of the screen</SelectItem>
+          </Select.Group>
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Portal>
+  </Select.Root>
+);

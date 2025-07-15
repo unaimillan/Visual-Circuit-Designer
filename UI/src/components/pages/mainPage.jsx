@@ -107,6 +107,7 @@ export default function Main() {
   const [theme, setTheme] = useState("light");
   const [toastPosition, setToastPosition] = useState("top-center");
   const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
+  const [pastePosition, setPastePosition] = useState("cursor")
 
   // Хуки React Flow
   const [nodes, setNodes, onNodesChangeFromHook] = useNodesState([]);
@@ -343,6 +344,7 @@ export default function Main() {
       reactFlowInstance,
       setNodes,
       setEdges,
+      pastePosition,
     });
     setTimeout(recordHistory, 0);
   }, [clipboard, reactFlowInstance, recordHistory]);
@@ -358,6 +360,7 @@ export default function Main() {
       setCircuitsMenuState,
       setLogLevel,
       setToastPosition,
+      setPastePosition,
     });
   }, []);
 
@@ -373,6 +376,7 @@ export default function Main() {
       circuitsMenuState,
       logLevel,
       toastPosition,
+      pastePosition,
     };
     localStorage.setItem("userSettings", JSON.stringify(settings));
   }, [
@@ -385,6 +389,7 @@ export default function Main() {
     circuitsMenuState,
     logLevel,
     toastPosition,
+    pastePosition,
   ]);
 
   //Sets current theme to the whole document
@@ -661,6 +666,8 @@ export default function Main() {
             setShowMinimap={setShowMinimap}
             currentBG={currentBG}
             setCurrentBG={setCurrentBG}
+            pastePosition={pastePosition}
+            setPastePosition={setPastePosition}
             theme={theme}
             setTheme={setTheme}
             toastPosition={toastPosition}
