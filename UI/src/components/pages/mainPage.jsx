@@ -649,7 +649,7 @@ export default function Main() {
           </button>
 
           <div
-            className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
+            className={`backdrop ${openSettings ? "cover" : ""}`}
             onClick={() => {
               setMenu(null);
               setOpenSettings(false);

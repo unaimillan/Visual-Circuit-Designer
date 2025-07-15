@@ -53,8 +53,13 @@ function LogicGateBase({
   };
 
   return (
-    <RotatedNodeWrapper className="circuit-button">
-      <IconComponent SVGClassName={"circuit-button-icon"} />
+    <div
+      className="logic-gate"
+      style={{ width: "80px", height: "60px" }}
+    >
+      <IconComponent
+        SVGClassName={"logic-gate-icon"}
+      />
 
       {/* Handles */}
       {handleConfigs.map(({ id: handleId, type, position }) => (
@@ -68,7 +73,7 @@ function LogicGateBase({
           connections={handleId.slice(0, 2) === "in" ? 1 : undefined}
         />
       ))}
-    </RotatedNodeWrapper>
+    </div>
   );
 }
 

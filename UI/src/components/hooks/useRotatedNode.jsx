@@ -74,10 +74,6 @@ export const useRotatedNode = (id, rotation, originalWidth, originalHeight) => {
         style={{
           width: rotatedWidth,
           height: rotatedHeight,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
         }}
       >
         <div

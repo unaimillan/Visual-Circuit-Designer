@@ -40,18 +40,17 @@
   }
 }
 
-.circuit-button {
+.logic-gate {
   display: flex;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
 }
 
-.circuit-button-icon {
+.logic-gate-icon {
   margin: -2% -14% 0 -14%;
   color: var(--main-0);
   object-fit: cover;
-  /*scale: 2;*/
 }
 
 .switch-icon-wrapper {
@@ -68,7 +67,7 @@
   height: 70%;
 }
 
-.circuit-button.input {
+.logic-gate.input {
   width: 60px;
   height: 80px;
   position: relative;

@@ -1,5 +1,5 @@
 export const IconAND = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="0 0 800 600">
+  <svg className={SVGClassName} style={style} viewBox="0 0 700 600">
     <g>
       <title>Layer 1</title>
       <path
