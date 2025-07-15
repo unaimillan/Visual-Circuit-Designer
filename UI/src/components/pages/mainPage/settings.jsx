@@ -211,22 +211,22 @@ function TabContent({
           </div>
         </div>
 
-        <div className="settingBlock">
-          <div className="setting-text">
-            <p className="setting-title">Kostya switch</p>
-            <p className="setting-description">
-              Если что, switch есть, он просто закомментирован. Надо ему указать
-              boolVar и toggleBoolVar
-            </p>
-          </div>
+        {/*<div className="settingBlock">*/}
+        {/*  <div className="setting-text">*/}
+        {/*    <p className="setting-title">Kostya switch</p>*/}
+        {/*    <p className="setting-description">*/}
+        {/*      Если что, switch есть, он просто закомментирован. Надо ему указать*/}
+        {/*      boolVar и toggleBoolVar*/}
+        {/*    </p>*/}
+        {/*  </div>*/}
 
-          <div className={"interactive-wrapper"}>
-            {/*<KostyaSwitch*/}
-            {/*  boolVar={}*/}
-            {/*  toggleBootVar={}*/}
-            {/*/>*/}
-          </div>
-        </div>
+        {/*  <div className={"interactive-wrapper"}>*/}
+        {/*    <KostyaSwitch*/}
+        {/*      boolVar={}*/}
+        {/*      toggleBootVar={}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </div>
     );
   }
