@@ -53,13 +53,8 @@ function LogicGateBase({
   };
 
   return (
-    <div
-      className="logic-gate"
-      style={{ width: "80px", height: "60px" }}
-    >
-      <IconComponent
-        SVGClassName={"logic-gate-icon"}
-      />
+    <div className="logic-gate" style={{ width: "80px", height: "60px" }}>
+      <IconComponent SVGClassName={"logic-gate-icon"} />
 
       {/* Handles */}
       {handleConfigs.map(({ id: handleId, type, position }) => (
