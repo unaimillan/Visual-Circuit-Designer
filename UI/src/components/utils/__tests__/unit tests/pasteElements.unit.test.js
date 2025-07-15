@@ -55,7 +55,7 @@ describe("pasteElements", () => {
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      "React Flow instance not available"
+      "React Flow instance not available",
     );
     expect(mockSetNodes).not.toHaveBeenCalled();
     expect(mockSetEdges).not.toHaveBeenCalled();
@@ -89,10 +89,7 @@ describe("pasteElements", () => {
     expect(mockSetNodes).toHaveBeenCalledTimes(2);
     expect(mockSetEdges).toHaveBeenCalledTimes(2);
 
-    expect(calculatePosition).toHaveBeenCalledWith(
-      { x: 50, y: 50 },
-      "foo"
-    );
+    expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 50 }, "foo");
 
     const addNodesFn = mockSetNodes.mock.calls[1][0];
     const resultNodes = addNodesFn([]);
@@ -122,8 +119,14 @@ describe("pasteElements", () => {
   it("pastes elements at center position when pastePosition !== 'cursor'", () => {
     const originalWidth = window.innerWidth;
     const originalHeight = window.innerHeight;
-    Object.defineProperty(window, "innerWidth", { value: 800, configurable: true });
-    Object.defineProperty(window, "innerHeight", { value: 600, configurable: true });
+    Object.defineProperty(window, "innerWidth", {
+      value: 800,
+      configurable: true,
+    });
+    Object.defineProperty(window, "innerHeight", {
+      value: 600,
+      configurable: true,
+    });
 
     pasteElements({
       clipboard,
@@ -142,10 +145,7 @@ describe("pasteElements", () => {
     expect(mockSetNodes).toHaveBeenCalledTimes(2);
     expect(mockSetEdges).toHaveBeenCalledTimes(2);
 
-    expect(calculatePosition).toHaveBeenCalledWith(
-      { x: 50, y: 50 },
-      "foo"
-    );
+    expect(calculatePosition).toHaveBeenCalledWith({ x: 50, y: 50 }, "foo");
 
     Object.defineProperty(window, "innerWidth", { value: originalWidth });
     Object.defineProperty(window, "innerHeight", { value: originalHeight });

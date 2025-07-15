@@ -107,7 +107,7 @@ export default function Main() {
   const [theme, setTheme] = useState("light");
   const [toastPosition, setToastPosition] = useState("top-center");
   const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
-  const [pastePosition, setPastePosition] = useState("cursor")
+  const [pastePosition, setPastePosition] = useState("cursor");
 
   // Хуки React Flow
   const [nodes, setNodes, onNodesChangeFromHook] = useNodesState([]);

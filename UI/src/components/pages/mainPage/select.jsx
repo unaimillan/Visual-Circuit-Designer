@@ -161,15 +161,9 @@ export const SelectNotificationsPosition = ({
   </Select.Root>
 );
 
-export const SelectPastePosition = ({
-                                              pastePosition,
-                                              setPastePosition,
-                                            }) => (
+export const SelectPastePosition = ({ pastePosition, setPastePosition }) => (
   <Select.Root value={pastePosition} onValueChange={setPastePosition}>
-    <Select.Trigger
-      className="SelectTrigger"
-      aria-label="Paste Position"
-    >
+    <Select.Trigger className="SelectTrigger" aria-label="Paste Position">
       <Select.Value placeholder="Select paste position" />
       <Select.Icon className="SelectIcon">
         <ChevronDownIcon />
