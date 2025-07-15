@@ -1,5 +1,5 @@
 export const IconAND = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="0 0 700 600">
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <path
@@ -68,7 +68,7 @@ export const IconAND = ({ SVGClassName, style }) => (
 );
 
 export const IconOR = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <line
@@ -124,7 +124,7 @@ export const IconOR = ({ SVGClassName, style }) => (
 );
 
 export const IconNAND = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <path
@@ -195,7 +195,7 @@ export const IconNAND = ({ SVGClassName, style }) => (
 );
 
 export const IconNOR = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <line
@@ -260,7 +260,7 @@ export const IconNOR = ({ SVGClassName, style }) => (
 );
 
 export const IconXOR = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <line
@@ -329,7 +329,7 @@ export const IconXOR = ({ SVGClassName, style }) => (
 );
 
 export const IconNOT = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <line
@@ -386,7 +386,7 @@ export const IconNOT = ({ SVGClassName, style }) => (
 );
 
 export const IconInput = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" fill="none" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <line
@@ -443,7 +443,7 @@ export const IconInput = ({ SVGClassName, style }) => (
 );
 
 export const IconOutput = ({ SVGClassName, style }) => (
-  <svg style={style} viewBox="0 0 800 600" fill="none" className={SVGClassName}>
+  <svg className={SVGClassName} style={style} viewBox="87 110 626 400">
     <g>
       <title>Layer 1</title>
       <line
@@ -498,29 +498,29 @@ export const IconOutput = ({ SVGClassName, style }) => (
   </svg>
 );
 
-export const IconSwitchOn = ({ SVGClassName, style }) => (
-  <svg
-    style={style}
-    className={SVGClassName}
-    fill="currentColor"
-    viewBox="-2 -6 24 24"
-  >
-    <path d="M6 0h8a6 6 0 1 1 0 12H6A6 6 0 1 1 6 0zm1 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
-  </svg>
-);
-
-export const IconSwitchOff = ({ SVGClassName }) => (
-  <svg
-    fill="currentColor"
-    viewBox="-2 -5 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="xMinYMin"
-    className={SVGClassName}
-  >
-    <path d="M 7 2 C 3.151 2 0.745 6.167 2.67 9.5 C 3.563 11.047 5.214 12 7 12 L 13 12 C 16.849 12 19.255 7.833 17.33 4.5 C 16.437 2.953 14.786 2 13 2 L 7 2 Z M 7 0 L 13 0 C 18.389 0 21.756 5.833 19.062 10.5 C 17.812 12.666 15.501 14 13 14 L 7 14 C 1.611 14 -1.756 8.167 0.938 3.5 C 2.188 1.334 4.499 0 7 0 Z M 7 11 C 3.921 11 1.996 7.667 3.536 5 C 4.25 3.762 5.571 3 7 3 C 10.079 3 12.004 6.333 10.464 9 C 9.75 10.238 8.429 11 7 11 Z M 7 9 C 8.54 9 9.502 7.333 8.732 6 C 8.375 5.381 7.715 5 7 5 C 5.46 5 4.498 6.667 5.268 8 C 5.625 8.619 6.285 9 7 9 Z" />
-  </svg>
-);
-
+// export const IconSwitchOn = ({ SVGClassName, style }) => (
+//   <svg
+//     style={style}
+//     className={SVGClassName}
+//     fill="currentColor"
+//     viewBox="-2 -6 24 24"
+//   >
+//     <path d="M6 0h8a6 6 0 1 1 0 12H6A6 6 0 1 1 6 0zm1 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+//   </svg>
+// );
+//
+// export const IconSwitchOff = ({ SVGClassName }) => (
+//   <svg
+//     fill="currentColor"
+//     viewBox="-2 -5 24 24"
+//     xmlns="http://www.w3.org/2000/svg"
+//     preserveAspectRatio="xMinYMin"
+//     className={SVGClassName}
+//   >
+//     <path d="M 7 2 C 3.151 2 0.745 6.167 2.67 9.5 C 3.563 11.047 5.214 12 7 12 L 13 12 C 16.849 12 19.255 7.833 17.33 4.5 C 16.437 2.953 14.786 2 13 2 L 7 2 Z M 7 0 L 13 0 C 18.389 0 21.756 5.833 19.062 10.5 C 17.812 12.666 15.501 14 13 14 L 7 14 C 1.611 14 -1.756 8.167 0.938 3.5 C 2.188 1.334 4.499 0 7 0 Z M 7 11 C 3.921 11 1.996 7.667 3.536 5 C 4.25 3.762 5.571 3 7 3 C 10.079 3 12.004 6.333 10.464 9 C 9.75 10.238 8.429 11 7 11 Z M 7 9 C 8.54 9 9.502 7.333 8.732 6 C 8.375 5.381 7.715 5 7 5 C 5.46 5 4.498 6.667 5.268 8 C 5.625 8.619 6.285 9 7 9 Z" />
+//   </svg>
+// );
+//
 // const IconXNOR = ({ SVGClassName }) => (
 //   <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" className={SVGClassName}>
 //     <g>

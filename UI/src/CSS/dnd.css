@@ -48,7 +48,7 @@
 }
 
 .logic-gate-icon {
-  margin: -2% -14% 0 -14%;
+  /*margin: -2% -14% 0 -14%;*/
   color: var(--main-0);
   object-fit: cover;
 }
