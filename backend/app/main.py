@@ -2,13 +2,10 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, APIRouter, HTTPException
 from fastapi.responses import Response
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi import status
 from fastapi_users import FastAPIUsers
 from fastapi_users.manager import UserManagerDependency, BaseUserManager
-from fastapi_users.router import ErrorCode
-from fastapi_users.router.common import ErrorModel
-from pydantic import BaseModel
 from pymongo.errors import DuplicateKeyError
 from starlette.responses import JSONResponse
 
@@ -32,6 +29,10 @@ fastapi_users = FastAPIUsers[UserDB, UUID](
     [auth_backend, refresh_backend],
 )
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/jwt/login")
+get_current_user = fastapi_users.current_user(active=False, verified=False)
+
+
 app = FastAPI()
 router = APIRouter()
 
@@ -46,12 +47,6 @@ async def mongo_duplicate_handler(request, exc):
         status_code=400,
         content={"detail": detail},
     )
-
-# app.include_router(
-#     fastapi_users.get_auth_router(auth_backend),
-#     prefix="/auth/jwt",
-#     tags=["auth"]
-# )
 
 app.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
@@ -86,6 +81,14 @@ async def login(
     return {
         "access_token": access_token,
         "token_type": "bearer",
+    }
+
+@router.get("/verify", tags=["auth"])
+async def verify_access_token(user: UserDB = Depends(get_current_user)):
+    return {
+        "valid": True,
+        "user_id": str(user.id),
+        "email": user.email,
     }
 
 app.include_router(router, prefix="/auth", tags=["auth"])

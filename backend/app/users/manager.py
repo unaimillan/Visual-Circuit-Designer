@@ -3,7 +3,6 @@ from uuid import UUID, uuid4
 
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users.manager import BaseUserManager, UUIDIDMixin
-from fastapi.responses import JSONResponse, Response
 
 from backend.app.models import UserDB
 from fastapi_users.authentication import JWTStrategy, AuthenticationBackend, CookieTransport, BearerTransport
@@ -65,26 +64,27 @@ class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
         created_user = await self.user_db.create(user_dict)
         return await self.get(created_user["id"])
 
-# Transport for access token (Bearer token in response)
+# Transport for access token (Bearer)
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 # Transport for refresh token (HTTP-only cookie)
 cookie_transport = CookieTransport(cookie_name="refresh_token", cookie_max_age=86_400)
 
-# Стратегия для access token (JSON)
 def get_access_strategy() -> JWTStrategy:
     return JWTStrategy(
         secret=SECRET,
-        lifetime_seconds=3600 * 24,  # 24 часа
-        algorithm="HS256"
+        lifetime_seconds=3600 * 24,  # 24 hours
+        # lifetime_seconds=2, # For expiration tests
+        algorithm="HS256",
+        token_audience=["fastapi-users:auth"]
     )
 
-# Стратегия для refresh token (Cookie)
 def get_refresh_strategy() -> JWTStrategy:
     return JWTStrategy(
         secret=SECRET,
-        lifetime_seconds=86400 * 30,  # 30 дней
-        algorithm="HS256"
+        lifetime_seconds=86400 * 30,  # 30 days
+        algorithm="HS256",
+        token_audience = ["fastapi-users:auth"]
     )
 
 # Create authentication backends
