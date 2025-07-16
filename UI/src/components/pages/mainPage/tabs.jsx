@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
+import { calculateContextMenuPosition} from "../../utils/calculateContextMenuPosition.js";
 
 export default function TabsContainer({
   tabs,
   activeTabId,
   onTabsChange,
   onActiveTabIdChange,
+  ref,
 }) {
   const scrollRef = useRef(null);
   const textareaRefs = useRef({});
@@ -71,10 +73,13 @@ export default function TabsContainer({
 
   const handleContextMenu = (e, tabId) => {
     e.preventDefault();
+    const menuPosition = calculateContextMenuPosition(e, ref.current.getBoundingClientRect());
     setContextMenu({
-      x: e.clientX,
-      y: e.clientY,
       tabId: tabId,
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
     });
   };
 
@@ -162,8 +167,10 @@ export default function TabsContainer({
         <div
           className="context-menu"
           style={{
-            left: contextMenu.x,
-            top: contextMenu.y,
+            top: contextMenu.top,
+            left: contextMenu.left,
+            right: contextMenu.right,
+            bottom: contextMenu.bottom,
           }}
         >
           <div

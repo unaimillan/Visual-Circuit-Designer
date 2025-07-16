@@ -557,6 +557,7 @@ export default function Main() {
             activeTabId={activeTabId}
             onTabsChange={setTabs}
             onActiveTabIdChange={handleTabSwitch}
+            ref={ref}
           />
         </div>
 

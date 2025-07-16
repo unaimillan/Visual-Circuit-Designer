@@ -108,7 +108,7 @@ button {
   padding: 0.5rem;
   margin: 0.5rem;
   border-radius: 0.35rem;
-  background: var(--main-2);
+  background: var(--menu-lighter);
   border: 1px solid var(--main-4);
   color: var(--main-0);
   width: 75%;
@@ -116,7 +116,7 @@ button {
 }
 
 .SelectTriggerWire:hover {
-  background-color: var(--select-1);
+  background-color: var(--main-4);
 }
 
 .SelectTriggerWire[data-placeholder] {
