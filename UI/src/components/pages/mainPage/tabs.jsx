@@ -34,18 +34,6 @@ export default function TabsContainer({
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
-  // Close context menu on click outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (contextMenu && !e.target.closest(".context-menu")) {
-        setContextMenu(null);
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [contextMenu]);
-
   // Focus textarea when editing starts
   useEffect(() => {
     if (editingTabId && textareaRefs.current[editingTabId]) {
@@ -194,6 +182,13 @@ export default function TabsContainer({
           )}
         </div>
       )}
+
+      <div
+        className={`backdrop ${contextMenu ? "show" : ""}`}
+        onClick={() => {
+          setContextMenu(null);
+        }}
+      />
     </div>
   );
 }

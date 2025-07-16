@@ -425,16 +425,40 @@ export default function Main() {
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, node, pane, "node"));
+    const menuPosition = calculateContextMenuPosition(event, pane);
+    setMenu({
+      id: node.id,
+      name: node.type,
+      type: "node",
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
+    });
   }, []);
 
   const onEdgeContextMenu = useCallback((event, edge) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, edge, pane, "edge"));
+    const menuPosition = calculateContextMenuPosition(event, pane);
+    setMenu({
+      id: edge.id,
+      name: edge.type,
+      type: "edge",
+      position: menuPosition,
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
+    });
   }, []);
 
-  const onPaneClick = useCallback(() => setMenu(null), []);
+  const onPaneContextMenu = useCallback((event, edge) => {
+    event.preventDefault();
+    const pane = ref.current.getBoundingClientRect();
+    const menuPosition = calculateContextMenuPosition(event, pane);
+    setMenu(calculateContextMenuPosition(event, edge, pane, "pane"));
+  }, []);
 
   //Allows user to download circuit JSON
   const saveCircuit = () => saveCircuitUtil(nodes, edges);
@@ -547,9 +571,9 @@ export default function Main() {
             defaultEdgeOptions={{
               type: activeWire,
             }}
+            onPaneContextMenu={onPaneContextMenu}
             onNodeContextMenu={onNodeContextMenu}
             onEdgeContextMenu={onEdgeContextMenu}
-            onPaneClick={onPaneClick}
             onConnect={onConnect}
             onNodeDragStop={onNodeDragStop}
             onDrop={onDrop}
@@ -600,11 +624,11 @@ export default function Main() {
           </ReactFlow>
 
           {menu && menu.type === "node" && (
-            <NodeContextMenu onClick={onPaneClick} {...menu} />
+            <NodeContextMenu {...menu} />
           )}
 
           {menu && menu.type === "edge" && (
-            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+            <EdgeContextMenu {...menu} />
           )}
 
           <Toaster
@@ -656,10 +680,17 @@ export default function Main() {
           <div
             className={`backdrop ${openSettings ? "cover" : ""}`}
             onClick={() => {
-              setMenu(null);
               setOpenSettings(false);
             }}
           />
+
+          <div
+            className={`backdrop ${menu ? "show" : ""}`}
+            onClick={() => {
+              setMenu(null);
+            }}
+          />
+
           <Settings
             openSettings={openSettings}
             showMinimap={showMinimap}
