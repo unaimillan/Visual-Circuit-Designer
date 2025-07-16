@@ -8,8 +8,8 @@ body {
 
 #app {
   width: 100vw;
-  height: 100vh;
-  position: absolute;
+  height: 95vh;
+  position: fixed;
   top: 0;
   right: 0;
 }

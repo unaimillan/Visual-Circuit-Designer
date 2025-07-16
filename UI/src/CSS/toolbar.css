@@ -31,14 +31,15 @@
   border-radius: 0.33rem;
 }
 
-.toolbarButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-3);
+.toolbarButton:not(:disabled):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-.toolbarButton:active {
+.toolbarButton:not(:disabled):active {
+  transform: translateY(0px);
   transition: 0.05s ease-out;
-  background-color: var(--select-1);
+  background-color: var(--select-2);
   box-shadow: none;
   border: var(--select-1) solid 0.05rem;
 }
@@ -78,6 +79,11 @@
   transition: 0.15s ease-out;
   border-radius: 0.33rem;
   z-index: 1000;
+}
+
+.simulate-button:not(:disabled):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .simulate-button.idle {
@@ -140,5 +146,5 @@
 }
 
 .toolbar.download {
-  right: 21.63rem;
+  right: 29.73rem;
 }

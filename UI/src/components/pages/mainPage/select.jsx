@@ -79,9 +79,9 @@ export const SelectWireType = ({ wireType, setWireType }) => (
         </Select.ScrollUpButton>
         <Select.Viewport className="SelectViewport">
           <Select.Group>
+            <SelectItem value="default">Bezier</SelectItem>
             <SelectItem value="step">Step</SelectItem>
             <SelectItem value="straight">Straight</SelectItem>
-            <SelectItem value="default">Bezier</SelectItem>
           </Select.Group>
         </Select.Viewport>
       </Select.Content>

@@ -1,7 +1,7 @@
 .controls {
-  border: var(--main-5) solid 0.07rem;
-  background-color: var(--main-2);
-  border-radius: 0.2rem;
+  border: var(--main-5) solid 0.05rem;
+  background-color: var(--menu-lighter);
+  border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: none;
   transition:
@@ -10,15 +10,20 @@
 }
 
 .controls button {
-  background-color: var(--main-2);
-  border-bottom: var(--main-4) solid 0.07rem;
+  background-color: var(--menu-lighter);
+  border-top: var(--main-4) solid 0.05rem;
+  border-bottom: var(--main-4) solid 0.05rem;
   transition:
     background-color var(--ttime),
     border var(--ttime);
 }
 
 .controls button:hover {
-  background-color: var(--main-3);
+  background-color: var(--menu-darker);
+}
+
+.controls button:active {
+  background-color: var(--select-1);
 }
 
 .controls button svg {
@@ -90,8 +95,8 @@
 }
 
 .close-cross-icon {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
 }
 
 .toast-notification {
@@ -101,4 +106,22 @@
   gap: 12px;
   width: 100%;
   max-width: 400px;
+}
+
+/* Global scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px; /* width of the vertical scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--menu-lighter); /* track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--main-3); /* scroll handle */
+  border-radius: 4px; /* rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--main-4); /* hover effect */
 }

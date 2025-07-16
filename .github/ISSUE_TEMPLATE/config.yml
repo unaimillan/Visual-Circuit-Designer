@@ -1,0 +1,20 @@
+blank\_issues\_enabled: false
+contact\_links:
+
+* name: General Questions or Support
+  url: [https://github.com/IUMusicalFish19/Visual-Circuit-Designer/discussions](https://github.com/IUMusicalFish19/Visual-Circuit-Designer/discussions)
+  about: Please use GitHub Discussions for general questions or help.
+  issue\_templates:
+* name: Feature Request
+  description: Suggest a new feature or enhancement.
+  labels: [triage]
+  file: AC_template.md
+* name: Bug Report
+  description: Report a reproducible bug or regression.
+  labels: [bug]
+  file: BUG_REPORT.md
+* name: Technical Task
+  description: Define a technical implementation task with subtasks or dependencies.
+  labels: [task]
+  file: technical_task.md
+

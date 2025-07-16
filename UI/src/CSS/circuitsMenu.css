@@ -5,7 +5,7 @@
   max-height: 70vh;
   z-index: 200;
   position: fixed;
-  top: 2.5rem;
+  top: calc(2.5rem + 5vh);
   left: -15.5rem;
   margin: 0.5rem 0 0 0.5rem;
   border-radius: 0.5rem;
@@ -20,6 +20,29 @@
   border: 0.05rem solid var(--main-5);
 }
 
+/* Global scrollbar styles */
+.circuitsMenu::-webkit-scrollbar {
+  width: 8px; /* width of the vertical scrollbar */
+}
+
+.circuitsMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.circuitsMenu::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Invisible by default */
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.circuitsMenu:hover::-webkit-scrollbar-thumb {
+  background: var(--main-4); /* hover effect */
+}
+
+.circuitsMenu:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--main-5); /* hover effect */
+}
+
 .circuitsMenu.open {
   transition:
     0.2s ease,
@@ -27,27 +50,6 @@
     border var(--ttime);
   position: fixed;
   left: 0;
-}
-
-.circuitsMenuInnerButton {
-  background-color: var(--main-3);
-  border: none;
-  transition: 0.15s ease-out;
-  border-radius: 0.5rem;
-  width: 3.33rem;
-  height: 3.33rem;
-  /*margin: 0.05rem;*/
-}
-
-.circuitsMenuInnerButton:hover {
-  transition: 0.15s ease-out;
-  background-color: var(--main-5);
-}
-
-.circuitsMenuInnerButton:active {
-  transition: 0.05s ease-out;
-  background-color: var(--select-1);
-  box-shadow: none;
 }
 
 .circuitsMenuTitle {
@@ -94,8 +96,11 @@
   padding: 0.5rem 0;
 }
 
+.menu-item {
+  margin-bottom: 5px;
+}
 .menu-item.active .gates-grid {
-  max-height: 500px; /* Enough for content */
+  max-height: 500px;
 }
 
 .arrow {
@@ -115,7 +120,7 @@
 /*_______Open Menu_______*/
 .openCircuitsMenuButton {
   position: fixed;
-  top: 0.5rem;
+  top: calc(0.5rem + 5vh);
   left: 0.5rem;
   width: 2rem;
   height: 2rem;
