@@ -1,7 +1,6 @@
 with import <nixpkgs> {};
 
 let
-  # Переопределяем Poco с поддержкой PostgreSQL
   pocoWithPostgres = pkgs.poco.overrideAttrs (oldAttrs: {
     buildInputs = (oldAttrs.buildInputs or []) ++ [ pkgs.postgresql ];
     cmakeFlags = (oldAttrs.cmakeFlags or []) ++ [

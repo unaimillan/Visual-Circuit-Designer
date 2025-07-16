@@ -1,20 +1,21 @@
 FROM nixos/nix:latest AS build
 
-WORKDIR /app
-COPY CMakeLists.txt .
-COPY src/ src
-COPY default.nix .
+WORKDIR /build
+ADD ./default.nix /build
+RUN nix-shell --run exit
 
-RUN --mount=type=cache,target=/tmp/nix-store cp -R /tmp/nix-store/nix /nix
+ADD ./src/ /build/src
+ADD ./CMakeLists.txt /build
 RUN nix-build
-RUN --mount=type=cache,target=/tmp/nix-store cp -R /nix /tmp/nix-store/nix
-RUN mkdir nix-deps
-RUN cp -R $(nix-store -qR result/) nix-deps
+
+RUN mkdir /build/nix-deps
+RUN cp -R $(nix-store -qR /build/result/) /build/nix-deps
 
 FROM scratch
 
 WORKDIR /app
 
-COPY --from=build /app/nix-deps /nix/store
-COPY --from=build /app/result /app
+COPY --from=build /build/nix-deps /nix/store
+COPY --from=build /build/result /app
+
 ENTRYPOINT [ "/app/bin/VCDAuth" ]
