@@ -1,7 +1,9 @@
 export function hotkeyHandler(e, context) {
-  if (document.activeElement.tagName === 'INPUT' ||
-    document.activeElement.tagName === 'TEXTAREA' ||
-    document.activeElement.isContentEditable) {
+  if (
+    document.activeElement.tagName === "INPUT" ||
+    document.activeElement.tagName === "TEXTAREA" ||
+    document.activeElement.isContentEditable
+  ) {
     return;
   }
 

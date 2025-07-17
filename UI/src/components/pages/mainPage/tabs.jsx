@@ -66,7 +66,7 @@ export default function TabsContainer({
 
   const updateTabTitle = (id, newTitle) => {
     const updated = tabs.map((t) =>
-      t.id === id ? { ...t, title: newTitle } : t
+      t.id === id ? { ...t, title: newTitle } : t,
     );
     onTabsChange(updated);
   };
