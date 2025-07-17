@@ -42,6 +42,7 @@
 .toolbar-button:not(:disabled):hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 
 .toolbar-button:not(:disabled):active {
@@ -92,6 +93,7 @@
 .simulate-button:not(:disabled):hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 
 .simulate-button.idle {

@@ -135,43 +135,29 @@ export default function Main() {
 
   const ignoreChangesRef = useRef(false);
 
-  const [selectedNode, setSelectedNode] = useState(null);
-
-  const onSelectionChange = useCallback(
-    ({ nodes: selectedNodes, edges: selectedEdges }) => {
-      if (selectedNodes.length === 1 && selectedEdges.length === 0) {
-        setSelectedNode(selectedNodes[0]);
-        console.log(selectedNodes[0].name);
-      } else {
-        setSelectedNode(null);
+  const editableNode = useMemo(() => {
+    const selectedNodes = nodes.filter(n => n.selected);
+    const selectedEdges = edges.filter(e => e.selected);
+    if (selectedNodes.length === 1 && selectedEdges.length === 0) {
+      const node = selectedNodes[0];
+      if (["inputNodeSwitch", "inputNodeButton", "outputNodeLed"].includes(node.type)) {
+        return node;
       }
-    },
-    []
-  );
+    }
+    return null;
+  }, [nodes]);
 
   const handleNameChange = (e) => {
+    if (!editableNode) return;
+
     const newName = e.target.value;
-    setSelectedNode((prev) => ({
-      ...prev,
-      name: newName,
-    }));
-    setNodes((nds) =>
-      nds.map((n) =>
-        n.id === selectedNode.id
-          ? {
-            ...n,
-            name: newName,
-          }
-          : n
+    setNodes(nds =>
+      nds.map(n =>
+        n.id === editableNode.id ? { ...n, name: newName } : n
       )
     );
+    setTimeout(recordHistory, 0);
   };
-
-  const canChangeName =
-    selectedNode &&
-    ["inputNodeSwitch", "inputNodeButton", "outputNodeLed"].includes(
-      selectedNode.type
-    );
 
   const handleOpenClick = () => {
     if (fileInputRef.current) {
@@ -611,7 +597,6 @@ export default function Main() {
             edges={edges}
             onNodesChange={onNodesChangeFromHook}
             onEdgesChange={onEdgesChangeFromHook}
-            onSelectionChange={onSelectionChange}
             defaultEdgeOptions={{
               type: activeWire,
             }}
@@ -667,19 +652,20 @@ export default function Main() {
             )}
           </ReactFlow>
 
-          {canChangeName && (
+          {editableNode && (
             <div className="name-editor">
               <label>
                 Export Name (Optional)
               </label>
               <input
                 type="text"
-                value={selectedNode.name || ''}
+                value={editableNode.name || ''}
                 onChange={handleNameChange}
+                autoFocus
               />
               <button
                 className="close-button"
-                onClick={() => setSelectedNode(null)}
+                onClick={deselectAll}
               >
                 Close
               </button>

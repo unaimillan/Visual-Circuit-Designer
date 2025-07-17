@@ -94,7 +94,7 @@
 .name-text-area.editing {
   outline: 1px solid var(--main-0);
   border-radius: 2px;
-  background-color: var(--main-2);
+  background-color: var(--menu-lighter);
 }
 
 .tab-title {
