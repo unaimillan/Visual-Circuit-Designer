@@ -2,18 +2,18 @@ import React, { useCallback } from "react";
 import { useReactFlow } from "@xyflow/react";
 
 export default function PaneContextMenu({
-                                          copyElements,
-                                          pasteElements,
-                                          cutElements,
-                                          selectedElements,
-                                          clipboard,
-                                          onClose,
-                                          top,
-                                          left,
-                                          right,
-                                          bottom,
-                                          ...props
-                                        }) {
+  copyElements,
+  pasteElements,
+  cutElements,
+  selectedElements,
+  clipboard,
+  onClose,
+  top,
+  left,
+  right,
+  bottom,
+  ...props
+}) {
   const { setNodes, setEdges } = useReactFlow();
 
   // const rotateSelectedNodes = useCallback(
@@ -43,22 +43,20 @@ export default function PaneContextMenu({
   // );
 
   const deleteSelectedElements = useCallback(() => {
-    const selectedNodeIds = new Set(selectedElements.nodes.map(n => n.id));
-    const selectedEdgeIds = new Set(selectedElements.edges.map(e => e.id));
+    const selectedNodeIds = new Set(selectedElements.nodes.map((n) => n.id));
+    const selectedEdgeIds = new Set(selectedElements.edges.map((e) => e.id));
 
-    setNodes(nodes =>
-      nodes.filter(node => !selectedNodeIds.has(node.id))
-    );
+    setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
 
-    setEdges(edges =>
-      edges.filter(edge =>
-        !selectedEdgeIds.has(edge.id) &&
-        !selectedNodeIds.has(edge.source) &&
-        !selectedNodeIds.has(edge.target)
-      )
+    setEdges((edges) =>
+      edges.filter(
+        (edge) =>
+          !selectedEdgeIds.has(edge.id) &&
+          !selectedNodeIds.has(edge.source) &&
+          !selectedNodeIds.has(edge.target),
+      ),
     );
   }, [selectedElements, setNodes, setEdges]);
-
 
   return (
     <div

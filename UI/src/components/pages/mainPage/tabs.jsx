@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
 import { initializeTabHistory } from "../../utils/initializeTabHistory.js";
-import { calculateContextMenuPosition} from "../../utils/calculateContextMenuPosition.js";
+import { calculateContextMenuPosition } from "../../utils/calculateContextMenuPosition.js";
 
 export default function TabsContainer({
   tabs,
@@ -73,7 +73,10 @@ export default function TabsContainer({
 
   const handleContextMenu = (e, tabId) => {
     e.preventDefault();
-    const menuPosition = calculateContextMenuPosition(e, ref.current.getBoundingClientRect());
+    const menuPosition = calculateContextMenuPosition(
+      e,
+      ref.current.getBoundingClientRect(),
+    );
     setContextMenu({
       tabId: tabId,
       top: menuPosition.top,

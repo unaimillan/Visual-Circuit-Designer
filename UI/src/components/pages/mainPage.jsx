@@ -136,11 +136,15 @@ export default function Main() {
   const ignoreChangesRef = useRef(false);
 
   const editableNode = useMemo(() => {
-    const selectedNodes = nodes.filter(n => n.selected);
-    const selectedEdges = edges.filter(e => e.selected);
+    const selectedNodes = nodes.filter((n) => n.selected);
+    const selectedEdges = edges.filter((e) => e.selected);
     if (selectedNodes.length === 1 && selectedEdges.length === 0) {
       const node = selectedNodes[0];
-      if (["inputNodeSwitch", "inputNodeButton", "outputNodeLed"].includes(node.type)) {
+      if (
+        ["inputNodeSwitch", "inputNodeButton", "outputNodeLed"].includes(
+          node.type,
+        )
+      ) {
         return node;
       }
     }
@@ -151,10 +155,8 @@ export default function Main() {
     if (!editableNode) return;
 
     const newName = e.target.value;
-    setNodes(nds =>
-      nds.map(n =>
-        n.id === editableNode.id ? { ...n, name: newName } : n
-      )
+    setNodes((nds) =>
+      nds.map((n) => (n.id === editableNode.id ? { ...n, name: newName } : n)),
     );
     setTimeout(recordHistory, 0);
   };
@@ -654,31 +656,22 @@ export default function Main() {
 
           {editableNode && (
             <div className="name-editor">
-              <label>
-                Export Name (Optional)
-              </label>
+              <label>Export Name (Optional)</label>
               <input
                 type="text"
-                value={editableNode.name || ''}
+                value={editableNode.name || ""}
                 onChange={handleNameChange}
                 autoFocus
               />
-              <button
-                className="close-button"
-                onClick={deselectAll}
-              >
+              <button className="close-button" onClick={deselectAll}>
                 Close
               </button>
             </div>
           )}
 
-          {menu && menu.type === "node" && (
-            <NodeContextMenu {...menu} />
-          )}
+          {menu && menu.type === "node" && <NodeContextMenu {...menu} />}
 
-          {menu && menu.type === "edge" && (
-            <EdgeContextMenu {...menu} />
-          )}
+          {menu && menu.type === "edge" && <EdgeContextMenu {...menu} />}
 
           {menu && menu.type === "pane" && (
             <PaneContextMenu

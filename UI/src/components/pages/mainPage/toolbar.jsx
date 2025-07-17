@@ -96,7 +96,10 @@ export default function Toolbar({
           disabled={activeAction === "hand"}
           title={"Hand (Ctrl+2)"}
         >
-          <IconToolbarHand SVGClassName="toolbar-button-icon" draggable="false" />
+          <IconToolbarHand
+            SVGClassName="toolbar-button-icon"
+            draggable="false"
+          />
         </button>
 
         <button
@@ -117,7 +120,10 @@ export default function Toolbar({
           disabled={activeAction === "text"}
           title={"Text (Ctrl+4)"}
         >
-          <IconToolbarText SVGClassName="toolbar-button-icon" draggable="false" />
+          <IconToolbarText
+            SVGClassName="toolbar-button-icon"
+            draggable="false"
+          />
         </button>
 
         <div className="toolbar-separator"></div>
