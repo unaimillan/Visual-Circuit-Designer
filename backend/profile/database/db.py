@@ -1,6 +1,40 @@
-from backend.profile.config import MONGO_URI
-from motor.motor_asyncio import AsyncIOMotorClient
+import os
+from typing import Any, AsyncGenerator
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
-client = AsyncIOMotorClient(MONGO_URI)
-db = client["visual-circuit-designer"]
-user_collection = db["Projects"]
+from backend.profile.database.postgres_users import PostgreSQLUserDatabase
+from backend.profile.models import User
+from backend.profile.schemas import UserDB, UserProfile
+
+try:
+    DATABASE_URL = (
+        f"postgresql+asyncpg://{os.environ['POSTGRES_USER']}:"
+        f"{os.environ['POSTGRES_PASSWORD']}@"
+        f"{os.environ['POSTGRES_HOST']}:"
+        f"{os.environ['POSTGRES_PORT']}/"
+        f"{os.environ['POSTGRES_DB']}"
+    )
+except KeyError:
+    DATABASE_URL = (
+        f"postgresql+asyncpg://vcd:"
+        f"pgpwd4vcd@"
+        f"localhost:"
+        f"5432/"
+        f"vcd"
+    )
+
+engine = create_async_engine(DATABASE_URL, echo=True)
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+
+async def get_async_session() -> AsyncGenerator[AsyncSession, Any]:
+    async with async_session_maker() as session:
+        yield session
+
+async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    yield PostgreSQLUserDatabase(
+        session=session,
+        user_model=User,  # ваша SQLAlchemy модель
+        user_db_model=UserDB  # ваша Pydantic схема
+    )

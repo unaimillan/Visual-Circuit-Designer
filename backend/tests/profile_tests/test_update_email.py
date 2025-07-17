@@ -7,7 +7,7 @@ async def test_get_info(auth_client, registered_user, profile_client):
     user_data, user = registered_user
 
     login_response = await auth_client.post(
-        "/auth/login",
+        "http://auth:8080/api/auth/login",
         data={
             "username": user_data["email"],
             "password": user_data["password"]

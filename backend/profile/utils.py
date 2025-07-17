@@ -1,3 +1,6 @@
+import base64
+import json
+
 from fastapi import Depends, HTTPException, Header
 import httpx
 
@@ -14,3 +17,13 @@ async def get_current_user_id(authorization: str = Header(...)) -> str:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
     return response.json().get("user_id")
+
+def decode_jwt(token: str):
+    try:
+        payload_part = token.split('.')[1]
+        padded = payload_part + '=' * (-len(payload_part) % 4)
+        decoded_bytes = base64.urlsafe_b64decode(padded)
+        payload = json.loads(decoded_bytes)
+        return payload
+    except Exception as e:
+        raise ValueError(f"Invalid token format: {e}")
