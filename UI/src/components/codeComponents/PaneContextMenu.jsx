@@ -5,6 +5,7 @@ export default function PaneContextMenu({
                                           copyElements,
                                           pasteElements,
                                           selectedElements,
+                                          clipboard,
                                           onClose,
                                           top,
                                           left,
@@ -77,6 +78,7 @@ export default function PaneContextMenu({
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}
         onClick={pasteElements}
+        disabled={!clipboard?.nodes?.length}
       >
         Paste here
       </button>
