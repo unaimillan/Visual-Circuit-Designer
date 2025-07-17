@@ -76,7 +76,7 @@ export default function Toolbar({
           className={`toolbarButton ${activeAction === "cursor" ? "active" : ""}`}
           onClick={() => {
             setActiveAction("cursor");
-            setPanOnDrag([2]);
+            setPanOnDrag(false);
           }}
           disabled={activeAction === "cursor"}
           title={"Cursor (Ctrl+1)"}

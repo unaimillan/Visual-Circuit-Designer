@@ -28,6 +28,7 @@ import Settings from "./mainPage/settings.jsx";
 
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
+import PaneContextMenu from "../codeComponents/PaneContextMenu.jsx";
 import { nodeTypes } from "../codeComponents/nodes.js";
 
 import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
@@ -126,7 +127,7 @@ export default function Main() {
   const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [panOnDrag, setPanOnDrag] = useState([2]);
+  const [panOnDrag, setPanOnDrag] = useState(false);
 
   const socketRef = useRef(null);
 
@@ -422,6 +423,8 @@ export default function Main() {
     [reactFlowInstance, setNodes, deselectAll, recordHistory],
   );
 
+  const closeMenu = () => setMenu(null);
+
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
@@ -445,7 +448,6 @@ export default function Main() {
       id: edge.id,
       name: edge.type,
       type: "edge",
-      position: menuPosition,
       top: menuPosition.top,
       left: menuPosition.left,
       right: menuPosition.right,
@@ -453,11 +455,17 @@ export default function Main() {
     });
   }, []);
 
-  const onPaneContextMenu = useCallback((event, edge) => {
+  const onPaneContextMenu = useCallback((event) => {
     event.preventDefault();
-    const pane = ref.current.getBoundingClientRect();
-    const menuPosition = calculateContextMenuPosition(event, pane);
-    setMenu(calculateContextMenuPosition(event, edge, pane, "pane"));
+    const paneRect = ref.current.getBoundingClientRect();
+    const menuPosition = calculateContextMenuPosition(event, paneRect);
+    setMenu({
+      type: "pane",
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
+    });
   }, []);
 
   //Allows user to download circuit JSON
@@ -572,9 +580,9 @@ export default function Main() {
             defaultEdgeOptions={{
               type: activeWire,
             }}
-            onPaneContextMenu={onPaneContextMenu}
             onNodeContextMenu={onNodeContextMenu}
             onEdgeContextMenu={onEdgeContextMenu}
+            onPaneContextMenu={onPaneContextMenu}
             onConnect={onConnect}
             onNodeDragStop={onNodeDragStop}
             onDrop={onDrop}
@@ -632,6 +640,16 @@ export default function Main() {
             <EdgeContextMenu {...menu} />
           )}
 
+          {menu && menu.type === "pane" && (
+            <PaneContextMenu
+              {...menu}
+              selectedElements={getSelectedElements()}
+              copyElements={copyElements}
+              pasteElements={pasteElements}
+              onClose={closeMenu}
+            />
+          )}
+
           <Toaster
             position={toastPosition}
             toastOptions={{
@@ -687,9 +705,7 @@ export default function Main() {
 
           <div
             className={`backdrop ${menu ? "show" : ""}`}
-            onClick={() => {
-              setMenu(null);
-            }}
+            onClick={() => closeMenu()}
           />
 
           <Settings
@@ -707,7 +723,6 @@ export default function Main() {
             currentLogLevel={logLevel}
             setLogLevel={setLogLevel}
             closeSettings={() => {
-              setMenu(null);
               setOpenSettings(false);
             }}
           />
