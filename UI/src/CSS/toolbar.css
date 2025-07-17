@@ -31,6 +31,14 @@
   border-radius: 0.33rem;
 }
 
+.toolbarButton:disabled .toolbarButtonIcon {
+  color: var(--secondary-text);
+}
+
+.toolbarButton:disabled.active .toolbarButtonIcon {
+  color: var(--main-0);
+}
+
 .toolbarButton:not(:disabled):hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);

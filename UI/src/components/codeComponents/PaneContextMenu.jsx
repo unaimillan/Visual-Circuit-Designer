@@ -69,6 +69,7 @@ export default function PaneContextMenu({
         style={{ margin: "0.5rem" }}
         className={"contextMenuButton"}
         onClick={copyElements}
+        disabled={!selectedElements?.nodes?.length}
       >
         Copy
       </button>

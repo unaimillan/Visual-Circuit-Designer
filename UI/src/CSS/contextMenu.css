@@ -20,8 +20,21 @@
   background: var(--menu-lighter);
 }
 
-.contextMenuButton:hover {
-  background: var(--main-4);
+.contextMenuButton:disabled {
+  color: var(--secondary-text);
+}
+
+.contextMenuButton:not(:disabled):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.contextMenuButton:not(:disabled):active {
+  transform: translateY(0px);
+  transition: 0.05s ease-out;
+  background-color: var(--select-2);
+  box-shadow: none;
+  border: var(--select-1) solid 0.05rem;
 }
 
 .selectWireType {
