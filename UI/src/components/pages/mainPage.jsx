@@ -430,9 +430,10 @@ export default function Main() {
     const pane = ref.current.getBoundingClientRect();
     const menuPosition = calculateContextMenuPosition(event, pane);
     setMenu({
-      id: node.id,
-      name: node.type,
-      type: "node",
+      // id: node.id,
+      // name: node.type,
+      // type: "node",
+      type: "pane",
       top: menuPosition.top,
       left: menuPosition.left,
       right: menuPosition.right,
@@ -445,9 +446,10 @@ export default function Main() {
     const pane = ref.current.getBoundingClientRect();
     const menuPosition = calculateContextMenuPosition(event, pane);
     setMenu({
-      id: edge.id,
-      name: edge.type,
-      type: "edge",
+      // id: edge.id,
+      // name: edge.type,
+      // type: "edge",
+      type: "pane",
       top: menuPosition.top,
       left: menuPosition.left,
       right: menuPosition.right,
