@@ -2,8 +2,8 @@ import httpx
 import pytest
 import pytest_asyncio
 
-from backend.app.db import user_collection
-from backend.app.main import app
+from backend.auth.db import user_collection
+from backend.auth.main import app
 
 
 @pytest_asyncio.fixture

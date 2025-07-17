@@ -9,11 +9,11 @@ from fastapi_users.manager import UserManagerDependency, BaseUserManager
 from pymongo.errors import DuplicateKeyError
 from starlette.responses import JSONResponse
 
-from ..app.schema import UserCreate, UserRead, UserUpdate
-from ..app.models import UserDB
-from ..app.db import user_collection
-from ..app.users.mongo_users import MongoUserDatabase
-from ..app.users.manager import MyUserManager, auth_backend, refresh_backend
+from ..auth.schema import UserCreate, UserRead, UserUpdate
+from ..auth.models import UserDB
+from ..auth.db import user_collection
+from ..auth.users.mongo_users import MongoUserDatabase
+from ..auth.users.manager import MyUserManager, auth_backend, refresh_backend
 from uuid import UUID
 
 user_db = MongoUserDatabase(user_collection)
@@ -30,7 +30,7 @@ fastapi_users = FastAPIUsers[UserDB, UUID](
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/jwt/login")
-get_current_user = fastapi_users.current_user(active=False, verified=False)
+get_current_user = fastapi_users.current_user(active=False)
 
 
 app = FastAPI()

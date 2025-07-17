@@ -1,5 +1,5 @@
 from fastapi_users.db.base import BaseUserDatabase
-from backend.app.models import UserDB
+from backend.auth.models import UserDB
 from motor.motor_asyncio import AsyncIOMotorCollection
 from uuid import UUID, uuid4
 from typing import Optional, Dict, Any
@@ -25,9 +25,6 @@ class MongoUserDatabase(BaseUserDatabase[UserDB, UUID]):
         if "id" not in user:
             print("[mongo_users] User does not have an ID, generating one...")
             user["id"] = str(uuid4())
-        user.setdefault("is_active", True)
-        user.setdefault("is_superuser", False)
-        user.setdefault("is_verified", False)
         await self.collection.insert_one(user)
         return user
 
@@ -39,17 +36,13 @@ class MongoUserDatabase(BaseUserDatabase[UserDB, UUID]):
         if update_dict:
             user_dict = user.model_dump()
             user_dict.update(update_dict)
-            await self.collection.replace_one(
-                {"id": str(user.id)},
-                user_dict
-            )
-            return UserDB(**user_dict)
         else:
-            await self.collection.replace_one(
-                {"id": str(user.id)},
-                user.model_dump()
-            )
-            return user
+            user_dict = user.model_dump()
+
+        user_dict["id"] = str(user_dict["id"])
+
+        await self.collection.replace_one({"id": user_dict["id"]}, user_dict)
+        return UserDB(**user_dict)
 
     async def get_by_username(self, username: str) -> Optional[UserDB]:
         user = await self.collection.find_one({"username": username})

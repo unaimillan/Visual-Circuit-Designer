@@ -1,7 +1,7 @@
 import pytest
 from fastapi import status
 
-from backend.app.main import app
+from backend.auth.main import app
 
 
 @pytest.mark.asyncio

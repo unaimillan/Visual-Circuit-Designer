@@ -4,11 +4,11 @@ from uuid import UUID, uuid4
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users.manager import BaseUserManager, UUIDIDMixin
 
-from backend.app.models import UserDB
+from backend.auth.models import UserDB
 from fastapi_users.authentication import JWTStrategy, AuthenticationBackend, CookieTransport, BearerTransport
 from fastapi_users.password import PasswordHelper
-from backend.app.config import SECRET
-from backend.app.schema import UserCreate
+from backend.auth.config import SECRET
+from backend.auth.schema import UserCreate
 import logging
 
 
@@ -58,7 +58,6 @@ class MyUserManager(UUIDIDMixin, BaseUserManager[UserDB, UUID]):
 
         user_dict["is_active"] = True
         user_dict["is_superuser"] = False
-        user_dict["is_verified"] = False
         user_dict.pop("password", None)
 
         created_user = await self.user_db.create(user_dict)
