@@ -646,6 +646,7 @@ export default function Main() {
               selectedElements={getSelectedElements()}
               copyElements={copyElements}
               pasteElements={pasteElements}
+              cutElements={cutElements}
               onClose={closeMenu}
               clipboard={clipboard}
             />

@@ -4,6 +4,7 @@ import { useReactFlow } from "@xyflow/react";
 export default function PaneContextMenu({
                                           copyElements,
                                           pasteElements,
+                                          cutElements,
                                           selectedElements,
                                           clipboard,
                                           onClose,
@@ -15,31 +16,31 @@ export default function PaneContextMenu({
                                         }) {
   const { setNodes, setEdges } = useReactFlow();
 
-  const rotateSelectedNodes = useCallback(
-    (angle) => {
-      console.log("selectedElements", selectedElements);
-      if (!selectedElements?.nodes?.length) return;
-      const selectedNodeIds = new Set(selectedElements.nodes.map((n) => n.id));
-
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (selectedNodeIds.has(node.id)) {
-            const currentRotation = node.data?.rotation || 0;
-            const newRotation = (currentRotation + angle + 360) % 360;
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                rotation: newRotation,
-              },
-            };
-          }
-          return node;
-        })
-      );
-    },
-    [selectedElements, setNodes],
-  );
+  // const rotateSelectedNodes = useCallback(
+  //   (angle) => {
+  //     console.log("selectedElements", selectedElements);
+  //     if (!selectedElements?.nodes?.length) return;
+  //     const selectedNodeIds = new Set(selectedElements.nodes.map((n) => n.id));
+  //
+  //     setNodes((nodes) =>
+  //       nodes.map((node) => {
+  //         if (selectedNodeIds.has(node.id)) {
+  //           const currentRotation = node.data?.rotation || 0;
+  //           const newRotation = (currentRotation + angle + 360) % 360;
+  //           return {
+  //             ...node,
+  //             data: {
+  //               ...node.data,
+  //               rotation: newRotation,
+  //             },
+  //           };
+  //         }
+  //         return node;
+  //       })
+  //     );
+  //   },
+  //   [selectedElements, setNodes],
+  // );
 
   const deleteSelectedElements = useCallback(() => {
     const selectedNodeIds = new Set(selectedElements.nodes.map(n => n.id));
@@ -81,6 +82,14 @@ export default function PaneContextMenu({
         disabled={!clipboard?.nodes?.length}
       >
         Paste here
+      </button>
+      <button
+        style={{ margin: "0.5rem" }}
+        className={"contextMenuButton"}
+        onClick={cutElements}
+        disabled={!selectedElements?.nodes?.length}
+      >
+        Cut
       </button>
       <button
         style={{ margin: "0.5rem" }}
