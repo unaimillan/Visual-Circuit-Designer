@@ -1,0 +1,32 @@
+.name-editor {
+  position: absolute;
+  bottom: 0;
+  left: 80px;
+  padding: 12px;
+  background: var(--menu-lighter);
+  color: #fff;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.name-editor label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.name-editor input {
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.name-editor .close-button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: #444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}

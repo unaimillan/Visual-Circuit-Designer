@@ -5,15 +5,16 @@ import HelloPage from "./components/pages/hello-page.jsx";
 import "@xyflow/react/dist/style.css";
 
 import "./CSS/variables.css";
-import "./CSS/App.css";
+import "./CSS/app.css";
 import "./CSS/settings.css";
 import "./CSS/toolbar.css";
 import "./CSS/dnd.css";
 import "./CSS/backdrop.css";
-import "./CSS/circuitsMenu.css";
-import "./CSS/contextMenu.css";
+import "./CSS/circuits-menu.css";
+import "./CSS/context-menu.css";
 import "./CSS/button.css";
 import "./CSS/tabs.css";
+import "./CSS/name-editor.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

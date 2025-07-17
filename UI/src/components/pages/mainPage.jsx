@@ -135,6 +135,44 @@ export default function Main() {
 
   const ignoreChangesRef = useRef(false);
 
+  const [selectedNode, setSelectedNode] = useState(null);
+
+  const onSelectionChange = useCallback(
+    ({ nodes: selectedNodes, edges: selectedEdges }) => {
+      if (selectedNodes.length === 1 && selectedEdges.length === 0) {
+        setSelectedNode(selectedNodes[0]);
+        console.log(selectedNodes[0].name);
+      } else {
+        setSelectedNode(null);
+      }
+    },
+    []
+  );
+
+  const handleNameChange = (e) => {
+    const newName = e.target.value;
+    setSelectedNode((prev) => ({
+      ...prev,
+      name: newName,
+    }));
+    setNodes((nds) =>
+      nds.map((n) =>
+        n.id === selectedNode.id
+          ? {
+            ...n,
+            name: newName,
+          }
+          : n
+      )
+    );
+  };
+
+  const canChangeName =
+    selectedNode &&
+    ["inputNodeSwitch", "inputNodeButton", "outputNodeLed"].includes(
+      selectedNode.type
+    );
+
   const handleOpenClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -425,14 +463,11 @@ export default function Main() {
 
   const closeMenu = () => setMenu(null);
 
-  const onNodeContextMenu = useCallback((event, node) => {
+  const onNodeContextMenu = useCallback((event) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
     const menuPosition = calculateContextMenuPosition(event, pane);
     setMenu({
-      // id: node.id,
-      // name: node.type,
-      // type: "node",
       type: "pane",
       top: menuPosition.top,
       left: menuPosition.left,
@@ -441,14 +476,11 @@ export default function Main() {
     });
   }, []);
 
-  const onEdgeContextMenu = useCallback((event, edge) => {
+  const onEdgeContextMenu = useCallback((event) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
     const menuPosition = calculateContextMenuPosition(event, pane);
     setMenu({
-      // id: edge.id,
-      // name: edge.type,
-      // type: "edge",
       type: "pane",
       top: menuPosition.top,
       left: menuPosition.left,
@@ -579,6 +611,7 @@ export default function Main() {
             edges={edges}
             onNodesChange={onNodesChangeFromHook}
             onEdgesChange={onEdgesChangeFromHook}
+            onSelectionChange={onSelectionChange}
             defaultEdgeOptions={{
               type: activeWire,
             }}
@@ -633,6 +666,25 @@ export default function Main() {
               />
             )}
           </ReactFlow>
+
+          {canChangeName && (
+            <div className="name-editor">
+              <label>
+                Export Name (Optional)
+              </label>
+              <input
+                type="text"
+                value={selectedNode.name || ''}
+                onChange={handleNameChange}
+              />
+              <button
+                className="close-button"
+                onClick={() => setSelectedNode(null)}
+              >
+                Close
+              </button>
+            </div>
+          )}
 
           {menu && menu.type === "node" && (
             <NodeContextMenu {...menu} />
