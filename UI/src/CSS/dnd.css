@@ -1,5 +1,5 @@
 /*______DragAndDrop______*/
-.dndnode {
+.menu-element {
   padding: 8px;
   border: var(--main-4) 0.05rem solid;
   border-radius: 0.5rem;
@@ -11,18 +11,18 @@
   user-select: none;
 }
 
-.dndnode:hover {
+.menu-element:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-.dndnode:active {
+.menu-element:active {
   background: var(--main-4);
   transform: translateY(0px);
   box-shadow: none;
 }
 
-.dndnode svg {
+.menu-element svg {
   width: 50px;
   height: auto;
   user-select: none;
@@ -60,7 +60,7 @@
   justify-content: center;
 }
 
-.switchNodeButton {
+.switch-node-button {
   width: 70%;
   height: 70%;
 }

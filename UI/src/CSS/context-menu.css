@@ -8,7 +8,7 @@
   color: var(--main-0);
 }
 
-.contextMenuButton {
+.context-menu-button {
   border: 1px solid var(--main-4);
   display: block;
   padding: 0.5rem;
@@ -20,16 +20,16 @@
   background: var(--menu-lighter);
 }
 
-.contextMenuButton:disabled {
+.context-menu-button:disabled {
   color: var(--secondary-text);
 }
 
-.contextMenuButton:not(:disabled):hover {
+.context-menu-button:not(:disabled):hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-.contextMenuButton:not(:disabled):active {
+.context-menu-button:not(:disabled):active {
   transform: translateY(0px);
   transition: 0.05s ease-out;
   background-color: var(--select-2);
@@ -37,7 +37,7 @@
   border: var(--select-1) solid 0.05rem;
 }
 
-.selectWireType {
+.select-wire-type {
   padding: 0.5rem;
   margin: 0.5rem;
 }

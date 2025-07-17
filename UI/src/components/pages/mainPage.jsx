@@ -731,23 +731,23 @@ export default function Main() {
           />
 
           <button
-            className="openCircuitsMenuButton"
+            className="open-circuits-menu-button"
             onClick={() => setCircuitsMenuState(!circuitsMenuState)}
             title={"Circuits menu"}
           >
             <IconMenu
-              SVGClassName="openCircuitsMenuButtonIcon"
+              SVGClassName="open-circuits-menu-button-icon"
               draggable="false"
             />
           </button>
 
           <button
-            className="openSettingsButton"
+            className="open-settings-button"
             onClick={() => setOpenSettings(true)}
             title={"Settings"}
           >
             <IconSettings
-              SVGClassName="openSettingsButtonIcon"
+              SVGClassName="open-settings-button-icon"
               draggable="false"
             />
           </button>

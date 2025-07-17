@@ -69,7 +69,7 @@ export default function PaneContextMenu({
     >
       <button
         style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
+        className={"context-menu-button"}
         onClick={copyElements}
         disabled={!selectedElements?.nodes?.length}
       >
@@ -77,7 +77,7 @@ export default function PaneContextMenu({
       </button>
       <button
         style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
+        className={"context-menu-button"}
         onClick={pasteElements}
         disabled={!clipboard?.nodes?.length}
       >
@@ -85,7 +85,7 @@ export default function PaneContextMenu({
       </button>
       <button
         style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
+        className={"context-menu-button"}
         onClick={cutElements}
         disabled={!selectedElements?.nodes?.length}
       >
@@ -93,7 +93,7 @@ export default function PaneContextMenu({
       </button>
       <button
         style={{ margin: "0.5rem" }}
-        className={"contextMenuButton"}
+        className={"context-menu-button"}
         onClick={deleteSelectedElements}
       >
         Delete
