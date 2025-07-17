@@ -67,9 +67,20 @@ export default function TabsContainer({
   const updateTabTitle = (id, newTitle) => {
     const updated = tabs.map((t) => {
       if (t.id === id) {
-        const unselectedNodes = t.nodes.map(node => ({ ...node, selected: false }));
-        const unselectedEdges = t.edges.map(edge => ({ ...edge, selected: false }));
-        return { ...t, title: newTitle, nodes: unselectedNodes, edges: unselectedEdges };
+        const unselectedNodes = t.nodes.map((node) => ({
+          ...node,
+          selected: false,
+        }));
+        const unselectedEdges = t.edges.map((edge) => ({
+          ...edge,
+          selected: false,
+        }));
+        return {
+          ...t,
+          title: newTitle,
+          nodes: unselectedNodes,
+          edges: unselectedEdges,
+        };
       } else {
         return t;
       }
