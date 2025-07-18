@@ -1,9 +1,11 @@
 from pydantic import EmailStr
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict
 from uuid import UUID
 from fastapi_users import schemas, models
 
+
+# Users schemas
 class UserProfile(schemas.BaseUser):
     id: int
     username: str
@@ -42,10 +44,18 @@ class UpdateEmail(schemas.BaseModel):
 
 class UpdatePassword(schemas.BaseModel):
     password: str
-    
+
+
+# Projects schemas
 class Project(schemas.BaseModel):
-    pid: UUID
     name: str
-    date_created: str
-    circuit: dict
-    verilog: str
+    circuit: Optional[Dict] = None
+    verilog: Optional[str] = None
+    custom_nodes: Optional[Dict] = None
+
+class ProjectDB(Project):
+    pid: int
+    owner_id: int
+
+    class Config:
+        from_attributes = True

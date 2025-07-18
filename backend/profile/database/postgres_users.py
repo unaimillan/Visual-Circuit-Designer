@@ -1,5 +1,6 @@
 from typing import Any, Dict, Optional, Type, TypeVar
 from fastapi_users.db.base import BaseUserDatabase
+from pydantic import EmailStr
 from sqlalchemy import select, delete, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.profile.models import User as UserModel  # SQLAlchemy модель
@@ -44,7 +45,6 @@ class PostgreSQLUserDatabase(BaseUserDatabase[UP, int]):
         return self._convert_to_userdb(user)
 
     async def create(self, user_dict: Dict[str, Any]) -> UP:
-        # Удаляем ID если он есть, так как он генерируется базой
         user_dict.pop("id", None)
 
         stmt = insert(self.user_model).values(**user_dict).returning(self.user_model)
@@ -56,7 +56,7 @@ class PostgreSQLUserDatabase(BaseUserDatabase[UP, int]):
     async def update(
             self,
             user: UP,
-            update_dict: Dict[str, Any]
+            update_dict: Dict[str, EmailStr | str]
     ) -> UP:
         stmt = (
             update(self.user_model)

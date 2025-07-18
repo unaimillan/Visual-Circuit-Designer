@@ -1,7 +1,7 @@
-from sqlalchemy import String, Integer, text, Boolean
+from sqlalchemy import String, Integer, text, Boolean, JSON
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
-from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.schema import Column, ForeignKey
 
 Base = declarative_base()
 
@@ -20,12 +20,24 @@ class User(Base):
 
     # @property
     # def is_active(self) -> bool:
-    #     return True  # Все пользователи активны
+    #     return True
     #
     # @property
     # def is_superuser(self) -> bool:
-    #     return False  # Нет суперпользователей
+    #     return False
     #
     # @property
     # def is_verified(self) -> bool:
-    #     return True  # Считаем всех пользователей верифицированными
+    #     return True
+
+
+class ProjectModel(Base):
+    __tablename__ = "projects"
+
+    pid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    name: Mapped[str] = mapped_column(String(100))
+    circuit: Mapped[dict] = mapped_column(JSON, nullable=True)
+    custom_nodes: Mapped[dict] = mapped_column(JSON, nullable=True)
+    verilog: Mapped[dict] = mapped_column(String(10000), nullable=True)
+    created_at: Mapped[str] = mapped_column(TIMESTAMP(timezone=True), server_default=text("now()"))
