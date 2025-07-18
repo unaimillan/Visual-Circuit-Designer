@@ -65,6 +65,7 @@ import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 import { getEditableNode } from "../utils/getEditableNode.js";
+import { handleNameChange } from "../utils/handleNameChange.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -141,15 +142,7 @@ export default function Main() {
     [nodes, edges],
   );
 
-  const handleNameChange = (e) => {
-    if (!editableNode) return;
-
-    const newName = e.target.value;
-    setNodes((nds) =>
-      nds.map((n) => (n.id === editableNode.id ? { ...n, name: newName } : n)),
-    );
-    setTimeout(recordHistory, 0);
-  };
+  const onNameChange = (e) => handleNameChange(e, editableNode, setNodes, recordHistory);
 
   const handleOpenClick = () => {
     if (fileInputRef.current) {
@@ -650,7 +643,7 @@ export default function Main() {
               <input
                 type="text"
                 value={editableNode.name || ""}
-                onChange={handleNameChange}
+                onChange={onNameChange}
                 autoFocus
               />
               <button className="close-button" onClick={deselectAll}>
