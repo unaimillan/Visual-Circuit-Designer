@@ -644,6 +644,12 @@ export default function Main() {
                 type="text"
                 value={editableNode.name || ""}
                 onChange={onNameChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    deselectAll();
+                  }
+                }}
                 autoFocus
               />
               <button className="close-button" onClick={deselectAll}>
