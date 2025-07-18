@@ -142,7 +142,8 @@ export default function Main() {
     [nodes, edges],
   );
 
-  const onNameChange = (e) => handleNameChange(e, editableNode, setNodes, recordHistory);
+  const onNameChange = (e) =>
+    handleNameChange(e, editableNode, setNodes, recordHistory);
 
   const handleOpenClick = () => {
     if (fileInputRef.current) {

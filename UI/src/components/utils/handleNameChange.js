@@ -5,8 +5,8 @@ export function handleNameChange(event, editableNode, setNodes, recordHistory) {
 
   setNodes((prevNodes) =>
     prevNodes.map((node) =>
-      node.id === editableNode.id ? { ...node, name: newName } : node
-    )
+      node.id === editableNode.id ? { ...node, name: newName } : node,
+    ),
   );
 
   setTimeout(recordHistory, 0);
