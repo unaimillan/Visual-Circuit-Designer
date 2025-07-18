@@ -64,7 +64,7 @@ import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
 import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
-import { getEditableNode} from "../utils/getEditableNode.js";
+import { getEditableNode } from "../utils/getEditableNode.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -136,7 +136,10 @@ export default function Main() {
 
   const ignoreChangesRef = useRef(false);
 
-  const editableNode = useMemo(() => getEditableNode(nodes, edges), [nodes, edges]);
+  const editableNode = useMemo(
+    () => getEditableNode(nodes, edges),
+    [nodes, edges],
+  );
 
   const handleNameChange = (e) => {
     if (!editableNode) return;

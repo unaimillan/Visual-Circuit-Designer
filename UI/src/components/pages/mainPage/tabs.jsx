@@ -110,7 +110,6 @@ export default function TabsContainer({
     }
   };
 
-
   const handleBlur = () => {
     if (editingTabId !== null) {
       const tab = tabs.find((t) => t.id === editingTabId);
