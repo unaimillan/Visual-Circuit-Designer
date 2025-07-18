@@ -64,6 +64,7 @@ import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
 import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
+import CreateCustomBlock from "./mainPage/customCircuit.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -700,7 +701,7 @@ export default function Main() {
               },
               duration: 2000,
               error: {
-                duration: 10000,
+                duration: 1000,
               },
               warning: {
                 className: "toast-warning",
@@ -742,6 +743,13 @@ export default function Main() {
           <div
             className={`backdrop ${menu ? "show" : ""}`}
             onClick={() => closeMenu()}
+          />
+
+          <CreateCustomBlock
+              nodes={nodes}
+              edges={edges}
+            onCreateFromFile={() => {console.log("создать из файла")}}
+            onCreateFromCurrent={() => {console.log("создать из текущего")}}
           />
 
           <Settings
