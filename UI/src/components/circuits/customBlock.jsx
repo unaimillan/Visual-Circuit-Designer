@@ -1,102 +1,112 @@
-import { useState, useRef, useEffect } from "react";
-import { Position } from "@xyflow/react";
-import CustomHandle from "../../codeComponents/CustomHandle.jsx";
-import { useSimulateState } from "../../pages/mainPage.jsx";
-import { useRotatedNode } from "../../hooks/useRotatedNode.jsx";
+import React, { useState } from "react";
+import { Position, useReactFlow } from "@xyflow/react";
+import CustomHandle from "../codeComponents/CustomHandle.jsx";
+import { useRotatedNode } from "../hooks/useRotatedNode.jsx";
 
-function InputNodeButton({ id, data, isConnectable }) {
-    const { simulateState, updateInputState } = useSimulateState();
-    const [inputState, setInputState] = useState(data.value || false);
-    const cooldownRef = useRef(false);
-    const delay = 500;
+function CustomCircuitNode({ id, data, isConnectable }) {
+    const { setNodes, setEdges } = useReactFlow();
+    const [expanded, setExpanded] = useState(false);
     const rotation = data.rotation || 0;
 
-    const { getHandlePosition, RotatedNodeWrapper, triggerUpdate } =
-        useRotatedNode(id, rotation, 60, 80);
+    const { getHandlePosition, RotatedNodeWrapper } =
+        useRotatedNode(id, rotation, 120, 80);
 
-    const getHandleStyle = () => {
-        switch (rotation) {
-            case 90:
-                return { top: 32, left: 59 };
-            case 180:
-                return { top: 38.5, left: 59 };
-            case 270:
-                return { top: 39.5, left: 59 };
-            default:
-                return { top: 40, left: 52 };
-        }
+    // Обработчик двойного клика для развертывания схемы
+    const handleDoubleClick = () => {
+        if (!data.originalSchema) return;
+
+        // Рассчитываем позицию для новых узлов
+        const position = {
+            x: data.position.x + 150,
+            y: data.position.y
+        };
+
+        // Создаем узлы из схемы с новыми позициями
+        const newNodes = data.originalSchema.nodes.map(node => ({
+            ...node,
+            position: {
+                x: node.position.x + position.x,
+                y: node.position.y + position.y
+            },
+            selected: false,
+            zIndex: 1000
+        }));
+
+        // Создаем соединения
+        const newEdges = [...data.originalSchema.edges];
+
+        // Добавляем новые элементы в редактор
+        setNodes(prev => [...prev, ...newNodes]);
+        setEdges(prev => [...prev, ...newEdges]);
+
+        // Удаляем кастомный узел
+        setNodes(prev => prev.filter(node => node.id !== id));
     };
 
-    // Обновлять локальное состояние при изменении data.value
-    useEffect(() => {
-        setInputState(data.value || false);
-    }, [data.value]);
-
-    // 🧼 Дополнительный триггер для обновления DOM после нажатий
-    useEffect(() => {
-        if (typeof triggerUpdate === "function") {
-            triggerUpdate();
+    // Обработчик клика по узлу
+    const handleNodeClick = (e) => {
+        if (e.detail === 2) {
+            handleDoubleClick();
         }
-    }, [inputState, rotation]);
-
-    const handleChange = (newValue) => {
-        setInputState(newValue);
-        if (simulateState === "running" && updateInputState) {
-            updateInputState(id, newValue);
-        }
-        data.value = newValue;
-    };
-
-    const handlePressDown = (e) => {
-        e.stopPropagation();
-        if (cooldownRef.current || inputState) return;
-        handleChange(true);
-    };
-
-    const handlePressUp = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if (!inputState) return;
-
-        cooldownRef.current = true;
-        setTimeout(() => {
-            handleChange(false);
-            cooldownRef.current = false;
-        }, delay);
     };
 
     return (
-        <RotatedNodeWrapper className="logic-gate">
-            <p className="input-text">Button</p>
+        <RotatedNodeWrapper
+            className="custom-circuit-node"
+            onClick={handleNodeClick}
+        >
+            <div className="node-header">
+                <div className="node-icon">⚡</div>
+                <div className="node-label">{data.label || "Custom Circuit"}</div>
+            </div>
 
-            <SvgButton
-                pressed={inputState}
-                onPressDown={handlePressDown}
-                onPressUp={handlePressUp}
-                disabled={simulateState === "idle"}
-            />
+            <div className="ports-container">
+                {/* Входные порты */}
+                <div className="input-ports">
+                    {data.inputs?.map((input, index) => (
+                        <div key={`input-${input.id}`} className="port-group">
+                            <CustomHandle
+                                type="target"
+                                position={getHandlePosition(Position.Left)}
+                                id={`input-${input.id}`}
+                                style={{
+                                    top: `${20 + index * 20}px`,
+                                    left: -5
+                                }}
+                                isConnectable={isConnectable}
+                            />
+                            <span className="port-label">{input.name}</span>
+                        </div>
+                    ))}
+                </div>
 
-            <CustomHandle
-                type="source"
-                position={getHandlePosition(Position.Right)}
-                id="output-1"
-                style={getHandleStyle("output-1")}
-                isConnectable={isConnectable}
-            />
+                {/* Выходные порты */}
+                <div className="output-ports">
+                    {data.outputs?.map((output, index) => (
+                        <div key={`output-${output.id}`} className="port-group">
+                            <span className="port-label">{output.name}</span>
+                            <CustomHandle
+                                type="source"
+                                position={getHandlePosition(Position.Right)}
+                                id={`output-${output.id}`}
+                                style={{
+                                    top: `${20 + index * 20}px`,
+                                    right: -5
+                                }}
+                                isConnectable={isConnectable}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {expanded && (
+                <div className="expanded-view">
+                    {/* Здесь можно отобразить миниатюру схемы */}
+                </div>
+            )}
         </RotatedNodeWrapper>
     );
 }
 
-const SvgButton = ({ pressed, onPressDown, onPressUp, disabled }) => {
-    return (
-        <div
-            className={`svg-button-wrapper ${disabled ? "disabled" : ""} ${pressed ? "pressed" : ""}`}
-            onPointerDownCapture={onPressDown}
-            onPointerUpCapture={onPressUp}
-        >
-            <div className={`svg-button-inner ${pressed ? "pressed" : ""}`} />
-        </div>
-    );
-};
-
-export default InputNodeButton;
+export default CustomCircuitNode;
