@@ -165,19 +165,16 @@ const Auth = () => {
 
     if (!hasErrors) {
       try {
-        const response = await fetch(
-          "http://auth:8080/api/auth/register",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name,
-              username,
-              email,
-              password,
-            }),
-          },
-        );
+        const response = await fetch("http://auth:8080/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            username,
+            email,
+            password,
+          }),
+        });
         if (response.ok) {
           navigate("/profile");
         } else if (response.status === 409) {
