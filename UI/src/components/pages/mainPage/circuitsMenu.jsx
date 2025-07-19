@@ -15,27 +15,27 @@ import { loadCustomBlocks } from "./customCircuit.jsx"; // Путь к ваши�
 // Компонент для генерации иконки кастомного блока
 const CustomBlockIcon = ({ inputs, outputs }) => {
   return (
-      <div className="custom-icon">
-        <div className="inputs">
-          {inputs.map((input, index) => (
-              <div key={index} className="input-dot" title={input.name}></div>
-          ))}
-        </div>
-        <div className="custom-block-body"></div>
-        <div className="outputs">
-          {outputs.map((output, index) => (
-              <div key={index} className="output-dot" title={output.name}></div>
-          ))}
-        </div>
+    <div className="custom-icon">
+      <div className="inputs">
+        {inputs.map((input, index) => (
+          <div key={index} className="input-dot" title={input.name}></div>
+        ))}
       </div>
+      <div className="custom-block-body"></div>
+      <div className="outputs">
+        {outputs.map((output, index) => (
+          <div key={index} className="output-dot" title={output.name}></div>
+        ))}
+      </div>
+    </div>
   );
 };
 
 export default function CircuitsMenu({
-                                       circuitsMenuState,
-                                       onDragStart,
-                                       spawnCircuit,
-                                     }) {
+  circuitsMenuState,
+  onDragStart,
+  spawnCircuit,
+}) {
   const [openIndexes, setOpenIndexes] = useState([]);
   const [customBlocks, setCustomBlocks] = useState([]);
 
@@ -53,9 +53,9 @@ export default function CircuitsMenu({
 
   const toggleItem = useCallback((index) => {
     setOpenIndexes((prevIndexes) =>
-        prevIndexes.includes(index)
-            ? prevIndexes.filter((i) => i !== index)
-            : [...prevIndexes, index]
+      prevIndexes.includes(index)
+        ? prevIndexes.filter((i) => i !== index)
+        : [...prevIndexes, index],
     );
   }, []);
 
@@ -85,84 +85,88 @@ export default function CircuitsMenu({
     },
     {
       header: "Custom Circuits",
-      gates: customBlocks.map(block => ({
+      gates: customBlocks.map((block) => ({
         id: `custom-${block.id}`, // Префикс для идентификации кастомных блоков
         label: block.name,
         icon: (props) => (
-            <CustomBlockIcon
-                inputs={block.inputs}
-                outputs={block.outputs}
-                {...props}
-            />
+          <CustomBlockIcon
+            inputs={block.inputs}
+            outputs={block.outputs}
+            {...props}
+          />
         ),
-        customData: block // Сохраняем полные данные блока для spawnCircuit
+        customData: block, // Сохраняем полные данные блока для spawnCircuit
       })),
     },
   ];
 
   // Обработчик для создания кастомного блока
-  const handleSpawnCustomCircuit = useCallback((nodeId) => {
-    // Ищем полные данные блока по ID
-    const blockId = nodeId.replace('custom-', '');
-    const block = customBlocks.find(b => b.id === blockId);
+  const handleSpawnCustomCircuit = useCallback(
+    (nodeId) => {
+      // Ищем полные данные блока по ID
+      const blockId = nodeId.replace("custom-", "");
+      const block = customBlocks.find((b) => b.id === blockId);
 
-    if (block) {
-      // Вызываем функцию spawnCircuit с полными данными схемы
-      spawnCircuit(block.originalSchema);
-    }
-  }, [customBlocks, spawnCircuit]);
+      if (block) {
+        // Вызываем функцию spawnCircuit с полными данными схемы
+        spawnCircuit(block.originalSchema);
+      }
+    },
+    [customBlocks, spawnCircuit],
+  );
 
   return (
-      <div className={`circuits-menu ${circuitsMenuState ? "open" : ""}`}>
-        <div className="menu-container">
-          <div className="menu-header">
-            <p className="circuits-menu-title">Menu</p>
-            <div className="divider"></div>
-          </div>
-
-          <ol className="menu-items">
-            {menuItems.map((item, index) => (
-                <li
-                    key={index}
-                    className={`menu-item ${openIndexes.includes(index) ? "active" : ""}`}
-                >
-                  <div className="header" onClick={() => toggleItem(index)}>
-                    {item.header}
-                    <IconArrow SVGClassName="arrow" draggable="false" />
-                  </div>
-
-                  <div
-                      className={`gates-grid-wrapper ${openIndexes.includes(index) ? "open" : ""}`}
-                  >
-                    <div className="gates-grid">
-                      {item.gates.map((node) => (
-                          <div
-                              key={node.id}
-                              className="menu-element"
-                              draggable
-                              onDragStart={(e) => onDragStart(e, node.id)}
-                              title={node.label}
-                          >
-                            <button
-                                onClick={() => node.id.startsWith('custom-')
-                                    ? handleSpawnCustomCircuit(node.id)
-                                    : spawnCircuit(node.id)
-                                }
-                            >
-                              <node.icon
-                                  SVGClassName="dndnode-icon"
-                                  draggable="false"
-                              />
-                              <div className="circuits-name">{node.label}</div>
-                            </button>
-                          </div>
-                      ))}
-                    </div>
-                  </div>
-                </li>
-            ))}
-          </ol>
+    <div className={`circuits-menu ${circuitsMenuState ? "open" : ""}`}>
+      <div className="menu-container">
+        <div className="menu-header">
+          <p className="circuits-menu-title">Menu</p>
+          <div className="divider"></div>
         </div>
+
+        <ol className="menu-items">
+          {menuItems.map((item, index) => (
+            <li
+              key={index}
+              className={`menu-item ${openIndexes.includes(index) ? "active" : ""}`}
+            >
+              <div className="header" onClick={() => toggleItem(index)}>
+                {item.header}
+                <IconArrow SVGClassName="arrow" draggable="false" />
+              </div>
+
+              <div
+                className={`gates-grid-wrapper ${openIndexes.includes(index) ? "open" : ""}`}
+              >
+                <div className="gates-grid">
+                  {item.gates.map((node) => (
+                    <div
+                      key={node.id}
+                      className="menu-element"
+                      draggable
+                      onDragStart={(e) => onDragStart(e, node.id)}
+                      title={node.label}
+                    >
+                      <button
+                        onClick={() =>
+                          node.id.startsWith("custom-")
+                            ? handleSpawnCustomCircuit(node.id)
+                            : spawnCircuit(node.id)
+                        }
+                      >
+                        <node.icon
+                          SVGClassName="dndnode-icon"
+                          draggable="false"
+                        />
+                        <div className="circuits-name">{node.label}</div>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
+    </div>
   );
 }
