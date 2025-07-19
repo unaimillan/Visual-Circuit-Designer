@@ -19,7 +19,7 @@ using Poco::Net::HTTPServerResponse;
 class BaseCORSHandler : public Poco::Net::HTTPRequestHandler {
 protected:
   void addCORSHeaders(Poco::Net::HTTPServerResponse& response) {
-    response.set("Access-Control-Allow-Origin", "http://localhost:5173");
+    response.set("Access-Control-Allow-Origin", "/");
     response.set("Access-Control-Allow-Methods", "POST, OPTIONS");
     response.set(
         "Access-Control-Allow-Headers",
