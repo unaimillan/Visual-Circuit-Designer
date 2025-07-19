@@ -7,8 +7,8 @@ describe("hotkeyHandler", () => {
     copyElements: jest.fn(),
     cutElements: jest.fn(),
     pasteElements: jest.fn(),
-    handleSelectAll: jest.fn(),
-    handleDeselectAll: jest.fn(),
+    selectAll: jest.fn(),
+    deselectAll: jest.fn(),
     saveCircuit: jest.fn(),
     handleSimulateClick: jest.fn(),
     simulateState: "idle",
@@ -20,6 +20,8 @@ describe("hotkeyHandler", () => {
     setActiveAction: jest.fn(),
     setPanOnDrag: jest.fn(),
     setActiveWire: jest.fn(),
+    undo: jest.fn(),
+    redo: jest.fn(),
   });
 
   const makeEvent = (key, ctrlKey = true, shiftKey = false) => ({
@@ -45,11 +47,60 @@ describe("hotkeyHandler", () => {
     expect(ctx.cutElements).toHaveBeenCalled();
   });
 
+  it("calls pasteElements on Ctrl+V", () => {
+    const ctx = createContext();
+    const e = makeEvent("v");
+    hotkeyHandler(e, ctx);
+    expect(ctx.pasteElements).toHaveBeenCalled();
+  });
+
+  it("calls selectAll on Ctrl+A", () => {
+    const ctx = createContext();
+    const e = makeEvent("a");
+    hotkeyHandler(e, ctx);
+    expect(ctx.selectAll).toHaveBeenCalled();
+  });
+
+  it("calls deselectAll on Ctrl+D", () => {
+    const ctx = createContext();
+    const e = makeEvent("d");
+    hotkeyHandler(e, ctx);
+    expect(ctx.deselectAll).toHaveBeenCalled();
+  });
+
+  it("calls undo on Ctrl+Z", () => {
+    const ctx = createContext();
+    const e = makeEvent("z");
+    hotkeyHandler(e, ctx);
+    expect(ctx.undo).toHaveBeenCalled();
+  });
+
+  it("calls redo on Ctrl+Y", () => {
+    const ctx = createContext();
+    const e = makeEvent("y");
+    hotkeyHandler(e, ctx);
+    expect(ctx.redo).toHaveBeenCalled();
+  });
+
+  it("calls redo on Ctrl+Shift+Z", () => {
+    const ctx = createContext();
+    const e = makeEvent("z", true, true);
+    hotkeyHandler(e, ctx);
+    expect(ctx.redo).toHaveBeenCalled();
+  });
+
   it("calls setOpenSettings on Ctrl+Shift+S", () => {
     const ctx = createContext();
     const e = makeEvent("s", true, true);
     hotkeyHandler(e, ctx);
     expect(ctx.setOpenSettings).toHaveBeenCalled();
+  });
+
+  it("calls saveCircuit on Ctrl+S", () => {
+    const ctx = createContext();
+    const e = makeEvent("s");
+    hotkeyHandler(e, ctx);
+    expect(ctx.saveCircuit).toHaveBeenCalled();
   });
 
   it("calls handleSimulateClick on Ctrl+Shift+R", () => {
@@ -65,11 +116,68 @@ describe("hotkeyHandler", () => {
     });
   });
 
+  it("calls handleOpenClick on Ctrl+O", () => {
+    const ctx = createContext();
+    const e = makeEvent("o");
+    hotkeyHandler(e, ctx);
+    expect(ctx.handleOpenClick).toHaveBeenCalled();
+  });
+
   it('calls setActiveAction and setPanOnDrag on "1"', () => {
     const ctx = createContext();
     const e = makeEvent("1", false);
     hotkeyHandler(e, ctx);
     expect(ctx.setActiveAction).toHaveBeenCalledWith("cursor");
     expect(ctx.setPanOnDrag).toHaveBeenCalledWith([2]);
+  });
+
+  it('calls setActiveAction and setPanOnDrag on "2"', () => {
+    const ctx = createContext();
+    const e = makeEvent("2", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setActiveAction).toHaveBeenCalledWith("hand");
+    expect(ctx.setPanOnDrag).toHaveBeenCalledWith(true);
+  });
+
+  it('calls setActiveAction on "3"', () => {
+    const ctx = createContext();
+    const e = makeEvent("3", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setActiveAction).toHaveBeenCalledWith("eraser");
+  });
+
+  it('calls setActiveAction on "4"', () => {
+    const ctx = createContext();
+    const e = makeEvent("4", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setActiveAction).toHaveBeenCalledWith("text");
+  });
+
+  it('calls setActiveWire on "5"', () => {
+    const ctx = createContext();
+    const e = makeEvent("5", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setActiveWire).toHaveBeenCalledWith("default");
+  });
+
+  it('calls setActiveWire on "6"', () => {
+    const ctx = createContext();
+    const e = makeEvent("6", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setActiveWire).toHaveBeenCalledWith("step");
+  });
+
+  it('calls setActiveWire on "7"', () => {
+    const ctx = createContext();
+    const e = makeEvent("7", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setActiveWire).toHaveBeenCalledWith("straight");
+  });
+
+  it("calls setOpenSettings(false) on Escape if settings are open", () => {
+    const ctx = createContext();
+    const e = makeEvent("Escape", false);
+    hotkeyHandler(e, ctx);
+    expect(ctx.setOpenSettings).toHaveBeenCalledWith(false);
   });
 });

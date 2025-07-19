@@ -73,22 +73,22 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button
-          className={`toolbarButton ${activeAction === "cursor" ? "active" : ""}`}
+          className={`toolbar-button ${activeAction === "cursor" ? "active" : ""}`}
           onClick={() => {
             setActiveAction("cursor");
-            setPanOnDrag([2]);
+            setPanOnDrag(false);
           }}
           disabled={activeAction === "cursor"}
           title={"Cursor (Ctrl+1)"}
         >
           <IconToolbarCursor
-            SVGClassName="toolbarButtonIcon"
+            SVGClassName="toolbar-button-icon"
             draggable="false"
           />
         </button>
 
         <button
-          className={`toolbarButton ${activeAction === "hand" ? "active" : ""}`}
+          className={`toolbar-button ${activeAction === "hand" ? "active" : ""}`}
           onClick={() => {
             setActiveAction("hand");
             setPanOnDrag(true);
@@ -96,34 +96,40 @@ export default function Toolbar({
           disabled={activeAction === "hand"}
           title={"Hand (Ctrl+2)"}
         >
-          <IconToolbarHand SVGClassName="toolbarButtonIcon" draggable="false" />
-        </button>
-
-        <button
-          className={`toolbarButton ${activeAction === "eraser" ? "active" : ""}`}
-          onClick={() => setActiveAction("eraser")}
-          disabled={activeAction === "eraser"}
-          title={"Eraser (Ctrl+3)"}
-        >
-          <IconToolbarEraser
-            SVGClassName="toolbarButtonIcon"
+          <IconToolbarHand
+            SVGClassName="toolbar-button-icon"
             draggable="false"
           />
         </button>
 
         <button
-          className={`toolbarButton ${activeAction === "text" ? "active" : ""}`}
+          className={`toolbar-button ${activeAction === "eraser" ? "active" : ""}`}
+          onClick={() => setActiveAction("eraser")}
+          disabled={activeAction === "eraser"}
+          title={"Eraser (Ctrl+3)"}
+        >
+          <IconToolbarEraser
+            SVGClassName="toolbar-button-icon"
+            draggable="false"
+          />
+        </button>
+
+        <button
+          className={`toolbar-button ${activeAction === "text" ? "active" : ""}`}
           onClick={() => setActiveAction("text")}
           disabled={activeAction === "text"}
           title={"Text (Ctrl+4)"}
         >
-          <IconToolbarText SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconToolbarText
+            SVGClassName="toolbar-button-icon"
+            draggable="false"
+          />
         </button>
 
         <div className="toolbar-separator"></div>
 
         <button
-          className={`toolbarButton ${activeWire === "default" ? "active" : ""}`}
+          className={`toolbar-button ${activeWire === "default" ? "active" : ""}`}
           onClick={() => {
             setActiveWire("default");
           }}
@@ -131,13 +137,13 @@ export default function Toolbar({
           title={"Default (Ctrl+5)"}
         >
           <IconToolbarBezierWire
-            SVGClassName="toolbarButtonIcon"
+            SVGClassName="toolbar-button-icon"
             draggable="false"
           />
         </button>
 
         <button
-          className={`toolbarButton ${activeWire === "step" ? "active" : ""}`}
+          className={`toolbar-button ${activeWire === "step" ? "active" : ""}`}
           onClick={() => {
             setActiveWire("step");
           }}
@@ -145,13 +151,13 @@ export default function Toolbar({
           title={"Step (Ctrl+6)"}
         >
           <IconToolbarStepWire
-            SVGClassName="toolbarButtonIcon"
+            SVGClassName="toolbar-button-icon"
             draggable="false"
           />
         </button>
 
         <button
-          className={`toolbarButton ${activeWire === "straight" ? "active" : ""}`}
+          className={`toolbar-button ${activeWire === "straight" ? "active" : ""}`}
           onClick={() => {
             setActiveWire("straight");
           }}
@@ -159,7 +165,7 @@ export default function Toolbar({
           title={"Straight (Ctrl+7)"}
         >
           <IconToolbarStraightWire
-            SVGClassName="toolbarButtonIcon"
+            SVGClassName="toolbar-button-icon"
             draggable="false"
           />
         </button>
@@ -167,32 +173,32 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button
-          className="toolbarButton"
+          className="toolbar-button"
           onClick={undo}
           disabled={!canUndo}
           title={canUndo ? "Undo (Ctrl+Z)" : "Nothing to undo in this tab"}
         >
-          <IconUndo SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconUndo SVGClassName="toolbar-button-icon" draggable="false" />
         </button>
 
         <button
-          className="toolbarButton"
+          className="toolbar-button"
           onClick={redo}
           disabled={!canRedo}
           title={canRedo ? "Redo (Ctrl+Y)" : "Nothing to redo in this tab"}
         >
-          <IconRedo SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconRedo SVGClassName="toolbar-button-icon" draggable="false" />
         </button>
       </div>
 
       <div className="toolbar download">
         <button
-          className={`toolbarButton`}
+          className={`toolbar-button`}
           onClick={saveCircuit}
           title={"Download"}
         >
           <IconDownloadFile
-            SVGClassName="toolbarButtonIcon"
+            SVGClassName="toolbar-button-icon"
             draggable="false"
           />
         </button>
@@ -200,11 +206,11 @@ export default function Toolbar({
         <div className="toolbar-separator"></div>
 
         <button
-          className={`toolbarButton`}
+          className={`toolbar-button`}
           onClick={handleOpenClick}
           title={"Upload"}
         >
-          <IconOpenFile SVGClassName="toolbarButtonIcon" draggable="false" />
+          <IconOpenFile SVGClassName="toolbar-button-icon" draggable="false" />
         </button>
         <input
           className={`hidden`}

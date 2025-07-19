@@ -28,6 +28,7 @@ import Settings from "./mainPage/settings.jsx";
 
 import NodeContextMenu from "../codeComponents/NodeContextMenu.jsx";
 import EdgeContextMenu from "../codeComponents/EdgeContextMenu.jsx";
+import PaneContextMenu from "../codeComponents/PaneContextMenu.jsx";
 import { nodeTypes } from "../codeComponents/nodes.js";
 
 import { IconMenu, IconSettings } from "../../../assets/ui-icons.jsx";
@@ -63,6 +64,8 @@ import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
 import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
+import { getEditableNode } from "../utils/getEditableNode.js";
+import { handleNameChange } from "../utils/handleNameChange.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -107,6 +110,7 @@ export default function Main() {
   const [theme, setTheme] = useState("light");
   const [toastPosition, setToastPosition] = useState("top-center");
   const [logLevel, setLogLevel] = useState(LOG_LEVELS.ERROR);
+  const [pastePosition, setPastePosition] = useState("cursor");
 
   // Хуки React Flow
   const [nodes, setNodes, onNodesChangeFromHook] = useNodesState([]);
@@ -125,13 +129,20 @@ export default function Main() {
   const store = useStoreApi();
   const { getInternalNode } = useReactFlow();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [panOnDrag, setPanOnDrag] = useState([2]);
+  const [panOnDrag, setPanOnDrag] = useState(false);
 
   const socketRef = useRef(null);
 
   const fileInputRef = useRef(null);
 
   const ignoreChangesRef = useRef(false);
+
+  const editableNode = useMemo(
+    () => getEditableNode(nodes, edges),
+    [nodes, edges],
+  );
+
+  const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
 
   const handleOpenClick = () => {
     if (fileInputRef.current) {
@@ -343,6 +354,7 @@ export default function Main() {
       reactFlowInstance,
       setNodes,
       setEdges,
+      pastePosition,
     });
     setTimeout(recordHistory, 0);
   }, [clipboard, reactFlowInstance, recordHistory]);
@@ -358,6 +370,7 @@ export default function Main() {
       setCircuitsMenuState,
       setLogLevel,
       setToastPosition,
+      setPastePosition,
     });
   }, []);
 
@@ -373,6 +386,7 @@ export default function Main() {
       circuitsMenuState,
       logLevel,
       toastPosition,
+      pastePosition,
     };
     localStorage.setItem("userSettings", JSON.stringify(settings));
   }, [
@@ -385,6 +399,7 @@ export default function Main() {
     circuitsMenuState,
     logLevel,
     toastPosition,
+    pastePosition,
   ]);
 
   //Sets current theme to the whole document
@@ -417,19 +432,46 @@ export default function Main() {
     [reactFlowInstance, setNodes, deselectAll, recordHistory],
   );
 
-  const onNodeContextMenu = useCallback((event, node) => {
+  const closeMenu = () => setMenu(null);
+
+  const onNodeContextMenu = useCallback((event) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, node, pane, "node"));
+    const menuPosition = calculateContextMenuPosition(event, pane);
+    setMenu({
+      type: "pane",
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
+    });
   }, []);
 
-  const onEdgeContextMenu = useCallback((event, edge) => {
+  const onEdgeContextMenu = useCallback((event) => {
     event.preventDefault();
     const pane = ref.current.getBoundingClientRect();
-    setMenu(calculateContextMenuPosition(event, edge, pane, "edge"));
+    const menuPosition = calculateContextMenuPosition(event, pane);
+    setMenu({
+      type: "pane",
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
+    });
   }, []);
 
-  const onPaneClick = useCallback(() => setMenu(null), []);
+  const onPaneContextMenu = useCallback((event) => {
+    event.preventDefault();
+    const paneRect = ref.current.getBoundingClientRect();
+    const menuPosition = calculateContextMenuPosition(event, paneRect);
+    setMenu({
+      type: "pane",
+      top: menuPosition.top,
+      left: menuPosition.left,
+      right: menuPosition.right,
+      bottom: menuPosition.bottom,
+    });
+  }, []);
 
   //Allows user to download circuit JSON
   const saveCircuit = () => saveCircuitUtil(nodes, edges);
@@ -528,6 +570,7 @@ export default function Main() {
             activeTabId={activeTabId}
             onTabsChange={setTabs}
             onActiveTabIdChange={handleTabSwitch}
+            ref={ref}
           />
         </div>
 
@@ -544,7 +587,7 @@ export default function Main() {
             }}
             onNodeContextMenu={onNodeContextMenu}
             onEdgeContextMenu={onEdgeContextMenu}
-            onPaneClick={onPaneClick}
+            onPaneContextMenu={onPaneContextMenu}
             onConnect={onConnect}
             onNodeDragStop={onNodeDragStop}
             onDrop={onDrop}
@@ -594,12 +637,60 @@ export default function Main() {
             )}
           </ReactFlow>
 
-          {menu && menu.type === "node" && (
-            <NodeContextMenu onClick={onPaneClick} {...menu} />
+          {editableNode && (
+            <div className="name-editor">
+              <div className="label-container">
+                <label>Export Name (Optional)</label>
+                <div className="tooltip-container">
+                  <div className="tooltip-icon">?</div>
+                  <div className="tooltip-text">
+                    When creating custom circuit, each IO with an export name
+                    will become one of the new circuit's outputs.
+                  </div>
+                </div>
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={editableNode.name || ""}
+                  onChange={onNameChange}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      deselectAll();
+                      setTimeout(recordHistory, 0);
+                    }
+                  }}
+                  autoFocus
+                />
+                <button
+                  className="close-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    deselectAll();
+                    setTimeout(recordHistory, 0);
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           )}
 
-          {menu && menu.type === "edge" && (
-            <EdgeContextMenu onClick={onPaneClick} {...menu} />
+          {menu && menu.type === "node" && <NodeContextMenu {...menu} />}
+
+          {menu && menu.type === "edge" && <EdgeContextMenu {...menu} />}
+
+          {menu && menu.type === "pane" && (
+            <PaneContextMenu
+              {...menu}
+              selectedElements={getSelectedElements()}
+              copyElements={copyElements}
+              pasteElements={pasteElements}
+              cutElements={cutElements}
+              onClose={closeMenu}
+              clipboard={clipboard}
+            />
           )}
 
           <Toaster
@@ -627,40 +718,55 @@ export default function Main() {
           />
 
           <button
-            className="openCircuitsMenuButton"
+            className="open-circuits-menu-button"
             onClick={() => setCircuitsMenuState(!circuitsMenuState)}
             title={"Circuits menu"}
           >
             <IconMenu
-              SVGClassName="openCircuitsMenuButtonIcon"
+              SVGClassName="open-circuits-menu-button-icon"
               draggable="false"
             />
           </button>
 
           <button
-            className="openSettingsButton"
+            className="open-settings-button"
             onClick={() => setOpenSettings(true)}
             title={"Settings"}
           >
             <IconSettings
-              SVGClassName="openSettingsButtonIcon"
+              SVGClassName="open-settings-button-icon"
               draggable="false"
             />
           </button>
 
           <div
-            className={`backdrop ${openSettings ? "cover" : ""}${menu ? "show" : ""}`}
+            className={`backdrop ${openSettings ? "cover" : ""}`}
             onClick={() => {
-              setMenu(null);
               setOpenSettings(false);
             }}
           />
+
+          <div
+            className={`backdrop ${menu ? "show" : ""}`}
+            onClick={() => closeMenu()}
+          />
+
+          <div
+            className={`backdrop ${editableNode ? "show" : ""}`}
+            onClick={() => {
+              deselectAll();
+              setTimeout(recordHistory, 0);
+            }}
+          />
+
           <Settings
             openSettings={openSettings}
             showMinimap={showMinimap}
             setShowMinimap={setShowMinimap}
             currentBG={currentBG}
             setCurrentBG={setCurrentBG}
+            pastePosition={pastePosition}
+            setPastePosition={setPastePosition}
             theme={theme}
             setTheme={setTheme}
             toastPosition={toastPosition}
@@ -668,7 +774,6 @@ export default function Main() {
             currentLogLevel={logLevel}
             setLogLevel={setLogLevel}
             closeSettings={() => {
-              setMenu(null);
               setOpenSettings(false);
             }}
           />

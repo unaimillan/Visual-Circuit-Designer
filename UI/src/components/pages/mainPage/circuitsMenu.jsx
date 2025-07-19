@@ -57,10 +57,10 @@ export default function CircuitsMenu({
   ];
 
   return (
-    <div className={`circuitsMenu ${circuitsMenuState ? "open" : ""}`}>
+    <div className={`circuits-menu ${circuitsMenuState ? "open" : ""}`}>
       <div className="menu-container">
         <div className="menu-header">
-          <p className="circuitsMenuTitle">Menu</p>
+          <p className="circuits-menu-title">Menu</p>
           <div className="divider"></div>
         </div>
 
@@ -82,7 +82,7 @@ export default function CircuitsMenu({
                   {item.gates.map((node) => (
                     <div
                       key={node.id}
-                      className="dndnode"
+                      className="menu-element"
                       draggable
                       onDragStart={(e) => onDragStart(e, node.id)}
                       title={node.label}
@@ -92,7 +92,7 @@ export default function CircuitsMenu({
                           SVGClassName="dndnode-icon"
                           draggable="false"
                         />
-                        <div className="circuitsName">{node.label}</div>
+                        <div className="circuits-name">{node.label}</div>
                       </button>
                     </div>
                   ))}
