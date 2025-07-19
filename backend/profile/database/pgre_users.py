@@ -1,9 +1,9 @@
+from pydantic import EmailStr
 from typing import Any, Dict, Optional, Type, TypeVar
 from fastapi_users.db.base import BaseUserDatabase
-from pydantic import EmailStr
 from sqlalchemy import select, delete, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.profile.models import User as UserModel  # SQLAlchemy модель
+from backend.profile.models import User as UserModel
 from backend.profile.schemas import UserDB
 
 UP = TypeVar("UP", bound=UserDB)
@@ -83,7 +83,8 @@ class PostgreSQLUserDatabase(BaseUserDatabase[UP, int]):
             "hashed_password": user.password_hash,
             "created_at": user.created_at,
             "salt": user.salt,
-            # Добавляем обязательные поля со значениями по умолчанию
+
+            # Add default required fields
             "is_active": True,
             "is_superuser": False,
             "is_verified": True

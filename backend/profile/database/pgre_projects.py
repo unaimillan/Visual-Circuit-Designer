@@ -1,5 +1,4 @@
 from typing import Any, Dict, Optional, Type, TypeVar
-from fastapi_users.db.base import BaseUserDatabase
 from sqlalchemy import select, delete, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.profile.models import ProjectModel

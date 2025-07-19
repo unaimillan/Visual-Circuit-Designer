@@ -4,8 +4,8 @@ from backend.profile.database.pgre_projects import PostgreSQLProjectDatabase
 from backend.profile.schemas import Project, ProjectDB, UserDB, ProjectCreateResponse
 from backend.profile.utils import get_current_user
 
-router = APIRouter(prefix="/api/profile/{id}/project", tags=["projects"])
 
+router = APIRouter(prefix="/api/profile/{id}/project", tags=["projects"])
 
 @router.post("", response_model=ProjectCreateResponse)
 async def create_project(

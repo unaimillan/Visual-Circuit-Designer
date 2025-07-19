@@ -2,8 +2,7 @@ import json
 import httpx
 import base64
 from typing import Annotated
-from fastapi import Depends, HTTPException, Header
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, Header
 
 
 async def get_current_user(authorization: Annotated[str, Header(...)]) -> str:

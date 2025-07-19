@@ -1,9 +1,9 @@
-from uuid import UUID
 from fastapi import APIRouter, HTTPException, Depends
 from backend.profile.database.db import get_user_db
 from backend.profile.database.pgre_users import PostgreSQLUserDatabase
 from backend.profile.schemas import UpdateName, UpdateEmail, UpdatePassword, UserDB
 from backend.profile.utils import get_current_user
+
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
 

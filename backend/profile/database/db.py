@@ -1,13 +1,13 @@
 import os
 from typing import Any, AsyncGenerator
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from backend.profile.database.pgre_projects import PostgreSQLProjectDatabase
 from backend.profile.database.pgre_users import PostgreSQLUserDatabase
 from backend.profile.models import User, ProjectModel
-from backend.profile.schemas import UserDB, UserProfile, ProjectDB
+from backend.profile.schemas import UserDB, ProjectDB
 
 try:
     DATABASE_URL = (

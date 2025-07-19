@@ -1,8 +1,7 @@
 from pydantic import EmailStr
 from datetime import datetime
 from typing import Optional, Dict
-from uuid import UUID
-from fastapi_users import schemas, models
+from fastapi_users import schemas
 
 
 # Users schemas
