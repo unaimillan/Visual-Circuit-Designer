@@ -72,7 +72,7 @@ export default function PaneContextMenu({
           onClose();
         }}
       >
-        Create custom circuit
+        Create custom node
       </button>
     </div>
   );
