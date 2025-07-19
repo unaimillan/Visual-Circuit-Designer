@@ -75,7 +75,6 @@ class PostgreSQLUserDatabase(BaseUserDatabase[UP, int]):
         await self.session.commit()
 
     def _convert_to_userdb(self, user: UserModel) -> UP:
-        """Конвертирует SQLAlchemy модель в Pydantic UserDB схему"""
         user_dict = {
             "id": user.id,
             "username": user.username,

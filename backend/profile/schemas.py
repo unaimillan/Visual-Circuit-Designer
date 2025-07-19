@@ -53,6 +53,10 @@ class Project(schemas.BaseModel):
     verilog: Optional[str] = None
     custom_nodes: Optional[Dict] = None
 
+class ProjectCreateResponse(schemas.BaseModel):
+    status: str
+    project_id: int
+
 class ProjectDB(Project):
     pid: int
     owner_id: int

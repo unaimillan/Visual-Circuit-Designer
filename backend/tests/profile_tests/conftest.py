@@ -80,3 +80,46 @@ async def test_project_data():
         },
         # "custom_nodes": []
     }
+
+@pytest_asyncio.fixture
+async def test_custom_node_data():
+    return {
+        "name": "Test Project",
+        "id": "1",
+        "circuit": {
+          "nodes": [
+            {
+              "id": "andNode_1751219192609",
+              "type": "andNode",
+              "position": {
+                "x": 130,
+                "y": 220
+              },
+              "data": {
+                "customId": "andNode_1751219192609"
+              }
+            },
+            {
+              "id": "inputNodeSwitch_1751219193704",
+              "type": "inputNodeSwitch",
+              "position": {
+                "x": 10,
+                "y": 370
+              },
+              "data": {
+                "customId": "inputNodeSwitch_1751219193704"
+              }
+            }
+          ],
+          "edges": [
+            {
+              "id": "xy-edge__inputNodeSwitch_1751219193704output-1-andNode_1751219192609input-1",
+              "source": "inputNodeSwitch_1751219193704",
+              "target": "andNode_1751219192609",
+              "sourceHandle": "output-1",
+              "targetHandle": "input-1"
+            }
+          ]
+        },
+        # "custom_nodes": []
+    }

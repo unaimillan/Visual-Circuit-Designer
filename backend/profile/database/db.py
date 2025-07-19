@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from backend.profile.database.pgre_projects import PostgreSQLProjectDatabase
-from backend.profile.database.postgres_users import PostgreSQLUserDatabase
+from backend.profile.database.pgre_users import PostgreSQLUserDatabase
 from backend.profile.models import User, ProjectModel
 from backend.profile.schemas import UserDB, UserProfile, ProjectDB
 
@@ -36,8 +36,8 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, Any]:
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield PostgreSQLUserDatabase(
         session=session,
-        user_model=User,  # ваша SQLAlchemy модель
-        user_db_model=UserDB  # ваша Pydantic схема
+        user_model=User,
+        user_db_model=UserDB
     )
 
 async def get_project_db(session: AsyncSession = Depends(get_async_session)):

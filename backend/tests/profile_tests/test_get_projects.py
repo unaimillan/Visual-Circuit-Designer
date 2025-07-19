@@ -11,6 +11,7 @@ async def test_create_project(auth_client, registered_user, profile_client, test
 
     response = await profile_client.get(
         f"/api/profile/{id}/project",
+        headers={"Authorization": f"Bearer {token}"}
     )
 
     print("GET: ", response.json())

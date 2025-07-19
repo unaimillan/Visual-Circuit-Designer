@@ -1,22 +1,24 @@
-import base64
 import json
-
-from fastapi import Depends, HTTPException, Header
 import httpx
+import base64
+from typing import Annotated
+from fastapi import Depends, HTTPException, Header
+from fastapi.security import OAuth2PasswordBearer
 
-async def get_current_user_id(authorization: str = Header(...)) -> str:
+
+async def get_current_user(authorization: Annotated[str, Header(...)]) -> str:
     if not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+        raise HTTPException(status_code=401, detail="Missing Bearer token")
 
     token = authorization.removeprefix("Bearer ").strip()
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get("http://auth-backend:8000/auth/verify", headers={"Authorization": f"Bearer {token}"})
+    async with httpx.AsyncClient(base_url="http://localhost:8080") as client:
+        response = await client.post("/api/auth/verify", headers={"Authorization": f"Bearer {token}"})
 
     if response.status_code != 200:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-    return response.json().get("user_id")
+    return decode_jwt(token)
 
 def decode_jwt(token: str):
     try:
