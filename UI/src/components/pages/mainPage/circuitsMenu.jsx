@@ -10,7 +10,7 @@ import {
   IconInput,
   IconOutput,
 } from "../../../../assets/circuits-icons.jsx";
-import { loadCustomBlocks } from "./customCircuit.jsx"; // Путь к вашим утилитам
+import { loadCustomBlocks } from "../../utils/customBlockUtils.js"; // Путь к вашим утилитам
 
 // Компонент для генерации иконки кастомного блока
 const CustomBlockIcon = ({ inputs, outputs }) => {

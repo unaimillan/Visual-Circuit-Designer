@@ -66,7 +66,7 @@ import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
-import CreateCustomBlock from "./mainPage/customCircuit.jsx";
+import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -137,6 +137,18 @@ export default function Main() {
   const fileInputRef = useRef(null);
 
   const ignoreChangesRef = useRef(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleCreateFromCurrent = (customBlock) => {
+    // Handle custom block creation
+    console.log("Created custom block:", customBlock);
+  };
+
+  const handleCreateFromFile = () => {
+    // Handle file import logic
+    console.log("Create from file");
+  };
 
   const editableNode = useMemo(
     () => getEditableNode(nodes, edges),
@@ -691,6 +703,7 @@ export default function Main() {
               cutElements={cutElements}
               onClose={closeMenu}
               clipboard={clipboard}
+              onAddCustomCircuit={() => setModalOpen(true)}
             />
           )}
 
@@ -760,15 +773,13 @@ export default function Main() {
             }}
           />
 
-          <CreateCustomBlock
+          <CreateCustomBlockModal
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
             nodes={nodes}
             edges={edges}
-            onCreateFromFile={() => {
-              console.log("создать из файла");
-            }}
-            onCreateFromCurrent={() => {
-              console.log("создать из текущего");
-            }}
+            onCreateFromFile={handleCreateFromFile}
+            onCreateFromCurrent={handleCreateFromCurrent}
           />
 
           <Settings
