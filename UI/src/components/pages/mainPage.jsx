@@ -340,7 +340,6 @@ export default function Main() {
     const { nodes: newNodes, edges: newEdges } = deselectAllUtil(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
-    recordHistory();
   }, [nodes, edges, setNodes, setEdges]);
 
   const deleteSelectedElements = useCallback(() => {
