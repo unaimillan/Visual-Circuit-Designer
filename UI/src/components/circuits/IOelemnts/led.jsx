@@ -64,6 +64,7 @@ function OutputNodeLed({ id, data, isConnectable }) {
         id="input-1"
         style={getHandleStyle()}
         isConnectable={isConnectable}
+        connections={1}
       />
     </div>
   );
