@@ -639,30 +639,41 @@ export default function Main() {
 
           {editableNode && (
             <div className="name-editor">
-              <label>Export Name (Optional)</label>
-              <input
-                type="text"
-                value={editableNode.name || ""}
-                onChange={onNameChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+              <div className="label-container">
+                <label>Export Name (Optional)</label>
+                <div className="tooltip-container">
+                  <div className="tooltip-icon">?</div>
+                  <div className="tooltip-text">
+                    When creating custom circuit, each IO with an export
+                    name will become one of the new circuit's outputs.
+                  </div>
+                </div>
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={editableNode.name || ""}
+                  onChange={onNameChange}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      deselectAll();
+                      setTimeout(recordHistory, 0);
+                    }
+                  }}
+                  autoFocus
+                />
+                <button
+                  className="close-button"
+                  onClick={(e) => {
                     e.preventDefault();
                     deselectAll();
                     setTimeout(recordHistory, 0);
-                  }
-                }}
-                autoFocus
-              />
-              <button
-                className="close-button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  deselectAll();
-                  setTimeout(recordHistory, 0);
-                }}
-              >
-                Close
-              </button>
+                  }}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           )}
 
