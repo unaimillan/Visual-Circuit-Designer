@@ -1,5 +1,5 @@
 export const IconAND = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>AND</title>
       <line
@@ -45,7 +45,7 @@ export const IconAND = ({ SVGClassName, style }) => (
 );
 
 export const IconOR = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>OR</title>
       <line
@@ -101,7 +101,7 @@ export const IconOR = ({ SVGClassName, style }) => (
 );
 
 export const IconNAND = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>NAND</title>
       <line
@@ -157,7 +157,7 @@ export const IconNAND = ({ SVGClassName, style }) => (
 );
 
 export const IconNOR = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>NOR</title>
       <line
@@ -222,7 +222,7 @@ export const IconNOR = ({ SVGClassName, style }) => (
 );
 
 export const IconXOR = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>XOR</title>
       <line
@@ -291,7 +291,7 @@ export const IconXOR = ({ SVGClassName, style }) => (
 );
 
 export const IconNOT = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>NOT</title>
       <line
@@ -348,7 +348,7 @@ export const IconNOT = ({ SVGClassName, style }) => (
 );
 
 export const IconInput = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>Input</title>
       <line
@@ -405,7 +405,7 @@ export const IconInput = ({ SVGClassName, style }) => (
 );
 
 export const IconOutput = ({ SVGClassName, style }) => (
-  <svg className={SVGClassName} style={style} viewBox="87 60 626 480">
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
     <g>
       <title>Output</title>
       <line

@@ -64,6 +64,8 @@ import { createHistoryUpdater } from "../utils/createHistoryUpdater.js";
 import { undo as undoUtil } from "../utils/undo.js";
 import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
+import { getEditableNode } from "../utils/getEditableNode.js";
+import { handleNameChange } from "../utils/handleNameChange.js";
 import CreateCustomBlock from "./mainPage/customCircuit.jsx";
 
 export const SimulateStateContext = createContext({
@@ -136,31 +138,12 @@ export default function Main() {
 
   const ignoreChangesRef = useRef(false);
 
-  const editableNode = useMemo(() => {
-    const selectedNodes = nodes.filter((n) => n.selected);
-    const selectedEdges = edges.filter((e) => e.selected);
-    if (selectedNodes.length === 1 && selectedEdges.length === 0) {
-      const node = selectedNodes[0];
-      if (
-        ["inputNodeSwitch", "inputNodeButton", "outputNodeLed"].includes(
-          node.type,
-        )
-      ) {
-        return node;
-      }
-    }
-    return null;
-  }, [nodes]);
+  const editableNode = useMemo(
+    () => getEditableNode(nodes, edges),
+    [nodes, edges],
+  );
 
-  const handleNameChange = (e) => {
-    if (!editableNode) return;
-
-    const newName = e.target.value;
-    setNodes((nds) =>
-      nds.map((n) => (n.id === editableNode.id ? { ...n, name: newName } : n)),
-    );
-    setTimeout(recordHistory, 0);
-  };
+  const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
 
   const handleOpenClick = () => {
     if (fileInputRef.current) {
@@ -340,7 +323,6 @@ export default function Main() {
     const { nodes: newNodes, edges: newEdges } = deselectAllUtil(nodes, edges);
     setNodes(newNodes);
     setEdges(newEdges);
-    recordHistory();
   }, [nodes, edges, setNodes, setEdges]);
 
   const deleteSelectedElements = useCallback(() => {
@@ -658,16 +640,41 @@ export default function Main() {
 
           {editableNode && (
             <div className="name-editor">
-              <label>Export Name (Optional)</label>
-              <input
-                type="text"
-                value={editableNode.name || ""}
-                onChange={handleNameChange}
-                autoFocus
-              />
-              <button className="close-button" onClick={deselectAll}>
-                Close
-              </button>
+              <div className="label-container">
+                <label>Export Name (Optional)</label>
+                <div className="tooltip-container">
+                  <div className="tooltip-icon">?</div>
+                  <div className="tooltip-text">
+                    When creating custom circuit, each IO with an export name
+                    will become one of the new circuit's outputs.
+                  </div>
+                </div>
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={editableNode.name || ""}
+                  onChange={onNameChange}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      deselectAll();
+                      setTimeout(recordHistory, 0);
+                    }
+                  }}
+                  autoFocus
+                />
+                <button
+                  className="close-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    deselectAll();
+                    setTimeout(recordHistory, 0);
+                  }}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           )}
 
@@ -701,7 +708,7 @@ export default function Main() {
               },
               duration: 2000,
               error: {
-                duration: 1000,
+                duration: 10000,
               },
               warning: {
                 className: "toast-warning",
@@ -743,6 +750,14 @@ export default function Main() {
           <div
             className={`backdrop ${menu ? "show" : ""}`}
             onClick={() => closeMenu()}
+          />
+
+          <div
+            className={`backdrop ${editableNode ? "show" : ""}`}
+            onClick={() => {
+              deselectAll();
+              setTimeout(recordHistory, 0);
+            }}
           />
 
           <CreateCustomBlock

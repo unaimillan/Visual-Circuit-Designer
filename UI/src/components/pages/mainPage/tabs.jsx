@@ -96,9 +96,13 @@ export default function TabsContainer({
     setContextMenu(null);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e, tabId) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      const tab = tabs.find((t) => t.id === tabId);
+      if (tab && tab.title.trim() === "") {
+        updateTabTitle(tabId, "Untitled Tab");
+      }
       setEditingTabId(null);
     }
     if (e.key === "Escape") {
@@ -107,6 +111,12 @@ export default function TabsContainer({
   };
 
   const handleBlur = () => {
+    if (editingTabId !== null) {
+      const tab = tabs.find((t) => t.id === editingTabId);
+      if (tab && tab.title.trim() === "") {
+        updateTabTitle(editingTabId, "Untitled Tab");
+      }
+    }
     setEditingTabId(null);
   };
 
