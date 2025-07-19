@@ -746,10 +746,14 @@ export default function Main() {
           />
 
           <CreateCustomBlock
-              nodes={nodes}
-              edges={edges}
-            onCreateFromFile={() => {console.log("создать из файла")}}
-            onCreateFromCurrent={() => {console.log("создать из текущего")}}
+            nodes={nodes}
+            edges={edges}
+            onCreateFromFile={() => {
+              console.log("создать из файла");
+            }}
+            onCreateFromCurrent={() => {
+              console.log("создать из текущего");
+            }}
           />
 
           <Settings
