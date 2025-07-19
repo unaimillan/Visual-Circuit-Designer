@@ -1,3 +1,4 @@
+import os
 import json
 import httpx
 import base64
@@ -5,14 +6,17 @@ from typing import Annotated
 from fastapi import HTTPException, Header
 
 
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8080")
+
 async def get_current_user(authorization: Annotated[str, Header(...)]) -> str:
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing Bearer token")
 
     token = authorization.removeprefix("Bearer ").strip()
 
+    verify_url = f"{AUTH_SERVICE_URL}/api/auth/verify"
     async with httpx.AsyncClient() as client:
-        response = await client.post("http://auth:8080/api/auth/verify", headers={"Authorization": f"Bearer {token}"})
+        response = await client.post(verify_url, headers={"Authorization": f"Bearer {token}"})
 
     if response.status_code != 200:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
