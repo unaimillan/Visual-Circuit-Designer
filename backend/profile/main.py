@@ -1,4 +1,3 @@
-import warnings
 from fastapi import FastAPI
 from backend.profile.routers import profile, project
 

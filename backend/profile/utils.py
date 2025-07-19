@@ -12,8 +12,8 @@ async def get_current_user(authorization: Annotated[str, Header(...)]) -> str:
 
     token = authorization.removeprefix("Bearer ").strip()
 
-    async with httpx.AsyncClient(base_url="http://localhost:8080") as client:
-        response = await client.post("/api/auth/verify", headers={"Authorization": f"Bearer {token}"})
+    async with httpx.AsyncClient() as client:
+        response = await client.post("http://auth:8080/api/auth/verify", headers={"Authorization": f"Bearer {token}"})
 
     if response.status_code != 200:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
