@@ -644,8 +644,8 @@ export default function Main() {
                 <div className="tooltip-container">
                   <div className="tooltip-icon">?</div>
                   <div className="tooltip-text">
-                    When creating custom circuit, each IO with an export
-                    name will become one of the new circuit's outputs.
+                    When creating custom circuit, each IO with an export name
+                    will become one of the new circuit's outputs.
                   </div>
                 </div>
               </div>

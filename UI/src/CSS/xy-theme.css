@@ -39,7 +39,9 @@
   z-index: 15;
 
   transform-origin: center center;
-  transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    background 0.2s ease-in-out;
 }
 
 .react-flow__handle:hover {
@@ -47,10 +49,18 @@
   background: var(--main-0);
 }
 
-.react-flow__handle[data-handlepos="top"]    { transform-origin: 150% 150%; }
-.react-flow__handle[data-handlepos="bottom"] { transform-origin: 150% -50%; }
-.react-flow__handle[data-handlepos="left"]   { transform-origin: 150% 150%; }
-.react-flow__handle[data-handlepos="right"]  { transform-origin: -50% 150%; }
+.react-flow__handle[data-handlepos="top"] {
+  transform-origin: 150% 150%;
+}
+.react-flow__handle[data-handlepos="bottom"] {
+  transform-origin: 150% -50%;
+}
+.react-flow__handle[data-handlepos="left"] {
+  transform-origin: 150% 150%;
+}
+.react-flow__handle[data-handlepos="right"] {
+  transform-origin: -50% 150%;
+}
 
 .react-flow {
   --xy-connectionline-stroke-default: var(--main-0);
