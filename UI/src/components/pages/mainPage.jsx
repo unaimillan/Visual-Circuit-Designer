@@ -69,16 +69,13 @@ import { handleNameChange } from "../utils/handleNameChange.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {
-  },
-  updateInputState: () => {
-  },
+  setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {
-  },
+  setLogLevel: () => {},
 });
 
 export function useSimulateState() {
@@ -656,11 +653,14 @@ export default function Main() {
                 }}
                 autoFocus
               />
-              <button className="close-button" onClick={(e) => {
-                e.preventDefault();
-                deselectAll();
-                setTimeout(recordHistory, 0);
-              }}>
+              <button
+                className="close-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  deselectAll();
+                  setTimeout(recordHistory, 0);
+                }}
+              >
                 Close
               </button>
             </div>
