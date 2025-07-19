@@ -7,18 +7,27 @@ services:
       POSTGRES_PASSWORD: "pgpwd4vcd"
     volumes:
       - ./postgres-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U vcd -d vcd" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   runner:
     build: ./RunnerNode
   auth:
     build: ./auth
+    ports:
+      - "8080:8080"
     environment:
+      PORT: 8080
       POSTGRES_DB: "vcd"
       POSTGRES_USER: "vcd"
       POSTGRES_PASSWORD: "pgpwd4vcd"
       POSTGRES_HOST: "postgres"
       POSTGRES_PORT: 5432
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   webserver:
     build: ./UI
     volumes:

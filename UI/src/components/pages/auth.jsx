@@ -1,35 +1,28 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "../../CSS/auth.css";
 import "../../CSS/variables.css";
-import { Link, useNavigate } from "react-router-dom"; // Добавлен useNavigate
-
-const EMAIL_REGEXP =
-  /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+import { Link, useNavigate } from "react-router-dom";
 
 const Auth = () => {
-  const navigate = useNavigate(); // Используем хук
+  const navigate = useNavigate();
 
-  // Состояния полей формы
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
-  // Состояния валидации
-  const [emailError, setEmailError] = useState("");
-  const [wasEmailFocused, setWasEmailFocused] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [wasLoginFocused, setWasLoginFocused] = useState(false);
 
   const [passwordError, setPasswordError] = useState("");
   const [wasPasswordFocused, setWasPasswordFocused] = useState(false);
 
-  // Функции валидации
-  const validateEmail = useCallback(() => {
-    if (email.trim() === "") {
-      return "Email is required";
-    }
-    if (!EMAIL_REGEXP.test(email)) {
-      return "Please enter a valid email address";
+  const [serverError, setServerError] = useState("");
+
+  const validateLogin = useCallback(() => {
+    if (login.trim() === "") {
+      return "Login is required";
     }
     return "";
-  }, [email]);
+  }, [login]);
 
   const validatePassword = useCallback(() => {
     if (password.trim() === "") {
@@ -39,15 +32,15 @@ const Auth = () => {
   }, [password]);
 
   // Обработчики изменений
-  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleLoginChange = (e) => setLogin(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   // Эффекты валидации
   useEffect(() => {
-    if (wasEmailFocused) {
-      setEmailError(validateEmail());
+    if (wasLoginFocused) {
+      setLoginError(validateLogin());
     }
-  }, [email, wasEmailFocused, validateEmail]);
+  }, [login, wasLoginFocused, validateLogin]);
 
   useEffect(() => {
     if (wasPasswordFocused) {
@@ -56,19 +49,44 @@ const Auth = () => {
   }, [password, wasPasswordFocused, validatePassword]);
 
   // Обработчик входа
-  const handleLogin = () => {
-    // Активируем проверку всех полей
-    setWasEmailFocused(true);
+  const handleLogin = async () => {
+    setWasLoginFocused(true);
     setWasPasswordFocused(true);
+    setLoginError("");
+    setPasswordError("");
+    setServerError("");
 
-    const emailErr = validateEmail();
+    const loginErr = validateLogin();
     const passwordErr = validatePassword();
 
-    setEmailError(emailErr);
+    setLoginError(loginErr);
     setPasswordError(passwordErr);
 
-    if (!emailErr && !passwordErr) {
-      navigate("/profile");
+    if (loginErr || passwordErr) {
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({login, password}),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('accessToken', data.access);
+        localStorage.setItem('refreshToken', data.refresh);
+        navigate('/profile');
+      } else if (response.status === 401) {
+        const errorText = await response.text();
+        setServerError(errorText || "Invalid login or password");
+      } else {
+        const errorText = await response.text();
+        setServerError(errorText || "Authorization failed");
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setServerError("Network error. Please try again.");
     }
   };
 
@@ -76,31 +94,29 @@ const Auth = () => {
     <div className="auth-container">
       <div className="auth-window">
         <div className="auth-window-text">Log in</div>
+
         <div className="input-line-container">
-          <div className="input-email-text">Enter email:</div>
+          <div className="input-email-text">Login</div>
           <input
-            className={`input-email-window ${
-              wasEmailFocused && emailError ? "invalid" : ""
-            }`}
-            value={email}
-            onChange={handleEmailChange}
-            onFocus={() => setWasEmailFocused(false)}
+            className={`input-email-window ${wasLoginFocused && loginError ? "invalid" : ""}`}
+            value={login}
+            onChange={handleLoginChange}
+            onFocus={() => setWasLoginFocused(false)}
             onBlur={() => {
-              if (email.trim() !== "") {
-                setWasEmailFocused(true);
+              if (login.trim() !== "") {
+                setWasLoginFocused(true);
               }
             }}
-            placeholder="myEmail@example.com"
+            placeholder="email or username"
           />
-          {wasEmailFocused && emailError && (
-            <div className="error-message email-error">{emailError}</div>
+          {/* Ошибки валидации и не-401 ошибки сервера */}
+          {wasLoginFocused && loginError && !serverError && (
+            <div className="error-message email-error">{loginError}</div>
           )}
 
-          <div className="input-password-text">Enter password:</div>
+          <div className="input-password-text">Password:</div>
           <input
-            className={`input-password-window ${
-              wasPasswordFocused && passwordError ? "invalid" : ""
-            }`}
+            className={`input-password-window ${wasPasswordFocused && passwordError ? "invalid" : ""}`}
             type="password"
             value={password}
             onChange={handlePasswordChange}
@@ -116,9 +132,19 @@ const Auth = () => {
           )}
         </div>
 
-        <button className="log-in-button" onClick={handleLogin}>
-          <span className="log-in-button-text">Log in</span>
+
+
+        <button
+          className="log-in-button"
+          onClick={handleLogin}
+        >
+      <span className="log-in-button-text">
+        Log in
+      </span>
         </button>
+        {serverError && (
+          <div className="server-error-message">{serverError}</div>
+        )}
 
         <div className="register-text"> Have no account? </div>
         <Link to="/reg" className="register-link">

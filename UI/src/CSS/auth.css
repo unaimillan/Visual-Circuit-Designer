@@ -67,6 +67,12 @@
   animation: fadeIn 0.3s ease-in;
 }
 
+.server-error-message {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #ff4d4f;
+}
+
 .input-password-window {
   display: flex;
   align-items: center;
@@ -109,7 +115,7 @@
 .register-text {
   font-size: 1.1rem;
   font-family: Montserrat, serif;
-  margin-top: 5rem;
+  margin-top: 4.5rem;
   color: var(--main-0);
 }
 

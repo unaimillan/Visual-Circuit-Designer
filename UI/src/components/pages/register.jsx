@@ -10,12 +10,16 @@ const Auth = () => {
   const navigate = useNavigate();
 
   // Состояния полей формы
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // Состояния валидации
+  const [nameError, setNameError] = useState("");
+  const [wasNameFocused, setWasNameFocused] = useState(false);
+
   const [emailError, setEmailError] = useState("");
   const [wasEmailFocused, setWasEmailFocused] = useState(false);
 
@@ -30,6 +34,19 @@ const Auth = () => {
     useState(false);
 
   // Функции валидации
+  const validateName = useCallback(() => {
+    if (name.trim() === "") {
+      return "Name is required";
+    }
+    if (name.length < 2 || name.length > 52) {
+      return "Name length must be 2-52 characters";
+    }
+    if (!/^[a-zA-Z]*$/.test(name)) {
+      return "Name contains invalid character";
+    }
+    return "";
+  }, [name]);
+
   const validateUsername = useCallback(() => {
     if (username.trim() === "") {
       return "Username is required";
@@ -77,6 +94,7 @@ const Auth = () => {
   }, [confirmPassword, password]);
 
   // Обработчики изменений
+  const handleNameChange = (e) => setName(e.target.value);
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -84,6 +102,10 @@ const Auth = () => {
 
   // Эффект валидации
   useEffect(() => {
+    if (wasNameFocused) {
+      setNameError(validateName());
+    }
+
     if (wasUsernameFocused) {
       setUsernameError(validateUsername());
     }
@@ -100,6 +122,8 @@ const Auth = () => {
       setConfirmPasswordError(validateConfirmPassword());
     }
   }, [
+    name,
+    wasNameFocused,
     username,
     wasUsernameFocused,
     email,
@@ -108,6 +132,7 @@ const Auth = () => {
     wasPasswordFocused,
     confirmPassword,
     wasConfirmPasswordFocused,
+    validateName,
     validateUsername,
     validateEmail,
     validatePassword,
@@ -115,27 +140,56 @@ const Auth = () => {
   ]);
 
   // Обработчик регистрации
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    setWasNameFocused(true);
     setWasUsernameFocused(true);
     setWasEmailFocused(true);
     setWasPasswordFocused(true);
     setWasConfirmPasswordFocused(true);
 
     const errors = {
+      name: validateName(),
       username: validateUsername(),
       email: validateEmail(),
       password: validatePassword(),
       confirmPassword: validateConfirmPassword(),
     };
 
+    setNameError(errors.name);
     setUsernameError(errors.username);
     setEmailError(errors.email);
     setPasswordError(errors.password);
     setConfirmPasswordError(errors.confirmPassword);
 
     const hasErrors = Object.values(errors).some((error) => error !== "");
+
     if (!hasErrors) {
-      navigate("/profile");
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            username,
+            email,
+            password,
+          }),
+        });
+        if (response.ok) {
+          navigate('/profile');
+        } else if (response.status === 409) {
+          const errorText = await response.text();
+          if (errorText === 'username exists') {
+            setUsernameError(errorText);
+          } else if (errorText === 'email exists') {
+            setEmailError(errorText);
+          }
+        } else {
+          throw new Error('Registration failed');
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -144,6 +198,24 @@ const Auth = () => {
       <div className="reg-window">
         <div className="reg-window-text">Registration</div>
         <div className="input-line-container">
+          {/*Поле для имени*/}
+          <div className="input-name-text">Name</div>
+          <input
+            className={`input-name-window ${
+              wasNameFocused && nameError ? "invalid" : ""
+            }`}
+            value={name}
+            onChange={handleNameChange}
+            onFocus={() => setWasNameFocused(false)}
+            onBlur={() => {
+              if (name.trim() !== "") {
+                setWasNameFocused(true);
+              }
+            }}
+          />
+          {wasNameFocused && nameError && (
+            <div className="error-message name-error">{nameError}</div>
+          )}
           {/* Поле username */}
           <div className="input-username-text">Username</div>
           <input
