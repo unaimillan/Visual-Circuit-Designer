@@ -165,27 +165,30 @@ const Auth = () => {
 
     if (!hasErrors) {
       try {
-        const response = await fetch('http://localhost:8080/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            username,
-            email,
-            password,
-          }),
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/auth/register",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              username,
+              email,
+              password,
+            }),
+          },
+        );
         if (response.ok) {
-          navigate('/profile');
+          navigate("/profile");
         } else if (response.status === 409) {
           const errorText = await response.text();
-          if (errorText === 'username exists') {
+          if (errorText === "username exists") {
             setUsernameError(errorText);
-          } else if (errorText === 'email exists') {
+          } else if (errorText === "email exists") {
             setEmailError(errorText);
           }
         } else {
-          throw new Error('Registration failed');
+          throw new Error("Registration failed");
         }
       } catch (error) {
         console.error(error);

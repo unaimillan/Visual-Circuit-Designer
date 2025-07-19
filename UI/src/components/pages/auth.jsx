@@ -66,17 +66,17 @@ const Auth = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({login, password}),
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ login, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('accessToken', data.access);
-        localStorage.setItem('refreshToken', data.refresh);
-        navigate('/profile');
+        localStorage.setItem("accessToken", data.access);
+        localStorage.setItem("refreshToken", data.refresh);
+        navigate("/profile");
       } else if (response.status === 401) {
         const errorText = await response.text();
         setServerError(errorText || "Invalid login or password");
@@ -85,7 +85,7 @@ const Auth = () => {
         setServerError(errorText || "Authorization failed");
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       setServerError("Network error. Please try again.");
     }
   };
@@ -132,15 +132,8 @@ const Auth = () => {
           )}
         </div>
 
-
-
-        <button
-          className="log-in-button"
-          onClick={handleLogin}
-        >
-      <span className="log-in-button-text">
-        Log in
-      </span>
+        <button className="log-in-button" onClick={handleLogin}>
+          <span className="log-in-button-text">Log in</span>
         </button>
         {serverError && (
           <div className="server-error-message">{serverError}</div>
