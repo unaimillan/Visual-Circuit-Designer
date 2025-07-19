@@ -1,146 +1,307 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../../CSS/reg.css";
 import "../../CSS/variables.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const EMAIL_REGEXP =
   /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-const USERNAME_REGEXP = /^[a-zA-Z0-9._-]{4,25}$/;
 
 const Auth = () => {
+  const navigate = useNavigate();
+
+  // Состояния полей формы
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isTouched, setIsTouched] = useState(false);
-  const emailRef = useRef(null);
   const [username, setUsername] = useState("");
-  const [isUsernameTouched, setIsUsernameTouched] = useState(false);
-  const usernameRef = useRef(null);
-
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
+
+  // Состояния валидации
+  const [nameError, setNameError] = useState("");
+  const [wasNameFocused, setWasNameFocused] = useState(false);
+
+  const [emailError, setEmailError] = useState("");
+  const [wasEmailFocused, setWasEmailFocused] = useState(false);
+
+  const [usernameError, setUsernameError] = useState("");
+  const [wasUsernameFocused, setWasUsernameFocused] = useState(false);
+
+  const [passwordError, setPasswordError] = useState("");
+  const [wasPasswordFocused, setWasPasswordFocused] = useState(false);
+
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [wasConfirmPasswordFocused, setWasConfirmPasswordFocused] =
     useState(false);
-  const passwordRef = useRef(null);
-  const confirmPasswordRef = useRef(null);
 
-  const isValidUsername = USERNAME_REGEXP.test(username);
+  // Функции валидации
+  const validateName = useCallback(() => {
+    if (name.trim() === "") {
+      return "Name is required";
+    }
+    if (name.length < 2 || name.length > 52) {
+      return "Name length must be 2-52 characters";
+    }
+    if (!/^[a-zA-Z]*$/.test(name)) {
+      return "Name contains invalid character";
+    }
+    return "";
+  }, [name]);
 
-  const isValidEmail = EMAIL_REGEXP.test(email);
+  const validateUsername = useCallback(() => {
+    if (username.trim() === "") {
+      return "Username is required";
+    }
+    if (username.length < 4 || username.length > 25) {
+      return "Username length must be 4-25 characters";
+    }
+    if (!/^[a-zA-Z0-9._-]*$/.test(username)) {
+      return "Username contains invalid character";
+    }
+    return "";
+  }, [username]);
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
+  const validateEmail = useCallback(() => {
+    if (email.trim() === "") {
+      return "Email is required";
+    }
+    if (!EMAIL_REGEXP.test(email)) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  }, [email]);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const validatePassword = useCallback(() => {
+    if (password.trim() === "") {
+      return "Password is required";
+    }
+    if (password.length < 8 || password.length > 16) {
+      return "Password must be 8-16 characters";
+    }
+    if (!/^[a-zA-Z0-9]*$/.test(password)) {
+      return "Password can only contain Latin letters and numbers";
+    }
+    return "";
+  }, [password]);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const validateConfirmPassword = useCallback(() => {
+    if (confirmPassword.trim() === "") {
+      return "Confirm password is required";
+    }
+    if (password !== confirmPassword) {
+      return "Passwords do not match";
+    }
+    return "";
+  }, [confirmPassword, password]);
 
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
+  // Обработчики изменений
+  const handleNameChange = (e) => setName(e.target.value);
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
-  const passwordsMatch = password === confirmPassword;
-
+  // Эффект валидации
   useEffect(() => {
-    if (usernameRef.current) {
-      const showError =
-        isUsernameTouched && !isValidUsername && username !== "";
-      usernameRef.current.style.borderColor = showError
-        ? "red"
-        : "var(--main-5)";
+    if (wasNameFocused) {
+      setNameError(validateName());
     }
 
-    if (emailRef.current) {
-      const showEmailError = isTouched && !isValidEmail && email !== "";
-      emailRef.current.style.borderColor = showEmailError
-        ? "red"
-        : "var(--main-5)";
+    if (wasUsernameFocused) {
+      setUsernameError(validateUsername());
     }
 
-    if (passwordRef.current) {
-      passwordRef.current.style.borderColor = "var(--main-5)";
+    if (wasEmailFocused) {
+      setEmailError(validateEmail());
     }
 
-    if (confirmPasswordRef.current) {
-      const showError =
-        isConfirmPasswordTouched && !passwordsMatch && confirmPassword !== "";
-      confirmPasswordRef.current.style.borderColor = showError
-        ? "red"
-        : "var(--main-5)";
+    if (wasPasswordFocused) {
+      setPasswordError(validatePassword());
+    }
+
+    if (wasConfirmPasswordFocused) {
+      setConfirmPasswordError(validateConfirmPassword());
     }
   }, [
-    isValidUsername,
-    isUsernameTouched,
+    name,
+    wasNameFocused,
     username,
-    isValidEmail,
-    isTouched,
+    wasUsernameFocused,
     email,
-    passwordsMatch,
-    isConfirmPasswordTouched,
+    wasEmailFocused,
+    password,
+    wasPasswordFocused,
     confirmPassword,
+    wasConfirmPasswordFocused,
+    validateName,
+    validateUsername,
+    validateEmail,
+    validatePassword,
+    validateConfirmPassword,
   ]);
+
+  // Обработчик регистрации
+  const handleRegister = async () => {
+    setWasNameFocused(true);
+    setWasUsernameFocused(true);
+    setWasEmailFocused(true);
+    setWasPasswordFocused(true);
+    setWasConfirmPasswordFocused(true);
+
+    const errors = {
+      name: validateName(),
+      username: validateUsername(),
+      email: validateEmail(),
+      password: validatePassword(),
+      confirmPassword: validateConfirmPassword(),
+    };
+
+    setNameError(errors.name);
+    setUsernameError(errors.username);
+    setEmailError(errors.email);
+    setPasswordError(errors.password);
+    setConfirmPasswordError(errors.confirmPassword);
+
+    const hasErrors = Object.values(errors).some((error) => error !== "");
+
+    if (!hasErrors) {
+      try {
+        const response = await fetch("http://auth:8080/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            username,
+            email,
+            password,
+          }),
+        });
+        if (response.ok) {
+          navigate("/profile");
+        } else if (response.status === 409) {
+          const errorText = await response.text();
+          if (errorText === "username exists") {
+            setUsernameError(errorText);
+          } else if (errorText === "email exists") {
+            setEmailError(errorText);
+          }
+        } else {
+          throw new Error("Registration failed");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <div className="reg-container">
       <div className="reg-window">
         <div className="reg-window-text">Registration</div>
         <div className="input-line-container">
+          {/*Поле для имени*/}
+          <div className="input-name-text">Name</div>
+          <input
+            className={`input-name-window ${
+              wasNameFocused && nameError ? "invalid" : ""
+            }`}
+            value={name}
+            onChange={handleNameChange}
+            onFocus={() => setWasNameFocused(false)}
+            onBlur={() => {
+              if (name.trim() !== "") {
+                setWasNameFocused(true);
+              }
+            }}
+          />
+          {wasNameFocused && nameError && (
+            <div className="error-message name-error">{nameError}</div>
+          )}
+          {/* Поле username */}
           <div className="input-username-text">Username</div>
           <input
-            ref={usernameRef}
             className={`input-username-window ${
-              isUsernameTouched && !isValidUsername && username !== ""
-                ? "invalid"
-                : ""
+              wasUsernameFocused && usernameError ? "invalid" : ""
             }`}
             value={username}
             onChange={handleUsernameChange}
-            onBlur={() => setIsUsernameTouched(true)}
+            onFocus={() => setWasUsernameFocused(false)}
+            onBlur={() => {
+              if (username.trim() !== "") {
+                setWasUsernameFocused(true);
+              }
+            }}
           />
+          {wasUsernameFocused && usernameError && (
+            <div className="error-message username-error">{usernameError}</div>
+          )}
 
+          {/* Поле email */}
           <div className="input-email-text">Email</div>
           <input
-            ref={emailRef}
-            className={`input-email-window ${isTouched && !isValidEmail && email !== "" ? "invalid" : ""}`}
+            className={`input-email-window ${
+              wasEmailFocused && emailError ? "invalid" : ""
+            }`}
             value={email}
             onChange={handleEmailChange}
-            onBlur={() => setIsTouched(true)}
+            onFocus={() => setWasEmailFocused(false)}
+            onBlur={() => {
+              if (email.trim() !== "") {
+                setWasEmailFocused(true);
+              }
+            }}
             placeholder="myEmail@example.com"
           />
+          {wasEmailFocused && emailError && (
+            <div className="error-message email-error">{emailError}</div>
+          )}
 
+          {/* Поля пароля */}
           <div className="input-password-text">Password</div>
           <input
-            className="input-password-window"
+            className={`input-password-window ${
+              wasPasswordFocused && passwordError ? "invalid" : ""
+            }`}
             type="password"
             value={password}
             onChange={handlePasswordChange}
+            onFocus={() => setWasPasswordFocused(false)}
+            onBlur={() => {
+              if (password.trim() !== "") {
+                setWasPasswordFocused(true);
+              }
+            }}
           />
+          {wasPasswordFocused && passwordError && (
+            <div className="error-message password-main-error">
+              {passwordError}
+            </div>
+          )}
+
           <div className="input-confirm-password-text">Confirm password:</div>
           <input
-            ref={confirmPasswordRef}
             className={`input-password-window ${
-              isConfirmPasswordTouched &&
-              !passwordsMatch &&
-              confirmPassword !== ""
-                ? "invalid"
-                : ""
+              wasConfirmPasswordFocused && confirmPasswordError ? "invalid" : ""
             }`}
             type="password"
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
-            onBlur={() => setIsConfirmPasswordTouched(true)}
+            onFocus={() => setWasConfirmPasswordFocused(false)}
+            onBlur={() => {
+              if (confirmPassword.trim() !== "") {
+                setWasConfirmPasswordFocused(true);
+              }
+            }}
           />
+          {wasConfirmPasswordFocused && confirmPasswordError && (
+            <div className="error-message password-error">
+              {confirmPasswordError}
+            </div>
+          )}
         </div>
-        <Link
-          to="/profile"
-          className="reg-button"
-          style={{ textDecoration: "none" }}
-        >
+
+        <button className="reg-button" onClick={handleRegister}>
           <span className="reg-button-text">Register</span>
-        </Link>
+        </button>
       </div>
     </div>
   );

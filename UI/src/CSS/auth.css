@@ -57,6 +57,22 @@
   color: var(--main-0);
 }
 
+.error-message {
+  color: #ff4d4f;
+  text-align: left;
+  width: 20rem;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  margin-right: 11rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.server-error-message {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #ff4d4f;
+}
+
 .input-password-window {
   display: flex;
   align-items: center;
@@ -99,7 +115,7 @@
 .register-text {
   font-size: 1.1rem;
   font-family: Montserrat, serif;
-  margin-top: 5rem;
+  margin-top: 4.5rem;
   color: var(--main-0);
 }
 
@@ -119,7 +135,7 @@
 
 .login-button {
   position: fixed;
-  top: 3.05rem;
+  top: calc(0.5rem + 5vh);
   left: 4.97rem;
   width: 4rem;
   height: 2rem;

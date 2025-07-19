@@ -10,7 +10,7 @@
 .reg-window {
   position: fixed;
   width: 30rem;
-  height: 40rem;
+  height: 50rem;
   background-color: var(--main-1);
   border-radius: 0.5rem;
   border: var(--main-5) solid 0.05rem;
@@ -19,6 +19,25 @@
 .reg-window-text {
   margin-top: 1.5rem;
   font-size: 1.5rem;
+  color: var(--main-0);
+}
+
+.input-name-text {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  display: flex;
+  color: var(--main-0);
+}
+
+.input-name-window {
+  margin-top: 0.7rem;
+  height: 2rem;
+  width: 25rem;
+  font-size: 0.9rem;
+  border: var(--main-5) solid 0.05rem;
+  border-radius: 0.5rem;
+  font-family: Montserrat, serif;
+  background-color: var(--main-2);
   color: var(--main-0);
 }
 
@@ -90,6 +109,12 @@
   color: var(--main-0);
 }
 
+.input-username-window.invalid,
+.input-email-window.invalid,
+.input-password-window.invalid {
+  border-color: red;
+}
+
 .input-confirm-password-text {
   display: flex;
   margin-top: 1.5rem;
@@ -98,7 +123,7 @@
 }
 
 .reg-button {
-  margin-top: 8rem;
+  margin-top: 17rem;
   height: 2rem;
   width: 25rem;
   display: flex;
