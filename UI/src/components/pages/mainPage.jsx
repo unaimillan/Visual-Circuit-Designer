@@ -22,6 +22,7 @@ import {
   useStoreApi,
 } from "@xyflow/react";
 
+//Importing components
 import CircuitsMenu from "./mainPage/circuitsMenu.jsx";
 import Toolbar from "./mainPage/toolbar.jsx";
 import Settings from "./mainPage/settings.jsx";
@@ -42,6 +43,7 @@ import {
 } from "./mainPage/runnerHandler.jsx";
 import { LOG_LEVELS } from "../codeComponents/logger.jsx";
 import { nanoid } from "nanoid";
+import { Link } from "react-router-dom";
 
 import { copyElements as copyElementsUtil } from "../utils/copyElements.js";
 import { cutElements as cutElementsUtil } from "../utils/cutElements.js";
@@ -277,6 +279,7 @@ export default function Main() {
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const newId = () => nanoid();
 
+  // Update the ref in a window mousemove listener
   useEffect(() => {
     const handleMouseMove = (event) => {
       mousePositionRef.current = {
@@ -302,8 +305,9 @@ export default function Main() {
         return isBetweenSelected ? { ...edge, selected: true } : edge;
       }),
     );
-  }, [nodes]);
+  }, [nodes]); // Runs when node selection changes
 
+  // Update getSelectedElements
   const getSelectedElements = useCallback(() => {
     return getSelectedUtil(nodes, edges);
   });
@@ -739,6 +743,14 @@ export default function Main() {
               draggable="false"
             />
           </button>
+
+          <Link
+            to="/auth"
+            className="login-button"
+            style={{ textDecoration: "none" }}
+          >
+            <span className="login-button-text">Log in</span>
+          </Link>
 
           <div
             className={`backdrop ${openSettings ? "cover" : ""}`}
