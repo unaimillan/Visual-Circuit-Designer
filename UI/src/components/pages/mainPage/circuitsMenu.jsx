@@ -9,6 +9,7 @@ import {
   IconXOR,
   IconInput,
   IconOutput,
+  IconText,
 } from "../../../../assets/circuits-icons.jsx";
 import { useCustomBlocks } from "./customCircuit.jsx"; // Путь к вашим утилитам
 
@@ -73,19 +74,10 @@ export default function CircuitsMenu({
       ],
     },
     {
-      header: "Custom Circuits",
-      gates: customBlocks.map((block) => ({
-        id: `custom-${block.id}`,
-        label: block.name,
-        icon: (props) => (
-          <CustomBlockIcon
-            inputs={block.inputs}
-            outputs={block.outputs}
-            {...props}
-          />
-        ),
-        customData: block,
-      })),
+      header: "Advanced Logic Elements",
+      gates: [
+        { id: "text", label: "Text", icon: IconText },
+      ],
     },
     {
       header: "Pins",

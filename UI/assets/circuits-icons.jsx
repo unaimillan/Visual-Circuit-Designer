@@ -459,3 +459,54 @@ export const IconOutput = ({ SVGClassName, style }) => (
     </g>
   </svg>
 );
+
+export const IconText = ({ SVGClassName, style }) => (
+  <svg className={SVGClassName} style={style} viewBox="87 65 626 480">
+    <g>
+      <title>TEXT</title>
+      {/* Горизонтальная перекладина T */}
+      <line
+        stroke="currentColor"
+        strokeWidth="20"
+        x1="150"
+        y1="120"
+        x2="550"
+        y2="120"
+      />
+      {/* Вертикальная ножка T */}
+      <line
+        stroke="currentColor"
+        strokeWidth="20"
+        x1="350"
+        y1="120"
+        x2="350"
+        y2="450"
+      />
+      {/* Дополнительные горизонтальные строки текста */}
+      <line
+        stroke="currentColor"
+        strokeWidth="20"
+        x1="150"
+        y1="220"
+        x2="550"
+        y2="220"
+      />
+      <line
+        stroke="currentColor"
+        strokeWidth="20"
+        x1="150"
+        y1="320"
+        x2="550"
+        y2="320"
+      />
+      <line
+        stroke="currentColor"
+        strokeWidth="20"
+        x1="150"
+        y1="420"
+        x2="550"
+        y2="420"
+      />
+    </g>
+  </svg>
+);
