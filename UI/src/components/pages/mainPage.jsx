@@ -69,13 +69,16 @@ import { handleNameChange } from "../utils/handleNameChange.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {},
-  updateInputState: () => {},
+  setSimulateState: () => {
+  },
+  updateInputState: () => {
+  },
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {},
+  setLogLevel: () => {
+  },
 });
 
 export function useSimulateState() {
@@ -142,8 +145,7 @@ export default function Main() {
     [nodes, edges],
   );
 
-  const onNameChange = (e) =>
-    handleNameChange(e, editableNode, setNodes, recordHistory);
+  const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
 
   const handleOpenClick = () => {
     if (fileInputRef.current) {
@@ -649,11 +651,16 @@ export default function Main() {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     deselectAll();
+                    setTimeout(recordHistory, 0);
                   }
                 }}
                 autoFocus
               />
-              <button className="close-button" onClick={deselectAll}>
+              <button className="close-button" onClick={(e) => {
+                e.preventDefault();
+                deselectAll();
+                setTimeout(recordHistory, 0);
+              }}>
                 Close
               </button>
             </div>
@@ -731,6 +738,14 @@ export default function Main() {
           <div
             className={`backdrop ${menu ? "show" : ""}`}
             onClick={() => closeMenu()}
+          />
+
+          <div
+            className={`backdrop ${editableNode ? "show" : ""}`}
+            onClick={() => {
+              deselectAll();
+              setTimeout(recordHistory, 0);
+            }}
           />
 
           <Settings

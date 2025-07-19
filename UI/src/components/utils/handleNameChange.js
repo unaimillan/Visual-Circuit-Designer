@@ -1,4 +1,4 @@
-export function handleNameChange(event, editableNode, setNodes, recordHistory) {
+export function handleNameChange(event, editableNode, setNodes) {
   if (!editableNode) return;
 
   const newName = event.target.value;
@@ -8,6 +8,4 @@ export function handleNameChange(event, editableNode, setNodes, recordHistory) {
       node.id === editableNode.id ? { ...node, name: newName } : node,
     ),
   );
-
-  setTimeout(recordHistory, 0);
 }

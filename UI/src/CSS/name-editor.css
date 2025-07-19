@@ -8,7 +8,7 @@
   border: 1px solid var(--main-5);
   border-radius: 0.5rem;
   user-select: none;
-  z-index: 10;
+  z-index: 2001;
 }
 
 .name-editor label {
