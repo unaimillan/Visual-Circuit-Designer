@@ -44,7 +44,7 @@
 
 .react-flow__handle:hover {
   transform: scale(1.5);
-  background: var(--main-4);
+  background: var(--main-0);
 }
 
 .react-flow__handle[data-handlepos="top"]    { transform-origin: 150% 150%; }
@@ -53,9 +53,7 @@
 .react-flow__handle[data-handlepos="right"]  { transform-origin: -50% 150%; }
 
 .react-flow {
-  /* Новый цвет проекционной линии */
   --xy-connectionline-stroke-default: var(--main-0);
-  /* (необязательно) ширина линии */
   --xy-connectionline-stroke-width-default: 2;
 }
 
