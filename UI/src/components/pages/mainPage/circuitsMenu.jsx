@@ -75,9 +75,7 @@ export default function CircuitsMenu({
     },
     {
       header: "Advanced Logic Elements",
-      gates: [
-        { id: "text", label: "Text", icon: IconText },
-      ],
+      gates: [{ id: "text", label: "Text", icon: IconText }],
     },
     {
       header: "Pins",
