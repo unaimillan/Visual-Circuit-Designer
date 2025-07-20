@@ -67,7 +67,6 @@ import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
 import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
-import { createCustomBlock, saveCustomBlock } from "../utils/customBlockUtils.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -138,7 +137,6 @@ export default function Main() {
   const ignoreChangesRef = useRef(false);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [mode, setMode] = useState("fromSelected");
   const [nodesCustom, setNodesCustom] = useNodesState([]);
   const [edgesCustom, setEdgesCustom] = useEdgesState([]);
 
@@ -157,18 +155,16 @@ export default function Main() {
     (event) => {
       loadCircuitUtil(event, setNodesCustom, setEdgesCustom);
       setModalOpen(true);
-      setMode("fromFile");
     },
     [setNodesCustom, setEdgesCustom],
   );
 
   const onCreateCustom = useCallback(
-    (event) => {
+    () => {
       const selectedElements = getSelectedElements();
       setNodesCustom(selectedElements.nodes);
       setNodesCustom(selectedElements.edges);
       setModalOpen(true);
-      setMode("fromFile");
     },
     [setNodesCustom, setEdgesCustom],
   );

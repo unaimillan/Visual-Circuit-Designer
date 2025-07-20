@@ -1,9 +1,5 @@
 /*TODO: Add tests*/
-export const generateCustomBlockId = () => {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 10);
-  return `custom_${timestamp}_${random}`;
-};
+import { generateId } from "./generateId.js";
 
 export const createCustomBlock = (nodes, edges, blockName) => {
   if (!Array.isArray(nodes)) throw new Error("Invalid nodes: must be an array");
@@ -34,7 +30,7 @@ export const createCustomBlock = (nodes, edges, blockName) => {
   });
 
   return {
-    id: generateCustomBlockId(),
+    id: generateId(),
     name: blockName,
     inputNodes,
     outputNodes,
