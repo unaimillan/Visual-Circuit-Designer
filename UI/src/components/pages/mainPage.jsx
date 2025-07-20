@@ -69,6 +69,7 @@ import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
 import CreateCustomBlock from "./mainPage/customCircuit.jsx";
+import {CustomBlocksProvider} from "./mainPage/customCircuit.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -80,6 +81,7 @@ export const NotificationsLevelContext = createContext({
   logLevel: "idle",
   setLogLevel: () => {},
 });
+
 
 export function useSimulateState() {
   const context = useContext(SimulateStateContext);
@@ -565,6 +567,7 @@ export default function Main() {
   );
 
   return (
+    <CustomBlocksProvider>
     <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
       <SimulateStateContext.Provider
         value={{ simulateState, setSimulateState, updateInputState }}
@@ -838,5 +841,6 @@ export default function Main() {
         </>
       </SimulateStateContext.Provider>
     </NotificationsLevelContext.Provider>
+    </CustomBlocksProvider>
   );
 }

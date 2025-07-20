@@ -1,17 +1,53 @@
-import React, { useState } from "react";
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { IconCloseCross } from "../../../../assets/ui-icons.jsx";
-import toast from "react-hot-toast";
-import { showToastError } from "../../codeComponents/logger.jsx";
+import {LOG_LEVELS, showToast, showToastError} from "../../codeComponents/logger.jsx";
 
-export default function CreateCustomBlock({
-  nodes,
-  edges,
-  onCreateFromFile, // Колбэк при создании из файла (вы реализуете)
-  onCreateFromCurrent, // Колбэк при создании из схемы (вы реализуете)
-}) {
+// Контекст для управления кастомными блоками
+const CustomBlocksContext = createContext();
+
+export const CustomBlocksProvider = ({ children }) => {
+  const [customBlocks, setCustomBlocks] = useState([]);
+
+  // Загрузка блоков из localStorage при инициализации
+  useEffect(() => {
+    const blocks = JSON.parse(localStorage.getItem('customBlocks') || '[]');
+    setCustomBlocks(blocks);
+  }, []);
+
+  // Сохранение блоков в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem('customBlocks', JSON.stringify(customBlocks));
+  }, [customBlocks]);
+
+  // Добавление нового блока
+  const addBlock = (block) => {
+    setCustomBlocks(prev => [...prev, block]);
+  };
+
+  // Удаление блока
+  const deleteBlock = (blockId) => {
+    setCustomBlocks(prev => prev.filter(block => block.id !== blockId));
+  };
+
+  return (
+      <CustomBlocksContext.Provider value={{
+        customBlocks,
+        addBlock,
+        deleteBlock
+      }}>
+        {children}
+      </CustomBlocksContext.Provider>
+  );
+};
+
+export const useCustomBlocks = () => useContext(CustomBlocksContext);
+
+// Компонент для создания кастомных блоков
+export default function CreateCustomBlock({ nodes, edges }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [blockName, setBlockName] = useState("");
   const [error, setError] = useState("");
+  const { addBlock } = useCustomBlocks();
 
   const handleCreateFromCurrent = () => {
     if (!blockName.trim()) {
@@ -20,181 +56,84 @@ export default function CreateCustomBlock({
     }
 
     try {
-      // Создаем кастомный блок из текущей схемы
-      const customBlock = createCustomBlock(nodes, edges, blockName.trim());
+      // Создаем кастомный блок
+      const customBlock = {
+        id: `custom_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 10)}`,
+        name: blockName.trim(),
+        inputs: nodes.filter(node =>
+            node.type === "inputNodeSwitch" || node.type === "inputNodeButton"
+        ).map(node => ({
+          id: node.id,
+          name: node.name || `input_${node.id.slice(0, 4)}`
+        })),
+        outputs: nodes.filter(node =>
+            node.type === "outputNodeLed"
+        ).map(node => ({
+          id: node.id,
+          name: node.name || `output_${node.id.slice(0, 4)}`
+        })),
+        originalSchema: { nodes, edges }
+      };
 
-      // Сохраняем в localStorage
-      saveCustomBlock(customBlock);
+      addBlock(customBlock);
 
-      // Сбрасываем состояние
       setBlockName("");
       setError("");
       setIsModalOpen(false);
 
-      // Вызываем колбэк (если нужна дополнительная логика)
-      if (onCreateFromCurrent) {
-        onCreateFromCurrent(customBlock);
-      }
-
-      alert(`Блок "${blockName}" успешно создан!`);
+      showToast(`Block "${blockName}" created successfully!`, '✅', LOG_LEVELS.ERROR);
     } catch (err) {
-      console.error("Ошибка при создании блока:", err);
-      setError(`Ошибка: ${err.message}`);
-    }
-  };
-
-  const handleCreateFromFile = () => {
-    setIsModalOpen(false);
-    if (onCreateFromFile) {
-      onCreateFromFile();
+      console.error("Block creation error:", err);
+      setError(`Error: ${err.message}`);
     }
   };
 
   return (
-    <div className="create-custom-block">
-      <button className="create-button" onClick={() => setIsModalOpen(true)}>
-        Add custom circuit
-      </button>
+      <div className="create-custom-block">
+        <button className="create-button" onClick={() => setIsModalOpen(true)}>
+          Add custom circuit
+        </button>
 
-      {isModalOpen && (
-        <div className="custom-block-modal">
-          <div className="modal-content">
-            <h3>Create custom block</h3>
+        {isModalOpen && (
+            <div className="custom-block-modal">
+              <div className="modal-content">
+                <h3>Create custom block</h3>
 
-            <button
-              className="close-button-custom-circuit"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <IconCloseCross SVGClassName={"close-custom-circuit-cross"} />
-            </button>
-
-            <div className="creation-options">
-              <button className="option-button" onClick={handleCreateFromFile}>
-                From file
-              </button>
-
-              <div className="current-circuit-option">
                 <button
-                  className="option-button"
-                  onClick={handleCreateFromCurrent}
+                    className="close-button-custom-circuit"
+                    onClick={() => setIsModalOpen(false)}
                 >
-                  From current circuit
+                  <IconCloseCross SVGClassName={"close-custom-circuit-cross"} />
                 </button>
 
-                <div className="name-input">
-                  <input
-                    type="text"
-                    value={blockName}
-                    onChange={(e) => setBlockName(e.target.value)}
-                    placeholder="New custom block name"
-                    required
-                  />
-                  {error && <p className="error-message">{error}</p>}
+                <div className="creation-options">
+                  <button className="option-button">
+                    From file
+                  </button>
+
+                  <div className="current-circuit-option">
+                    <button
+                        className="option-button"
+                        onClick={handleCreateFromCurrent}
+                    >
+                      From current circuit
+                    </button>
+
+                    <div className="name-input">
+                      <input
+                          type="text"
+                          value={blockName}
+                          onChange={(e) => setBlockName(e.target.value)}
+                          placeholder="New custom block name"
+                          required
+                      />
+                      {error && <p className="error-message">{error}</p>}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
   );
 }
-
-const generateCustomBlockId = () => {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 10);
-  return `custom_${timestamp}_${random}`;
-};
-
-export const createCustomBlock = (nodes, edges, blockName) => {
-  // Валидация входных данных
-  if (!Array.isArray(nodes)) {
-    throw new Error("Invalid nodes: must be an array");
-  }
-
-  if (!Array.isArray(edges)) {
-    throw new Error("Invalid edges: must be an array");
-  }
-
-  // Фильтрация входных нод
-  const inputs = nodes.reduce((acc, node) => {
-    if (node.type === "inputNodeSwitch" || node.type === "inputNodeButton") {
-      acc.push({
-        id: node.id,
-        name: node.name || `input_${Math.floor(Math.random() * 10000)}`, // Случайный номер
-      });
-    }
-    return acc;
-  }, []);
-
-  // Фильтрация выходных нод
-  const outputs = nodes.reduce((acc, node) => {
-    if (node.type === "outputNodeLed") {
-      acc.push({
-        id: node.id,
-        name: node.name || `output_${Math.floor(Math.random() * 10000)}`, // Случайный номер
-      });
-    }
-    return acc;
-  }, []);
-
-  return {
-    id: generateCustomBlockId(),
-    name: blockName,
-    inputs,
-    outputs,
-    originalSchema: { nodes, edges }, // Сохраняем полную схему
-  };
-};
-
-/**
- * Сохраняет кастомный блок в localStorage
- */
-export const saveCustomBlock = (customBlock) => {
-  try {
-    const savedBlocks = JSON.parse(
-      localStorage.getItem("customBlocks") || "[]",
-    );
-    const updatedBlocks = [...savedBlocks, customBlock];
-    localStorage.setItem("customBlocks", JSON.stringify(updatedBlocks));
-  } catch (error) {
-    console.error("Failed to save custom block:", error);
-  }
-};
-
-/**
- * Загружает все кастомные блоки из localStorage
- */
-export const loadCustomBlocks = () => {
-  try {
-    return JSON.parse(localStorage.getItem("customBlocks") || "[]");
-  } catch (error) {
-    console.error("Failed to load custom blocks:", error);
-    return [];
-  }
-};
-
-/**
- * Удаляет кастомный блок по ID
- */
-export const deleteCustomBlock = (blockId) => {
-  try {
-    const savedBlocks = JSON.parse(
-      localStorage.getItem("customBlocks") || "[]",
-    );
-    const updatedBlocks = savedBlocks.filter((block) => block.id !== blockId);
-    localStorage.setItem("customBlocks", JSON.stringify(updatedBlocks));
-    return true;
-  } catch (error) {
-    console.error("Failed to delete custom block:", error);
-    return false;
-  }
-};
-
-/**
- * Находит кастомный блок по ID
- */
-export const findCustomBlockById = (blockId) => {
-  const blocks = loadCustomBlocks();
-  return blocks.find((block) => block.id === blockId);
-};
