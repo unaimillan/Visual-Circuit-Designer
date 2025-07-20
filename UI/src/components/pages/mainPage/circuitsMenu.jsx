@@ -36,7 +36,7 @@ export default function CircuitsMenu({
   spawnCircuit,
 }) {
   const [openIndexes, setOpenIndexes] = useState([]);
-  const { customBlocks } = useCustomBlocks(); // Получаем блоки из контекста
+  const { customBlocks, isLoading } = useCustomBlocks();
 
   const toggleItem = useCallback((index) => {
     setOpenIndexes((prevIndexes) =>
@@ -45,6 +45,20 @@ export default function CircuitsMenu({
         : [...prevIndexes, index],
     );
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className={`circuits-menu ${circuitsMenuState ? "open" : ""}`}>
+        <div className="menu-container">
+          <div className="menu-header">
+            <p className="circuits-menu-title">Menu</p>
+            <div className="divider"></div>
+          </div>
+          <p>Loading custom blocks...</p>
+        </div>
+      </div>
+    );
+  }
 
   const menuItems = [
     {
@@ -59,8 +73,19 @@ export default function CircuitsMenu({
       ],
     },
     {
-      header: "Advanced Logic Elements",
-      gates: [],
+      header: "Custom Circuits",
+      gates: customBlocks.map((block) => ({
+        id: `custom-${block.id}`,
+        label: block.name,
+        icon: (props) => (
+          <CustomBlockIcon
+            inputs={block.inputs}
+            outputs={block.outputs}
+            {...props}
+          />
+        ),
+        customData: block,
+      })),
     },
     {
       header: "Pins",
@@ -90,16 +115,14 @@ export default function CircuitsMenu({
   // Обработчик для создания кастомного блока
   const handleSpawnCustomCircuit = useCallback(
     (nodeId) => {
-      // Ищем полные данные блока по ID
       const blockId = nodeId.replace("custom-", "");
       const block = customBlocks.find((b) => b.id === blockId);
 
       if (block) {
-        // Вызываем функцию spawnCircuit с полными данными схемы
-        spawnCircuit(block.originalSchema);
+        spawnCircuit(`custom-${block.id}`);
       }
     },
-    [customBlocks, spawnCircuit],
+    [customBlocks, spawnCircuit]
   );
 
   return (

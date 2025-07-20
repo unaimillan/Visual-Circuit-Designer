@@ -12,8 +12,7 @@ export default function CreateCustomBlockModal({
   onClose,
   nodes,
   edges,
-  onCreateFromFile,
-  onCreateFromCurrent,
+  onCreateCustomBlock,
 }) {
   const [blockName, setBlockName] = useState("");
   const [error, setError] = useState("");
@@ -34,7 +33,7 @@ export default function CreateCustomBlockModal({
       setError("");
       onClose();
 
-      if (onCreateFromCurrent) onCreateFromCurrent(customBlock);
+      if (onCreateCustomBlock) onCreateCustomBlock(customBlock);
       alert(`Block "${blockName}" created successfully!`);
     } catch (err) {
       console.error("Error creating block:", err);

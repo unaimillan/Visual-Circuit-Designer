@@ -70,6 +70,7 @@ import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
 import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
 import { CustomBlocksProvider } from "./mainPage/customCircuit.jsx";
+import FlowWithCustomNodes from './mainPage/FlowWithCustomNodes.jsx';
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -162,14 +163,9 @@ export default function Main() {
     [setNodesCustom, setEdgesCustom],
   );
 
-  const handleCreateFromCurrent = (customBlock) => {
+  const handleCreateCustomBlock = (customBlock) => {
     // Handle custom block creation
     console.log("Created custom block:", customBlock);
-  };
-
-  const handleCreateFromFile = () => {
-    // Handle file import logic
-    console.log("Create from file");
   };
 
   const editableNode = useMemo(
@@ -616,7 +612,7 @@ export default function Main() {
           </div>
 
           <>
-            <ReactFlow
+            <FlowWithCustomNodes
               style={{ backgroundColor: "var(--main-2)" }}
               ref={ref}
               nodes={nodes}
@@ -676,7 +672,7 @@ export default function Main() {
                   }}
                 />
               )}
-            </ReactFlow>
+            </FlowWithCustomNodes>
 
             {editableNode && (
               <div className="name-editor">
@@ -814,8 +810,7 @@ export default function Main() {
               onClose={() => setModalOpen(false)}
               nodes={nodesCustom}
               edges={edgesCustom}
-              onCreateFromFile={handleCreateFromFile}
-              onCreateFromCurrent={handleCreateFromCurrent}
+              onCreateCustomBlock={handleCreateCustomBlock}
             />
 
             <Settings

@@ -40,6 +40,7 @@ export const createCustomBlock = (nodes, edges, blockName) => {
     inputs,
     outputs,
     originalSchema: { nodes, edges },
+    defaultPosition: { x: 0, y: 0 },
   };
 };
 
@@ -93,6 +94,11 @@ export const deleteCustomBlock = (blockId) => {
  * Находит кастомный блок по ID
  */
 export const findCustomBlockById = (blockId) => {
-  const blocks = loadCustomBlocks();
-  return blocks.find((block) => block.id === blockId);
+  try {
+    const savedBlocks = JSON.parse(localStorage.getItem("customBlocks") || "[]");
+    return savedBlocks.find(block => block.id === blockId);
+  } catch (error) {
+    console.error("Failed to find custom block:", error);
+    return null;
+  }
 };
