@@ -67,6 +67,7 @@ import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
 import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
+import { createCustomBlock, saveCustomBlock } from "../utils/customBlockUtils.js";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -778,7 +779,7 @@ export default function Main() {
             onClose={() => setModalOpen(false)}
             nodes={getSelectedElements().nodes}
             edges={getSelectedElements().edges}
-            // onCreateFromFile={handleCreateFromFile}
+            onCreateFromFile={handleCreateFromFile}
             onCreateFromCurrent={handleCreateFromCurrent}
           />
 
@@ -819,6 +820,7 @@ export default function Main() {
             loadCircuit={loadCircuit}
             fileInputRef={fileInputRef}
             handleOpenClick={handleOpenClick}
+            onCreateCustomBlock={() => setModalOpen(true)}
             setMenu={setMenu}
             onSimulateClick={() =>
               handleSimulateClick({

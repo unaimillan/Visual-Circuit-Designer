@@ -17,6 +17,7 @@ import {
   IconToolbarStepWire,
   IconToolbarStraightWire,
   IconToolbarText,
+  IconToolbarCustomBlock,
 } from "../../../../assets/toolbar-icons.jsx";
 
 export default function Toolbar({
@@ -31,6 +32,7 @@ export default function Toolbar({
   loadCircuit,
   fileInputRef,
   handleOpenClick,
+  onCreateCustomBlock,
   undo,
   redo,
   canUndo,
@@ -210,7 +212,10 @@ export default function Toolbar({
           onClick={handleOpenClick}
           title={"Upload"}
         >
-          <IconOpenFile SVGClassName="toolbar-button-icon" draggable="false" />
+          <IconOpenFile
+            SVGClassName="toolbar-button-icon"
+            draggable="false"
+          />
         </button>
         <input
           className={`hidden`}
@@ -218,6 +223,27 @@ export default function Toolbar({
           type="file"
           accept=".json"
           onChange={loadCircuit}
+          style={{ display: "none" }}
+        />
+
+        <div className="toolbar-separator"></div>
+
+        <button
+          className={`toolbar-button`}
+          onClick={handleOpenClick}
+          title={"Create custom block"}
+        >
+          <IconToolbarCustomBlock
+            SVGClassName="toolbar-button-icon"
+            draggable="false"
+          />
+        </button>
+        <input
+          className={`hidden`}
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={onCreateCustomBlock}
           style={{ display: "none" }}
         />
       </div>
