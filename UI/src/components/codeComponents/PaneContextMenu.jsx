@@ -12,42 +12,16 @@ export default function PaneContextMenu({
   left,
   right,
   bottom,
+  onCreateCustom,
   ...props
 }) {
   const { setNodes, setEdges } = useReactFlow();
-
-  // const rotateSelectedNodes = useCallback(
-  //   (angle) => {
-  //     console.log("selectedElements", selectedElements);
-  //     if (!selectedElements?.nodes?.length) return;
-  //     const selectedNodeIds = new Set(selectedElements.nodes.map((n) => n.id));
-  //
-  //     setNodes((nodes) =>
-  //       nodes.map((node) => {
-  //         if (selectedNodeIds.has(node.id)) {
-  //           const currentRotation = node.data?.rotation || 0;
-  //           const newRotation = (currentRotation + angle + 360) % 360;
-  //           return {
-  //             ...node,
-  //             data: {
-  //               ...node.data,
-  //               rotation: newRotation,
-  //             },
-  //           };
-  //         }
-  //         return node;
-  //       })
-  //     );
-  //   },
-  //   [selectedElements, setNodes],
-  // );
 
   const deleteSelectedElements = useCallback(() => {
     const selectedNodeIds = new Set(selectedElements.nodes.map((n) => n.id));
     const selectedEdgeIds = new Set(selectedElements.edges.map((e) => e.id));
 
     setNodes((nodes) => nodes.filter((node) => !selectedNodeIds.has(node.id)));
-
     setEdges((edges) =>
       edges.filter(
         (edge) =>
@@ -66,35 +40,39 @@ export default function PaneContextMenu({
       {...props}
     >
       <button
-        style={{ margin: "0.5rem" }}
-        className={"context-menu-button"}
+        className="context-menu-button"
         onClick={copyElements}
         disabled={!selectedElements?.nodes?.length}
       >
         Copy
       </button>
       <button
-        style={{ margin: "0.5rem" }}
-        className={"context-menu-button"}
+        className="context-menu-button"
         onClick={pasteElements}
         disabled={!clipboard?.nodes?.length}
       >
         Paste here
       </button>
       <button
-        style={{ margin: "0.5rem" }}
-        className={"context-menu-button"}
+        className="context-menu-button"
         onClick={cutElements}
         disabled={!selectedElements?.nodes?.length}
       >
         Cut
       </button>
-      <button
-        style={{ margin: "0.5rem" }}
-        className={"context-menu-button"}
-        onClick={deleteSelectedElements}
-      >
+      <button className="context-menu-button" onClick={deleteSelectedElements}>
         Delete
+      </button>
+
+      {/* New custom circuit button */}
+      <button
+        className="context-menu-button"
+        onClick={() => {
+          onCreateCustom();
+          onClose();
+        }}
+      >
+        Create custom node
       </button>
     </div>
   );

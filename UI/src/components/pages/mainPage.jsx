@@ -68,18 +68,21 @@ import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
-import CreateCustomBlock from "./mainPage/customCircuit.jsx";
+import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
 import { CustomBlocksProvider } from "./mainPage/customCircuit.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {},
-  updateInputState: () => {},
+  setSimulateState: () => {
+  },
+  updateInputState: () => {
+  },
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {},
+  setLogLevel: () => {
+  },
 });
 
 export function useSimulateState() {
@@ -137,9 +140,40 @@ export default function Main() {
 
   const socketRef = useRef(null);
 
-  const fileInputRef = useRef(null);
-
   const ignoreChangesRef = useRef(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [nodesCustom, setNodesCustom] = useNodesState([]);
+  const [edgesCustom, setEdgesCustom] = useEdgesState([]);
+
+  const uploadRef = useRef(null);
+  const extractRef = useRef(null);
+
+  const handleUploadClick = () => {
+    uploadRef.current?.click();
+  };
+
+  const handleExtractClick = () => {
+    extractRef.current?.click();
+  };
+
+  const extractFromFile = useCallback(
+    (event) => {
+      loadCircuitUtil(event, setNodesCustom, setEdgesCustom);
+      setModalOpen(true);
+    },
+    [setNodesCustom, setEdgesCustom],
+  );
+
+  const handleCreateFromCurrent = (customBlock) => {
+    // Handle custom block creation
+    console.log("Created custom block:", customBlock);
+  };
+
+  const handleCreateFromFile = () => {
+    // Handle file import logic
+    console.log("Create from file");
+  };
 
   const editableNode = useMemo(
     () => getEditableNode(nodes, edges),
@@ -147,12 +181,6 @@ export default function Main() {
   );
 
   const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
-
-  const handleOpenClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   // Create history updater
   const historyUpdater = useMemo(() => createHistoryUpdater(), []);
@@ -170,7 +198,8 @@ export default function Main() {
           setActiveTabId(savedActive);
           return;
         }
-      } catch {}
+      } catch {
+      }
     }
     // Initial setup for new users
     const initial = [
@@ -312,6 +341,13 @@ export default function Main() {
   const getSelectedElements = useCallback(() => {
     return getSelectedUtil(nodes, edges);
   });
+
+  const onCreateCustom = useCallback(() => {
+    const selectedElements = getSelectedElements();
+    setNodesCustom(selectedElements.nodes);
+    setEdgesCustom(selectedElements.edges);
+    setModalOpen(true);
+  }, [getSelectedElements, setNodesCustom, setEdgesCustom]);
 
   const isValidConnection = useCallback(
     (connection) => isValidConnectionUtil(connection, edgesRef.current),
@@ -537,7 +573,8 @@ export default function Main() {
       setPanOnDrag,
       setActiveWire,
       socketRef,
-      handleOpenClick,
+      handleUploadClick,
+      handleExtractClick,
       undo,
       redo,
     },
@@ -559,7 +596,8 @@ export default function Main() {
       setPanOnDrag,
       setActiveWire,
       socketRef,
-      handleOpenClick,
+      handleUploadClick,
+      handleExtractClick,
       undo,
       redo,
     ],
@@ -697,6 +735,7 @@ export default function Main() {
                 cutElements={cutElements}
                 onClose={closeMenu}
                 clipboard={clipboard}
+                onCreateCustom={onCreateCustom}
               />
             )}
 
@@ -774,15 +813,13 @@ export default function Main() {
               }}
             />
 
-            <CreateCustomBlock
-              nodes={nodes}
-              edges={edges}
-              onCreateFromFile={() => {
-                console.log("создать из файла");
-              }}
-              onCreateFromCurrent={() => {
-                console.log("создать из текущего");
-              }}
+            <CreateCustomBlockModal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              nodes={nodesCustom}
+              edges={edgesCustom}
+              onCreateFromFile={handleCreateFromFile}
+              onCreateFromCurrent={handleCreateFromCurrent}
             />
 
             <Settings
@@ -820,9 +857,11 @@ export default function Main() {
               setPanOnDrag={setPanOnDrag}
               saveCircuit={saveCircuit}
               loadCircuit={loadCircuit}
-              fileInputRef={fileInputRef}
-              handleOpenClick={handleOpenClick}
-              setMenu={setMenu}
+              extractFromFile={extractFromFile}
+              uploadRef={uploadRef}
+              handleUploadClick={handleUploadClick}
+              extractRef={extractRef}
+              handleExtractClick={handleExtractClick}
               onSimulateClick={() =>
                 handleSimulateClick({
                   simulateState,
