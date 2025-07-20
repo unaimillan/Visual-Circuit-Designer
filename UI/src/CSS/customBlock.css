@@ -123,12 +123,15 @@
 }
 
 .custom-block-node {
-  background-color: var(--main-2);
-  border: 1px solid var(--main-4);
   border-radius: 4px;
+  background: var(--menu-lighter);
+  color: var(--main-0);
   padding: 10px;
   min-width: 150px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.custom-block-node:hover {
+  background-color: var(--main-4);
 }
 
 .custom-block-header {

@@ -15,7 +15,7 @@ const CustomBlockNode = ({ data }) => {
                 type="target"
                 position={Position.Left}
                 id={`input-${idx}`}
-                style={{ top: `${(idx + 1) * 20}px`, background: '#555' }}
+                style={{ top: `${9}px`, left: `${-10}px` }}
               />
             </div>
           ))}
@@ -30,7 +30,7 @@ const CustomBlockNode = ({ data }) => {
                 type="source"
                 position={Position.Right}
                 id={`output-${idx}`}
-                style={{ top: `${(idx + 1) * 20}px`, background: '#555' }}
+                style={{ top: `${9}px`, right: `${-10}px` }}
               />
             </div>
           ))}
