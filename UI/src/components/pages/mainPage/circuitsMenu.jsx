@@ -10,7 +10,7 @@ import {
   IconInput,
   IconOutput,
 } from "../../../../assets/circuits-icons.jsx";
-import { loadCustomBlocks } from "../../utils/customBlockUtils.js"; // Путь к вашим утилитам
+import { useCustomBlocks } from "./customCircuit.jsx"; // Путь к вашим утилитам
 
 const CustomBlockIcon = ({ inputs, outputs }) => {
   return (
@@ -36,7 +36,7 @@ export default function CircuitsMenu({
   spawnCircuit,
 }) {
   const [openIndexes, setOpenIndexes] = useState([]);
-  const { customBlocks } = loadCustomBlocks(); // Получаем блоки из контекста
+  const { customBlocks } = useCustomBlocks(); // Получаем блоки из контекста
 
   const toggleItem = useCallback((index) => {
     setOpenIndexes((prevIndexes) =>
