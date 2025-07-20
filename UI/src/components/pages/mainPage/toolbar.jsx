@@ -30,9 +30,11 @@ export default function Toolbar({
   onSimulateClick,
   saveCircuit,
   loadCircuit,
-  fileInputRef,
-  handleOpenClick,
-  onCreateCustomBlock,
+  extractFromFile,
+  uploadRef,
+  handleUploadClick,
+  extractRef,
+  handleExtractClick,
   undo,
   redo,
   canUndo,
@@ -209,7 +211,7 @@ export default function Toolbar({
 
         <button
           className={`toolbar-button`}
-          onClick={handleOpenClick}
+          onClick={handleUploadClick}
           title={"Upload"}
         >
           <IconOpenFile
@@ -219,7 +221,7 @@ export default function Toolbar({
         </button>
         <input
           className={`hidden`}
-          ref={fileInputRef}
+          ref={uploadRef}
           type="file"
           accept=".json"
           onChange={loadCircuit}
@@ -230,7 +232,7 @@ export default function Toolbar({
 
         <button
           className={`toolbar-button`}
-          onClick={handleOpenClick}
+          onClick={handleExtractClick}
           title={"Create custom block"}
         >
           <IconToolbarCustomBlock
@@ -240,10 +242,10 @@ export default function Toolbar({
         </button>
         <input
           className={`hidden`}
-          ref={fileInputRef}
+          ref={extractRef}
           type="file"
           accept=".json"
-          onChange={onCreateCustomBlock}
+          onChange={extractFromFile}
           style={{ display: "none" }}
         />
       </div>

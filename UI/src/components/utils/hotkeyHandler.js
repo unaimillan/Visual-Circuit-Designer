@@ -24,7 +24,8 @@ export function hotkeyHandler(e, context) {
     socketRef,
     nodes,
     edges,
-    handleOpenClick,
+    handleUploadClick,
+    handleExtractClick,
     setActiveAction,
     setPanOnDrag,
     setActiveWire,
@@ -103,7 +104,12 @@ export function hotkeyHandler(e, context) {
       case "o":
       case "щ":
         e.preventDefault();
-        handleOpenClick?.();
+        handleUploadClick?.();
+        return;
+      case "b":
+      case "и":
+        e.preventDefault();
+        handleExtractClick?.();
         return;
     }
   }

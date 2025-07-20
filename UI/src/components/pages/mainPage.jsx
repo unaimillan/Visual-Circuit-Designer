@@ -135,11 +135,43 @@ export default function Main() {
 
   const socketRef = useRef(null);
 
-  const fileInputRef = useRef(null);
-
   const ignoreChangesRef = useRef(false);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [mode, setMode] = useState("fromSelected");
+  const [nodesCustom, setNodesCustom] = useNodesState([]);
+  const [edgesCustom, setEdgesCustom] = useEdgesState([]);
+
+  const uploadRef = useRef(null);
+  const extractRef = useRef(null);
+
+  const handleUploadClick = () => {
+    uploadRef.current?.click();
+  };
+
+  const handleExtractClick = () => {
+    extractRef.current?.click();
+  };
+
+  const extractFromFile = useCallback(
+    (event) => {
+      loadCircuitUtil(event, setNodesCustom, setEdgesCustom);
+      setModalOpen(true);
+      setMode("fromFile");
+    },
+    [setNodesCustom, setEdgesCustom],
+  );
+
+  const onCreateCustom = useCallback(
+    (event) => {
+      const selectedElements = getSelectedElements();
+      setNodesCustom(selectedElements.nodes);
+      setNodesCustom(selectedElements.edges);
+      setModalOpen(true);
+      setMode("fromFile");
+    },
+    [setNodesCustom, setEdgesCustom],
+  );
 
   const handleCreateFromCurrent = (customBlock) => {
     // Handle custom block creation
@@ -157,12 +189,6 @@ export default function Main() {
   );
 
   const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
-
-  const handleOpenClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   // Create history updater
   const historyUpdater = useMemo(() => createHistoryUpdater(), []);
@@ -545,7 +571,8 @@ export default function Main() {
       setPanOnDrag,
       setActiveWire,
       socketRef,
-      handleOpenClick,
+      handleUploadClick,
+      handleExtractClick,
       undo,
       redo,
     },
@@ -567,7 +594,8 @@ export default function Main() {
       setPanOnDrag,
       setActiveWire,
       socketRef,
-      handleOpenClick,
+      handleUploadClick,
+      handleExtractClick,
       undo,
       redo,
     ],
@@ -777,8 +805,8 @@ export default function Main() {
           <CreateCustomBlockModal
             isOpen={modalOpen}
             onClose={() => setModalOpen(false)}
-            nodes={getSelectedElements().nodes}
-            edges={getSelectedElements().edges}
+            nodes={nodesCustom}
+            edges={edgesCustom}
             onCreateFromFile={handleCreateFromFile}
             onCreateFromCurrent={handleCreateFromCurrent}
           />
@@ -818,10 +846,11 @@ export default function Main() {
             setPanOnDrag={setPanOnDrag}
             saveCircuit={saveCircuit}
             loadCircuit={loadCircuit}
-            fileInputRef={fileInputRef}
-            handleOpenClick={handleOpenClick}
-            onCreateCustomBlock={() => setModalOpen(true)}
-            setMenu={setMenu}
+            extractFromFile={extractFromFile}
+            uploadRef={uploadRef}
+            handleUploadClick={handleUploadClick}
+            extractRef={extractRef}
+            handleExtractClick={handleExtractClick}
             onSimulateClick={() =>
               handleSimulateClick({
                 simulateState,

@@ -14,12 +14,11 @@ export default function CreateCustomBlockModal({
   const [blockName, setBlockName] = useState("");
   const [error, setError] = useState("");
 
-  const handleCreateFromCurrent = () => {
+  const handleCreateCustomBlock = () => {
     if (!blockName.trim()) {
       showToastError("Please enter a custom block name.");
       return;
     }
-
     try {
       const customBlock = createCustomBlock(nodes, edges, blockName.trim());
       saveCustomBlock(customBlock);
@@ -34,12 +33,7 @@ export default function CreateCustomBlockModal({
       console.error("Error creating block:", err);
       setError(`Error: ${err.message}`);
     }
-  };
-
-  const handleCreateFromFile = () => {
-    onClose();
-    if (onCreateFromFile) onCreateFromFile();
-  };
+  }
 
   if (!isOpen) return null;
 
@@ -48,18 +42,11 @@ export default function CreateCustomBlockModal({
       <div className="modal-content">
         <h3>Create custom block</h3>
         <button className="close-button-custom-circuit" onClick={onClose}>
-          <IconCloseCross SVGClassName="close-custom-circuit-cross" />
+          <IconCloseCross SVGClassName="close-custom-circuit-cross"/>
         </button>
 
         <div className="creation-options">
-          <button className="option-button" onClick={handleCreateFromFile}>
-            From file
-          </button>
-
           <div className="current-circuit-option">
-            <button className="option-button" onClick={handleCreateFromCurrent}>
-              From current circuit
-            </button>
             <div className="name-input">
               <input
                 type="text"
@@ -68,6 +55,9 @@ export default function CreateCustomBlockModal({
                 placeholder="New custom block name"
                 required
               />
+              <button className="create-button" onClick={() => handleCreateCustomBlock()}>
+                Create
+              </button>
               {error && <p className="error-message">{error}</p>}
             </div>
           </div>
