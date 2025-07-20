@@ -73,16 +73,13 @@ import { CustomBlocksProvider } from "./mainPage/customCircuit.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
-  setSimulateState: () => {
-  },
-  updateInputState: () => {
-  },
+  setSimulateState: () => {},
+  updateInputState: () => {},
 });
 
 export const NotificationsLevelContext = createContext({
   logLevel: "idle",
-  setLogLevel: () => {
-  },
+  setLogLevel: () => {},
 });
 
 export function useSimulateState() {
@@ -198,8 +195,7 @@ export default function Main() {
           setActiveTabId(savedActive);
           return;
         }
-      } catch {
-      }
+      } catch {}
     }
     // Initial setup for new users
     const initial = [
