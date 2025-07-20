@@ -9,25 +9,35 @@ export const createCustomBlock = (nodes, edges, blockName) => {
   if (!Array.isArray(nodes)) throw new Error("Invalid nodes: must be an array");
   if (!Array.isArray(edges)) throw new Error("Invalid edges: must be an array");
 
-  const inputs = nodes.filter(node =>
+  const inputNodes = nodes.filter(node =>
     node.type === "inputNodeSwitch" || node.type === "inputNodeButton"
-  ).map(node => ({
-    id: node.id,
-    name: node.name || `input_${Math.floor(Math.random() * 10000)}`,
-  }));
+  );
 
-  const outputs = nodes.filter(node =>
+  const outputNodes = nodes.filter(node =>
     node.type === "outputNodeLed"
-  ).map(node => ({
-    id: node.id,
-    name: node.name || `output_${Math.floor(Math.random() * 10000)}`,
-  }));
+  );
+
+  if (inputNodes.length === 0 || outputNodes.length === 0) {
+    throw new Error("Custom block must have at least one input and one output pin");
+  }
+
+  inputNodes.forEach(node => {
+    if (!node.name) {
+      throw new Error(`Input \"${node.type.replace("inputNode", "")}\" must have a name`);
+    }
+  });
+
+  outputNodes.forEach(node => {
+    if (!node.name) {
+      throw new Error(`Output \"${node.type.replace("outputNode", "")}\" must have a name`);
+    }
+  });
 
   return {
     id: generateCustomBlockId(),
     name: blockName,
-    inputs,
-    outputs,
+    inputNodes,
+    outputNodes,
     originalSchema: { nodes, edges },
   };
 };

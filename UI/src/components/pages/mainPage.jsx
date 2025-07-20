@@ -776,9 +776,9 @@ export default function Main() {
           <CreateCustomBlockModal
             isOpen={modalOpen}
             onClose={() => setModalOpen(false)}
-            nodes={nodes}
-            edges={edges}
-            onCreateFromFile={handleCreateFromFile}
+            nodes={getSelectedElements().nodes}
+            edges={getSelectedElements().edges}
+            // onCreateFromFile={handleCreateFromFile}
             onCreateFromCurrent={handleCreateFromCurrent}
           />
 
