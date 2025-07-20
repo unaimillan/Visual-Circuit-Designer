@@ -159,13 +159,6 @@ export default function Main() {
     [setNodesCustom, setEdgesCustom],
   );
 
-  const onCreateCustom = useCallback(() => {
-    const selectedElements = getSelectedElements();
-    setNodesCustom(selectedElements.nodes);
-    setNodesCustom(selectedElements.edges);
-    setModalOpen(true);
-  }, [setNodesCustom, setEdgesCustom]);
-
   const handleCreateFromCurrent = (customBlock) => {
     // Handle custom block creation
     console.log("Created custom block:", customBlock);
@@ -339,6 +332,13 @@ export default function Main() {
   const getSelectedElements = useCallback(() => {
     return getSelectedUtil(nodes, edges);
   });
+
+  const onCreateCustom = useCallback(() => {
+    const selectedElements = getSelectedElements();
+    setNodesCustom(selectedElements.nodes);
+    setEdgesCustom(selectedElements.edges);
+    setModalOpen(true);
+  }, [getSelectedElements, setNodesCustom, setEdgesCustom]);
 
   const isValidConnection = useCallback(
     (connection) => isValidConnectionUtil(connection, edgesRef.current),
@@ -725,7 +725,7 @@ export default function Main() {
               cutElements={cutElements}
               onClose={closeMenu}
               clipboard={clipboard}
-              onAddCustomCircuit={() => setModalOpen(true)}
+              onCreateCustom={onCreateCustom}
             />
           )}
 

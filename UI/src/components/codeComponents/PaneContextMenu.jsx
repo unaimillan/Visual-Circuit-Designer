@@ -12,7 +12,7 @@ export default function PaneContextMenu({
   left,
   right,
   bottom,
-  onAddCustomCircuit, // New prop to open modal
+  onCreateCustom,
   ...props
 }) {
   const { setNodes, setEdges } = useReactFlow();
@@ -68,7 +68,7 @@ export default function PaneContextMenu({
       <button
         className="context-menu-button"
         onClick={() => {
-          onAddCustomCircuit();
+          onCreateCustom();
           onClose();
         }}
       >
