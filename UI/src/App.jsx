@@ -17,6 +17,7 @@ import "./CSS/context-menu.css";
 import "./CSS/button.css";
 import "./CSS/tabs.css";
 import "./CSS/name-editor.css";
+import "./CSS/customBlock.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 

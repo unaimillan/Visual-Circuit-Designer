@@ -68,6 +68,9 @@ import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
+import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
+import { CustomBlocksProvider } from "./mainPage/customCircuit.jsx";
+import FlowWithCustomNodes from "./mainPage/FlowWithCustomNodes.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",
@@ -135,9 +138,35 @@ export default function Main() {
 
   const socketRef = useRef(null);
 
-  const fileInputRef = useRef(null);
-
   const ignoreChangesRef = useRef(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [nodesCustom, setNodesCustom] = useNodesState([]);
+  const [edgesCustom, setEdgesCustom] = useEdgesState([]);
+
+  const uploadRef = useRef(null);
+  const extractRef = useRef(null);
+
+  const handleUploadClick = () => {
+    uploadRef.current?.click();
+  };
+
+  const handleExtractClick = () => {
+    extractRef.current?.click();
+  };
+
+  const extractFromFile = useCallback(
+    (event) => {
+      loadCircuitUtil(event, setNodesCustom, setEdgesCustom);
+      setModalOpen(true);
+    },
+    [setNodesCustom, setEdgesCustom],
+  );
+
+  const handleCreateCustomBlock = (customBlock) => {
+    // Handle custom block creation
+    console.log("Created custom block:", customBlock);
+  };
 
   const editableNode = useMemo(
     () => getEditableNode(nodes, edges),
@@ -145,12 +174,6 @@ export default function Main() {
   );
 
   const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
-
-  const handleOpenClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   // Create history updater
   const historyUpdater = useMemo(() => createHistoryUpdater(), []);
@@ -310,6 +333,13 @@ export default function Main() {
   const getSelectedElements = useCallback(() => {
     return getSelectedUtil(nodes, edges);
   });
+
+  const onCreateCustom = useCallback(() => {
+    const selectedElements = getSelectedElements();
+    setNodesCustom(selectedElements.nodes);
+    setEdgesCustom(selectedElements.edges);
+    setModalOpen(true);
+  }, [getSelectedElements, setNodesCustom, setEdgesCustom]);
 
   const isValidConnection = useCallback(
     (connection) => isValidConnectionUtil(connection, edgesRef.current),
@@ -535,7 +565,8 @@ export default function Main() {
       setPanOnDrag,
       setActiveWire,
       socketRef,
-      handleOpenClick,
+      handleUploadClick,
+      handleExtractClick,
       undo,
       redo,
     },
@@ -557,274 +588,288 @@ export default function Main() {
       setPanOnDrag,
       setActiveWire,
       socketRef,
-      handleOpenClick,
+      handleUploadClick,
+      handleExtractClick,
       undo,
       redo,
     ],
   );
 
   return (
-    <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
-      <SimulateStateContext.Provider
-        value={{ simulateState, setSimulateState, updateInputState }}
-      >
-        <div className={"main-tabs-wrapper"}>
-          <TabsContainer
-            tabs={tabs}
-            activeTabId={activeTabId}
-            onTabsChange={setTabs}
-            onActiveTabIdChange={handleTabSwitch}
-            ref={ref}
-          />
-        </div>
+    <CustomBlocksProvider>
+      <NotificationsLevelContext.Provider value={{ logLevel, setLogLevel }}>
+        <SimulateStateContext.Provider
+          value={{ simulateState, setSimulateState, updateInputState }}
+        >
+          <div className={"main-tabs-wrapper"}>
+            <TabsContainer
+              tabs={tabs}
+              activeTabId={activeTabId}
+              onTabsChange={setTabs}
+              onActiveTabIdChange={handleTabSwitch}
+              ref={ref}
+            />
+          </div>
 
-        <>
-          <ReactFlow
-            style={{ backgroundColor: "var(--main-2)" }}
-            ref={ref}
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChangeFromHook}
-            onEdgesChange={onEdgesChangeFromHook}
-            defaultEdgeOptions={{
-              type: activeWire,
-            }}
-            onNodeContextMenu={onNodeContextMenu}
-            onEdgeContextMenu={onEdgeContextMenu}
-            onPaneContextMenu={onPaneContextMenu}
-            onConnect={onConnect}
-            onNodeDragStop={onNodeDragStop}
-            onDrop={onDrop}
-            onDragOver={(e) => e.preventDefault()}
-            onInit={setReactFlowInstance}
-            isValidConnection={isValidConnection}
-            nodeTypes={nodeTypes}
-            panOnDrag={panOnDrag}
-            selectionOnDrag
-            panOnScroll
-            snapToGrid
-            snapGrid={[GAP_SIZE, GAP_SIZE]}
-            selectionMode={SelectionMode.Partial}
-            minZoom={0.2}
-            maxZoom={10}
-            deleteKeyCode={["Delete", "Backspace"]}
-            onDelete={deleteSelectedElements}
-            // onlyRenderVisibleElements={true}
-          >
-            <Background
-              offset={[10.5, 5]}
-              bgColor="var(--main-1)"
-              color="var(--main-4)"
-              gap={GAP_SIZE}
-              size={1.6}
-              variant={variant}
-              style={{ transition: "var(--ttime)" }}
-            />
-            <Controls
-              className="controls"
-              style={{ transition: "var(--ttime)" }}
-            />
-            {showMinimap && (
-              <MiniMap
-                className="miniMap"
-                bgColor="var(--main-3)"
-                maskColor="var(--mask)"
-                nodeColor="var(--main-4)"
-                position="top-right"
-                style={{
-                  borderRadius: "0.5rem",
-                  overflow: "hidden",
-                  transition:
-                    "background-color var(--ttime),border var(--ttime)",
-                }}
+          <>
+            <FlowWithCustomNodes
+              style={{ backgroundColor: "var(--main-2)" }}
+              ref={ref}
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChangeFromHook}
+              onEdgesChange={onEdgesChangeFromHook}
+              defaultEdgeOptions={{
+                type: activeWire,
+              }}
+              onNodeContextMenu={onNodeContextMenu}
+              onEdgeContextMenu={onEdgeContextMenu}
+              onPaneContextMenu={onPaneContextMenu}
+              onConnect={onConnect}
+              onNodeDragStop={onNodeDragStop}
+              onDrop={onDrop}
+              onDragOver={(e) => e.preventDefault()}
+              onInit={setReactFlowInstance}
+              isValidConnection={isValidConnection}
+              nodeTypes={nodeTypes}
+              panOnDrag={panOnDrag}
+              selectionOnDrag
+              panOnScroll
+              snapToGrid
+              snapGrid={[GAP_SIZE, GAP_SIZE]}
+              selectionMode={SelectionMode.Partial}
+              minZoom={0.2}
+              maxZoom={10}
+              deleteKeyCode={["Delete", "Backspace"]}
+              onDelete={deleteSelectedElements}
+              // onlyRenderVisibleElements={true}
+            >
+              <Background
+                offset={[10.5, 5]}
+                bgColor="var(--main-1)"
+                color="var(--main-4)"
+                gap={GAP_SIZE}
+                size={1.6}
+                variant={variant}
+                style={{ transition: "var(--ttime)" }}
               />
-            )}
-          </ReactFlow>
+              <Controls
+                className="controls"
+                style={{ transition: "var(--ttime)" }}
+              />
+              {showMinimap && (
+                <MiniMap
+                  className="miniMap"
+                  bgColor="var(--main-3)"
+                  maskColor="var(--mask)"
+                  nodeColor="var(--main-4)"
+                  position="top-right"
+                  style={{
+                    borderRadius: "0.5rem",
+                    overflow: "hidden",
+                    transition:
+                      "background-color var(--ttime),border var(--ttime)",
+                  }}
+                />
+              )}
+            </FlowWithCustomNodes>
 
-          {editableNode && (
-            <div className="name-editor">
-              <div className="label-container">
-                <label>Export Name (Optional)</label>
-                <div className="tooltip-container">
-                  <div className="tooltip-icon">?</div>
-                  <div className="tooltip-text">
-                    When creating custom circuit, each IO with an export name
-                    will become one of the new circuit's outputs.
+            {editableNode && (
+              <div className="name-editor">
+                <div className="label-container">
+                  <label>Export Name (Optional)</label>
+                  <div className="tooltip-container">
+                    <div className="tooltip-icon">?</div>
+                    <div className="tooltip-text">
+                      When creating custom circuit, each IO with an export name
+                      will become one of the new circuit's outputs.
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  value={editableNode.name || ""}
-                  onChange={onNameChange}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                <div className="input-group">
+                  <input
+                    type="text"
+                    value={editableNode.name || ""}
+                    onChange={onNameChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        deselectAll();
+                        setTimeout(recordHistory, 0);
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <button
+                    className="close-button"
+                    onClick={(e) => {
                       e.preventDefault();
                       deselectAll();
                       setTimeout(recordHistory, 0);
-                    }
-                  }}
-                  autoFocus
-                />
-                <button
-                  className="close-button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    deselectAll();
-                    setTimeout(recordHistory, 0);
-                  }}
-                >
-                  Close
-                </button>
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {menu && menu.type === "node" && <NodeContextMenu {...menu} />}
+            {menu && menu.type === "node" && <NodeContextMenu {...menu} />}
 
-          {menu && menu.type === "edge" && <EdgeContextMenu {...menu} />}
+            {menu && menu.type === "edge" && <EdgeContextMenu {...menu} />}
 
-          {menu && menu.type === "pane" && (
-            <PaneContextMenu
-              {...menu}
-              selectedElements={getSelectedElements()}
-              copyElements={copyElements}
-              pasteElements={pasteElements}
-              cutElements={cutElements}
-              onClose={closeMenu}
-              clipboard={clipboard}
+            {menu && menu.type === "pane" && (
+              <PaneContextMenu
+                {...menu}
+                selectedElements={getSelectedElements()}
+                copyElements={copyElements}
+                pasteElements={pasteElements}
+                cutElements={cutElements}
+                onClose={closeMenu}
+                clipboard={clipboard}
+                onCreateCustom={onCreateCustom}
+              />
+            )}
+
+            <Toaster
+              position={toastPosition}
+              toastOptions={{
+                style: {
+                  backgroundColor: "var(--main-2)",
+                  color: "var(--main-0)",
+                  fontSize: "12px",
+                  borderRadius: "0.5rem",
+                  padding: "10px 25px 10px 10px",
+                  border: "0.05rem solid var(--main-5)",
+                  fontFamily: "Montserrat, serif",
+                },
+                duration: 2000,
+                error: {
+                  duration: 10000,
+                },
+                warning: {
+                  className: "toast-warning",
+                  duration: 3000,
+                  icon: "⚠️",
+                },
+              }}
             />
-          )}
 
-          <Toaster
-            position={toastPosition}
-            toastOptions={{
-              style: {
-                backgroundColor: "var(--main-2)",
-                color: "var(--main-0)",
-                fontSize: "12px",
-                borderRadius: "0.5rem",
-                padding: "10px 25px 10px 10px",
-                border: "0.05rem solid var(--main-5)",
-                fontFamily: "Montserrat, serif",
-              },
-              duration: 2000,
-              error: {
-                duration: 10000,
-              },
-              warning: {
-                className: "toast-warning",
-                duration: 3000,
-                icon: "⚠️",
-              },
-            }}
-          />
+            <button
+              className="open-circuits-menu-button"
+              onClick={() => setCircuitsMenuState(!circuitsMenuState)}
+              title={"Circuits menu"}
+            >
+              <IconMenu
+                SVGClassName="open-circuits-menu-button-icon"
+                draggable="false"
+              />
+            </button>
 
-          <button
-            className="open-circuits-menu-button"
-            onClick={() => setCircuitsMenuState(!circuitsMenuState)}
-            title={"Circuits menu"}
-          >
-            <IconMenu
-              SVGClassName="open-circuits-menu-button-icon"
-              draggable="false"
+            <button
+              className="open-settings-button"
+              onClick={() => setOpenSettings(true)}
+              title={"Settings"}
+            >
+              <IconSettings
+                SVGClassName="open-settings-button-icon"
+                draggable="false"
+              />
+            </button>
+
+            <Link
+              to="/login"
+              className="login-button"
+              style={{ textDecoration: "none" }}
+            >
+              <span className="login-button-text">Log in</span>
+            </Link>
+
+            <div
+              className={`backdrop ${openSettings ? "cover" : ""}`}
+              onClick={() => {
+                setOpenSettings(false);
+              }}
             />
-          </button>
 
-          <button
-            className="open-settings-button"
-            onClick={() => setOpenSettings(true)}
-            title={"Settings"}
-          >
-            <IconSettings
-              SVGClassName="open-settings-button-icon"
-              draggable="false"
+            <div
+              className={`backdrop ${menu ? "show" : ""}`}
+              onClick={() => closeMenu()}
             />
-          </button>
 
-          <Link
-            to="/login"
-            className="login-button"
-            style={{ textDecoration: "none" }}
-          >
-            <span className="login-button-text">Log in</span>
-          </Link>
+            <div
+              className={`backdrop ${editableNode ? "show" : ""}`}
+              onClick={() => {
+                deselectAll();
+                setTimeout(recordHistory, 0);
+              }}
+            />
 
-          <div
-            className={`backdrop ${openSettings ? "cover" : ""}`}
-            onClick={() => {
-              setOpenSettings(false);
-            }}
-          />
+            <CreateCustomBlockModal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              nodes={nodesCustom}
+              edges={edgesCustom}
+              onCreateCustomBlock={handleCreateCustomBlock}
+            />
 
-          <div
-            className={`backdrop ${menu ? "show" : ""}`}
-            onClick={() => closeMenu()}
-          />
+            <Settings
+              openSettings={openSettings}
+              showMinimap={showMinimap}
+              setShowMinimap={setShowMinimap}
+              currentBG={currentBG}
+              setCurrentBG={setCurrentBG}
+              pastePosition={pastePosition}
+              setPastePosition={setPastePosition}
+              theme={theme}
+              setTheme={setTheme}
+              toastPosition={toastPosition}
+              setToastPosition={setToastPosition}
+              currentLogLevel={logLevel}
+              setLogLevel={setLogLevel}
+              closeSettings={() => {
+                setOpenSettings(false);
+              }}
+            />
 
-          <div
-            className={`backdrop ${editableNode ? "show" : ""}`}
-            onClick={() => {
-              deselectAll();
-              setTimeout(recordHistory, 0);
-            }}
-          />
+            <CircuitsMenu
+              circuitsMenuState={circuitsMenuState}
+              onDragStart={onDragStart}
+              spawnCircuit={spawnCircuit}
+            />
 
-          <Settings
-            openSettings={openSettings}
-            showMinimap={showMinimap}
-            setShowMinimap={setShowMinimap}
-            currentBG={currentBG}
-            setCurrentBG={setCurrentBG}
-            pastePosition={pastePosition}
-            setPastePosition={setPastePosition}
-            theme={theme}
-            setTheme={setTheme}
-            toastPosition={toastPosition}
-            setToastPosition={setToastPosition}
-            currentLogLevel={logLevel}
-            setLogLevel={setLogLevel}
-            closeSettings={() => {
-              setOpenSettings(false);
-            }}
-          />
-
-          <CircuitsMenu
-            circuitsMenuState={circuitsMenuState}
-            onDragStart={onDragStart}
-            spawnCircuit={spawnCircuit}
-          />
-
-          <Toolbar
-            simulateState={simulateState}
-            setSimulateState={setSimulateState}
-            activeAction={activeAction}
-            setActiveAction={setActiveAction}
-            activeWire={activeWire}
-            setActiveWire={setActiveWire}
-            setPanOnDrag={setPanOnDrag}
-            saveCircuit={saveCircuit}
-            loadCircuit={loadCircuit}
-            fileInputRef={fileInputRef}
-            handleOpenClick={handleOpenClick}
-            setMenu={setMenu}
-            onSimulateClick={() =>
-              handleSimulateClick({
-                simulateState,
-                setSimulateState,
-                socketRef,
-                nodes,
-                edges,
-              })
-            }
-            undo={undo}
-            redo={redo}
-            canUndo={activeTab?.index > 0}
-            canRedo={activeTab?.index < (activeTab?.history?.length || 1) - 1}
-          />
-        </>
-      </SimulateStateContext.Provider>
-    </NotificationsLevelContext.Provider>
+            <Toolbar
+              simulateState={simulateState}
+              setSimulateState={setSimulateState}
+              activeAction={activeAction}
+              setActiveAction={setActiveAction}
+              activeWire={activeWire}
+              setActiveWire={setActiveWire}
+              setPanOnDrag={setPanOnDrag}
+              saveCircuit={saveCircuit}
+              loadCircuit={loadCircuit}
+              extractFromFile={extractFromFile}
+              uploadRef={uploadRef}
+              handleUploadClick={handleUploadClick}
+              extractRef={extractRef}
+              handleExtractClick={handleExtractClick}
+              onSimulateClick={() =>
+                handleSimulateClick({
+                  simulateState,
+                  setSimulateState,
+                  socketRef,
+                  nodes,
+                  edges,
+                })
+              }
+              undo={undo}
+              redo={redo}
+              canUndo={activeTab?.index > 0}
+              canRedo={activeTab?.index < (activeTab?.history?.length || 1) - 1}
+            />
+          </>
+        </SimulateStateContext.Provider>
+      </NotificationsLevelContext.Provider>
+    </CustomBlocksProvider>
   );
 }

@@ -139,9 +139,9 @@ const Auth = () => {
           <div className="server-error-message">{serverError}</div>
         )}
 
-        <div className="register-text"> Have no account? </div>
+        <div className="register-text"> Don't have an account yet? </div>
         <Link to="/register" className="register-link">
-          <span className="register-link-text">Register</span>
+          <span className="register-link-text">Register now</span>
         </Link>
       </div>
     </div>
