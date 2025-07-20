@@ -2,13 +2,12 @@
   display: flex;
   text-align: center;
   justify-content: center;
-  align-items: center;
   height: 100vh;
   background-color: var(--main-2);
+  overflow: auto;
 }
 
 .reg-window {
-  position: fixed;
   width: 30rem;
   height: 50rem;
   background-color: var(--main-1);
@@ -145,5 +144,27 @@
   display: flex;
   justify-content: center;
   font-size: 1.2rem;
+  color: var(--main-0);
+}
+
+.login-text {
+  font-size: 1.1rem;
+  font-family: Montserrat, serif;
+  margin-top: 2rem;
+  color: var(--main-0);
+  text-decoration-color: var(--main-0);
+}
+
+.login-link {
+  display: flex;
+  font-size: 0.2rem;
+  font-family: Montserrat, serif;
+  margin-left: 12.25rem;
+}
+
+.login-link-text {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  font-family: Montserrat, serif;
   color: var(--main-0);
 }
