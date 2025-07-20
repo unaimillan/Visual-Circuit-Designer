@@ -134,16 +134,20 @@ For those who want locally launch our project
   - [Continuous Deployment](./docs/automation/continuous-delivery.md)
 - [Architecture](./docs/architecture/architecture.md) with Static view, Dynamic view, Deployment view and Tech Stack
 
-## Contributors
+## Contributors (for customer)
 
-Thanks to all developers:
+Top developers:
 
-- [Konstantin Smirnov](https://github.com/kostya2505) — Frontend developer, UI/UX
-- [Albert Khechoyan](https://github.com/RII6) — Backend developer
-- [Matvei Kantserov](https://github.com/Doshqq) - 
-- [Tatiana Dudnikova](https://github.com/witch2256)
-- [Arseny Lashkevich](https://github.com/arsenez2006)
+<a href="https://github.com/IUMusicalFish19/Visual-Circuit-Designer/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=IUMusicalFish19/Visual-Circuit-Designer" alt="contrib.rocks image" />
+</a>
 
-[![Contributors](https://img.shields.io/github/contributors/username/repo.svg)](https://github.com/IUMusicalFish19/Visual-Circuit-Designer/graphs/contributors)
+- [Konstantin Smirnov](https://github.com/kostya2505) - Frontend Developer
+- [Albert Khechoyan](https://github.com/RII6) - Frontend Developer
+- [Matvei Kantserov](https://github.com/Doshqq) - Backend Developer
+- [Tatiana Dudnikova](https://github.com/witch2256) - Frontend Developer
+- [Arseny Lashkevich](https://github.com/arsenez2006) - Backend Developer
+
 
 [contributors-url]: https://github.com/IUMusicalFish19/Visual-Circuit-Designer/graphs/contributors
+[contributors-shield]: https://img.shields.io/badge/Contributors-5-black
