@@ -19,6 +19,5 @@ export const nodeTypes = {
   inputNodeSwitch: InputNodeSwitch,
   inputNodeButton: InputNodeButton,
   outputNodeLed: OutputNodeLed,
-  switchNode: SwitchNode
+  switchNode: SwitchNode,
 };
-
