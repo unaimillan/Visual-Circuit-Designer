@@ -66,7 +66,7 @@ const Auth = () => {
       return;
     }
     try {
-      const response = await fetch("https://auth:8080/api/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ login, password }),
