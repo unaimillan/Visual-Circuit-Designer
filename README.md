@@ -1,3 +1,7 @@
+<a id="readme-top"></a>
+
+[![Contributors][contributors-shield]][contributors-url]
+
 ### <div align="center"><img src="./docs/logo.png" width="200"> 
 # <div align="center">Visual-Circuit-Designer<div>
 Visual-Circuit-Designer is web-based platform that could provide students and learners good experience in designing circuits similar to the Block Diagrams (like on Computer Architecture), but without the need to install Quartus Prime or huge Virtual box image. 
@@ -129,3 +133,17 @@ For those who want locally launch our project
   - [Continuous Integration](./docs/automation/continuous-integration.md)
   - [Continuous Deployment](./docs/automation/continuous-delivery.md)
 - [Architecture](./docs/architecture/architecture.md) with Static view, Dynamic view, Deployment view and Tech Stack
+
+## Contributors
+
+Thanks to all developers:
+
+- [Konstantin Smirnov](https://github.com/kostya2505) — Frontend developer, UI/UX
+- [Albert Khechoyan](https://github.com/RII6) — Backend developer
+- [Matvei Kantserov](https://github.com/Doshqq) - 
+- [Tatiana Dudnikova](https://github.com/witch2256)
+- [Arseny Lashkevich](https://github.com/arsenez2006)
+
+[![Contributors](https://img.shields.io/github/contributors/username/repo.svg)](https://github.com/IUMusicalFish19/Visual-Circuit-Designer/graphs/contributors)
+
+[contributors-url]: https://github.com/IUMusicalFish19/Visual-Circuit-Designer/graphs/contributors
