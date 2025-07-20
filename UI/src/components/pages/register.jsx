@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "../../CSS/reg.css";
 import "../../CSS/variables.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const EMAIL_REGEXP =
   /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
@@ -302,6 +302,11 @@ const Reg = () => {
         <button className="reg-button" onClick={handleRegister}>
           <span className="reg-button-text">Register</span>
         </button>
+
+        <div className="login-text"> Already have an account? </div>
+        <Link to="/login" className="login-link">
+          <span className="login-link-text">Log In</span>
+        </Link>
       </div>
     </div>
   );
