@@ -1,129 +1,171 @@
-import {
-  generateCustomBlockId,
-  createCustomBlock,
-  saveCustomBlock,
-  loadCustomBlocks,
-  deleteCustomBlock,
-  findCustomBlockById,
-} from "../../customBlockUtils.js";
+import { createCustomBlock, saveCustomBlock, loadCustomBlocks, deleteCustomBlock, findCustomBlockById } from '../../customBlockUtils.js';
+import { generateId } from '../../generateId.js';
 
-beforeEach(() => {
-  localStorage.clear();
-  jest.clearAllMocks();
-});
+// Mock generateId to return a predictable ID
+jest.mock('../../generateId.js', () => ({
+  generateId: jest.fn(() => 'mocked-id'),
+}));
 
-describe("generateCustomBlockId", () => {
-  it("should generate a unique id with correct format", () => {
-    const id = generateCustomBlockId();
-    expect(id).toMatch(/^custom_[a-z0-9]+_[a-z0-9]{8}$/);
+describe('createCustomBlock', () => {
+  const validInputNode = { type: 'inputNodeSwitch', name: 'input1' };
+  const validOutputNode = { type: 'outputNodeLed', name: 'output1' };
+  const edges = [];
+
+  it('throws if nodes is not an array', () => {
+    expect(() => createCustomBlock(null, edges, 'block')).toThrow('Invalid nodes: must be an array');
   });
 
-  it("should generate different IDs on consecutive calls", () => {
-    const id1 = generateCustomBlockId();
-    const id2 = generateCustomBlockId();
-    expect(id1).not.toEqual(id2);
+  it('throws if edges is not an array', () => {
+    expect(() => createCustomBlock([validInputNode], null, 'block')).toThrow('Invalid edges: must be an array');
   });
-});
 
-describe("createCustomBlock", () => {
-  const nodes = [
-    { id: "1", type: "inputNodeSwitch", name: "Switch A" },
-    { id: "2", type: "inputNodeButton" },
-    { id: "3", type: "outputNodeLed", name: "LED" },
-    { id: "4", type: "logicNode" },
-  ];
-  const edges = [{ id: "e1", source: "1", target: "3" }];
-
-  it("should create a custom block with inputs and outputs", () => {
-    const block = createCustomBlock(nodes, edges, "My Block");
-
-    expect(block).toHaveProperty("id");
-    expect(block).toHaveProperty("name", "My Block");
-    expect(block.inputs).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ id: "1", name: "Switch A" }),
-        expect.objectContaining({ id: "2" }),
-      ]),
+  it('throws if no inputs or outputs', () => {
+    expect(() => createCustomBlock([], [], 'block')).toThrow(
+      'Custom block must have at least one input and one output pin'
     );
-    expect(block.outputs).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ id: "3", name: "LED" }),
-      ]),
+  });
+
+  it('throws if input node missing name', () => {
+    const badInput = { type: 'inputNodeButton' };
+    const nodes = [badInput, validOutputNode];
+    expect(() => createCustomBlock(nodes, edges, 'block')).toThrow(
+      'Input "Button" must have a name'
     );
-    expect(block.originalSchema.nodes).toBe(nodes);
-    expect(block.originalSchema.edges).toBe(edges);
   });
 
-  it("should throw error if nodes or edges are not arrays", () => {
-    expect(() => createCustomBlock(null, [], "Block")).toThrow();
-    expect(() => createCustomBlock([], null, "Block")).toThrow();
-  });
-});
-
-describe("saveCustomBlock & loadCustomBlocks", () => {
-  it("should save and load a block correctly", () => {
-    const block = {
-      id: "test-id",
-      name: "Test",
-      inputs: [],
-      outputs: [],
-      originalSchema: {},
-    };
-    saveCustomBlock(block);
-
-    const loaded = loadCustomBlocks();
-    expect(loaded).toHaveLength(1);
-    expect(loaded[0]).toEqual(block);
+  it('throws if output node missing name', () => {
+    const badOutput = { type: 'outputNodeLed' };
+    const nodes = [validInputNode, badOutput];
+    expect(() => createCustomBlock(nodes, edges, 'block')).toThrow(
+      'Output "Led" must have a name'
+    );
   });
 
-  it("should handle malformed JSON gracefully", () => {
-    localStorage.setItem("customBlocks", "invalid_json");
-    const loaded = loadCustomBlocks();
-    expect(loaded).toEqual([]);
+  it('creates block with correct structure', () => {
+    const block = createCustomBlock([validInputNode, validOutputNode], edges, 'MyBlock');
+    expect(block).toEqual({
+      id: 'mocked-id',
+      name: 'MyBlock',
+      inputs: [validInputNode],
+      outputs: [validOutputNode],
+      originalSchema: { nodes: [validInputNode, validOutputNode], edges },
+      defaultPosition: { x: 0, y: 0 },
+    });
+    expect(generateId).toHaveBeenCalled();
   });
 });
 
-describe("deleteCustomBlock", () => {
-  it("should delete the specified block", () => {
-    const block = {
-      id: "to-delete",
-      name: "To Delete",
-      inputs: [],
-      outputs: [],
-      originalSchema: {},
-    };
-    saveCustomBlock(block);
-    expect(loadCustomBlocks()).toHaveLength(1);
+describe('Custom block storage functions', () => {
+  const sampleBlock = { id: 'id1', name: 'Block1' };
 
-    const result = deleteCustomBlock("to-delete");
-    expect(result).toBe(true);
-    expect(loadCustomBlocks()).toHaveLength(0);
+  beforeEach(() => {
+    localStorage.clear();
   });
 
-  it("should return false if deletion fails", () => {
-    localStorage.setItem("customBlocks", "bad_json");
-    const result = deleteCustomBlock("any-id");
-    expect(result).toBe(false);
-  });
-});
+  describe('saveCustomBlock', () => {
+    it('saves a block to localStorage', () => {
+      saveCustomBlock(sampleBlock);
+      const stored = JSON.parse(localStorage.getItem('customBlocks'));
+      expect(stored).toHaveLength(1);
+      expect(stored[0]).toEqual(sampleBlock);
+    });
 
-describe("findCustomBlockById", () => {
-  it("should return the correct block by ID", () => {
-    const block = {
-      id: "block123",
-      name: "FindMe",
-      inputs: [],
-      outputs: [],
-      originalSchema: {},
-    };
-    saveCustomBlock(block);
-
-    const found = findCustomBlockById("block123");
-    expect(found).toEqual(block);
+    it('appends to existing blocks', () => {
+      localStorage.setItem('customBlocks', JSON.stringify([{ id: 'existing' }]));
+      saveCustomBlock(sampleBlock);
+      const stored = JSON.parse(localStorage.getItem('customBlocks'));
+      expect(stored).toHaveLength(2);
+      expect(stored).toEqual([{ id: 'existing' }, sampleBlock]);
+    });
   });
 
-  it("should return undefined for nonexistent ID", () => {
-    const found = findCustomBlockById("missing");
-    expect(found).toBeUndefined();
+  describe('loadCustomBlocks', () => {
+    it('returns empty array if none saved', () => {
+      expect(loadCustomBlocks()).toEqual([]);
+    });
+
+    it('loads saved blocks', () => {
+      const blocks = [sampleBlock];
+      localStorage.setItem('customBlocks', JSON.stringify(blocks));
+      expect(loadCustomBlocks()).toEqual(blocks);
+    });
+
+    it('returns empty on parse error', () => {
+      localStorage.setItem('customBlocks', 'invalid json');
+      const originalError = console.error;
+      const originalParse = JSON.parse;
+      console.error = jest.fn();
+      JSON.parse = () => { throw new Error('fail'); };
+
+      expect(loadCustomBlocks()).toEqual([]);
+
+      console.error = originalError;
+      JSON.parse = originalParse;
+    });
+  });
+
+  describe('deleteCustomBlock', () => {
+    beforeEach(() => {
+      const blocks = [{ id: 'a' }, { id: 'b' }];
+      localStorage.setItem('customBlocks', JSON.stringify(blocks));
+    });
+
+    it('deletes existing block and returns true', () => {
+      const result = deleteCustomBlock('a');
+      expect(result).toBe(true);
+      const stored = JSON.parse(localStorage.getItem('customBlocks'));
+      expect(stored).toEqual([{ id: 'b' }]);
+    });
+
+    it('returns true even if id not found', () => {
+      const result = deleteCustomBlock('x');
+      expect(result).toBe(true);
+      const stored = JSON.parse(localStorage.getItem('customBlocks'));
+      expect(stored).toEqual([{ id: 'a' }, { id: 'b' }]);
+    });
+
+    it('returns false on error', () => {
+      // Temporarily override JSON.parse to throw
+      const originalParse = JSON.parse;
+      const originalError = console.error;
+      console.error = jest.fn();
+      JSON.parse = () => { throw new Error('fail'); };
+
+      const result = deleteCustomBlock('a');
+      expect(result).toBe(false);
+
+      // Restore originals
+      JSON.parse = originalParse;
+      console.error = originalError;
+    });
+  });
+
+  describe('findCustomBlockById', () => {
+    beforeEach(() => {
+      const blocks = [{ id: 'x' }, { id: 'y' }];
+      localStorage.setItem('customBlocks', JSON.stringify(blocks));
+    });
+
+    it('finds and returns block by id', () => {
+      expect(findCustomBlockById('y')).toEqual({ id: 'y' });
+    });
+
+    it('returns undefined if not found', () => {
+      expect(findCustomBlockById('z')).toBeUndefined();
+    });
+
+    it('returns null on error', () => {
+      // Temporarily override JSON.parse to throw
+      const originalParse = JSON.parse;
+      const originalError = console.error;
+      console.error = jest.fn();
+      JSON.parse = () => { throw new Error('fail'); };
+
+      expect(findCustomBlockById('x')).toBeNull();
+
+      // Restore originals
+      JSON.parse = originalParse;
+      console.error = originalError;
+    });
   });
 });

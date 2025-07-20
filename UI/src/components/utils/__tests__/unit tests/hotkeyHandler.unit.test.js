@@ -16,7 +16,8 @@ describe("hotkeyHandler", () => {
     socketRef: { current: {} },
     nodes: [],
     edges: [],
-    handleOpenClick: jest.fn(),
+    handleUploadClick: jest.fn(),
+    handleExtractClick: jest.fn(),
     setActiveAction: jest.fn(),
     setPanOnDrag: jest.fn(),
     setActiveWire: jest.fn(),
@@ -44,6 +45,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("x");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.cutElements).toHaveBeenCalled();
   });
 
@@ -51,6 +53,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("v");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.pasteElements).toHaveBeenCalled();
   });
 
@@ -58,6 +61,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("a");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.selectAll).toHaveBeenCalled();
   });
 
@@ -65,6 +69,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("d");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.deselectAll).toHaveBeenCalled();
   });
 
@@ -72,6 +77,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("z");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.undo).toHaveBeenCalled();
   });
 
@@ -79,6 +85,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("y");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.redo).toHaveBeenCalled();
   });
 
@@ -86,20 +93,23 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("z", true, true);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.redo).toHaveBeenCalled();
   });
 
-  it("calls setOpenSettings on Ctrl+Shift+S", () => {
+  it("toggles settings on Ctrl+Shift+S", () => {
     const ctx = createContext();
     const e = makeEvent("s", true, true);
     hotkeyHandler(e, ctx);
-    expect(ctx.setOpenSettings).toHaveBeenCalled();
+    expect(e.preventDefault).toHaveBeenCalled();
+    expect(ctx.setOpenSettings).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("calls saveCircuit on Ctrl+S", () => {
     const ctx = createContext();
     const e = makeEvent("s");
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.saveCircuit).toHaveBeenCalled();
   });
 
@@ -107,6 +117,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("r", true, true);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.handleSimulateClick).toHaveBeenCalledWith({
       simulateState: "idle",
       setSimulateState: ctx.setSimulateState,
@@ -116,17 +127,27 @@ describe("hotkeyHandler", () => {
     });
   });
 
-  it("calls handleOpenClick on Ctrl+O", () => {
+  it("calls handleUploadClick on Ctrl+O", () => {
     const ctx = createContext();
     const e = makeEvent("o");
     hotkeyHandler(e, ctx);
-    expect(ctx.handleOpenClick).toHaveBeenCalled();
+    expect(e.preventDefault).toHaveBeenCalled();
+    expect(ctx.handleUploadClick).toHaveBeenCalled();
+  });
+
+  it("calls handleExtractClick on Ctrl+B", () => {
+    const ctx = createContext();
+    const e = makeEvent("b");
+    hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
+    expect(ctx.handleExtractClick).toHaveBeenCalled();
   });
 
   it('calls setActiveAction and setPanOnDrag on "1"', () => {
     const ctx = createContext();
     const e = makeEvent("1", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveAction).toHaveBeenCalledWith("cursor");
     expect(ctx.setPanOnDrag).toHaveBeenCalledWith([2]);
   });
@@ -135,6 +156,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("2", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveAction).toHaveBeenCalledWith("hand");
     expect(ctx.setPanOnDrag).toHaveBeenCalledWith(true);
   });
@@ -143,6 +165,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("3", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveAction).toHaveBeenCalledWith("eraser");
   });
 
@@ -150,6 +173,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("4", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveAction).toHaveBeenCalledWith("text");
   });
 
@@ -157,6 +181,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("5", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveWire).toHaveBeenCalledWith("default");
   });
 
@@ -164,6 +189,7 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("6", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveWire).toHaveBeenCalledWith("step");
   });
 
@@ -171,10 +197,11 @@ describe("hotkeyHandler", () => {
     const ctx = createContext();
     const e = makeEvent("7", false);
     hotkeyHandler(e, ctx);
+    expect(e.preventDefault).toHaveBeenCalled();
     expect(ctx.setActiveWire).toHaveBeenCalledWith("straight");
   });
 
-  it("calls setOpenSettings(false) on Escape if settings are open", () => {
+  it("closes settings on Escape if open", () => {
     const ctx = createContext();
     const e = makeEvent("Escape", false);
     hotkeyHandler(e, ctx);
