@@ -117,6 +117,7 @@
   font-family: Montserrat, serif;
   margin-top: 4.5rem;
   color: var(--main-0);
+  text-decoration-color: var(--main-0);
 }
 
 .register-link {

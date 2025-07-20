@@ -140,7 +140,7 @@ const Auth = () => {
         )}
 
         <div className="register-text"> Have no account? </div>
-        <Link to="/reg" className="register-link">
+        <Link to="/register" className="register-link">
           <span className="register-link-text">Register</span>
         </Link>
       </div>

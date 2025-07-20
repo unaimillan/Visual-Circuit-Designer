@@ -744,7 +744,7 @@ export default function Main() {
           </button>
 
           <Link
-            to="/auth"
+            to="/login"
             className="login-button"
             style={{ textDecoration: "none" }}
           >
