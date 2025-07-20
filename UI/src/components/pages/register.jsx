@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const EMAIL_REGEXP =
   /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
-const Auth = () => {
+const Reg = () => {
   const navigate = useNavigate();
 
   // Состояния полей формы
@@ -307,4 +307,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Reg;
