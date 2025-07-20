@@ -159,15 +159,12 @@ export default function Main() {
     [setNodesCustom, setEdgesCustom],
   );
 
-  const onCreateCustom = useCallback(
-    () => {
-      const selectedElements = getSelectedElements();
-      setNodesCustom(selectedElements.nodes);
-      setNodesCustom(selectedElements.edges);
-      setModalOpen(true);
-    },
-    [setNodesCustom, setEdgesCustom],
-  );
+  const onCreateCustom = useCallback(() => {
+    const selectedElements = getSelectedElements();
+    setNodesCustom(selectedElements.nodes);
+    setNodesCustom(selectedElements.edges);
+    setModalOpen(true);
+  }, [setNodesCustom, setEdgesCustom]);
 
   const handleCreateFromCurrent = (customBlock) => {
     // Handle custom block creation

@@ -214,10 +214,7 @@ export default function Toolbar({
           onClick={handleUploadClick}
           title={"Upload"}
         >
-          <IconOpenFile
-            SVGClassName="toolbar-button-icon"
-            draggable="false"
-          />
+          <IconOpenFile SVGClassName="toolbar-button-icon" draggable="false" />
         </button>
         <input
           className={`hidden`}

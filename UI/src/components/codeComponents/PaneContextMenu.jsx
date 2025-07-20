@@ -2,19 +2,19 @@ import React, { useCallback } from "react";
 import { useReactFlow } from "@xyflow/react";
 
 export default function PaneContextMenu({
-                                          copyElements,
-                                          pasteElements,
-                                          cutElements,
-                                          selectedElements,
-                                          clipboard,
-                                          onClose,
-                                          top,
-                                          left,
-                                          right,
-                                          bottom,
-                                          onAddCustomCircuit, // New prop to open modal
-                                          ...props
-                                        }) {
+  copyElements,
+  pasteElements,
+  cutElements,
+  selectedElements,
+  clipboard,
+  onClose,
+  top,
+  left,
+  right,
+  bottom,
+  onAddCustomCircuit, // New prop to open modal
+  ...props
+}) {
   const { setNodes, setEdges } = useReactFlow();
 
   const deleteSelectedElements = useCallback(() => {
@@ -27,8 +27,8 @@ export default function PaneContextMenu({
         (edge) =>
           !selectedEdgeIds.has(edge.id) &&
           !selectedNodeIds.has(edge.source) &&
-          !selectedNodeIds.has(edge.target)
-      )
+          !selectedNodeIds.has(edge.target),
+      ),
     );
   }, [selectedElements, setNodes, setEdges]);
 
