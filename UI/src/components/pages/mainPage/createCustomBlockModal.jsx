@@ -5,6 +5,7 @@ import {
   createCustomBlock,
   saveCustomBlock,
 } from "../../utils/customBlockUtils";
+import { useCustomBlocks } from "./customCircuit.jsx";
 
 export default function CreateCustomBlockModal({
   isOpen,
@@ -16,6 +17,7 @@ export default function CreateCustomBlockModal({
 }) {
   const [blockName, setBlockName] = useState("");
   const [error, setError] = useState("");
+  const { addBlock } = useCustomBlocks();
 
   const handleCreateCustomBlock = () => {
     if (!blockName.trim()) {
@@ -25,6 +27,8 @@ export default function CreateCustomBlockModal({
     try {
       const customBlock = createCustomBlock(nodes, edges, blockName.trim());
       saveCustomBlock(customBlock);
+
+      addBlock(customBlock);
 
       setBlockName("");
       setError("");
