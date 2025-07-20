@@ -122,7 +122,7 @@ export default function CircuitsMenu({
         spawnCircuit(`custom-${block.id}`);
       }
     },
-    [customBlocks, spawnCircuit]
+    [customBlocks, spawnCircuit],
   );
 
   return (

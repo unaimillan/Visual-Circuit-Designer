@@ -70,7 +70,7 @@ import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
 import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
 import { CustomBlocksProvider } from "./mainPage/customCircuit.jsx";
-import FlowWithCustomNodes from './mainPage/FlowWithCustomNodes.jsx';
+import FlowWithCustomNodes from "./mainPage/FlowWithCustomNodes.jsx";
 
 export const SimulateStateContext = createContext({
   simulateState: "idle",

@@ -27,7 +27,7 @@ export const CustomBlocksProvider = ({ children }) => {
     setCustomBlocks((prev) => prev.filter((block) => block.id !== blockId));
   };
 
-  const getBlockById = (id) => customBlocks.find(block => block.id === id);
+  const getBlockById = (id) => customBlocks.find((block) => block.id === id);
 
   return (
     <CustomBlocksContext.Provider

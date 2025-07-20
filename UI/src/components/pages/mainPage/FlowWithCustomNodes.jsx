@@ -1,12 +1,7 @@
-import React, { useMemo } from 'react';
-import {
-  Background,
-  Controls,
-  MiniMap,
-  ReactFlow,
-} from '@xyflow/react';
-import CustomBlockNode from '../../circuits/customBlockNode.jsx';
-import { useCustomBlocks } from './customCircuit.jsx';
+import React, { useMemo } from "react";
+import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react";
+import CustomBlockNode from "../../circuits/customBlockNode.jsx";
+import { useCustomBlocks } from "./customCircuit.jsx";
 
 const FlowWithCustomNodes = (props) => {
   const { customBlocks } = useCustomBlocks();
@@ -14,22 +9,17 @@ const FlowWithCustomNodes = (props) => {
   const allNodeTypes = useMemo(() => {
     const customNodeTypes = {};
 
-    customBlocks.forEach(block => {
+    customBlocks.forEach((block) => {
       customNodeTypes[`custom-${block.id}`] = CustomBlockNode;
     });
 
     return {
       ...props.nodeTypes,
-      ...customNodeTypes
+      ...customNodeTypes,
     };
   }, [customBlocks, props.nodeTypes]);
 
-  return (
-    <ReactFlow
-      {...props}
-      nodeTypes={allNodeTypes}
-    />
-  );
+  return <ReactFlow {...props} nodeTypes={allNodeTypes} />;
 };
 
 export default FlowWithCustomNodes;

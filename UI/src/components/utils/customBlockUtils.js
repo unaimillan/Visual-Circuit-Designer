@@ -95,8 +95,10 @@ export const deleteCustomBlock = (blockId) => {
  */
 export const findCustomBlockById = (blockId) => {
   try {
-    const savedBlocks = JSON.parse(localStorage.getItem("customBlocks") || "[]");
-    return savedBlocks.find(block => block.id === blockId);
+    const savedBlocks = JSON.parse(
+      localStorage.getItem("customBlocks") || "[]",
+    );
+    return savedBlocks.find((block) => block.id === blockId);
   } catch (error) {
     console.error("Failed to find custom block:", error);
     return null;

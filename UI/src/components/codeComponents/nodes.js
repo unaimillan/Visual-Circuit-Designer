@@ -8,7 +8,7 @@ import InputNodeSwitch from "../circuits/IOelemnts/switch.jsx";
 import InputNodeButton from "../circuits/IOelemnts/button.jsx";
 import OutputNodeLed from "../circuits/IOelemnts/led.jsx";
 import SwitchNode from "../circuits/IOelemnts/switch.jsx";
-import CustomBlockNode from '../circuits/CustomBlockNode.jsx';
+import CustomBlockNode from "../circuits/CustomBlockNode.jsx";
 
 export const nodeTypes = {
   andNode: AndNode,

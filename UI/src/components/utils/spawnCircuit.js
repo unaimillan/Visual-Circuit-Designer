@@ -15,21 +15,21 @@ export function spawnCircuit(type, reactFlowInstance, setNodes) {
   let newNode;
 
   // Handle custom blocks
-  if (type.startsWith('custom-')) {
-    const blockId = type.replace('custom-', '');
+  if (type.startsWith("custom-")) {
+    const blockId = type.replace("custom-", "");
     const block = findCustomBlockById(blockId);
 
     if (block) {
       newNode = {
         id: generateId(),
-        type: 'customBlock', // Use this special type
+        type: "customBlock", // Use this special type
         position,
         selected: true,
         data: {
           blockId: block.id, // Store block ID for lookup
           label: block.name, // Display name
           inputs: block.inputs,
-          outputs: block.outputs
+          outputs: block.outputs,
         },
       };
     } else {
