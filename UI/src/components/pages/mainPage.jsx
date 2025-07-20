@@ -777,13 +777,13 @@ export default function Main() {
               />
             </button>
 
-          <Link
-            to="/login"
-            className="login-button"
-            style={{ textDecoration: "none" }}
-          >
-            <span className="login-button-text">Log in</span>
-          </Link>
+            <Link
+              to="/login"
+              className="login-button"
+              style={{ textDecoration: "none" }}
+            >
+              <span className="login-button-text">Log in</span>
+            </Link>
 
             <div
               className={`backdrop ${openSettings ? "cover" : ""}`}
