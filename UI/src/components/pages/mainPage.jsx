@@ -68,7 +68,7 @@ import { redo as redoUtil } from "../utils/redo.js";
 import { handleTabSwitch as handleTabSwitchUtil } from "../utils/handleTabSwitch.js";
 import { getEditableNode } from "../utils/getEditableNode.js";
 import { handleNameChange } from "../utils/handleNameChange.js";
-import CreateCustomBlockModal from "./mainPage/CreateCustomBlockModal.jsx";
+import CreateCustomBlockModal from "./mainPage/createCustomBlockModal.jsx";
 import { CustomBlocksProvider } from "./mainPage/customCircuit.jsx";
 import FlowWithCustomNodes from "./mainPage/FlowWithCustomNodes.jsx";
 
