@@ -8,7 +8,7 @@ import TextNode from "../circuits/advancedElements/TextNode.jsx";
 import InputNodeSwitch from "../circuits/IOelemnts/switch.jsx";
 import InputNodeButton from "../circuits/IOelemnts/button.jsx";
 import OutputNodeLed from "../circuits/IOelemnts/led.jsx";
-import CustomBlockNode from "../circuits/CustomBlockNode.jsx";
+import CustomBlockNode from "../circuits/customBlockNode.jsx";
 
 export const nodeTypes = {
   andNode: AndNode,
