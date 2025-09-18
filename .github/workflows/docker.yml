@@ -1,0 +1,28 @@
+name: Build docker images for the project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-push-images:
+    name: Push Docker Images to GHCR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      # - name: Create .env file from example
+      #   run: cp .env.example .env
+
+      - name: Build all images with Docker Compose
+        run: docker compose build
+
+      - name: Push all images to GHCR
+        run: docker compose push
