@@ -675,7 +675,7 @@ export default function Main() {
               )}
             </FlowWithCustomNodes>
 
-            {(false && editableNode) && (
+            {false && editableNode && (
               <div className="name-editor">
                 <div className="label-container">
                   <label>Export Name (Optional)</label>
