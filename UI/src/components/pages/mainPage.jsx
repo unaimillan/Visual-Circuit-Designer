@@ -105,7 +105,7 @@ const GAP_SIZE = 10;
 const STORAGE_KEY = "myCircuits";
 
 export default function Main() {
-  const [circuitsMenuState, setCircuitsMenuState] = useState(false);
+  const [circuitsMenuState, setCircuitsMenuState] = useState(true);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAction, setActiveAction] = useState("cursor");
   const [activeWire, setActiveWire] = useState("default");
@@ -168,10 +168,11 @@ export default function Main() {
     console.log("Created custom block:", customBlock);
   };
 
-  const editableNode = useMemo(
-    () => getEditableNode(nodes, edges),
-    [nodes, edges],
-  );
+  // const editableNode = useMemo(
+  //   () => getEditableNode(nodes, edges),
+  //   [nodes, edges],
+  // );
+  const editableNode = false;
 
   const onNameChange = (e) => handleNameChange(e, editableNode, setNodes);
 
@@ -674,7 +675,7 @@ export default function Main() {
               )}
             </FlowWithCustomNodes>
 
-            {editableNode && (
+            {(false && editableNode) && (
               <div className="name-editor">
                 <div className="label-container">
                   <label>Export Name (Optional)</label>
